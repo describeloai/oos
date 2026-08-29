@@ -347,4 +347,4 @@ Escrito aquí para que no haya que descubrirlo:
 - **Que una regla se aplique sola a lo que se clasifique mañana.** Este régimen gobierna lo
   que se **causa**. Que una afirmación se sostenga sobre todo lo que case un predicado —y
   que el permiso pueda resolverse en una máscara en vez de en un `deny`— es otra cosa, y es
-  v1alpha3 ([`00-scope`](00-scope.md) §7).
+  v1alpha3 ([`01-gobierno`](../v1alpha3/01-gobierno.md)).

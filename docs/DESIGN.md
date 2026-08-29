@@ -69,7 +69,7 @@ Mapa de cuándo se completa:
 | **v1alpha1** | queda definido y comprobable en **L0** |
 | **ORE fases 0–3** | queda **demostrado una vez** por la implementación de referencia |
 | **v1alpha2** | `Function`, `Resolution` y la resolución de dependencias → «ejecutable» cubre L2 y L3, y «autosuficiente» se cierra |
-| **v1alpha3** | la capa de gobierno: predicado de objetivo, conjunto de aserciones, máscara y obligación |
+| **v1alpha3** | [la capa de gobierno](../spec/v1alpha3/00-scope.md): el objetivo por clasificación, el `Ruleset`, la máscara y el deber → la cobertura es comprobable al compilar |
 | **v1beta1** | compatibilidad de la propia spec, suite extraída del texto, arnés de runtime para L1 |
 | **segunda implementación** | el claim deja de ser intención y pasa a ser hecho |
 
@@ -235,6 +235,10 @@ La política la aplica el motor, en un punto único, **nunca el consumidor**. Un
 o un agente no pueden saltarse el enmascaramiento olvidándose de aplicarlo. Cada decisión
 —qué política, qué efecto, qué obligación— se registra: es artefacto de cumplimiento, no
 línea de debug.
+
+El *qué* de esa frase lo especifica [v1alpha3](../spec/v1alpha3/01-gobierno.md): la máscara
+es un desclasificador del vocabulario cerrado de v1alpha1, y la obligación es una `Function`
+de v1alpha2. Lo que aquí es una decisión de runtime, allí es una propiedad del artefacto.
 
 ---
 

@@ -262,73 +262,32 @@ Cedar. La suite solo puede crecer con lo primero.
 
 ## 7. Lo que esto abre — v1alpha3, la capa de gobierno
 
-Se registra aquí porque sale de **cerrar** esta versión, no de una idea nueva. El entregable
-se define en la siguiente iteración; esto solo lo acota.
+Escrito en [`spec/v1alpha3/`](../v1alpha3/00-scope.md). Aquí queda solo lo que salió de
+**cerrar esta versión**, porque explica por qué la capa de gobierno viene después y no antes.
 
-### 7.1 · Las cinco naturalezas de una regla
-
-Toda regla aplicable sobre una superficie ontológica es una de estas cinco, y se distinguen
-por **lo que producen al dispararse**:
-
-| | Naturaleza | Produce | Forma | Se decide en |
-|---|---|---|---|---|
-| **1** | restricción | un veredicto | `∀x∈T . φ(x)` | L0 la forma · L2 los datos |
-| **2** | derivación | contenido nuevo | `∀x∈T . p(x) = e(x)` | L2 |
-| **3** | autorización | un permiso sobre una acción | `∀(p,a,r) . permit ⟸ φ` | L3 |
-| **4** | **obligación** | **otra acción que debe ocurrir** | `∀x∈T . φ(x) ⟹ □ψ` | L3 + tiempo |
-| **5** | transformación | el mismo dato, representado distinto | `∀x∈T . x ↦ f(x)` | L2 / L3 |
-
-Cuatro de las cinco tienen la misma forma —**cuantificador y cuerpo**—, y por eso **un solo
-mecanismo de objetivo las sirve a las cuatro**. La cuarta es de otra familia: introduce un
-operador modal —*debe llegar a ocurrir*— y con él el tiempo, aplazado desde v1alpha1.
-
-Y una precisión de naturaleza que evita el error de encuadre: **una regla no es un verbo.**
-Los verbos son `Function` y `Resolution`, y un verbo cambia el mundo. Una regla no cambia
-nada: **sostiene**. Y lo que la hace un *paquete* no es la sintaxis:
-
-> **Un paquete de reglas es un sujeto de autoridad.**
-
-Sus reglas se agrupan no porque se parezcan, sino porque **responde la misma persona por
-todas y entran y salen juntas**. Eso es lo que una regla inline no puede ser: tiene por
-construcción el mismo dueño que la entidad, y en un entorno regulado el responsable de
-cumplimiento **tiene que poder restringir la ontología sin poder editarla**.
-
-### 7.2 · Lo que ya tenemos sin saberlo
-
-Dos hallazgos que hacen de v1alpha3 una derivación y no una invención:
+### 7.1 · Lo que ya teníamos sin saberlo
 
 > **Un desclasificador es una máscara.**
 
-v1alpha1 define el desclasificador como *la única forma legítima de bajar una etiqueta*.
-Enmascarar —`ssn → últimos 4`— es exactamente eso. El requisito número uno de todo comprador
-regulado **ya está inventado aquí con otro nombre**, y nunca se conectó con Cedar. La capa de
-política no necesita un concepto nuevo: necesita **una arista** —que una política se resuelva
-en un desclasificador en vez de en un `deny`—. Y como el desclasificador declara qué etiqueta
-produce, el efecto de la máscara sobre el flujo **es computable al compilar**, que es justo lo
-que a las máscaras de los catálogos les falta.
+v1alpha1 define el desclasificador como *la única forma legítima de bajar una etiqueta*, y
+[`04-flow`](../v1alpha1/04-flow.md) §5 lo llama con todas las letras *«el vocabulario cerrado
+de obligaciones»*. Enmascarar —`ssn → últimos 4`— es exactamente eso. **El requisito número
+uno de todo comprador regulado ya estaba en el árbol**, sin ningún sitio donde engancharse
+salvo una anotación de Cedar que nadie comprueba.
 
 > **Una obligación es una `Function`.**
 
 XACML murió de sus obligaciones: nombraban deberes que ningún runtime sabía ejecutar. En
 v1alpha1 una obligación habría sido prosa. Ahora que **los verbos existen**, un deber es una
 referencia a uno —con su integridad computada, sus precondiciones y su endoso—. La capa de
-política estaba esperando a que existieran los verbos, y esa es la razón de que esto venga
-después y no antes.
+política estaba esperando a que existieran los verbos.
 
-### 7.3 · El alcance, sin especificar
-
-| | |
-|---|---|
-| **el predicado de objetivo** | la primitiva de la que dependen las otras cuatro piezas |
-| **el conjunto de aserciones** | objetivo + cuerpo ODCS + dueño + versión. Es una **dependencia**, como el paquete de clasificación |
-| **la máscara** | una política que se resuelve en desclasificador. Sin documento nuevo |
-| **la obligación** | `φ(x) ⟹ Function`. Decible ya; exigible cuando entre lo temporal |
-| **un código** | un objetivo que **no casa con nada** es casi siempre una etiqueta mal escrita o un retículo que cambió |
-
-Con lo que el arco de versiones queda dicho:
+### 7.2 · El arco
 
 | | |
 |---|---|
 | **v1alpha1** | qué se puede **saber** |
 | **v1alpha2** | qué se puede **causar** |
 | **v1alpha3** | **qué debe sostenerse — y quién responde** |
+
+Y cada versión aporta una regla y solo una: `L ⊑ C`, `I(f) ⊒ I(destino)`, y la cobertura.

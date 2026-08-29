@@ -187,6 +187,7 @@ consumidor externo más.
 ```
 spec/v1alpha1/     documentos normativos
 spec/v1alpha2/     alcance cerrado — NO normativo todavía
+spec/v1alpha3/     borrador de alcance — la capa de gobierno
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
@@ -225,9 +226,13 @@ verbos —`Function` y `Resolution`—, dos campos a documentos que ya existen �
 por separado, para que **73/73 siga queriendo decir lo mismo** cuando este directorio tenga
 cincuenta casos.
 
-`Test` y lo temporal siguen aplazados. La **capa de gobierno** —reglas que apuntan por
-clasificación en vez de enumerar, la máscara y la obligación— es v1alpha3
-([`00-scope`](spec/v1alpha2/00-scope.md) §7).
+`Test` y lo temporal siguen aplazados.
+
+**v1alpha3 abre la capa de gobierno** —[`spec/v1alpha3/`](spec/v1alpha3/00-scope.md)—, que
+no inventa el plano: lo termina. v1alpha1 ya declaraba el vocabulario cerrado de obligaciones
+y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, y sale gratis:
+*una etiqueta ya es un conjunto*. El retículo que v1alpha1 usa para comparar dos elementos
+—`L ⊑ C`— nombra, leído al revés, el conjunto entero.
 
 ---
 

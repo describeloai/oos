@@ -248,4 +248,6 @@ referencias no necesitaron una sola regla nueva.
 - **La obligación.** Un deber —*«si ocurre esto, tiene que ocurrir aquello»*— es una
   referencia a una función, y por tanto **ya es decible desde que este documento existe**.
   Lo que falta es el operador temporal —*debe llegar a ocurrir*— y el objetivo sobre el que
-  se enuncia. Va con v1alpha3 ([`00-scope`](00-scope.md) §7.2).
+  se enuncia. Va con v1alpha3 ([`01-gobierno`](../v1alpha3/01-gobierno.md) §5.3), donde la
+  restricción que lo hace exigible es que **un deber DEBE nombrar una `Function`** — lo
+  contrario es lo que mató a XACML.
