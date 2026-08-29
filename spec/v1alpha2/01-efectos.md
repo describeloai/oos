@@ -2,8 +2,8 @@
 
 **Estado:** borrador. `spec/v1alpha1/` sigue mandando.
 
-El núcleo de v1alpha2. Todo lo demás de esta versión —`Function`, `Resolution`, `Rule`—
-se deriva de lo que aquí se decide.
+El núcleo de v1alpha2. Todo lo demás de esta versión —`Function`, `Resolution`, y los dos
+campos que `Entity` gana— se deriva de lo que aquí se decide.
 
 ---
 

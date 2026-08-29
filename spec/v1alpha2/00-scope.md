@@ -30,9 +30,9 @@ Los tres documentos de v1alpha2 son, los tres, sobre lo contrario:
 
 | | Efecto sobre |
 |---|---|
-| `Rule` | el **contenido** — deriva hechos que no están en ninguna tabla |
 | `Function` | el **mundo** — escribe en una fuente física |
 | `Resolution` | la **identidad** — decide que dos registros son uno |
+| ~~`Rule`~~ | el **contenido** — **retirado como documento** (§3.1) |
 
 > **v1alpha1 gobierna lo que se puede saber. v1alpha2 gobierna lo que se puede causar.**
 
@@ -69,26 +69,64 @@ conjunta evita.
 
 ## 3. Los documentos
 
-### 3.1 · `Rule`
+### 3.1 · `Rule` — retirado como documento
 
-Se parte en dos cosas que los borradores mezclan bajo un mismo `type:`, y que no se
-parecen en nada:
+**La pregunta P7 tiene respuesta, y la respuesta es que este documento no debe existir.**
 
-| | Qué es | Gobernanza |
+`Rule` mezclaba bajo un mismo `type:` dos cosas que no se parecen en nada, y separarlas fue
+suficiente para que cada mitad se fuera a un sitio que ya existe.
+
+#### `constraint` es `quality` de ODCS
+
+Y no es SHACL, aunque SHACL fuera el candidato obvio. Tres razones, en orden de peso:
+
+| | |
+|---|---|
+| **SHACL es RDF** | *«Rules cannot work directly over non-RDF data — they operate exclusively within RDF graphs.»* Nuestros datos viven en PostgreSQL, BigQuery y Databricks. Adoptar SHACL exigiría proyectar a RDF una ontología que no es RDF, para validar datos que tampoco lo son |
+| **SHACL-AF no es una Recomendación** | es una **Nota** del W3C de 2017, y SHACL 1.2 sigue en Borrador de Trabajo. **P6** dice adoptar donde exista un estándar adecuado; una Nota no da la estabilidad que justifica arrastrar RDF entero |
+| **ODCS ya está adoptado** | `quality` existe en v3.1, **cuelga de la propiedad**, y trae biblioteca de métricas (`nullValues`, `duplicateValues`, `rowCount`…), operadores (`mustBe`, `mustBeBetween`…), y compatibilidad declarada con Soda, Great Expectations y dbt-tests |
+
+La tercera fila es la decisiva: **ya perfilamos ODCS** en `Package` y `Binding`. Elegir SHACL
+sería adoptar un segundo estándar, de otra familia, para algo que el primero ya cubre.
+
+Y hay una partición que cae sola de la separación de planos que ya tenemos:
+
+| Tipo de regla | Dónde vive | Por qué |
 |---|---|---|
-| `inference` | **produce** una propiedad nueva | es un efecto sobre el contenido |
-| `constraint` | **afirma** un invariante | es una comprobación, no un efecto |
+| `library` — `nullValues mustBe 0` | **`Entity`** | es una afirmación sobre el **significado**: esta propiedad no es nula nunca. Sin dialecto |
+| `sql` — una comparación entre registros | **`Binding`** | está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente |
 
-Y la inferencia tiene una propiedad que la hace fácil: **es `derivedFrom` con el cómo**.
-v1alpha1 ya especifica que una propiedad derivada computa su etiqueta por `join` de sus
-orígenes y que declararla es `OOS4008`. Una regla de inferencia es lo mismo con una
-expresión adjunta, así que **no necesita modelo de gobernanza nuevo**: hereda el que ya
-existe y ya está implementado.
+Las dos restricciones del borrador —`salary-within-band` y `no-overlapping-comp-periods`—
+son de la segunda clase: comparan entre registros, y en ODCS eso es `type: sql`. Lo que se
+hereda con ello es la limitación de ODCS, no una nuestra: **una regla `sql` no es portable
+entre fuentes**, y conviene decirlo en vez de fingir que sí.
 
-> **P7 · pendiente de resolver antes de escribir este documento.** SHACL es un lenguaje de
-> restricciones sobre grafos, y SHACL-AF tiene reglas de inferencia. La carga de la prueba
-> es nuestra: hay que escribir por qué `constraint` no es SHACL, o adoptar SHACL. No se
-> escribe `Rule` hasta que esa pregunta tenga respuesta escrita.
+> **P3 no aplica aquí, y conviene justificarlo.** P3 exige datos inertes en los documentos
+> que **gobiernan** — `Policy`, la clasificación, el bloque `materialization`. Una regla de
+> calidad no decide accesos: afirma una propiedad de los datos. Por eso puede llevar SQL
+> donde una precondición de `Function` no puede.
+
+#### `inference` es `derivedFrom` con el cómo
+
+v1alpha1 ya declara la procedencia de una propiedad derivada, ya computa su etiqueta por
+`join`, ya prohíbe declararla (`OOS4008`) y ya prohíbe escribirla (`OOS7006`). Lo único que
+una regla de inferencia añade es **la expresión**, y una expresión es un campo, no un
+documento.
+
+Así que `Entity.properties.<nombre>` gana `expr` junto a `derivedFrom`, y no hace falta nada
+más: las referencias de la expresión son `OOS2005`, sus lecturas están sujetas a la regla de
+flujo, y su etiqueta ya se propaga.
+
+#### Lo que esto cierra
+
+**Tercera vez que la respuesta correcta es quitar** — tras los campos constantes de
+`Function` y el `confidence` de `Resolution`. Y aquí es un documento entero, que es
+exactamente el resultado que **P7** existe para producir:
+
+> Un campo sin esa justificación es un defecto, no una funcionalidad.
+
+v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, dos campos añadidos
+a documentos que ya existen —`expr` y `quality`—, y la resolución de dependencias.
 
 ### 3.2 · `Function`
 
@@ -177,14 +215,18 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
 
 ## 6. Decisiones abiertas
 
-1. **`Rule` frente a SHACL** — la pregunta P7 de §3.1. Bloquea escribir `Rule`.
-2. **El vocabulario cerrado de endosantes.** ¿Cuáles, y cómo se verifica cada uno al
-   compilar sin reloj y sin red?
-3. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
-   cada una es una lectura sujeta a la regla de flujo.
-4. **`maxDepth` en Cedar** — materializar la profundidad, o aceptar el cierre transitivo.
+1. **El vocabulario cerrado de endosantes.** Hoy son dos —`attested` y `humanApproval`— y
+   falta escribir cómo se verifica una atestación al compilar, sin reloj y sin red.
+2. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
+   cada una es una lectura sujeta a la regla de flujo. Ahora incluye también las que
+   `Entity.expr` necesite (§3.1).
+3. **`maxDepth` en Cedar** — materializar la profundidad, o aceptar el cierre transitivo.
 
-**Cerrada desde que se escribió el núcleo:** *qué es certificable*. La partición está en
-`01-efectos` §4.1 — la regla de integridad es L0 porque se escribe sobre la función y no
-sobre quien la invoca; la invocación es L3 y es de Cedar. La suite solo puede crecer con
-lo primero.
+### Cerradas
+
+**`Rule` frente a SHACL** (§3.1). La respuesta fue **retirar el documento**: `constraint` es
+`quality` de ODCS, que ya perfilamos, e `inference` es un campo de `Entity`.
+
+**Qué es certificable** ([`01-efectos`](01-efectos.md) §4.1). La regla de integridad es L0
+porque se escribe sobre la función y no sobre quien la invoca; la invocación es L3 y es de
+Cedar. La suite solo puede crecer con lo primero.

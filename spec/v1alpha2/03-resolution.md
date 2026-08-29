@@ -9,9 +9,9 @@ Aplica el régimen de [`01-efectos`](01-efectos.md).
 
 De los tres efectos de v1alpha2, este es el peligroso.
 
-`Rule` cambia el contenido y `Function` cambia el mundo; los dos son reversibles y los dos
-dejan rastro. `Resolution` decide que **dos registros son la misma cosa**, y eso no es un
-cambio sobre la ontología: es un cambio sobre a qué se refieren todos los demás.
+Una derivación cambia el contenido y una `Function` cambia el mundo; los dos son reversibles
+y los dos dejan rastro. `Resolution` decide que **dos registros son la misma cosa**, y eso no
+es un cambio sobre la ontología: es un cambio sobre a qué se refieren todos los demás.
 
 > **Fusionar dos entidades fusiona sus etiquetas.**
 
