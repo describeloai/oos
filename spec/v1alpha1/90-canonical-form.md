@@ -117,13 +117,35 @@ esas ambigüedades **DEBE** sobrevivir a la normalización.
 
 ### 4.1 · Números
 
-Un valor numérico con precisión decimal significativa —importes monetarios, umbrales—
-**DEBE** representarse como **cadena** en la forma canónica, no como número JSON, para
-evitar la pérdida de precisión del punto flotante binario.
+Un valor numérico **con parte fraccionaria DEBE representarse como cadena** en la forma
+canónica, y por tanto **DEBE escribirse entrecomillado en el origen**. Un decimal sin
+comillas es un error de conformidad (`OOS6003`).
+
+```yaml
+value: "68400.50"      # correcto
+value: 68400.50        # OOS6003
+```
 
 ```json
 {"amount": "1234.50", "currency": "EUR", "precision": 2}
 ```
+
+Los enteros no están afectados: son exactos y no tienen dígitos que perder.
+
+**La regla es deliberadamente uniforme, y no dice «cuando se pierda precisión».** Una
+formulación permisiva —«solo si el valor es inexacto en binario»— sería peor por dos
+razones:
+
+1. Obligaría a cada implementación a coincidir *exactamente* en qué decimales pierden
+   precisión, que es justo la divergencia que esta sección existe para impedir.
+2. Dejaría pasar `68400.50`, cuyo valor **sí** es exacto en binario y cuyo cero final se
+   pierde igual — y con él la escala que `Money<EUR, 2>` declara.
+
+El problema de fondo no es el valor, es que **un decimal escrito sin comillas no tiene
+forma canónica**: lo que sobreviva depende del parser de quien lo lea. RFC 8785 fija cómo
+se serializa el resultado, pero no puede devolver los dígitos que el parseo ya perdió.
+
+El arreglo es una comilla.
 
 ---
 

@@ -24,14 +24,14 @@ spec:
     # no requiere leer un solo valor de negocio más allá de la propia clave.
     - id: tax-id-exact
       type: deterministic
-      confidence: 1.0
+      confidence: "1.0"
       match:
         - { salesforce_crm: "Account.VAT_Number__c", postgres_erp: "erp.customer.tax_id" }
       normalize: [trim, upper, strip_non_alphanumeric]
 
     - id: duns-exact
       type: deterministic
-      confidence: 1.0
+      confidence: "1.0"
       match:
         - { salesforce_crm: "Account.DunsNumber", postgres_erp: "erp.customer.duns" }
 
@@ -46,10 +46,10 @@ spec:
         approvalRef: "PR #1842"
         reviewEvery: 180d             # caduca: hay que revalidarla
       features:
-        - { property: legalName,      method: jaro_winkler, weight: 0.45 }
-        - { property: postalAddress,  method: normalized_levenshtein, weight: 0.35 }
-        - { property: country,        method: exact, weight: 0.20 }
-      threshold: 0.92
+        - { property: legalName,      method: jaro_winkler, weight: "0.45" }
+        - { property: postalAddress,  method: normalized_levenshtein, weight: "0.35" }
+        - { property: country,        method: exact, weight: "0.20" }
+      threshold: "0.92"
       onAmbiguity: FLAG_FOR_REVIEW    # nunca fusiona a ciegas
       maxCandidatesPerRecord: 5
 

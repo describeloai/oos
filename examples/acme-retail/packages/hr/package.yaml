@@ -66,7 +66,7 @@ spec:
     # Todo lo demás viaja sin interpretar: OOS no lo evalúa, así que no lo tipa.
     properties:
       - property: availability
-        value: 99.9
+        value: "99.9"
         unit: percent
       - property: frequency
         value: 15
