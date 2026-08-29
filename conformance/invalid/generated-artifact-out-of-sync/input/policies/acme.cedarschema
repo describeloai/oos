@@ -1,8 +1,13 @@
 // GENERADO POR ORE - NO EDITAR
 // Generado cuando el reticulo solo tenia [none, low, high].
-namespace Acme {
-    entity Label;
-    //   gdpr.sensitivity : none | low | high      <- falta `critical`
-    entity EntityType in [Label];
-    entity Property in [Label, EntityType];
-}
+// Alguien anadio `critical` al reticulo y no regenero este fichero.
+
+entity Label enum ["gdpr.sensitivity:none", "gdpr.sensitivity:low", "gdpr.sensitivity:high", "oos.maturity:STABLE", "oos.maturity:REVIEWED", "oos.maturity:DRAFT", "oos.maturity:DEPRECATED"];
+entity Role;
+entity Employee;
+entity Property in [Label, Employee];
+
+action "read" appliesTo { principal: [Role], resource: [Employee, Property] };
+action "aggregate" appliesTo { principal: [Role], resource: [Employee, Property] };
+action "export" appliesTo { principal: [Role], resource: [Employee, Property] };
+action "invoke" appliesTo { principal: [Role], resource: [Employee, Property] };
