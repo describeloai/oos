@@ -1,6 +1,6 @@
 # `Resolution` — el efecto sobre la identidad
 
-**Estado:** borrador. `spec/v1alpha1/` sigue mandando.
+**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
 Aplica el régimen de [`01-efectos`](01-efectos.md).
 
 ---

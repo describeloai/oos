@@ -1,6 +1,6 @@
 # El régimen de efectos
 
-**Estado:** borrador. `spec/v1alpha1/` sigue mandando.
+**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
 
 El núcleo de v1alpha2. Todo lo demás de esta versión —`Function`, `Resolution`, y los dos
 campos que `Entity` gana— se deriva de lo que aquí se decide.
@@ -344,3 +344,7 @@ Escrito aquí para que no haya que descubrirlo:
 - **Que la integridad de una fuente externa sea la que dice.** Etiquetar una tabla como
   `attested` es una afirmación de quien la etiqueta. El compilador comprueba que las
   etiquetas se respeten, no que sean verdad.
+- **Que una regla se aplique sola a lo que se clasifique mañana.** Este régimen gobierna lo
+  que se **causa**. Que una afirmación se sostenga sobre todo lo que case un predicado —y
+  que el permiso pueda resolverse en una máscara en vez de en un `deny`— es otra cosa, y es
+  v1alpha3 ([`00-scope`](00-scope.md) §7).

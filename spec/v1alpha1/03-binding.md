@@ -24,7 +24,7 @@ violaciones `OOS4xxx` se detectan.
 |---|---|
 | Infrastructures & Servers | **obligatoria** → `datasourceRef` |
 | `physicalType` / `physicalName` de propiedad | **obligatoria** → el mapeo |
-| Data Quality | **excluida** → `Rule`, aplazado |
+| Data Quality | **excluida** → `quality` de ODCS `type: sql`, readmitida en v1alpha2 |
 
 ### 2.1 · Restricciones adicionales
 

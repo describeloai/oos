@@ -1,7 +1,8 @@
 # OOS v1alpha2 — alcance
 
-**Estado:** borrador de alcance. Ningún documento de esta carpeta es normativo todavía.
-`spec/v1alpha1/` sigue mandando.
+**Estado:** **alcance cerrado — primera versión.** Los tres documentos están escritos y su
+borrador de conformidad va 14/14. Lo que aquí se cierra es el **diseño**, no la ratificación:
+`spec/v1alpha1/` sigue siendo la versión normativa.
 
 | | |
 |---|---|
@@ -32,7 +33,7 @@ Los tres documentos de v1alpha2 son, los tres, sobre lo contrario:
 |---|---|
 | `Function` | el **mundo** — escribe en una fuente física |
 | `Resolution` | la **identidad** — decide que dos registros son uno |
-| ~~`Rule`~~ | el **contenido** — **retirado como documento** (§3.1) |
+| `Entity.expr` | el **contenido** — deriva hechos que no están en ninguna tabla (§3.1) |
 
 > **v1alpha1 gobierna lo que se puede saber. v1alpha2 gobierna lo que se puede causar.**
 
@@ -69,7 +70,7 @@ conjunta evita.
 
 ## 3. Los documentos
 
-### 3.1 · `Rule` — retirado como documento
+### 3.1 · `Rule` — retirado como documento, y por qué solo a medias
 
 **La pregunta P7 tiene respuesta, y la respuesta es que este documento no debe existir.**
 
@@ -117,13 +118,37 @@ Así que `Entity.properties.<nombre>` gana `expr` junto a `derivedFrom`, y no ha
 más: las referencias de la expresión son `OOS2005`, sus lecturas están sujetas a la regla de
 flujo, y su etiqueta ya se propaga.
 
-#### Lo que esto cierra
+#### Lo que esto cierra — y lo que no
 
 **Tercera vez que la respuesta correcta es quitar** — tras los campos constantes de
 `Function` y el `confidence` de `Resolution`. Y aquí es un documento entero, que es
 exactamente el resultado que **P7** existe para producir:
 
 > Un campo sin esa justificación es un defecto, no una funcionalidad.
+
+Pero `Rule` planteaba **dos** preguntas independientes, y esta respuesta contesta una:
+
+| | Pregunta | Respuesta |
+|---|---|---|
+| **vocabulario** | ¿cómo se escribe una restricción? | ODCS `quality`, no SHACL — **cerrado aquí** |
+| **localidad** | ¿sobre qué se aplica, y quién responde por ella? | **no la contesta este documento** |
+
+La segunda quedó contestada por omisión —*«inline, colgando de la propiedad»*— y esa
+respuesta no se sostiene. **Una regla inline enumera**: para cubrir cuatrocientas propiedades
+clasificadas hay que escribirla cuatrocientas veces, y una propiedad que se clasifique mañana
+queda fuera sin que nadie se entere.
+
+Ya resolvimos ese problema una vez, en el otro lado del sistema. La proyección a esquema
+Cedar existe precisamente para que una política diga
+`resource in Label::"gdpr.sensitivity:high"` **en lugar de enumerar propiedades**, y por eso
+una entidad nueva queda gobernada el día que se etiqueta. Que la autorización apunte por
+clasificación y la restricción enumere es una asimetría, y las asimetrías de este proyecto
+han resultado ser defectos.
+
+Cerrarla exige una primitiva que hoy no existe —**un predicado de objetivo sobre el
+retículo**— que toca el retículo, Cedar y la regla de flujo a la vez. No cabe aquí sin
+reescribir la proyección Cedar antes de haber ejecutado nunca una `Function` contra una base
+de datos real. **Es el núcleo de v1alpha3** (§7).
 
 v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, dos campos añadidos
 a documentos que ya existen —`expr` y `quality`—, y la resolución de dependencias.
@@ -221,12 +246,89 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
    cada una es una lectura sujeta a la regla de flujo. Ahora incluye también las que
    `Entity.expr` necesite (§3.1).
 3. **`maxDepth` en Cedar** — materializar la profundidad, o aceptar el cierre transitivo.
+   Es una pregunta de la capa de política: se decide con v1alpha3 (§7).
 
 ### Cerradas
 
 **`Rule` frente a SHACL** (§3.1). La respuesta fue **retirar el documento**: `constraint` es
-`quality` de ODCS, que ya perfilamos, e `inference` es un campo de `Entity`.
+`quality` de ODCS, que ya perfilamos, e `inference` es un campo de `Entity`. Cierra el
+**vocabulario** y deja abierta la **localidad**, que pasa a v1alpha3 (§7).
 
 **Qué es certificable** ([`01-efectos`](01-efectos.md) §4.1). La regla de integridad es L0
 porque se escribe sobre la función y no sobre quien la invoca; la invocación es L3 y es de
 Cedar. La suite solo puede crecer con lo primero.
+
+---
+
+## 7. Lo que esto abre — v1alpha3, la capa de gobierno
+
+Se registra aquí porque sale de **cerrar** esta versión, no de una idea nueva. El entregable
+se define en la siguiente iteración; esto solo lo acota.
+
+### 7.1 · Las cinco naturalezas de una regla
+
+Toda regla aplicable sobre una superficie ontológica es una de estas cinco, y se distinguen
+por **lo que producen al dispararse**:
+
+| | Naturaleza | Produce | Forma | Se decide en |
+|---|---|---|---|---|
+| **1** | restricción | un veredicto | `∀x∈T . φ(x)` | L0 la forma · L2 los datos |
+| **2** | derivación | contenido nuevo | `∀x∈T . p(x) = e(x)` | L2 |
+| **3** | autorización | un permiso sobre una acción | `∀(p,a,r) . permit ⟸ φ` | L3 |
+| **4** | **obligación** | **otra acción que debe ocurrir** | `∀x∈T . φ(x) ⟹ □ψ` | L3 + tiempo |
+| **5** | transformación | el mismo dato, representado distinto | `∀x∈T . x ↦ f(x)` | L2 / L3 |
+
+Cuatro de las cinco tienen la misma forma —**cuantificador y cuerpo**—, y por eso **un solo
+mecanismo de objetivo las sirve a las cuatro**. La cuarta es de otra familia: introduce un
+operador modal —*debe llegar a ocurrir*— y con él el tiempo, aplazado desde v1alpha1.
+
+Y una precisión de naturaleza que evita el error de encuadre: **una regla no es un verbo.**
+Los verbos son `Function` y `Resolution`, y un verbo cambia el mundo. Una regla no cambia
+nada: **sostiene**. Y lo que la hace un *paquete* no es la sintaxis:
+
+> **Un paquete de reglas es un sujeto de autoridad.**
+
+Sus reglas se agrupan no porque se parezcan, sino porque **responde la misma persona por
+todas y entran y salen juntas**. Eso es lo que una regla inline no puede ser: tiene por
+construcción el mismo dueño que la entidad, y en un entorno regulado el responsable de
+cumplimiento **tiene que poder restringir la ontología sin poder editarla**.
+
+### 7.2 · Lo que ya tenemos sin saberlo
+
+Dos hallazgos que hacen de v1alpha3 una derivación y no una invención:
+
+> **Un desclasificador es una máscara.**
+
+v1alpha1 define el desclasificador como *la única forma legítima de bajar una etiqueta*.
+Enmascarar —`ssn → últimos 4`— es exactamente eso. El requisito número uno de todo comprador
+regulado **ya está inventado aquí con otro nombre**, y nunca se conectó con Cedar. La capa de
+política no necesita un concepto nuevo: necesita **una arista** —que una política se resuelva
+en un desclasificador en vez de en un `deny`—. Y como el desclasificador declara qué etiqueta
+produce, el efecto de la máscara sobre el flujo **es computable al compilar**, que es justo lo
+que a las máscaras de los catálogos les falta.
+
+> **Una obligación es una `Function`.**
+
+XACML murió de sus obligaciones: nombraban deberes que ningún runtime sabía ejecutar. En
+v1alpha1 una obligación habría sido prosa. Ahora que **los verbos existen**, un deber es una
+referencia a uno —con su integridad computada, sus precondiciones y su endoso—. La capa de
+política estaba esperando a que existieran los verbos, y esa es la razón de que esto venga
+después y no antes.
+
+### 7.3 · El alcance, sin especificar
+
+| | |
+|---|---|
+| **el predicado de objetivo** | la primitiva de la que dependen las otras cuatro piezas |
+| **el conjunto de aserciones** | objetivo + cuerpo ODCS + dueño + versión. Es una **dependencia**, como el paquete de clasificación |
+| **la máscara** | una política que se resuelve en desclasificador. Sin documento nuevo |
+| **la obligación** | `φ(x) ⟹ Function`. Decible ya; exigible cuando entre lo temporal |
+| **un código** | un objetivo que **no casa con nada** es casi siempre una etiqueta mal escrita o un retículo que cambió |
+
+Con lo que el arco de versiones queda dicho:
+
+| | |
+|---|---|
+| **v1alpha1** | qué se puede **saber** |
+| **v1alpha2** | qué se puede **causar** |
+| **v1alpha3** | **qué debe sostenerse — y quién responde** |

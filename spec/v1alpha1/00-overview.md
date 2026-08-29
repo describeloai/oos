@@ -170,6 +170,11 @@ relaciones se declaran dentro de `Entity`), `Rule`, `Function`, `Test`, `Resolut
 **resolución de dependencias** — cuyo campo `dependencies`, no obstante, **DEBE** existir
 en la gramática desde v1alpha1 ([04 · §6](04-flow.md)).
 
+> De esa lista, v1alpha2 cierra alcance con `Function` y `Resolution`. **`Rule` quedó
+> retirado como documento** —`constraint` es `quality` de ODCS e `inference` es un campo de
+> `Entity`— y `Test` sigue aplazado, por ser L2
+> ([`spec/v1alpha2/00-scope.md`](../v1alpha2/00-scope.md) §3.1).
+
 ---
 
 ## 5. Principios de diseño

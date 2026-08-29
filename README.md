@@ -186,6 +186,7 @@ consumidor externo más.
 
 ```
 spec/v1alpha1/     documentos normativos
+spec/v1alpha2/     alcance cerrado — NO normativo todavía
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
@@ -206,9 +207,27 @@ docs/vision/       ontologías escritas contra el lenguaje completo — NO valid
 
 Alcance cerrado de v1alpha1: cinco documentos. `Package` y `Binding` son **perfiles**
 sobre ODCS; `Entity`, `Lattice` y `ConduitPolicy` son **gramática propia** —Ossie es
-objetivo de emisión del bundle, no anfitrión de la entidad (`00-overview` §7.2-bis)—. Las políticas son **Cedar**, no un documento
-OOS. `Rule`, `Function`, `Test`, `Resolution` y la resolución de dependencias quedan
-aplazados.
+objetivo de emisión del bundle, no anfitrión de la entidad (`00-overview` §7.2-bis)—. Las
+políticas son **Cedar**, no un documento OOS.
+
+| | v1alpha2 · alcance cerrado, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha2/00-scope.md) · alcance, la retirada de `Rule`, y lo que abre v1alpha3 | ✅ |
+| [`01-efectos`](spec/v1alpha2/01-efectos.md) · el régimen: eje de integridad, endosante, la regla | ✅ |
+| [`02-function`](spec/v1alpha2/02-function.md) · la superficie de escritura gobernada | ✅ |
+| [`03-resolution`](spec/v1alpha2/03-resolution.md) · el efecto sobre la identidad | ✅ |
+| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **14/14** |
+
+**v1alpha1 gobierna lo que se puede saber; v1alpha2, lo que se puede causar.** Añade los dos
+verbos —`Function` y `Resolution`—, dos campos a documentos que ya existen —`expr` y
+`quality`— y la resolución de dependencias. `Rule` se retiró como documento
+([`00-scope`](spec/v1alpha2/00-scope.md) §3.1). Su suite vive en un árbol aparte y se cuenta
+por separado, para que **73/73 siga queriendo decir lo mismo** cuando este directorio tenga
+cincuenta casos.
+
+`Test` y lo temporal siguen aplazados. La **capa de gobierno** —reglas que apuntan por
+clasificación en vez de enumerar, la máscara y la obligación— es v1alpha3
+([`00-scope`](spec/v1alpha2/00-scope.md) §7).
 
 ---
 
@@ -228,7 +247,7 @@ Ordenado por riesgo retirado, no por capas.
 `capabilities` es un campo que nadie rellena bien y la federación no funciona. Es
 prerrequisito de la segunda fuente de datos, no un lujo posterior.
 
-Detalle, estimaciones y qué queda fuera: [decisiones abiertas](docs/99-decisiones-abiertas.md).
+Detalle, estimaciones y qué queda fuera: [`docs/DESIGN.md` §7](docs/DESIGN.md) — decisiones abiertas.
 
 ---
 

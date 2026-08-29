@@ -44,7 +44,7 @@ De las once secciones de ODCS, este perfil usa cinco.
 | Team · Roles · Support · SLA | opcionales → `spec` |
 | Schema | **excluida** → [`02-entity`](02-entity.md) |
 | Infrastructures & Servers | **excluida** → [`03-binding`](03-binding.md) |
-| Data Quality | **excluida** → `Rule`, aplazado |
+| Data Quality | **excluida** → `quality` de ODCS, readmitida en v1alpha2 |
 | References · Pricing · Custom Properties | transportadas sin interpretar |
 
 ### 2.1 · Fundamentals, campo por campo

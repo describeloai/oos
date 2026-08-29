@@ -68,7 +68,8 @@ Mapa de cuándo se completa:
 |---|---|
 | **v1alpha1** | queda definido y comprobable en **L0** |
 | **ORE fases 0–3** | queda **demostrado una vez** por la implementación de referencia |
-| **v1alpha2** | `Rule`, `Function`, `Resolution` y resolución de dependencias → «ejecutable» cubre L2 y L3, y «autosuficiente» se cierra |
+| **v1alpha2** | `Function`, `Resolution` y la resolución de dependencias → «ejecutable» cubre L2 y L3, y «autosuficiente» se cierra |
+| **v1alpha3** | la capa de gobierno: predicado de objetivo, conjunto de aserciones, máscara y obligación |
 | **v1beta1** | compatibilidad de la propia spec, suite extraída del texto, arnés de runtime para L1 |
 | **segunda implementación** | el claim deja de ser intención y pasa a ser hecho |
 
@@ -324,6 +325,13 @@ Lo que sobrevive, en orden de fuerza:
 Matiz obligado: Foundry tiene **virtual tables** —punteros a sistemas externos sin
 ingesta—, así que *"te obliga a ingerir todo"* ya no es exacto y no debe usarse.
 
+Y un matiz de vocabulario que evita malentendidos al leer su documentación: **lo que Foundry
+llama `rule` es lo que aquí se llama `Function`.** Sus doce reglas de *action type* son
+`create object`, `modify object`, `delete link` y demás, más webhook, notificación y
+*schedule*. Lo que aquí es una regla —una afirmación que debe sostenerse— allí son
+*submission criteria*, y van **enumeradas dentro de cada action type**: sin objetivo, igual
+que en ODCS.
+
 Y donde Foundry gana, sin adornos: quince años de campo, sistema completo en vez de capa,
 integración industrial, capa de aplicaciones, y el foso que no es tecnológico — los
 Forward Deployed Engineers. **Competimos con un producto contra un servicio.**
@@ -370,6 +378,15 @@ especificación.**
 
 Las capas semánticas (dbt, Cube, LookML) son métricas sobre un warehouse: sin grafo, sin
 inferencia, sin políticas ejecutables, atadas a un motor.
+
+Un aviso que conviene tener escrito porque va contra el instinto: **apuntar por clasificación
+en vez de enumerar no es una idea nuestra.** Unity Catalog tiene en GA el filtrado de filas y
+el enmascarado de columnas por etiqueta gobernada —`has_tag_value('pii','ssn')`— bajo el lema
+*«Govern Once, Protect Everywhere»*, y Snowflake y BigQuery tienen lo equivalente. El mercado
+convergió ahí. Lo que sigue siendo nuestro es **dónde vive** —en el artefacto versionado, no
+en el catálogo de un motor—, que la aplicación sea decidible al compilar, y que la máscara
+**declare qué clasificación produce**: la de un catálogo es opaca al gobierno, se evalúa en
+tiempo de consulta y nadie sabe qué etiqueta sale por el otro lado.
 
 ### 5.4 · Cuellos de botella donde esto paga
 
@@ -485,9 +502,9 @@ medio, y eso se filtra a las decisiones en el año cinco.
 |---|---|
 | **Motor de consulta federada** | Está el *qué* (cero copia) y no el *cómo*: sin planificador ni política de pushdown, "cero copia" es una intención. En Rust, **Apache DataFusion** es la respuesta evidente |
 | **Frescura del índice** | CDC · sondeo con marca de agua · versionado nativo Iceberg/Delta. Lo más caro del runtime |
-| **Writeback** | Qué garantías hay cuando una acción toca Postgres y Salesforce a la vez. La decisión con más consecuencias del proyecto |
-| **Resolución de identidad** | Determinista (clave natural) encaja nativamente en el índice; probabilística exige materialización declarada. Ventaja sobre Foundry si se hace bien: allí vive en pipelines opacos, aquí sería código revisado con umbral explícito |
-| **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables |
+| **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
+| **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
+| **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
 
 ### 7.2 · Bloquean la primera venta enterprise
 
@@ -515,7 +532,7 @@ medio, y eso se filtra a las decisiones en el año cinco.
 |---|---|
 | **Marca del namespace** | `node-ecosystems` para un motor Rust manda la señal equivocada. Decidir antes de publicar artefactos |
 | **Qué NO se construye** | Foundry entrega apps operativas. *"Somos la capa semántica, tus apps las construyes con lo que ya usas"* es mejor respuesta que un intento a medias — pero hay que decirla en voz alta |
-| **`Rule`, `Function`, `Test`, `Resolution`** | Aplazados de v1alpha1. `Function` arrastra `autonomy`, que es la pieza que desbloquea la IA agéntica |
+| **`Test`** | El único que queda de la lista original. `Function` y `Resolution` cierran alcance en v1alpha2 —y `Function` arrastra la `autonomy` que desbloquea la IA agéntica—; `Rule` se **retiró** como documento |
 
 ### 7.5 · Cerradas
 

@@ -1,7 +1,8 @@
 # Suite de conformidad — v1alpha2
 
-**Borrador.** Certifica el régimen de efectos de
-[`spec/v1alpha2/`](../../spec/v1alpha2/), que **no es normativo todavía**.
+**Borrador — 14/14.** Certifica el régimen de efectos de
+[`spec/v1alpha2/`](../../spec/v1alpha2/), cuyo **alcance está cerrado** y que **no es
+normativo todavía**.
 
 ---
 
@@ -18,8 +19,8 @@ directorio tenga cincuenta casos.
 
 ## Qué afirma
 
-Un caso por código de la familia `OOS7xxx`, más el `accept` que impide que la suite
-distinga mal:
+Un caso por **código activo** de la familia `OOS7xxx`, más los `accept` que impiden que la
+suite distinga mal:
 
 | Caso | Código | Qué certifica |
 |---|---|---|
@@ -33,10 +34,24 @@ distinga mal:
 | `invalid/effect-on-derived-property` | `OOS7006` | efecto sobre una propiedad `derivedFrom` |
 | `invalid/lattice-join-contradicts-axis` | `OOS7007` | `join` contradiciendo el `axis` |
 | `invalid/effects-across-two-datasources` | `OOS7008` | efectos sobre dos fuentes físicas |
+| `valid/resolution-deterministic-key-only` | — | una resolución determinista no instancia ningún conducto |
+| `invalid/probabilistic-without-conduit` | `OOS7009` | emparejar a escala **es** un conducto |
+| `invalid/probabilistic-claims-top-integrity` | `OOS7011` | una coincidencia probable no produce un hecho |
+| `valid/probabilistic-endorsed-reaches-top` | — | el techo se levanta con un endoso incondicional |
 
-`OOS7002` tiene dos casos porque tiene dos causas que se confunden con facilidad: **no
+**`OOS7010` no aparece porque está retirado**
+([`03-resolution`](../../spec/v1alpha2/03-resolution.md) §7): existía para `confidence` en
+una estrategia determinista, y al desaparecer el campo del vocabulario el fallo pasó a ser
+una clave desconocida, que ya tiene código. Un código semántico para algo que el esquema
+resuelve estructuralmente es peso muerto.
+
+Dos pares, y los dos por la misma razón. `OOS7002` tiene dos casos porque tiene dos causas que se confunden con facilidad: **no
 tener endoso** y **tener uno que no cuenta**. Una implementación puede acertar la primera y
-fallar la segunda, y el caso que las separa es el que hace normativa la distinción.
+fallar la segunda, y el caso que las separa es el que hace normativa la distinción. Y
+`probabilistic-claims-top-integrity` va emparejado con
+[`probabilistic-endorsed-reaches-top`](valid/probabilistic-endorsed-reaches-top/) invirtiendo
+el argumento: **un techo que no se puede levantar no es un techo, es una prohibición**, y el
+caso negativo por sí solo no distingue las dos cosas.
 
 ## El caso que hay que leer primero
 

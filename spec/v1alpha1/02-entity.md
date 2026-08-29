@@ -62,8 +62,8 @@ Cada una existe porque una pieza concreta de la maquinaria la necesita. No hay u
 |---|---|---|
 | Columna física, tabla, expresión SQL | `Binding` | §1.1 |
 | Reglas de acceso | Cedar | la política decide; la entidad solo declara qué hay |
-| Métricas y agregados | `Rule`, aplazado | son cómputo, no estructura |
-| Restricciones de calidad | `Rule`, aplazado | ídem |
+| Métricas y agregados | `expr`, v1alpha2 | son cómputo, no estructura |
+| Restricciones de calidad | `quality` de ODCS, v1alpha2 | ídem |
 | Estructuras anidadas | aplanadas en el binding | §4.4 |
 | Consultas y vistas | — | una entidad sin identidad estable es una vista, y OOS no las modela en v1alpha1 |
 
@@ -204,8 +204,8 @@ totalCompensation:
 
 El compilador la usa para propagar etiquetas —`join(critical, critical) = critical`— y para
 computar el linaje. **No calcula el valor**: una propiedad derivada **DEBE** tener binding
-igual que cualquier otra, porque el cálculo ocurre aguas arriba o en un `Rule`, que está
-aplazado.
+igual que cualquier otra, porque el cálculo ocurre aguas arriba o en el `expr` que añade
+v1alpha2.
 
 Decirlo así evita la tentación de interpretar `expression`, que exigiría un motor de
 consultas dentro del compilador y rompería su pureza.

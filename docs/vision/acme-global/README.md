@@ -13,7 +13,8 @@
 | Construcción | Estado |
 |---|---|
 | `Entity`, `Binding`, `Package`, `Lattice`, `ConduitPolicy`, `OntologyConfig` | **v1alpha1.** Ver `examples/acme-retail` |
-| `Resolution`, `Policy`, `Relation`, `RelationSet`, `RuleSet`, `Function`, `TestSuite` | **No existen.** v1alpha1 fija cinco documentos, ni uno más: las políticas son Cedar y las reglas están aplazadas |
+| `Function`, `Resolution` | **v1alpha2**, con otra forma. Escritos en [`spec/v1alpha2/`](../../../spec/v1alpha2/); lo de aquí es anterior y no valida |
+| `Policy`, `Relation`, `RelationSet`, `RuleSet`, `TestSuite` | **No existen.** Las políticas son Cedar; `RuleSet` se **retiró** (`constraint` es `quality` de ODCS, `inference` es `Entity.expr`); `Test` sigue aplazado |
 | `spec.identity`, `spec.temporality`, `spec.governedBy`, `spec.complianceFrameworks`, `spec.entities`, `metadata.status` | Vocabulario **pre-especificación**, anterior a que los tres perfiles se fijaran |
 
 Cada fila de la segunda categoría es material para el **P7**: si alguna de esas
@@ -165,8 +166,10 @@ un despliegue que un CISO aprueba.
 
 ### 7 · Conocimiento que no existe en ninguna tabla — 🔭 hoja de ruta
 
-> **`kind: RuleSet` no existe.** `02-entity` §1.4 aplaza métricas, agregados y reglas de
-> calidad a un `Rule` que v1alpha1 no define: son cómputo, no estructura.
+> **`kind: RuleSet` no existe, y `Rule` tampoco llegó a existir.** v1alpha2 lo retiró como
+> documento: una restricción de calidad es `quality` de ODCS y una inferencia es
+> `Entity.expr` ([`spec/v1alpha2/00-scope.md`](../../../spec/v1alpha2/00-scope.md) §3.1).
+> Que *apunten por clasificación* en vez de enumerar es v1alpha3 (§7 del mismo documento).
 
 ```yaml
 - id: concentration-risk

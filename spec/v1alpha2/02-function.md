@@ -1,6 +1,6 @@
 # `Function` — la superficie de efecto
 
-**Estado:** borrador. `spec/v1alpha1/` sigue mandando.
+**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
 Aplica el régimen de [`01-efectos`](01-efectos.md).
 
 ---
@@ -245,3 +245,7 @@ referencias no necesitaron una sola regla nueva.
 - **`tests`** — va con `Test`, que es L2 y por tanto no certificable por una suite de
   ficheros.
 - **Compensaciones y sagas.** Ver §5.2. La ausencia es la posición.
+- **La obligación.** Un deber —*«si ocurre esto, tiene que ocurrir aquello»*— es una
+  referencia a una función, y por tanto **ya es decible desde que este documento existe**.
+  Lo que falta es el operador temporal —*debe llegar a ocurrir*— y el objetivo sobre el que
+  se enuncia. Va con v1alpha3 ([`00-scope`](00-scope.md) §7.2).
