@@ -289,8 +289,10 @@ de un documento normativo; hasta entonces vive donde se define.
 | `OOS7008` | efectos de una función sobre más de una fuente física | [`02-function`](02-function.md) §5.2 |
 
 | `OOS7009` | estrategia `probabilistic` sin conducto declarado | [`03-resolution`](03-resolution.md) §2 |
-| `OOS7010` | `confidence` declarada en una estrategia `deterministic` | §4 |
 | `OOS7011` | integridad por encima del techo que la estrategia puede producir | §3 |
+
+`OOS7010` fue registrado y **retirado** al escribir el esquema de `Resolution`: existía para
+un campo, `confidence`, que resultó no significar nada en ninguna estrategia.
 
 Los cuatro últimos no salieron de este documento sino de escribir los otros dos, al
 convertir campos declarados en reglas comprobables: `transaction.scope` y `confidence` eran

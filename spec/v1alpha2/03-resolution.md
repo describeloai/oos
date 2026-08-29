@@ -42,7 +42,12 @@ probabilístico es un conducto**, y como tal exige autorización declarada.
 
 El borrador de `docs/vision/` lo escribía como `requires.materialization: cache`, que se lee
 como una opción de rendimiento. No lo es: **es la declaración del conducto**, y por eso se
-renombra.
+renombra a `conduit`.
+
+Y la clase es `materialization`, del vocabulario cerrado que ya existe — no una clase nueva.
+Un emparejador que compara nombres a escala **tiene que sostener esos nombres para
+compararlos**, así que es una materialización en el sentido literal. Que encaje sin ampliar
+el vocabulario es la señal de que el conducto estaba bien definido desde v1alpha1.
 
 ```yaml
 strategies:
@@ -54,7 +59,7 @@ strategies:
 
   - id: fuzzy-name-address
     type: probabilistic
-    conduit: matching.probabilistic     # ← no es rendimiento: es el conducto
+    conduit: materialization.matching   # ← no es rendimiento: es el conducto
     threshold: "0.92"
     weights:
       - { property: legalName,     method: jaro_winkler,            weight: "0.45" }
@@ -77,8 +82,13 @@ Una estrategia probabilística **infiere**. Por bien calibrada que esté, produc
 conclusión, no una observación. Y la integridad de una conclusión no puede superar a la de
 una inferencia:
 
-> Una identidad resuelta por una estrategia `probabilistic` **NO DEBE** declararse por
-> encima del nivel de inferencia del retículo, sea cual sea su `threshold`.
+> Una entidad resuelta por una estrategia `probabilistic` **NO DEBE** declarar integridad en
+> el **nivel máximo** de un retículo, sea cual sea su `threshold`.
+
+El techo es «no el máximo» y no un nivel con nombre, y eso es deliberado: obligaría a que
+todo retículo de integridad declarase cuál de sus niveles significa «inferido», que es
+vocabulario nuevo para decir algo que la posición ya dice. **Sea lo que sea la cima de tu
+retículo, una conjetura no es eso.**
 
 **`threshold: "0.99"` sigue sin ser un hecho.** Es la misma frase que `meet` dice en el otro
 sitio —un cómputo no es más fiable que su entrada menos fiable— aplicada a la propia
@@ -90,9 +100,10 @@ resuelta probabilísticamente **hereda ese techo**, y si su destino exige más, 
 el que crees no es una operación con una integridad distinta de esa probabilidad, y ahora
 el compilador lo dice.
 
-Elevar ese techo exige un endoso, que es la única forma declarada de decir *me hago
-responsable de esta fusión*. Y en resolución de identidad ese endoso tiene nombre propio en
-la práctica: alguien mira los dos registros y decide.
+Elevar ese techo exige un endoso —`endorsements`, el mismo mecanismo de `02-function` §6—,
+que es la única forma declarada de decir *me hago responsable de esta fusión*. Y en
+resolución de identidad ese endoso tiene nombre propio en la práctica: alguien mira los dos
+registros y decide.
 
 ---
 
@@ -107,8 +118,18 @@ significa 1.0** — si el NIF coincide, coincide. Declararlo es un campo derivab
 declarable (**P2**), y además abre la puerta a `confidence: "0.8"` en una estrategia
 determinista, que no significa nada.
 
-`confidence` **NO DEBE** aparecer en una estrategia `deterministic` (`OOS7010`). En una
-`probabilistic`, el valor que sí significa algo es `threshold`, y significa otra cosa: el
+**Y escribir el esquema lo llevó más lejos: `confidence` no existe en ninguna estrategia.**
+
+La primera redacción le dio código propio —`OOS7010`— para el caso determinista. Al escribir
+el esquema quedó claro que el campo tampoco significa nada en el probabilístico: lo que se
+quería decir con él —*cuánta confianza merece lo que produce esta estrategia*— es
+exactamente lo que dice el eje de integridad en §3, y **dos formas de decir lo mismo acaban
+con dos semánticas**. Es el hallazgo del endosante otra vez, en pequeño.
+
+Así que `confidence` desaparece del vocabulario y el error es estructural: `OOS1005`, clave
+desconocida, igual que `labels` en una `Function`. `OOS7010` queda **retirado**.
+
+Lo que sí significa algo en una `probabilistic` es `threshold`, y significa otra cosa: el
 corte por debajo del cual no se fusiona.
 
 ---
@@ -153,8 +174,12 @@ un régimen con dos formas de decir *«que lo mire una persona»* acaba con dos 
 | Código | Condición |
 |---|---|
 | `OOS7009` | estrategia `probabilistic` sin `conduit` declarado |
-| `OOS7010` | `confidence` declarada en una estrategia `deterministic` |
 | `OOS7011` | integridad declarada por encima del techo que la estrategia puede producir |
+
+**`OOS7010` está retirado** (§4). Existía para `confidence` en una estrategia determinista;
+al desaparecer el campo del vocabulario, el fallo es una clave desconocida y ya tiene código.
+Un código semántico para algo que el esquema resuelve estructuralmente es peso muerto — y
+retirarlo antes de implementarlo es más barato que después.
 
 Y los que **no** hacen falta, que es lo que dice que el régimen compone: una propiedad
 ponderada cuya etiqueta supera la autorización del conducto es `OOS4002`; una que referencia

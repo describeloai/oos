@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Customer, namespace: customers, labels: { acme.assurance: inferred } }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    customerId: { type: String }
+    taxId:      { type: String }
+    legalName:
+      type: String
+      labels: { gdpr.sensitivity: medium }

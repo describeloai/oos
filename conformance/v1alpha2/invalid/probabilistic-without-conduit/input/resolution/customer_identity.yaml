@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha2
+kind: Resolution
+metadata: { name: CustomerIdentity, namespace: customers }
+spec:
+  entity: customers.Customer
+  sources:
+    - { datasourceRef: salesforce_crm, key: "Account.Id" }
+    - { datasourceRef: postgres_erp,   key: "erp.customer.id" }
+  strategies:
+    - id: fuzzy-name
+      type: probabilistic
+      threshold: "0.92"
+      weights:
+        - { property: legalName, method: jaro_winkler, weight: "1.0" }

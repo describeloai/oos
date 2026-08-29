@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/03-resolution.md#2
+level: L0
+expects: accept
+summary: >
+  Resolucion determinista sobre una clave natural. No lee un solo valor de negocio, luego no
+  instancia ningun conducto y no necesita autorizacion.

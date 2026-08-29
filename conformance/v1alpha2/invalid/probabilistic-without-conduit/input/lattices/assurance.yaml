@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha2
+kind: Lattice
+metadata: { name: assurance, namespace: acme }
+spec:
+  axis: integrity
+  levels: [untrusted, inferred, reviewed, attested]

@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/03-resolution.md#3
+level: L0
+expects: OOS7011
+summary: >
+  Entidad resuelta probabilisticamente declarando el nivel maximo del reticulo de
+  integridad. Un umbral alto sigue sin ser una observacion.

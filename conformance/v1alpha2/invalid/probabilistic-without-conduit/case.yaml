@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/03-resolution.md#2
+level: L0
+expects: OOS7009
+summary: >
+  Estrategia probabilistica sin `conduit`. Comparar nombres a escala es hacer fluir esos
+  nombres hacia algo que los lee.

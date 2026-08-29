@@ -1,0 +1,5 @@
+{
+  "code": "OOS7009",
+  "resolution": "customers.CustomerIdentity",
+  "strategy": "fuzzy-name"
+}

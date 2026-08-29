@@ -1,0 +1,7 @@
+{
+  "code": "OOS7011",
+  "resolution": "customers.CustomerIdentity",
+  "entity": "customers.Customer",
+  "declared": "acme.assurance:attested",
+  "ceiling": "acme.assurance:reviewed"
+}

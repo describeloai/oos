@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/03-resolution.md#3
+level: L0
+expects: accept
+summary: >
+  La misma resolucion probabilistica del caso anterior, con un endoso incondicional. El
+  techo se levanta porque alguien se hizo responsable.
