@@ -8,6 +8,7 @@
 | `00-scope` | **este documento** — qué entra en v1alpha2, qué no, y qué queda abierto |
 | [`01-efectos`](01-efectos.md) | el núcleo — el régimen de efectos, del que se deriva todo lo demás |
 | [`02-function`](02-function.md) | la superficie de efecto — el primer documento que aplica el régimen |
+| [`03-resolution`](03-resolution.md) | el efecto sobre la identidad — el más peligroso de los tres |
 
 ---
 
@@ -123,8 +124,12 @@ El borrador acierta en la distinción que importa:
 
 Esa segunda fila cae directamente de v1alpha1: comparar nombres y direcciones es hacer
 fluir datos etiquetados hacia un emparejador. `requires.materialization: cache` del borrador
-no es una opción de rendimiento — es la declaración del conducto. Renombrarlo para que lo
-diga.
+no es una opción de rendimiento — es la declaración del conducto, y se renombró a `conduit`.
+
+Escrito en [`03-resolution`](03-resolution.md), donde el eje de integridad aporta lo único
+que no era gratis: **una coincidencia probable no produce un hecho.** Por bien calibrada que
+esté, una estrategia probabilística infiere, y `threshold: "0.99"` sigue sin ser una
+observación.
 
 ---
 

@@ -288,9 +288,14 @@ de un documento normativo; hasta entonces vive donde se define.
 | `OOS7007` | `join` declarado incoherente con el `axis` del retículo | 3.1 |
 | `OOS7008` | efectos de una función sobre más de una fuente física | [`02-function`](02-function.md) §5.2 |
 
-`OOS7008` no salió de este documento sino de escribir `Function`, al convertir
-`transaction.scope` de campo declarado en regla comprobable. Es el patrón de siempre: la
-regla aparece cuando se intenta escribir el documento que la necesita.
+| `OOS7009` | estrategia `probabilistic` sin conducto declarado | [`03-resolution`](03-resolution.md) §2 |
+| `OOS7010` | `confidence` declarada en una estrategia `deterministic` | §4 |
+| `OOS7011` | integridad por encima del techo que la estrategia puede producir | §3 |
+
+Los cuatro últimos no salieron de este documento sino de escribir los otros dos, al
+convertir campos declarados en reglas comprobables: `transaction.scope` y `confidence` eran
+constantes disfrazadas de opción. Es el patrón de siempre — la regla aparece cuando se
+intenta escribir el documento que la necesita.
 
 **La numeración no es decorativa.** `7001` y `7002` reproducen deliberadamente la distinción
 de `4001` y `4002`, y por la misma razón: la violación **declarada** la ve cualquiera
