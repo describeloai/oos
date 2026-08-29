@@ -10,8 +10,9 @@ spec:
       type: String
       labels: { acme.assurance: reviewed }
     total:   { type: "Money<EUR, 2>" }
-    taxRate: { type: Int }
+    taxRate: { type: Integer }
     totalWithTax:
       type: "Money<EUR, 2>"
+      # Sin etiqueta: una propiedad derivada que la declarase sería OOS4008,
+      # y eso taparía el error que este caso afirma.
       derivedFrom: [scm.PurchaseOrder.total, scm.PurchaseOrder.taxRate]
-      labels: { acme.assurance: reviewed }

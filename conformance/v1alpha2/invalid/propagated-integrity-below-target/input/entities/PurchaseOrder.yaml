@@ -10,6 +10,6 @@ spec:
       type: String
       labels: { acme.assurance: reviewed }
     supplierScore:
-      type: Int
+      type: Integer
       # Viene de un tercero: nadie ha revisado este numero.
       labels: { acme.assurance: untrusted }
