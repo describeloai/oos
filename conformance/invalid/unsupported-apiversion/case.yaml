@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/00-overview.md#6
+level: L0
+expects: OOS1002
+summary: >
+  apiVersion de una versión que este validador no implementa. Es un fallo de DESPACHO, no de validación.

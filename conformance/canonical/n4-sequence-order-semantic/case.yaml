@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: diverge
+summary: >
+  Un campo declarado como SECUENCIA preserva el orden: dos ordenes distintos NO deben converger.

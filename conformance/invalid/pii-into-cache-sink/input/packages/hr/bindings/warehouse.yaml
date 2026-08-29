@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata:
+  name: warehouse
+  namespace: hr
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: hr_db
+  source: "public.tb_employee"
+  properties:
+    employeeId: "emp_id"
+    email: "txt_email"
+  materialization:
+    mode: cache
+    properties: [employeeId, email]

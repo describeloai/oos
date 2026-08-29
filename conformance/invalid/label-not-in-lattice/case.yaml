@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#3
+level: L0
+expects: OOS4003
+summary: >
+  Etiqueta cuyo nivel no existe en el retículo referenciado. Ejemplo canónico de
+  la frontera esquema/compilador: la forma es válida, la referencia no.

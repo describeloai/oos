@@ -1,0 +1,8 @@
+// GENERADO POR ORE - NO EDITAR
+// Generado cuando el reticulo solo tenia [none, low, high].
+namespace Acme {
+    entity Label;
+    //   gdpr.sensitivity : none | low | high      <- falta `critical`
+    entity EntityType in [Label];
+    entity Property in [Label, EntityType];
+}

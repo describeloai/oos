@@ -1,0 +1,1 @@
+{ "code": "OOS4012", "subject": "hr.Employee.workEmail", "inherited": "gdpr.sensitivity:high", "declared": "gdpr.sensitivity:low", "path": "entities/Employee.yaml" }

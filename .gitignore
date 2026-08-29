@@ -1,0 +1,13 @@
+# Artefactos compilados y caché local del motor. Derivados, reconstruibles y
+# específicos de la máquina: nunca se comprometen (spec/v1alpha1 · anatomía §9).
+.ore/
+
+# Credenciales. El repositorio declara el NOMBRE de la variable de entorno,
+# nunca su valor (OOS2012).
+.env
+.env.local
+.env.*.local
+
+# Sistema
+.DS_Store
+Thumbs.db

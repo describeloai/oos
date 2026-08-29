@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#4.1
+level: L0
+expects: OOS6003
+summary: >
+  Decimal con precisión significativa serializado como número JSON en lugar de cadena. El digest dejaría de ser reproducible entre implementaciones.

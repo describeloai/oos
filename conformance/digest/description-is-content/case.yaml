@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N7
+level: L0
+expects: different
+summary: >
+  Un comentario no cuenta; un campo `description` si. La frontera exacta entre formato y contenido.

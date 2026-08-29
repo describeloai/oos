@@ -1,0 +1,20 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: erp, namespace: hr }
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: hr_db
+  source: "public.tb_employee"
+  properties:
+    employeeId: "emp_id"
+    # Ruta fisica anidada: la emision debe poder RECONSTRUIR la estructura.
+    addressCity:
+      column: "address.city"
+      physicalType: "varchar(120)"
+    baseSalary:
+      column: "base_salary"
+      physicalType: "numeric(18,2)"
+  materialization:
+    mode: index
+    refresh: { every: 15m, strategy: table_version }
+    freshnessSLA: 30m

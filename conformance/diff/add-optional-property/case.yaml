@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.4
+level: L0
+expects: accept
+summary: >
+  Anadir superficie opcional es compatible en los cuatro ejes y exige salto menor, no mayor.

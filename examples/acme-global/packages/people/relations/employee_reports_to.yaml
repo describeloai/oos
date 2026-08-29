@@ -1,0 +1,32 @@
+apiVersion: oos/v1alpha1
+kind: Relation
+
+metadata:
+  name: reportsTo
+  namespace: people
+  status: STABLE
+  description: >
+    La arista que sostiene la política de acceso retributivo. No es documentación
+    de un organigrama: es el mecanismo que decide quién ve qué salario.
+
+spec:
+  from: { entity: people.Employee, cardinality: many }
+  to:   { entity: people.Employee, cardinality: one }
+
+  inverse: manages
+
+  # La jerarquía cambia con el tiempo, y una auditoría retributiva de 2025 debe
+  # evaluarse contra la jerarquía de 2025, no contra la de hoy.
+  temporality:
+    mode: bitemporal
+    inheritsFrom: people.Employee
+
+  constraints:
+    acyclic: true               # nadie se reporta a sí mismo por transitividad
+    maxDepth: 12
+
+  traversal:
+    # Habilita graph.reachable() en las políticas. Sin esto, el predicado de
+    # cadena de mando no es evaluable.
+    indexed: true
+    directions: [forward, reverse]

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N5
+level: L0
+expects: converge
+summary: >
+  Texto identico en NFC y en NFD: bytes de entrada distintos, misma forma canonica.

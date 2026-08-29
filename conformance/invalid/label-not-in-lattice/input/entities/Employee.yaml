@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    email:
+      type: String
+      # `extreme` no está en levels. El esquema JSON no puede saberlo: comprueba
+      # que el valor es un identificador, no que exista en ese retículo.
+      labels: { gdpr.sensitivity: extreme }

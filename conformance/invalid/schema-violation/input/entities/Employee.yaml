@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: []          # minItems: 1 — una clave vacía no identifica nada
+  properties:
+    employeeId: { type: String }

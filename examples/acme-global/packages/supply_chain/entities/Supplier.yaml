@@ -1,0 +1,52 @@
+apiVersion: oos/v1alpha1
+kind: Entity
+
+metadata:
+  name: Supplier
+  namespace: supply_chain
+  status: STABLE
+
+spec:
+  identity:
+    primaryKey: id
+    resolution: supply_chain.SupplierIdentity
+
+  temporality:
+    mode: bitemporal              # la calificación de un proveedor cambia, y auditar
+    validTime: { from: validFrom, to: validTo }   # una decisión de 2025 exige el estado de 2025
+    systemTime: { recorded: recordedAt }
+
+  properties:
+    id:          { type: string, format: uuid }
+    legalName:   { type: string }
+    taxId:       { type: string, tags: ["PII"], classification: CONFIDENTIAL }
+    country:     { type: string, format: iso-3166-1 }
+    tier:        { type: integer, description: "1 = directo, 2 = proveedor del proveedor" }
+
+    certifications:
+      type: array
+      items: { type: string, enum: [ISO9001, ISO14001, SA8000, FSC, RBA] }
+
+    validFrom:  { type: date }
+    validTo:    { type: date, required: false }
+    recordedAt: { type: timestamp }
+
+    # ── Conocimiento derivado: el corazón del valor ────────────────────────────
+    onTimeDeliveryRate:
+      type: float
+      computed: { by: rules/supplier_risk.rules.yaml }
+
+    riskScore:
+      type: float
+      computed: { by: rules/supplier_risk.rules.yaml }
+
+    isConcentrationRisk:
+      type: boolean
+      computed: { by: rules/supplier_risk.rules.yaml }
+      description: >
+        Este proveedor es punto único de fallo para al menos un producto.
+        No existe en ninguna tabla: se deriva recorriendo el grafo.
+
+  complianceFrameworks:
+    - EU_CSDDD                    # diligencia debida en sostenibilidad
+    - EU_Deforestation_Regulation

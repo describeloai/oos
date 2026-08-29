@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Employee
+  namespace: hr
+  description: "Persona con relación laboral en la compañía."
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }

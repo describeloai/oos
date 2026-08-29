@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5006, OOS5018
+summary: >
+  UN cambio clasificado en DOS ejes: rompe a los consumidores y además invalida el índice materializado.

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/lattice.schema.json",
+  "title": "Lattice",
+  "description": "Declara un retículo: un conjunto de etiquetas y su orden parcial.\n\nEs la estructura sobre la que opera todo el análisis de flujo de información. La clasificación de sensibilidad es UNA instancia de este mecanismo, no el mecanismo: añadir una dimensión de gobernanza nueva —residencia de datos, control de exportación, nivel de habilitación— no requiere cambiar la especificación ni el motor, solo declarar otro retículo.\n\nNormativo: spec/v1alpha1/04-flow.md §3",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+
+  "properties": {
+
+    "apiVersion": {
+      "description": "Versión de la especificación a la que se ajusta este documento. Hay un esquema por apiVersion: el valor no es una opción, es el discriminante.",
+      "const": "oos.dev/v1alpha1"
+    },
+
+    "kind": {
+      "const": "Lattice"
+    },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+
+        "name": {
+          "description": "Nombre del retículo dentro de su espacio de nombres. El nombre cualificado resultante —`<namespace>.<name>`, p. ej. `gdpr.sensitivity`— es el que usan las etiquetas y las autorizaciones de conducto.",
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
+        "namespace": {
+          "description": "Espacio de nombres. Obligatorio: es lo que evita que un retículo importado colisione con uno local. Por convención, el del paquete que lo publica (`gdpr`, `oos`) o el de la organización (`acme`).",
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
+        "description": {
+          "description": "Qué gobierna este retículo y por qué existe. Se muestra al pasar el ratón por una etiqueta en el editor, así que es la documentación más leída de un paquete.",
+          "type": "string",
+          "maxLength": 2048
+        }
+      }
+    },
+
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["levels", "join"],
+      "properties": {
+
+        "levels": {
+          "description": "Las etiquetas del retículo, en orden ASCENDENTE de restrictividad.\n\nEste campo es una SECUENCIA, no un conjunto: su orden ES el orden parcial, y por tanto es semántico y se preserva en la forma canónica. `[none, low, medium, high, critical]` significa `none ⊑ low ⊑ … ⊑ critical`.\n\nEl primer elemento es el mínimo (⊥) y el último el máximo (⊤). NO se declaran por separado: son derivables de esta secuencia, y lo derivable no se declara (principio P2).",
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+        },
+
+        "levelDescriptions": {
+          "description": "Descripción opcional de cada nivel. Las claves DEBEN existir en `levels`; el esquema no puede comprobarlo —es una relación entre campos— y lo verifica el compilador.",
+          "type": "object",
+          "propertyNames": { "$ref": "type/basic.schema.json#/$defs/identifier" },
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+
+        "join": {
+          "description": "Cómo se combinan dos etiquetas cuando una propiedad deriva de varios orígenes.\n\n`max` toma la más restrictiva de todas: una propiedad derivada de un campo `critical` y otro `low` queda `critical`. Es el único valor admitido en v1alpha1 — un `join` que pudiera rebajar la etiqueta abriría una vía de desclasificación implícita, y la desclasificación debe ser siempre explícita y autorizada.",
+          "const": "max"
+        }
+      }
+    }
+  },
+
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Las claves de nivel superior que no reconoce esta especificación DEBEN llevar prefijo `x-<proveedor>-`; cualquier otra clave desconocida es un error (OOS1005). Es el mismo mecanismo por el que OOS emite sus extensiones a Ossie y a ODCS como `x-oos-`."
+    }
+  }
+}

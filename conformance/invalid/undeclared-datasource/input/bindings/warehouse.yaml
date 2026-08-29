@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: warehouse, namespace: hr }
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: hr_warehouse       # el manifiesto declara `hr_db`
+  source: "public.tb_employee"
+  properties:
+    employeeId: "emp_id"
+    email: "txt_email"

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/00-overview.md#5
+level: L0
+expects: OOS2013
+summary: >
+  Esquema Cedar comprometido que no corresponde a los reticulos del paquete.
+  Mismo codigo cubre ontology.lock desincronizado.

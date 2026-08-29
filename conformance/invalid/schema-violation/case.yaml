@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/00-overview.md#3.1
+level: L0
+expects: OOS1004
+summary: >
+  Violación de esquema sin código semántico más específico. Es el genérico, y solo aplica cuando ningún código concreto describe el fallo.

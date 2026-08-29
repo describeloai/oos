@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: OOS2005
+summary: >
+  Relación que apunta a una entidad inexistente. Integridad referencial entre documentos: fuera del alcance de cualquier JSON Schema.

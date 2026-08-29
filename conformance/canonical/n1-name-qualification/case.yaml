@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N1
+level: L0
+expects: converge
+summary: >
+  La forma corta y la cualificada del mismo nombre producen la misma forma canonica.

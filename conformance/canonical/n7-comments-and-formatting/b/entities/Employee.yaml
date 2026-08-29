@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Empleado. Fuente autoritativa de estructura organizativa.
+#   Revisado por: @acme/people-platform
+# ---------------------------------------------------------------------------
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Employee
+  namespace: hr
+
+spec:
+  nature: entity
+
+  primaryKey:
+    - employeeId
+
+  properties:
+
+    # Identificador opaco, sin significado de negocio.
+    employeeId:
+      type: String
+
+    workEmail:
+      type: String        # correo corporativo

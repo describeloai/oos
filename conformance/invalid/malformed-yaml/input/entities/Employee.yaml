@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr
+spec:
+  nature: entity

@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5001", "axis": "CONSUMER", "subject": "hr.Employee.nickname" }
+  ],
+  "requiredBump": "major"
+}

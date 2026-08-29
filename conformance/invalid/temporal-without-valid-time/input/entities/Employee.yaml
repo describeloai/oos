@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  temporal:
+    # Solo el eje del SISTEMA. Falta el eje del MUNDO, que es el obligatorio.
+    transactionTime: recordedAt
+  properties:
+    employeeId: { type: String }
+    recordedAt: { type: DateTimeTz }

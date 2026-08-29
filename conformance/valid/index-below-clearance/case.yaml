@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#2
+level: L0
+expects: accept
+summary: >
+  Materialización de topología legítima: las etiquetas en juego están por debajo
+  de la autorización del conducto. Debe compilar sin error.

@@ -1,0 +1,99 @@
+apiVersion: oos/v1alpha1
+kind: TestSuite
+
+metadata:
+  name: compensation
+  namespace: people
+  description: >
+    La gobernanza se testea en CI, no se audita en producción.
+    Estos casos corren en cada pull request, sin red y sin credenciales.
+
+spec:
+  cases:
+    # ── Inferencia ────────────────────────────────────────────────────────────
+    - name: "Un manager con 9 reportes directos es ejecutivo"
+      given:
+        entities:
+          - { kind: Employee, id: "emp-100", department: "SALES" }
+        relations:
+          - { via: people.reportsTo, from: ["emp-1..emp-9"], to: "emp-100" }
+      expect:
+        - { entity: "emp-100", property: isExecutive, equals: true }
+        - { entity: "emp-100", property: directReportCount, equals: 9 }
+
+    - name: "Un manager con 8 reportes NO es ejecutivo — el límite es estricto"
+      given:
+        relations:
+          - { via: people.reportsTo, from: ["emp-1..emp-8"], to: "emp-200" }
+      expect:
+        - { entity: "emp-200", property: isExecutive, equals: false }
+
+    # ── Bitemporalidad: el caso que rompe todos los sistemas de nómina ────────
+    - name: "Una subida retroactiva no altera lo que sabíamos en el pasado"
+      given:
+        entities:
+          - kind: CompensationRecord
+            employeeId: "emp-42"
+            baseSalary: 50000
+            currency: EUR
+            effectiveFrom: "2026-01-01"
+            recordedAt: "2026-03-15T10:00:00Z"   # aprobada en marzo, efecto en enero
+      expect:
+        # Consulta "según lo que sabíamos el 1 de febrero": la subida aún no existía
+        - query: { asOfValidTime: "2026-02-01", asOfSystemTime: "2026-02-01" }
+          returns: EMPTY
+        # Consulta "según lo que sabemos hoy, con efecto a 1 de febrero": sí existe
+        - query: { asOfValidTime: "2026-02-01", asOfSystemTime: "2026-04-01" }
+          returns: { baseSalary: 50000 }
+
+    # ── Divisa ────────────────────────────────────────────────────────────────
+    - name: "La conversión usa el FX del validTime, no el de hoy"
+      given:
+        entities:
+          - kind: CompensationRecord
+            baseSalary: 60000
+            currency: USD
+            effectiveFrom: "2026-01-01"
+        fxRates:
+          - { pair: "USD/EUR", rate: 0.92, asOf: "2026-01-01" }
+          - { pair: "USD/EUR", rate: 0.85, asOf: "2026-08-01" }
+      expect:
+        - query: { as: EUR, asOfValidTime: "2026-01-01" }
+          returns: { baseSalary: 55200 }    # 60000 × 0.92, no × 0.85
+
+    # ── Política: lo más importante que se puede testear ──────────────────────
+    - name: "Un ingeniero no ve ningún salario"
+      given:
+        subject: { employeeId: "emp-77", department: "ENGINEERING", clearance: "INTERNAL" }
+      query: { entity: people.CompensationRecord, id: "comp-1" }
+      expect: { effect: DENY }
+
+    - name: "Un manager ve el salario base de su equipo pero no el bonus"
+      given:
+        subject: { employeeId: "emp-100", department: "SALES", clearance: "INTERNAL" }
+        relations:
+          - { via: people.reportsTo, from: "emp-5", to: "emp-100" }
+      query: { entity: people.CompensationRecord, employeeId: "emp-5" }
+      expect:
+        effect: ALLOW
+        visible: [baseSalary, currency, effectiveFrom, effectiveTo, changeReason]
+        masked:  [bonusTarget, totalTargetComp]
+
+    - name: "Un manager NO ve el salario de alguien fuera de su cadena"
+      given:
+        subject: { employeeId: "emp-100", department: "SALES" }
+      query: { entity: people.CompensationRecord, employeeId: "emp-999" }
+      expect: { effect: DENY }
+
+    - name: "People Analytics no puede desagregar por debajo de 5 personas"
+      given:
+        subject: { employeeId: "emp-31", department: "PEOPLE_ANALYTICS" }
+      query: { entity: people.CompensationRecord, groupBy: [department], having: "count < 5" }
+      expect: { effect: DENY, reason: "minGroupSize" }
+
+    # ── Regresión de agentes ──────────────────────────────────────────────────
+    - name: "Un agente de IA en producción no alcanza entidades en DRAFT"
+      given:
+        subject: { kind: agent, name: "HRAssistant" }
+      query: { entity: people.CompensationForecast }   # status: DRAFT
+      expect: { effect: DENY, reason: "status not STABLE" }

@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/04-flow.md#3.1
+level: L0
+expects: OOS4001
+summary: >
+  Una propiedad derivada alcanza un conducto por encima de su autorización.
+  La etiqueta que lo provoca NO está declarada en ninguna parte: la computa el
+  compilador propagando join() desde los orígenes de la derivación.

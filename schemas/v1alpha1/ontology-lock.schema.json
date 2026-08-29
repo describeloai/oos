@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/ontology-lock.schema.json",
+  "title": "OntologyLock",
+  "description": "Resolución determinista y fijada de todas las dependencias y perfiles.\n\nUn lockfile corriente existe para que el resolutor reproduzca. Este existe ADEMÁS para que un auditor lea, sin red y sin descargar nada, de quién procede cada decisión que la organización no tomó por sí misma.\n\nDe ahí dos rasgos poco habituales:\n\n1. Incluye `provides` aunque sea derivable del paquete descargado — porque el punto es poder leerlo SIN descargarlo. Es dato derivado comprometido como artefacto generado, igual que el esquema Cedar: nunca escrito a mano, con CI verificando frescura.\n\n2. NO lleva marca de tiempo, aunque casi todos los lockfiles la lleven. El invariante III prohíbe el reloj: la compilación es pura.\n\nNo lleva `apiVersion` ni `kind` porque no es un documento de la ontología: es un artefacto generado, versionado por su propio formato.\n\nGenerar: `ore lock` · Verificar: `ore lock --check`",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lockfileVersion", "generatedFor", "profiles", "resolution"],
+
+  "properties": {
+
+    "lockfileVersion": {
+      "description": "Versión del formato del lockfile. Permite que un resolutor futuro detecte que este fichero pudo resolverse con reglas distintas de las suyas.",
+      "const": 1
+    },
+
+    "generatedFor": {
+      "description": "El repositorio al que corresponde esta resolución, como `nombre@semver`. `ore compile` falla si no coincide con ontology.config.yaml.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*@(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+
+    "profiles": {
+      "description": "Especificaciones anfitrionas fijadas.\n\nEntity, Binding y Package son PERFILES sobre estándares externos. Una publicación nueva de Ossie o de ODCS podría cambiar el significado de un paquete ya compilado, así que se fijan con la misma disciplina que una dependencia. Actualizar un perfil es un cambio de la especificación, no una actualización rutinaria.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oos"],
+      "properties": {
+        "oos": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version", "digest"],
+          "properties": {
+            "version": { "type": "string", "pattern": "^v[0-9]+(alpha|beta)?[0-9]*$" },
+            "digest": { "$ref": "type/basic.schema.json#/$defs/digest" }
+          }
+        },
+        "ossie":  { "$ref": "#/$defs/externalProfile" },
+        "odcs":   { "$ref": "#/$defs/externalProfile" },
+        "cedar":  { "$ref": "#/$defs/externalProfile" }
+      }
+    },
+
+    "packages": {
+      "description": "Cada dependencia resuelta a una versión exacta. El orden DEBE ser determinista —alfabético por `name`— para que dos resoluciones equivalentes produzcan bytes idénticos.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "version", "resolved", "digest", "range"],
+        "properties": {
+
+          "name": { "type": "string", "maxLength": 256 },
+
+          "version": {
+            "description": "La versión exacta a la que se resolvió el rango.",
+            "$ref": "type/basic.schema.json#/$defs/semver"
+          },
+
+          "range": {
+            "description": "Lo que se pidió. Se conserva junto a lo resuelto porque la INTENCIÓN es parte del registro: un auditor debe poder ver que se pidió `^2.1` y no `2.1.4` exacto.",
+            "$ref": "type/basic.schema.json#/$defs/versionRange"
+          },
+
+          "resolved": {
+            "description": "De dónde vino: URL de registry o referencia git con etiqueta.",
+            "type": "string",
+            "maxLength": 1024
+          },
+
+          "digest": {
+            "description": "Digest del paquete descargado. Es lo que hace verificable la delegación: no basta con decir de quién procede una decisión, hay que poder comprobar que no ha cambiado.",
+            "$ref": "type/basic.schema.json#/$defs/digest"
+          },
+
+          "requestedBy": {
+            "description": "`root` si la declara ontology.config.yaml. El nombre del paquete que la pide si es transitiva. Ausente equivale a transitiva de origen no registrado.",
+            "type": "string",
+            "maxLength": 256
+          },
+
+          "provides": {
+            "description": "Qué autoridad aporta este paquete.\n\nEs dato derivado, incluido deliberadamente para que el lockfile sea legible sin red. Un auditor ve aquí que la taxonomía de PII de esta organización procede del paquete GDPR 2.1.4, y no de la opinión de alguien.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "lattices":        { "$ref": "#/$defs/nameList" },
+              "conduits":        { "$ref": "#/$defs/nameList" },
+              "entities":        { "$ref": "#/$defs/nameList" },
+              "types":           { "$ref": "#/$defs/nameList" },
+              "bindingProfiles": { "$ref": "#/$defs/nameList" },
+              "templates":       { "$ref": "#/$defs/nameList" },
+              "tests":           { "$ref": "#/$defs/nameList" }
+            }
+          },
+
+          "dependencies": {
+            "description": "Dependencias propias de este paquete, ya resueltas. Reconstruye el grafo completo sin volver a resolver.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "version"],
+              "properties": {
+                "name": { "type": "string", "maxLength": 256 },
+                "version": { "$ref": "type/basic.schema.json#/$defs/semver" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "resolution": {
+      "description": "Cierre de la resolución.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "packageCount"],
+      "properties": {
+
+        "digest": {
+          "description": "Digest del grafo completo de dependencias resueltas. Entra en el cálculo del digest del bundle (90-canonical-form §5.3): dos compilaciones con el mismo commit y el mismo lock producen el mismo artefacto, siempre.",
+          "$ref": "type/basic.schema.json#/$defs/digest"
+        },
+
+        "packageCount": { "type": "integer", "minimum": 0 },
+
+        "conflicts": {
+          "description": "Conflictos de versión resueltos, si los hubo. Un array vacío es una afirmación positiva —no hubo ninguno—, no una ausencia de información.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["package", "resolvedTo", "requestedRanges"],
+            "properties": {
+              "package": { "type": "string", "maxLength": 256 },
+              "resolvedTo": { "$ref": "type/basic.schema.json#/$defs/semver" },
+              "requestedRanges": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "string", "maxLength": 320 }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+
+    "externalProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "digest"],
+      "properties": {
+        "spec": {
+          "description": "Identificador del estándar anfitrión, p. ej. `bitol/open-data-contract-standard`.",
+          "type": "string",
+          "maxLength": 256
+        },
+        "version": { "type": "string", "maxLength": 64 },
+        "digest": { "$ref": "type/basic.schema.json#/$defs/digest" },
+        "schema": {
+          "description": "Ruta relativa a un artefacto generado asociado, p. ej. el esquema Cedar.",
+          "type": "string",
+          "maxLength": 512
+        }
+      }
+    },
+
+    "nameList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" }
+    }
+  }
+}

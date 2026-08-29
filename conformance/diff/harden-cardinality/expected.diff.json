@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5003", "axis": "CONSUMER", "subject": "hr.Employee.relations.department" }
+  ],
+  "requiredBump": "major"
+}

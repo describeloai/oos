@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.2
+level: L0
+expects: OOS5015
+summary: >
+  Conjunto de finalidades ampliado. La limitacion de finalidad del RGPD se relaja sin que cambie ningun dato.

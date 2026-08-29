@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.2
+level: L0
+expects: OOS5014
+summary: >
+  Eliminacion de un forbid. Cedar puede demostrar que el conjunto resultante es estrictamente mas permisivo.

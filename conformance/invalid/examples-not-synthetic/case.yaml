@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/02-entity.md#4.2
+level: L0
+expects: OOS4014
+summary: >
+  Valores de ejemplo sin marcar como sintéticos en una propiedad etiquetada.
+  La misma entidad los declara legítimamente en una propiedad sin etiqueta.

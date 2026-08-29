@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/01-package.md#2.1
+level: L0
+expects: OOS2007
+summary: >
+  Version que no es semver 2.0.0. ODCS no restringe el formato; el perfil sí, porque los rangos de dependencia lo exigen.

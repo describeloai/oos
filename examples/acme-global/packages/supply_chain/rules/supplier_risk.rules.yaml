@@ -1,0 +1,67 @@
+apiVersion: oos/v1alpha1
+kind: RuleSet
+
+metadata:
+  name: supplier_risk
+  namespace: supply_chain
+  status: STABLE
+
+spec:
+  rules:
+    # ── Derivaciones simples ──────────────────────────────────────────────────
+    - id: delay-days
+      type: inference
+      produces: supply_chain.Shipment.delayDays
+      expr: coalesce(entity.actualDate, today()) - entity.promisedDate
+
+    - id: is-late
+      type: inference
+      produces: supply_chain.Shipment.isLate
+      expr: entity.delayDays > 3
+
+    - id: on-time-rate
+      type: inference
+      produces: supply_chain.Supplier.onTimeDeliveryRate
+      expr: >
+        1.0 - (
+          count(graph.in(entity, via: "supply_chain.shippedBy", where: "isLate"))
+          / max(count(graph.in(entity, via: "supply_chain.shippedBy")), 1)
+        )
+      window: { last: 180d }
+
+    # ── La inferencia que justifica tener un grafo ────────────────────────────
+    # "¿Qué proveedores son punto único de fallo?" es una pregunta que hoy
+    # requiere semanas de análisis manual entre Snowflake, el ERP y una hoja de
+    # cálculo. Aquí es una travesía de dos saltos sobre el índice de topología.
+    - id: concentration-risk
+      type: inference
+      produces: supply_chain.Supplier.isConcentrationRisk
+      expr: >
+        exists(
+          graph.out(entity, via: "supply_chain.supplies", to: "supply_chain.Product")
+            .where(product => count(graph.in(product, via: "supply_chain.supplies")) == 1)
+        )
+
+    - id: risk-score
+      type: inference
+      produces: supply_chain.Supplier.riskScore
+      expr: >
+        0.40 * (1.0 - entity.onTimeDeliveryRate)
+      + 0.30 * (entity.isConcentrationRisk ? 1.0 : 0.0)
+      + 0.20 * geopolitical.index(entity.country)
+      + 0.10 * (size(entity.certifications) == 0 ? 1.0 : 0.0)
+
+    # ── Restricciones ─────────────────────────────────────────────────────────
+    - id: tier1-requires-certification
+      type: constraint
+      severity: ERROR
+      appliesTo: supply_chain.Supplier
+      expr: entity.tier > 1 || size(entity.certifications) > 0
+      message: "Un proveedor de nivel 1 sin certificación incumple la política CSDDD"
+
+    - id: shipment-value-positive
+      type: constraint
+      severity: ERROR
+      appliesTo: supply_chain.Shipment
+      expr: entity.declaredValue > 0
+      message: "Valor declarado no positivo — bloquea el despacho aduanero"

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/00-overview.md#5
+level: L0
+expects: OOS1005
+summary: >
+  Clave desconocida sin prefijo x-<proveedor>-. El punto de extensión existe; usarlo es obligatorio.

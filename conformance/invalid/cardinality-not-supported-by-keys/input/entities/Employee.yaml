@@ -1,0 +1,19 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  uniqueKeys:
+    - [nationalId]
+  properties:
+    employeeId:   { type: String }
+    nationalId:   { type: String }
+    departmentId: { type: String }     # no es única: muchos empleados por departamento
+  relations:
+    department:
+      target: hr.Department
+      # `one_to_one` afirma que ningún otro empleado apunta al mismo departamento.
+      # Nada en las claves declaradas sostiene esa afirmación.
+      cardinality: one_to_one
+      via: departmentId

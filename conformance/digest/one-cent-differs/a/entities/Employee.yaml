@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    baseSalary:
+      type: Money<EUR, 2>
+      examples:
+        values: ["68400.50"]
+        synthetic: true

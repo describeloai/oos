@@ -1,0 +1,110 @@
+# =============================================================================
+# GENERADO POR ORE — NO EDITAR A MANO
+#
+# Resolución determinista de dependencias. Se compromete a Git.
+# Regenerar: `ore lock`   ·   Verificar sin modificar: `ore lock --check`
+#
+# `ore compile` falla si este fichero no corresponde a ontology.config.yaml.
+# =============================================================================
+
+lockfileVersion: 1
+generatedFor: acme-retail@0.4.0
+
+# -----------------------------------------------------------------------------
+# Perfiles fijados.
+#
+# Entity, Binding y Package son PERFILES sobre especificaciones externas
+# (00-overview §7.4). Una versión nueva de Ossie o de ODCS puede romper el
+# perfil, así que se fijan aquí con la misma disciplina que una dependencia.
+# Actualizar un perfil es un cambio de la especificación, no una actualización
+# rutinaria.
+# -----------------------------------------------------------------------------
+profiles:
+  oos:
+    version: v1alpha1
+    digest: sha256:4b1d7c9a2e5f80b36d4a1c8e07f92b5d3a6c0e18f4b7d92a5c3e60f18b4d7a2c
+  ossie:
+    spec: apache-ossie/semantic-model
+    version: 1.0.0
+    digest: sha256:e70a3c15b8d4f296a1c07e53b9d248f6a0c31e75b4d89f2a6c13e08b5d7f4a91
+  odcs:
+    spec: bitol/open-data-contract-standard
+    version: 3.1.0
+    digest: sha256:1c84f0a7d3b95e26c8a41f70b3d59e8a2f06c47d1b83e95a0c7f2d61e48b3a05
+  cedar:
+    version: 4.2.0
+    schema: policies/acme.cedarschema
+    digest: sha256:9f2c41a7e0b83d5c6e1f04a9b7d2c8e35f60a1b4d9c7e2a08a3b5d6c1e4f7a09
+
+# -----------------------------------------------------------------------------
+# Dependencias resueltas.
+#
+# `requestedBy: root` = declarada en ontology.config.yaml
+# sin `requestedBy`   = transitiva
+# -----------------------------------------------------------------------------
+packages:
+
+  - name: oos.dev/regulatory/gdpr
+    version: 2.1.4
+    resolved: https://registry.oos.dev/regulatory/gdpr/-/gdpr-2.1.4.oob
+    digest: sha256:a3f91c7e0b58d24a6c1f83e07b95d4a2c60e17f3b8d95a4c2e70f16b8d3a5c94
+    requestedBy: root
+    range: "^2.1"
+    provides:
+      lattices:  [gdpr.sensitivity]
+      conduits:  [gdpr.default-clearances]
+      templates: [gdpr.purpose-limitation, gdpr.subject-access]
+      tests:     [gdpr.dsar-traversable, gdpr.pii-never-in-logs]
+    # Los tests importados corren en TU CI. Si tu ontología no satisface los
+    # requisitos estructurales derivables del RGPD, tu build falla.
+    # Cumplimiento como dependencia.
+
+  - name: oos.dev/types/iso
+    version: 1.0.2
+    resolved: https://registry.oos.dev/types/iso/-/iso-1.0.2.oob
+    digest: sha256:5d8b0c3a71e94f26b8d05a1c7e34f90b2a6d18c53e7b04f9a1c86d2e50b7f3a4
+    requestedBy: root
+    range: "^1.0"
+    provides:
+      types: [iso.CountryAlpha2, iso.CurrencyCode, iso.LanguageTag]
+
+  - name: oos.dev/connectors/workday
+    version: 3.2.1
+    resolved: https://registry.oos.dev/connectors/workday/-/workday-3.2.1.oob
+    digest: sha256:c40e7a91d5b83f26a0c74e18b3d95f07a2c61d84e0b73f95a2c48d16e70b3f5a
+    requestedBy: root
+    range: "^3.2"
+    provides:
+      bindingProfiles: [workday.Worker, workday.Organization, workday.Compensation]
+    dependencies:
+      - { name: oos.dev/types/iso, version: 1.0.2 }
+
+  - name: oos.dev/connectors/gs1
+    version: 1.4.0
+    resolved: https://registry.oos.dev/connectors/gs1/-/gs1-1.4.0.oob
+    digest: sha256:7e2a6c04b18d95f3a0c67e21d84b05f9a3c72e16d90b48f5a1c03e67b2d95a08
+    requestedBy: root
+    range: "^1.4"
+    provides:
+      bindingProfiles: [gs1.Shipment, gs1.TradeItem, gs1.Party]
+
+  - name: acme/core-identity
+    version: 1.2.7
+    resolved: git+ssh://git@github.com/acme/core-identity.git#v1.2.7
+    digest: sha256:b91c58e0a7d34f26c8a10e75b3d84f92a6c07e13d58b0f4a9c26e81d70b3a5f7
+    range: "^1.2"
+    # transitiva: la pide packages/hr/package.yaml
+    provides:
+      entities: [identity.Person, identity.Organization]
+
+# -----------------------------------------------------------------------------
+# Cierre de la resolución.
+#
+# Este digest cubre el grafo completo de dependencias resueltas y entra en el
+# cálculo del digest del bundle (90-canonical-form §5.3). Dos compilaciones con
+# el mismo commit y el mismo lock producen el mismo artefacto, siempre.
+# -----------------------------------------------------------------------------
+resolution:
+  digest: sha256:f06b3a91c74e0d825a6c13e70f94b28d5a0c61e83f7b45d92a0c38e61d7b4a17
+  packageCount: 5
+  conflicts: []

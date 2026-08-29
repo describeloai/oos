@@ -1,0 +1,20 @@
+# Gobierno del conocimiento con la herramienta que la empresa ya usa.
+# Un cambio de política de PII no se mergea sin seguridad. No hay motor de
+# aprobaciones propietario: hay revisión de pull request.
+
+# ── Toda política requiere seguridad ────────────────────────────────────────────
+/packages/*/policies/          @acme/security @acme/data-governance
+
+# ── Todo lo que escribe requiere plataforma y seguridad ─────────────────────────
+/packages/*/functions/         @acme/platform-eng @acme/security
+
+# ── Resolución de identidad: quién decide que dos personas son la misma ─────────
+/packages/*/resolution/        @acme/data-governance @acme/security
+
+# ── Dominios ────────────────────────────────────────────────────────────────────
+/packages/customers/           @acme/crm-domain
+/packages/supply_chain/        @acme/scm-domain
+/packages/people/              @acme/hr-domain @acme/security
+
+# ── El manifiesto raíz cambia el comportamiento de todo el repositorio ──────────
+/ontology.config.yaml          @acme/data-architecture @acme/security

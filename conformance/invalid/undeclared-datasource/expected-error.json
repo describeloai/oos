@@ -1,0 +1,1 @@
+{ "code": "OOS2004", "reference": "hr_warehouse", "declared": ["hr_db"], "path": "bindings/warehouse.yaml" }

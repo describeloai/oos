@@ -1,0 +1,49 @@
+apiVersion: oos/v1alpha1
+kind: RuleSet
+
+metadata:
+  name: infer_executive
+  namespace: people
+  status: STABLE
+  description: >
+    Conocimiento derivado que no existe en ninguna tabla de Workday.
+    Un catálogo de metadatos sabe que existe una columna `supervisory_org_name`.
+    No sabe qué es un ejecutivo. Esto sí.
+
+spec:
+  rules:
+    # ── Inferencia: derivar hechos nuevos desde la topología ──────────────────
+    - id: count-direct-reports
+      type: inference
+      produces: people.Employee.directReportCount
+      expr: count(graph.in(entity, via: "people.reportsTo"))
+
+    - id: executive-status
+      type: inference
+      produces: people.Employee.isExecutive
+      expr: >
+        entity.directReportCount > 8
+        || graph.depth(entity, via: "people.reportsTo", to: "ROOT") <= 2
+      description: >
+        Ejecutivo = gestiona a más de ocho personas, o está a dos saltos o menos
+        del CEO. Es una decisión de negocio, y por eso vive en un PR revisable
+        en vez de en la cabeza de alguien de RRHH.
+
+    # ── Restricción: invariantes que fallan ruidosamente ──────────────────────
+    - id: salary-within-band
+      type: constraint
+      severity: ERROR
+      appliesTo: people.CompensationRecord
+      expr: >
+        entity.baseSalary >= band(entity.employeeId).min
+        && entity.baseSalary <= band(entity.employeeId).max
+      message: "Salario fuera de la banda del grado — revisar antes de publicar"
+
+    - id: no-overlapping-comp-periods
+      type: constraint
+      severity: ERROR
+      appliesTo: people.CompensationRecord
+      expr: temporal.noOverlap(partitionBy: employeeId, over: validTime)
+      message: >
+        Dos registros retributivos vigentes a la vez para el mismo empleado.
+        Es el error más común en migraciones de nómina y el más caro de detectar tarde.

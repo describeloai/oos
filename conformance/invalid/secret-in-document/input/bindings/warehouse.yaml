@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: warehouse, namespace: hr }
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: hr_db
+  # Alguien pegó la cadena de conexión entera donde iba el nombre de la tabla.
+  source: "postgres://acme:hunter2@db.internal:5432/crm?sslmode=require"
+  properties:
+    employeeId: "emp_id"
+    email: "txt_email"

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N6
+level: L0
+expects: diverge
+summary: >
+  Los identificadores se comparan de forma sensible a mayusculas: employeeId y employeeid son propiedades distintas.

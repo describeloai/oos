@@ -1,0 +1,29 @@
+apiVersion: oos.dev/v1alpha1
+kind: Lattice
+metadata:
+  name: residency
+  namespace: acme
+  description: >
+    Residencia de datos. Retículo propio de ACME: no lo define ninguna
+    especificación y no hace falta que lo haga. El motor lo trata exactamente
+    igual que a gdpr.sensitivity.
+
+spec:
+  # Secuencia ascendente por RESTRICTIVIDAD, no por amplitud geográfica.
+  #   global    ⊑ eu_and_us ⊑ eu_only
+  #   (el dato menos restringido)   (el que no puede salir de la UE)
+  #
+  # Un conducto declara la etiqueta MÁXIMA que admite. Por tanto un conducto
+  # servido desde EE. UU. tiene autorización `global`: solo acepta datos
+  # etiquetados `global`. Un conducto en la UE tiene autorización `eu_only`
+  # y acepta todo.
+  levels: [global, eu_and_us, eu_only]
+  join: max
+
+  # `bottom` y `top` NO se declaran: son levels[0] y levels[-1].
+  # Lo derivable no se declara (P2).
+
+  levelDescriptions:
+    global:    "Puede servirse desde cualquier región."
+    eu_and_us: "Acuerdo de transferencia vigente; fuera de esos dos bloques, no."
+    eu_only:   "No abandona la UE bajo ninguna circunstancia."

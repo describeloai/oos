@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N7
+level: L0
+expects: same
+summary: >
+  Comentarios, indentacion y estilo no entran en el digest.

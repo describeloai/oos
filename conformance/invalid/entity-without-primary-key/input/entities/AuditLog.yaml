@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: AuditLog, namespace: hr }
+spec:
+  # Un log de auditoría no tiene identidad estable por registro: debería ser
+  # `nature: event` con `timeKey`. Declarado como `entity`, exige primaryKey.
+  nature: entity
+  properties:
+    actor:      { type: String }
+    action:     { type: String }
+    recordedAt: { type: DateTimeTz }

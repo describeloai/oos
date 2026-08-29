@@ -1,0 +1,44 @@
+apiVersion: oos/v1alpha1
+kind: Entity
+
+metadata:
+  name: Employee
+  namespace: people
+  status: STABLE
+
+spec:
+  identity:
+    primaryKey: id
+
+  temporality:
+    mode: bitemporal              # un empleado cambia de puesto, país y manager
+    validTime: { from: validFrom, to: validTo }
+    systemTime: { recorded: recordedAt }
+
+  properties:
+    id:            { type: string, format: uuid }
+    fullName:      { type: string, tags: ["PII"], classification: CONFIDENTIAL }
+    workEmail:     { type: string, format: email, tags: ["PII"] }
+    nationalId:    { type: string, tags: ["PII", "SENSITIVE"], classification: RESTRICTED }
+    country:       { type: string, format: iso-3166-1 }
+    department:    { type: string }
+    positionTitle: { type: string }
+    hireDate:      { type: date }
+    validFrom:     { type: date }
+    validTo:       { type: date, required: false }
+    recordedAt:    { type: timestamp }
+
+    # ── Conocimiento derivado ──────────────────────────────────────────────────
+    # Esto no existe en ninguna tabla de Workday. Es lo que un catálogo de
+    # metadatos estructuralmente no puede hacer: inferir.
+    directReportCount:
+      type: integer
+      computed: { by: rules/infer_executive.rules.yaml }
+
+    isExecutive:
+      type: boolean
+      computed: { by: rules/infer_executive.rules.yaml }
+      description: Deriva de la topología del grafo, no de un campo de origen
+
+  governedBy:
+    - people.CompensationAccess

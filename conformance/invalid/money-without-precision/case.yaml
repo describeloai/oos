@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#3.2
+level: L0
+expects: OOS3002
+summary: >
+  Tipo paramétrico sin precisión. Es la mitad del error silencioso que motivó la extensión.

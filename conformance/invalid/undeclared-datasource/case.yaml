@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#2.1
+level: L0
+expects: OOS2004
+summary: >
+  Binding que referencia un datasource no declarado en el manifiesto raíz. Sin él no hay credencial que resolver ni etiquetas que heredar.

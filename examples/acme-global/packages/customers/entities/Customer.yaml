@@ -1,0 +1,65 @@
+apiVersion: oos/v1alpha1
+kind: Entity
+
+metadata:
+  name: Customer
+  namespace: customers
+  status: STABLE
+  description: >
+    El mismo cliente vive en Salesforce como SF-4471 y en el ERP como 0001234.
+    Esta entidad es una sola cosa; las fuentes son dos. Quién decide que son el
+    mismo está declarado en resolution/, no escondido en un pipeline.
+
+spec:
+  identity:
+    primaryKey: id
+    resolution: customers.CustomerIdentity   # ← el módulo que unifica las fuentes
+
+  temporality:
+    mode: snapshot                # el cliente actual; el histórico vive en Order
+
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Identificador canónico emitido por la resolución, no por ninguna fuente
+
+    legalName:   { type: string }
+    taxId:       { type: string, tags: ["PII"], classification: CONFIDENTIAL }
+    contactEmail:{ type: string, format: email, tags: ["PII"] }
+    country:     { type: string, format: iso-3166-1 }
+    segment:
+      type: string
+      enum: [SMB, MID_MARKET, ENTERPRISE, STRATEGIC]
+
+    createdAt:   { type: timestamp }
+
+    # ── Derivados ──────────────────────────────────────────────────────────────
+    lifetimeValue:
+      type: Money
+      precision: 2
+      currency: { fixed: EUR }
+      fx: { policy: as_of_transaction, source: finance.FxRate }
+      computed: { by: rules/customer_health.rules.yaml }
+      description: >
+        Suma de pedidos convertida a EUR con el tipo de cambio de cada pedido,
+        no con el de hoy. La diferencia entre ambos criterios ha provocado
+        más discusiones en comités de dirección que ninguna otra cifra.
+
+    isAtRisk:
+      type: boolean
+      computed: { by: rules/customer_health.rules.yaml }
+
+    # ── Procedencia de la resolución ───────────────────────────────────────────
+    # Cuando un regulador o un comercial pregunte "¿por qué el sistema cree que
+    # estas dos empresas son la misma?", hay respuesta.
+    resolutionConfidence:
+      type: float
+      computed: { by: resolution/customer_identity.yaml }
+    sourceRecords:
+      type: array
+      items: { type: string }
+      computed: { by: resolution/customer_identity.yaml }
+
+  governedBy:
+    - customers.CustomerPII

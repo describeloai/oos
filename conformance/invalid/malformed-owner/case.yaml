@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/01-package.md#3.2
+level: L0
+expects: OOS2009
+summary: >
+  owner escrito como nombre libre en lugar de handle. El handle es lo que se alinea con CODEOWNERS, que es quien hace cumplir la revisión.

@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+dependencies:
+  # Dos objetos DISTINTOS: `uniqueItems` del esquema no los ve.
+  # El duplicado es por clave semántica —el nombre del paquete—, no por valor.
+  - { package: oos.dev/regulatory/gdpr, version: "^2.1" }
+  - { package: oos.dev/regulatory/gdpr, version: "^3.0" }

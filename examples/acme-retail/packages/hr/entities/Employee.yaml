@@ -1,0 +1,122 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Employee
+  namespace: hr
+
+  # Cierto del conjunto: se declara una vez aquí, no cincuenta veces abajo.
+  # Cada propiedad la hereda, puede elevarla y no puede rebajarla.
+  labels:
+    acme.residency: eu_only
+
+  description: >
+    Persona con relación laboral vigente o pasada con ACME. Fuente autoritativa
+    para estructura organizativa y compensación; no para nómina.
+
+  aiContext:
+    synonyms: [empleado, trabajador, worker, headcount]
+    guidance: >
+      Incluye bajas y excedencias. Para plantilla activa hay que filtrar por
+      validTime, no por la existencia del registro.
+
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+
+  # Claves alternativas: lo que hace posible la resolución DETERMINISTA de
+  # identidad entre fuentes. El mismo empleado es otro id en el CRM, pero
+  # comparte NIF.
+  uniqueKeys:
+    - [nationalId]
+    - [email]
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+    # `transactionTime` omitido: ACME no lo necesita, y la pregunta
+    # «qué sabía el agente el martes» la responden el commit y la marca de agua.
+
+  properties:
+
+    employeeId:
+      type: String
+      description: Identificador estable, opaco y sin significado de negocio.
+
+    fullName:
+      type: String
+      labels: { gdpr.sensitivity: high }
+
+    email:
+      type: String
+      labels: { gdpr.sensitivity: high }
+
+    nationalId:
+      type: String
+      description: DNI o equivalente nacional.
+      labels: { gdpr.sensitivity: critical }
+      # Sin `examples`, ni siquiera sintéticos: un ejemplo de DNI se parece
+      # demasiado a un DNI como para que valga la pena la discusión.
+
+    baseSalary:
+      type: Money<EUR, 2>
+      temporal: true
+      labels: { gdpr.sensitivity: critical }
+      aiContext:
+        synonyms: [salario base, fijo, sueldo bruto]
+        guidance: Anualizado y a jornada completa. No incluye variable ni especie.
+
+    bonus:
+      type: Money<EUR, 2>
+      temporal: true
+      labels: { gdpr.sensitivity: critical }
+
+    # Procedencia, no computación. El compilador propaga
+    #   join(critical, critical) = critical
+    # y NO calcula el valor: esta propiedad necesita binding como cualquier otra.
+    # Declarar `labels` aquí sería OOS4008.
+    totalCompensation:
+      type: Money<EUR, 2>
+      temporal: true
+      derivedFrom: [hr.Employee.baseSalary, hr.Employee.bonus]
+      expression: "baseSalary + bonus"      # documental, no se interpreta
+
+    managerId:
+      type: String
+      description: Clave del responsable jerárquico. El DATO; la arista está abajo.
+
+    departmentId:
+      type: String
+
+    grade:
+      type: String
+      enum: [IC1, IC2, IC3, IC4, M1, M2, M3]     # secuencia: retirar un valor rompe
+      labels: { gdpr.sensitivity: medium }
+      examples:
+        values: [IC3, M1]
+        synthetic: true      # afirmación explícita, no descuido
+
+  # Las aristas del grafo, separadas de los datos.
+  relations:
+
+    manager:
+      target: hr.Employee            # autorreferencia: Cedar la proyecta como jerarquía
+      cardinality: many_to_one
+      via: managerId
+      required: false
+      description: Responsable jerárquico directo.
+
+    department:
+      target: hr.Department
+      cardinality: many_to_one
+      via: departmentId
+      required: true
+
+  moved:
+    - { from: salary, to: baseSalary, since: 0.3.0 }
+
+  reserved:
+    - name: comp
+      reason: >
+        Antes de 0.3.0 significaba compensación total. Reutilizarlo haría que
+        consultas antiguas devolvieran una cifra correcta para la pregunta
+        equivocada.

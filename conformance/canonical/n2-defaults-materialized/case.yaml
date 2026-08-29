@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N2
+level: L0
+expects: converge
+summary: >
+  Omitir un valor por defecto y declararlo explicitamente producen la misma forma canonica.

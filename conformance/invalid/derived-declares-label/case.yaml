@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/02-entity.md#5
+level: L0
+expects: OOS4008
+summary: >
+  Propiedad derivada que declara etiqueta en lugar de dejar que se compute.
+  Falla AUNQUE el valor declarado sea el correcto.

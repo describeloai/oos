@@ -1,0 +1,59 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Customer
+  namespace: customers
+  labels:
+    oos.maturity: STABLE
+
+spec:
+  profile: ossie/semantic-model@1.0
+  primaryKey: customerId
+
+  labels:
+    acme.residency: eu_only
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    customerId:
+      type: string
+      format: uuid
+
+    email:
+      type: string
+      format: email
+      labels: { gdpr.sensitivity: high }
+
+    countryCode:
+      type: iso.CountryAlpha2        # tipo importado de oos.dev/types/iso
+      labels: { gdpr.sensitivity: low }
+
+    segment:
+      type: string
+      enum: [retail, business, enterprise]   # secuencia: el orden es semántico
+      labels: { gdpr.sensitivity: none }
+
+    # Derivada de importes de pedido. El compilador computa
+    #   join(low) = low
+    # No hereda `critical` de nada porque nada crítico entra en el cálculo.
+    # Que una empresa tenga PII no convierte todo su modelo en PII, y el
+    # sistema de flujo lo demuestra en vez de suponerlo.
+    lifetimeValue:
+      type: Money<EUR, 2>
+      derivedFrom: [customers.Order.totalAmount]
+      expression: "sum(orders.totalAmount)"
+      labels: { gdpr.sensitivity: low }
+
+    # Relación entre paquetes. `customers` depende de `hr`, y la etiqueta
+    # acme.residency = eu_only se propaga a través del enlace.
+    accountManager:
+      type: ref
+      target: hr.Employee
+      cardinality: many_to_one
+
+    # `orders` NO se declara aquí. Un uno-a-muchos vive en el lado que sostiene
+    # la clave —`Order.customer`, que es `many_to_one`— y el inverso es derivable
+    # de él. Declararlo violaría P2.

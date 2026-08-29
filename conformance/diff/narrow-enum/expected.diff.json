@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5002", "axis": "CONSUMER", "subject": "hr.Employee.grade", "removed": ["IC3"] }
+  ],
+  "requiredBump": "major"
+}

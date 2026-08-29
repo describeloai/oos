@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: hr, version: 1.0.0, status: stable, domain: people }
+spec: { owner: team:people }

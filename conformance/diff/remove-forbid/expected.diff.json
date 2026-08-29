@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5014", "axis": "POLICY", "policy": "forbid-agent-reads-comp" }
+  ],
+  "requiredBump": "major"
+}

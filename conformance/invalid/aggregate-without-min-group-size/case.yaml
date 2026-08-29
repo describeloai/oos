@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#5
+level: L0
+expects: OOS4007
+summary: >
+  Desclasificador `aggregate` sin umbral de tamaño de grupo. Sin umbral no
+  desclasifica: el agregado de un grupo de uno es el individuo.

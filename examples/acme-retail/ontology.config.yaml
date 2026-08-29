@@ -1,0 +1,71 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata:
+  name: acme-retail
+  version: 0.4.0
+  description: >
+    Ontología de referencia para un minorista europeo. Tres dominios —cadena de
+    suministro, clientes y compensación— con niveles de sensibilidad muy distintos,
+    deliberadamente, para mostrar que el sistema de flujo no estorba donde no hace falta.
+
+# ---------------------------------------------------------------------------
+# Dependencias. La taxonomía regulatoria, los tipos ISO y el perfil del conector
+# de Workday no se escriben aquí: se consumen. Resolución determinista vía
+# ontology.lock.
+# ---------------------------------------------------------------------------
+dependencies:
+  - { package: oos.dev/regulatory/gdpr,     version: "^2.1" }
+  - { package: oos.dev/types/iso,           version: "^1.0" }
+  - { package: oos.dev/connectors/workday,  version: "^3.2" }
+  - { package: oos.dev/connectors/gs1,      version: "^1.4" }
+
+# ---------------------------------------------------------------------------
+# NO se declaran aquí los retículos activos ni dónde vive la política de
+# conductos: ambos son derivables —de lo declarado más lo importado, y de
+# buscar los documentos kind: ConduitPolicy— y lo derivable no se declara (P2).
+#
+# Los retículos en juego en este repositorio son, de hecho, tres:
+#   gdpr.sensitivity   importado de oos.dev/regulatory/gdpr
+#   oos.maturity       estándar de la especificación
+#   acme.residency     local, en lattices/residency.yaml
+#
+# `acme.residency` demuestra la propiedad más importante de 04-flow.md: añadir
+# una dimensión de gobernanza NO requiere cambiar la especificación ni el
+# motor. Requiere declarar un retículo.
+# ---------------------------------------------------------------------------
+# Fuentes físicas. El secreto NUNCA vive aquí: solo el nombre de la variable
+# de entorno de la que se lee. Por eso este repositorio es publicable.
+#
+# `residency` etiqueta la ubicación física de cada fuente. El compilador la
+# usa para propagar la etiqueta acme.residency a todo lo que se enlace ahí.
+# ---------------------------------------------------------------------------
+datasources:
+  - name: crm_prod
+    type: postgres
+    connectionEnv: ACME_CRM_URL
+    labels:
+      acme.residency: eu_only
+
+  - name: erp_snowflake
+    type: snowflake
+    connectionEnv: ACME_SNOWFLAKE_URL
+    labels:
+      acme.residency: eu_only
+
+  - name: hr_workday
+    type: workday
+    connectionEnv: ACME_WORKDAY_URL
+    labels:
+      acme.residency:   eu_only
+      gdpr.sensitivity: high      # suelo: todo lo que sale de RRHH es al menos `high`
+
+  - name: logistics_api
+    type: rest
+    connectionEnv: ACME_LOGISTICS_URL
+    labels:
+      acme.residency: global
+
+# Tampoco hay `defaults`. Si el modo de materialización por defecto fuese
+# configurable por repositorio, cambiarlo materializaría todos los bindings en
+# silencio. `passthrough` es EL valor por defecto de la especificación, no una
+# preferencia (P4).

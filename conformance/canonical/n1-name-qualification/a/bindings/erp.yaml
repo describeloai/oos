@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: erp, namespace: hr }
+spec:
+  targetEntity: Employee          # forma corta: mismo espacio de nombres
+  datasourceRef: hr_db
+  source: "public.tb_employee"
+  properties: { employeeId: "emp_id" }

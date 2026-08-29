@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5017", "axis": "POLICY", "policy": "hr-analyst-reads-comp", "declassifier": "redact" }
+  ],
+  "requiredBump": "major"
+}

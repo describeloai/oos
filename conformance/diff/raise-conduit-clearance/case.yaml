@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.2
+level: L0
+expects: OOS5012
+summary: >
+  Autorizacion de conducto elevada. Ni una entidad cambia, y de golpe todo lo critico puede materializarse.

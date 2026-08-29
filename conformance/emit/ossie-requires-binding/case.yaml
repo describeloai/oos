@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/02-entity.md#9.1
+level: L0
+expects: emit-fails
+format: ossie
+summary: >
+  Emitir a Ossie una entidad sin binding debe fallar: Dataset.source y
+  Field.expression son obligatorios en Ossie y viven en el binding.

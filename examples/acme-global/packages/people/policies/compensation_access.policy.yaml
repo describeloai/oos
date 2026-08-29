@@ -1,0 +1,84 @@
+apiVersion: oos/v1alpha1
+kind: Policy
+
+metadata:
+  name: CompensationAccess
+  namespace: people
+  status: STABLE
+  description: >
+    Quién puede ver retribución, y cuánta. Se aplica en el motor, en un único punto,
+    para cualquier consumidor — aplicación, cuadro de mando o agente de IA.
+    Una aplicación no puede saltárselo olvidándose de filtrar.
+
+spec:
+  appliesTo:
+    - people.CompensationRecord
+    - people.Employee
+
+  # Sin regla que permita, se deniega. No hay acceso por omisión.
+  defaultEffect: DENY
+
+  rules:
+    # ── 1. RRHH con autorización ve todo ──────────────────────────────────────
+    - id: hr-full-access
+      effect: ALLOW
+      when: subject.department == "HR" && subject.clearance >= "CONFIDENTIAL"
+      properties: ["*"]
+
+    # ── 2. La cadena de mando ─────────────────────────────────────────────────
+    # Esto es lo que ninguna seguridad a nivel de fila en una base de datos puede
+    # expresar: el permiso depende de la TOPOLOGÍA DEL GRAFO, no de una columna.
+    # "Puedes ver la retribución de quien esté por debajo de ti en la jerarquía,
+    #  hasta cinco niveles" no es escribible en un RLS de PostgreSQL.
+    - id: management-chain
+      effect: ALLOW
+      when: >
+        graph.reachable(
+          from:  subject.employeeId,
+          to:    resource.employeeId,
+          via:   "people.reportsTo",
+          maxDepth: 5
+        )
+      properties: [baseSalary, currency, effectiveFrom, effectiveTo, changeReason]
+      # Un manager ve el salario base de su equipo, pero no el bonus objetivo
+      # ni la retribución total. Eso es RRHH.
+
+    # ── 3. Uno mismo ──────────────────────────────────────────────────────────
+    - id: self-access
+      effect: ALLOW
+      when: subject.employeeId == resource.employeeId
+      properties: ["*"]
+
+    # ── 4. Analítica agregada ─────────────────────────────────────────────────
+    # Permite calcular la brecha salarial de género sin ver ni un salario individual.
+    - id: aggregate-only
+      effect: ALLOW
+      when: subject.department == "PEOPLE_ANALYTICS"
+      properties: [baseSalary, currency]
+      constraints:
+        aggregateOnly: true
+        minGroupSize: 5          # k-anonimato: ningún grupo de menos de 5 personas
+        deny: [employeeId, fullName, nationalId]
+
+  # ── Enmascaramiento ─────────────────────────────────────────────────────────
+  masking:
+    - properties: [nationalId]
+      strategy: REDACT
+      appliesWhen: "!(subject.department == 'HR')"
+    - properties: [workEmail]
+      strategy: PARTIAL
+      pattern: "***@{domain}"
+      appliesWhen: "subject.country != resource.country"   # minimización transfronteriza
+
+  # ── Auditoría ───────────────────────────────────────────────────────────────
+  # Cada decisión de este motor es un artefacto de cumplimiento, no una línea de log.
+  audit:
+    logDecisions: ALL
+    retention: 7y
+    includeSubject: true
+    includeResourceIds: true
+    sink: customer-managed          # el log NO sale de la infraestructura del cliente
+
+  complianceFrameworks:
+    - GDPR_Art9
+    - EU_Pay_Transparency_Directive_2023_970

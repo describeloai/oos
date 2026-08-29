@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    grade:
+      type: String
+      enum: [IC1, IC2, M1]
+      examples: { values: [IC1] }              # sin etiqueta: legítimo
+    baseSalary:
+      type: Money<EUR, 2>
+      labels: { gdpr.sensitivity: critical }
+      examples:
+        values: ["68400.00", "91250.00"]       # etiquetada y sin `synthetic`

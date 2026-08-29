@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/01-package.md#2.3
+level: L0
+expects: OOS2008
+summary: >
+  status con un valor plausible que no pertenece al vocabulario de ODCS. `stable` es del retículo de madurez, no del contrato.

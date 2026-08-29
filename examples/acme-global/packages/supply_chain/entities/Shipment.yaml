@@ -1,0 +1,54 @@
+apiVersion: oos/v1alpha1
+kind: Entity
+
+metadata:
+  name: Shipment
+  namespace: supply_chain
+  status: STABLE
+  description: >
+    Cientos de millones de filas en Snowflake. Ni una sola se copia.
+    Lo que sí se copia son las aristas: qué envío conecta qué proveedor con qué
+    pedido. Decenas de gigabytes de topología describiendo petabytes de carga útil.
+
+spec:
+  identity:
+    primaryKey: id
+
+  temporality:
+    mode: snapshot
+    systemTime: { recorded: lastUpdatedAt }
+
+  properties:
+    id:              { type: string }
+    supplierId:      { type: string }
+    destinationSite: { type: string }
+    carrier:         { type: string }
+
+    status:
+      type: string
+      enum: [PLANNED, IN_TRANSIT, CUSTOMS_HOLD, DELIVERED, CANCELLED]
+
+    promisedDate:  { type: date }
+    actualDate:    { type: date, required: false }
+    lastUpdatedAt: { type: timestamp }
+
+    declaredValue:
+      type: Money
+      precision: 2
+      currency: { property: currency }
+      fx: { policy: as_of_transaction, source: finance.FxRate }
+    currency: { type: string, format: iso-4217 }
+
+    originCountry: { type: string, format: iso-3166-1 }
+
+    # ── Derivados ──────────────────────────────────────────────────────────────
+    delayDays:
+      type: integer
+      computed: { by: rules/supplier_risk.rules.yaml }
+
+    isLate:
+      type: boolean
+      computed: { by: rules/supplier_risk.rules.yaml }
+
+  governedBy:
+    - supply_chain.DataResidency

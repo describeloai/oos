@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N8
+level: L0
+expects: canonical
+summary: >
+  La forma canonica del paquete fuente no contiene campos computados, aunque el compilador los calcule.

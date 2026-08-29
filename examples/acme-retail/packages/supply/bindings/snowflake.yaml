@@ -1,0 +1,60 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+
+metadata:
+  name: snowflake
+  namespace: supply
+  description: >
+    Envíos desde el ERP. Aquí sí se materializa topología: las etiquetas del
+    origen están por debajo de la autorización del conducto y compila sin objeción.
+
+spec:
+  targetEntity: supply.Shipment
+  datasourceRef: erp_snowflake
+  profile: oos.dev/connectors/gs1
+
+  source: "LOGISTICS.PUBLIC.TB_SHIPMENT_V2"
+
+  properties:
+    shipmentId: "SHP_UUID"
+    supplierId: "FK_SUPPLIER_ID"
+    skuCode:    "FK_SKU_CODE"
+    quantity:   "QTY_UNITS"
+    promisedAt: "DT_PROMISED_UTC"
+    status:     "CD_STATUS"
+
+    deliveredAt:
+      column: "DT_DELIVERED_UTC"
+      physicalType: "timestamp_ntz"
+
+    # A diferencia del `expression` de una entidad —que es documental— este SÍ
+    # se ejecuta contra el origen. Aquí estamos en el plano físico, que es
+    # exactamente donde el cálculo pertenece.
+    delayDays:
+      expression: "DATEDIFF(day, DT_PROMISED_UTC, COALESCE(DT_DELIVERED_UTC, CURRENT_TIMESTAMP()))"
+      physicalType: "number(9,0)"
+
+    validFrom: "DT_ROW_VALID_FROM"
+    validTo:   "DT_ROW_VALID_TO"
+
+  capabilities:
+    predicatePushdown: [eq, neq, in, range, like, isNull]
+    joinPushdown: true
+    aggregatePushdown: [count, sum, avg, min, max, countDistinct]
+    fullScan: expensive
+    maxRowsPerRequest: 100000
+
+  materialization:
+    mode: index
+    # Sin lista de propiedades: en `index` lo materializado es DERIVABLE —la
+    # clave primaria y las propiedades `via` de las relaciones—, así que
+    # declararlo violaría P2.
+    #
+    # Se copian las ARISTAS, no la carga útil. Es lo que hace local y
+    # sub-milisegundo recorrer
+    #   Customer → Order → Sku → Supplier → Shipment
+    # sobre datos que nunca se han movido.
+    refresh:
+      every: 15m
+      strategy: table_version    # Snowflake versiona; no hay que sondear filas
+    freshnessSLA: 30m            # superado el umbral, el motor DEGRADA en vez de mentir

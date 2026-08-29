@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/type/basic.schema.json",
+  "title": "OOS · primitivas compartidas",
+  "description": "Definiciones reutilizadas por todos los esquemas de documento. Ningún otro esquema debe redefinir estos patrones: es así como empiezan a divergir.",
+
+  "$defs": {
+
+    "identifier": {
+      "description": "Segmento simple de un nombre. No admite '.', que es el separador de nombres cualificados. Los nombres físicos del origen NO son identificadores: viven en el binding como cadenas opacas, y por eso OOS no necesita reglas de escape.",
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+      "maxLength": 128
+    },
+
+    "packageName": {
+      "description": "Nombre de paquete: minúsculas y guiones. Los paquetes publicados llevan espacio de nombres, p. ej. oos.dev/regulatory/gdpr.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64
+    },
+
+    "qualifiedName": {
+      "description": "Nombre completamente cualificado. Segmentos separados por '.', cada uno un identifier. Sin escapes porque ningún segmento puede contener el separador.",
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)*$",
+      "maxLength": 512
+    },
+
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    },
+
+    "versionRange": {
+      "description": "Rango semver: ^2.1, ~1.4.0, >=1.0 <2.0, 3.2.1",
+      "type": "string",
+      "maxLength": 64
+    },
+
+    "digest": {
+      "description": "Digest direccionable por contenido. Convención OCI.",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+
+    "duration": {
+      "description": "Duración. Forma corta (15m, 24h, 90d) o ISO-8601 (PT15M).",
+      "type": "string",
+      "pattern": "^(\\d+(ms|s|m|h|d)|P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?)$"
+    },
+
+    "envVarName": {
+      "description": "Nombre de variable de entorno. Un documento OOS declara SIEMPRE el nombre de la variable, nunca el secreto. Es lo que hace publicable un repositorio ontológico.",
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "maxLength": 128
+    },
+
+    "labelRef": {
+      "description": "Referencia a un valor de retículo: <retículo cualificado>:<nivel>. Ejemplo: gdpr.sensitivity:critical",
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)*:[a-zA-Z][a-zA-Z0-9_]*$"
+    },
+
+    "conduitRef": {
+      "description": "Referencia a un conducto: <clase>.<instancia>. Ejemplo: materialization.index, datasource.erp_snowflake",
+      "type": "string",
+      "pattern": "^(materialization|datasource|contextSurface|export|log)\\.[a-zA-Z][a-zA-Z0-9_]*$"
+    },
+
+    "confidence": {
+      "description": "Confianza de una inferencia automática. Presente solo en documentos en DRAFT; ore promote la elimina.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "reference": {
+      "description": "Referencia a otro objeto del grafo ontológico.\n\nA diferencia de EntityReference de OpenMetadata, NO lleva id, href ni type: OOS no es un servicio con claves subrogadas, y el tipo se deriva de la posición del campo — declararlo violaría P2 (lo derivable no se declara). Lo compartido aquí es la GRAMÁTICA DE NOMBRES, no una envoltura.",
+      "$ref": "#/$defs/qualifiedName"
+    },
+
+    "packageRef": {
+      "description": "Referencia a un paquete externo. Es la única referencia que lleva versión, porque es la única que cruza el límite del artefacto.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package", "version"],
+      "properties": {
+        "package": { "type": "string", "maxLength": 256 },
+        "version": { "$ref": "#/$defs/versionRange" }
+      }
+    },
+
+    "scalarType": {
+      "description": "Tipos escalares del perfil. Los compuestos anidados NO están en v1alpha1: se aplanan en el binding, de modo que cada hoja recibe su propia etiqueta y el análisis de flujo no necesita atravesar estructuras.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["string", "integer", "number", "boolean", "date", "timestamp", "bytes"]
+        },
+        {
+          "type": "string",
+          "description": "Tipo paramétrico: Money<EUR,2>, Quantity<km,1>",
+          "pattern": "^(Money|Quantity)<[A-Za-z]+,\\s*\\d+>$"
+        },
+        {
+          "type": "string",
+          "description": "Lista de escalares: list<string>. Un solo nivel; no hay list<list<T>>.",
+          "pattern": "^list<[a-zA-Z][a-zA-Z0-9_]*>$"
+        },
+        {
+          "$ref": "#/$defs/qualifiedName",
+          "description": "Tipo importado de un paquete de tipos: iso.CountryAlpha2"
+        }
+      ]
+    }
+  }
+}

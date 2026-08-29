@@ -1,0 +1,25 @@
+# ===========================================================================
+#  Empleado
+#  Revisado por @acme/people-platform · 2026-08
+# ===========================================================================
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name:        Employee
+  namespace:   hr
+  description: "Persona con relacion laboral."
+
+spec:
+  nature: entity
+
+  primaryKey:
+    - employeeId
+
+  properties:
+
+    employeeId:
+      type: String          # identificador opaco
+
+    baseSalary:
+      type: Money<EUR, 2>

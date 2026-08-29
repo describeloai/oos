@@ -1,0 +1,1 @@
+{ "code": "OOS2008", "value": "stable", "allowed": ["proposed", "draft", "active", "deprecated", "retired"], "path": "package.yaml" }

@@ -1,0 +1,92 @@
+apiVersion: oos/v1alpha1
+kind: Function
+
+metadata:
+  name: approvePurchaseOrder
+  namespace: supply_chain
+  status: STABLE
+  description: >
+    La superficie de acción gobernada. Un agente de IA no recibe credenciales de
+    PostgreSQL: recibe este contrato. Con precondiciones que el motor verifica,
+    autorización que el motor aplica, aislamiento WASM y traza de auditoría.
+    Es la diferencia entre un piloto de solo lectura y un despliegue.
+
+spec:
+  runtime: wasm
+  entrypoint: dist/approve_purchase_order.wasm
+  source: src/approve_purchase_order.ts
+  timeout: 5s
+  memoryLimit: 64Mi
+  network: DENY                       # el sandbox no puede llamar a nada
+
+  input:
+    purchaseOrderId: { type: string, format: uuid, required: true }
+    approvalNote:    { type: string, maxLength: 500 }
+
+  output:
+    approved:  { type: boolean }
+    newStatus: { type: string }
+
+  # ── Precondiciones: verificadas por el motor ANTES de ejecutar ───────────────
+  # No son validación dentro del código de la función: son parte del contrato,
+  # y por tanto visibles para el agente, que sabe qué puede intentar y qué no.
+  preconditions:
+    - id: order-is-pending
+      expr: target.status == "PENDING_APPROVAL"
+      message: "Solo se aprueban pedidos en estado PENDING_APPROVAL"
+
+    - id: within-approval-limit
+      expr: target.totalAmount <= subject.approvalLimit
+      message: "Importe por encima del límite de aprobación del solicitante"
+
+    - id: supplier-not-blocked
+      expr: >
+        graph.out(target, via: "supply_chain.orderedFrom").riskScore < 0.8
+      message: "El proveedor supera el umbral de riesgo — requiere excepción manual"
+
+    - id: supplier-certified
+      expr: >
+        graph.out(target, via: "supply_chain.orderedFrom").tier > 1
+        || size(graph.out(target, via: "supply_chain.orderedFrom").certifications) > 0
+      message: "Proveedor de nivel 1 sin certificación vigente (CSDDD)"
+
+  # ── Autorización ────────────────────────────────────────────────────────────
+  authorization:
+    policy: supply_chain.ProcurementApproval
+    requireHumanApproval:
+      when: target.totalAmount > 50000 || subject.kind == "agent"
+      # Un agente puede preparar y proponer. Por encima del umbral, firma un humano.
+      # Es la frase que hace que un CISO apruebe el despliegue.
+
+  # ── Efectos: declarados, no descubiertos ────────────────────────────────────
+  effects:
+    - writes: supply_chain.PurchaseOrder.status
+      datasourceRef: postgres_erp
+      from: "PENDING_APPROVAL"
+      to: "APPROVED"
+    - writes: supply_chain.PurchaseOrder.approvedBy
+      datasourceRef: postgres_erp
+    - emits: event
+      topic: acme.procurement.order_approved
+
+  # ── Transaccionalidad ───────────────────────────────────────────────────────
+  # Honestidad de diseño: el alcance transaccional es UNA fuente. Escribir
+  # atómicamente en PostgreSQL y Salesforce a la vez no es algo que este motor
+  # pueda prometer, así que no lo promete.
+  transaction:
+    scope: single-datasource
+    datasourceRef: postgres_erp
+    onPartialFailure: ROLLBACK
+
+  idempotency:
+    key: "{purchaseOrderId}:{subject.id}"
+    window: 24h                     # reintentar no aprueba dos veces
+
+  audit:
+    logInvocations: ALL
+    includeInput: true
+    includeSubject: true
+    retention: 7y
+    sink: customer-managed
+
+  tests: tests/approve_purchase_order.test.yaml

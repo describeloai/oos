@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Employee
+  namespace: hr
+  description: "Persona con relacion laboral vigente."
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    baseSalary: { type: Money<EUR, 2> }

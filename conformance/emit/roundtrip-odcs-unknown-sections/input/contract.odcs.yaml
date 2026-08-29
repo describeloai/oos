@@ -1,0 +1,24 @@
+# Contrato ODCS v3.1.0 nativo, con secciones que el perfil de OOS NO interpreta.
+apiVersion: v3.1.0
+kind: DataContract
+id: 53581432-6c55-4ba2-a65f-72344a91553a
+name: seller_payments
+version: 1.1.0
+status: active
+domain: seller
+tenant: ClimateQuantumInc
+contractCreatedTs: 2026-03-14T09:22:00Z
+description:
+  purpose: Vistas construidas sobre tablas de vendedor.
+price:
+  priceAmount: 9.95
+  priceCurrency: USD
+  priceUnit: megabyte
+team:
+  members:
+    - { username: daustin, role: Owner }
+schema:
+  - name: seller
+    physicalName: tb_seller
+    properties:
+      - { name: sellerId, logicalType: string, physicalType: varchar(36), primaryKey: true }

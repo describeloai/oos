@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Shipment, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [shipmentId]
+  properties:
+    shipmentId: { type: String }
+    quantity:   { type: Integer }        # sin etiqueta: nivel ⊥

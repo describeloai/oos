@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/03-binding.md#3.1
+level: L0
+expects: OOS4002
+summary: >
+  Propiedad etiquetada por encima de la autorización del conducto que instancia
+  su modo de materialización.

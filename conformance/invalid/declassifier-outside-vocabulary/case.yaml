@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#5
+level: L0
+expects: OOS4006
+summary: >
+  Anotación @obligation que invoca un desclasificador inexistente. El conjunto
+  es cerrado justamente para que esto sea detectable.

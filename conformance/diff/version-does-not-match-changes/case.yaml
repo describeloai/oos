@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#6
+level: L0
+expects: OOS5021
+summary: >
+  Cambio rompedor publicado como parche. La version deja de ser una afirmacion y pasa a ser una comprobacion.

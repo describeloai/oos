@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#5.3
+level: L0
+expects: different
+summary: >
+  Mismo codigo fuente, dependencia resuelta a una version distinta: el digest del bundle cambia.

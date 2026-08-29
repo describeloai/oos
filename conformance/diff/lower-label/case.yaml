@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#4
+level: L0
+expects: OOS5011
+summary: >
+  Rebajar una etiqueta: no rompe a ningún consumidor y concede acceso en silencio. La dirección invertida del versionado.

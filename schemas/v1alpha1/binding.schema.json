@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/binding.schema.json",
+  "title": "Binding",
+  "description": "Une el plano de significado con el plano físico: dónde vive realmente una entidad y —esto es lo propio de OOS— QUÉ SE COPIA de ella, a dónde y bajo qué restricción.\n\nEs el documento donde el sistema toca el mundo real, y por eso es donde se detectan la mayoría de las violaciones OOS4xxx: un binding no es una descripción pasiva, INSTANCIA UN CONDUCTO.\n\nPerfil de ODCS (Infrastructures & Servers, y los tipos físicos a nivel de propiedad).\n\nNormativo: spec/v1alpha1/03-binding.md",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+
+  "properties": {
+
+    "apiVersion": { "const": "oos.dev/v1alpha1" },
+    "kind": { "const": "Binding" },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": { "$ref": "type/basic.schema.json#/$defs/identifier" },
+        "namespace": { "$ref": "type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string", "maxLength": 4096 }
+      }
+    },
+
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetEntity", "datasourceRef", "source", "properties"],
+      "properties": {
+
+        "targetEntity": {
+          "description": "La entidad que este binding materializa. Exactamente una.\n\nUna entidad PUEDE tener varios bindings, cada uno cubriendo un subconjunto de sus propiedades: es como `Customer.lifetimeValue` sale de Snowflake y `Customer.supportTier` de Salesforce sin que la entidad sepa nada de ninguno de los dos.",
+          "$ref": "type/basic.schema.json#/$defs/qualifiedName"
+        },
+
+        "datasourceRef": {
+          "description": "Fuente física, declarada en el manifiesto raíz (OOS2004).\n\nEl secreto de conexión no aparece aquí ni en ninguna parte: el manifiesto declara el nombre de la variable de entorno de la que se lee. Es lo que hace publicable un repositorio ontológico.",
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
+        "profile": {
+          "description": "Perfil de conector que aporta mapeos y capacidades por defecto para un sistema conocido.\n\nSe declara solo el NOMBRE del paquete: la versión se resuelve desde `dependencies` y queda fijada en ontology.lock. Declararla también aquí sería duplicarla e invitar a la deriva.\n\nUn perfil convierte el descubrimiento de inferencia heurística en RECONOCIMIENTO de un sistema conocido: el Workday de todo el mundo tiene los mismos objetos estándar. Lo que el binding sobrescriba de él debe ser explícito en este documento.",
+          "type": "string",
+          "maxLength": 256
+        },
+
+        "source": {
+          "description": "El objeto físico: tabla, vista, objeto de API, tema, colección o endpoint. Cadena OPACA — sus reglas de nomenclatura son del sistema de origen, no de OOS, y por eso puede contener puntos, comillas o lo que ese sistema admita.",
+          "type": "string",
+          "maxLength": 1024
+        },
+
+        "properties": {
+          "description": "Mapeo de propiedades de la entidad a su representación física.\n\nEl mapeo DEBE cubrir la `primaryKey` de la entidad destino (OOS2011): sin clave no hay resolución de instancia, ni índice de topología, ni recurso identificable en una política.\n\nLas relaciones no se mapean: unen propiedades, y el enlace físico sale de mapear la propiedad `via`.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "$ref": "type/basic.schema.json#/$defs/identifier" },
+          "additionalProperties": { "$ref": "#/$defs/propertyBinding" }
+        },
+
+        "capabilities": {
+          "description": "Qué sabe hacer este origen.\n\nSin esto no hay federación posible: el planificador generaría planes que la fuente no puede ejecutar. Una tabla de PostgreSQL admite predicados arbitrarios, joins y agregaciones; un objeto de Salesforce admite filtrado por campos indexados y poco más; un CSV en S3 exige escaneo completo. Son tres contratos de ejecución distintos.\n\nSe DECLARAN, no se sondean: descubrirlas en ejecución rompería la pureza del compilador (invariante III) y haría no determinista la planificación.\n\nEn la práctica casi nadie las escribe: vienen del perfil de conector.",
+          "$ref": "#/$defs/capabilities"
+        },
+
+        "materialization": {
+          "description": "Qué se copia localmente. Omitirlo equivale a `mode: passthrough` — denegación por defecto (P4).\n\nEl modo INSTANCIA UN CONDUCTO: `mode: index` significa que este binding usa el conducto `materialization.index`, cuya autorización se declara en ConduitPolicy. La comprobación es la regla de flujo, sin excepciones.",
+          "$ref": "#/$defs/materialization"
+        }
+      }
+    }
+  },
+
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+
+  "$defs": {
+
+    "propertyBinding": {
+      "description": "Se admiten dos formas: la cadena breve —el nombre físico— y la expandida.\n\nLa forma canónica es siempre la expandida; el compilador materializa la conversión al normalizar (N2). Se admite la breve, a diferencia de lo que se decidió para los conductos, porque aquí la cardinalidad es otra: un binding puede tener cien propiedades y la verbosidad se paga cien veces.",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Nombre físico. Equivale a `{ column: <valor> }`.",
+          "maxLength": 1024
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+
+            "column": {
+              "description": "Nombre físico, cadena OPACA.\n\nPuede contener puntos cuando el origen es anidado —`address.city`— y esa ruta completa se conserva precisamente para que la emisión pueda RECONSTRUIR el anidamiento original. Los identificadores de OOS no admiten puntos; los nombres físicos sí, porque no son identificadores.",
+              "type": "string",
+              "maxLength": 1024
+            },
+
+            "expression": {
+              "description": "Cuando el acceso físico no es un nombre sino un cálculo: extraer de un JSON, concatenar, convertir. Se usa en lugar de `column`, no además.\n\nA diferencia del `expression` de una entidad —que es documental— este SÍ se ejecuta contra el origen: aquí estamos en el plano físico, que es exactamente donde el cálculo pertenece.",
+              "type": "string",
+              "maxLength": 4096
+            },
+
+            "physicalType": {
+              "description": "Tipo tal como lo almacena el origen: `VARCHAR(255)`, `NUMBER(18,2)`, `timestamptz`. Vocabulario de ODCS, absorbido.\n\nPermite comprobar que el mapeo es plausible: una propiedad `Money<EUR,2>` sobre un `FLOAT` es un error esperando a ocurrir.",
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        }
+      ]
+    },
+
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+
+        "predicatePushdown": {
+          "description": "Operadores de filtro que el origen puede ejecutar. Vocabulario CERRADO: si un perfil pudiera inventar nombres, el planificador no podría razonar sobre ellos.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["eq", "neq", "in", "range", "like", "isNull", "fullText"] }
+        },
+
+        "joinPushdown": { "type": "boolean" },
+
+        "aggregatePushdown": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["count", "sum", "avg", "min", "max", "countDistinct"] }
+        },
+
+        "fullScan": {
+          "description": "`cheap` una tabla pequeña · `expensive` el planificador lo evita salvo necesidad · `forbidden` una API con cuota que no admite recorrido completo.",
+          "enum": ["cheap", "expensive", "forbidden"]
+        },
+
+        "requiredFilters": {
+          "description": "Propiedades sin las cuales el origen no acepta consulta. Muchas APIs no admiten «dame todo»: exigen al menos un identificador de cuenta.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+        },
+
+        "maxRowsPerRequest": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "materialization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "cache" } }, "required": ["mode"] },
+          "then": { "required": ["properties"] }
+        }
+      ],
+
+      "properties": {
+
+        "mode": {
+          "description": "`passthrough` no almacena nada; toda lectura alcanza el origen. Es el valor por defecto.\n`index` almacena TOPOLOGÍA —claves de join y aristas—, no carga útil. Es lo que hace local y sub-milisegundo la travesía del grafo sobre datos que nunca se han movido.\n`cache` almacena las propiedades declaradas. ES UNA COPIA, y así hay que decirlo.",
+          "enum": ["passthrough", "index", "cache"]
+        },
+
+        "properties": {
+          "description": "Qué propiedades se copian. OBLIGATORIO en `mode: cache` y no admitido en los demás.\n\nLa asimetría es deliberada: en `index` lo materializado es derivable —la clave primaria y las propiedades `via` de las relaciones—, mientras que una caché es una copia de datos y quien la declara debe decir exactamente de qué.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+        },
+
+        "refresh": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["every"],
+          "properties": {
+            "every": { "$ref": "type/basic.schema.json#/$defs/duration" },
+            "strategy": {
+              "description": "`table_version` aprovecha el versionado nativo del formato —Iceberg, Delta— y solo reconstruye cuando hay una versión nueva: es lo más barato con diferencia.\n`cdc` consume el flujo de cambios del origen.\n`poll` compara para detectar diferencias; el último recurso.",
+              "enum": ["table_version", "cdc", "poll"]
+            }
+          }
+        },
+
+        "freshnessSLA": {
+          "description": "Antigüedad máxima tolerable de lo materializado.\n\nSuperado el umbral sin refresco, una implementación DEBE declarar el estado degradado al consumidor y NO DEBE servir datos obsoletos como si fueran frescos.\n\nEs normativo y no una recomendación: para un agente, saber que el contexto está degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en silencio convierte una garantía en una trampa.",
+          "$ref": "type/basic.schema.json#/$defs/duration"
+        }
+      }
+    }
+  },
+
+  "$comment": "Un binding no solo LEE etiquetas: las INTRODUCE. Toda propiedad enlazada hereda las `labels` declaradas en su datasource, combinadas por join con las que ya tuviera. La ubicación física es un hecho del mundo, no una decisión de modelado, y por tanto se computa (P2): si la fuente vive en la UE, todo lo enlazado a ella queda etiquetado sin que nadie lo escriba en la entidad."
+}

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.4
+level: L0
+expects: accept
+summary: >
+  La MISMA eliminacion que rompe en remove-property-without-moved, acompanada de moved, es compatible.

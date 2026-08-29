@@ -1,0 +1,1 @@
+{ "code": "OOS3004", "subject": "hr.Employee.totalCompensation", "units": ["EUR", "USD"], "path": "entities/Employee.yaml" }

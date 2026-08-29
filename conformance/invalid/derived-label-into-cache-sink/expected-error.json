@@ -1,0 +1,7 @@
+{
+  "code": "OOS4001",
+  "subject": "hr.Employee.totalCompensation",
+  "conduit": "materialization.cache",
+  "propagatedFrom": ["hr.Employee.baseSalary", "hr.Employee.bonus"],
+  "path": "packages/hr/bindings/warehouse.yaml"
+}

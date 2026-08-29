@@ -1,0 +1,7 @@
+{
+  "changes": [
+    { "code": "OOS5019", "axis": "INDEX", "subject": "hr.Employee",
+      "from": "public.tb_employee", "to": "public.tb_employee_v2" }
+  ],
+  "requiredBump": "minor"
+}

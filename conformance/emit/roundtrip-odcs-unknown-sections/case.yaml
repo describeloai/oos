@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/01-package.md#4.3
+level: L0
+expects: roundtrip
+format: odcs
+summary: >
+  ODCS a OOS y vuelta, conservando literalmente price y contractCreatedTs, que
+  quedan fuera del perfil.

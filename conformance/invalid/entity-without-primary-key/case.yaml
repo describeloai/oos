@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#2
+level: L0
+expects: OOS2010
+summary: >
+  Entidad con nature `entity` y sin primaryKey. El esquema también lo detecta; la implementación DEBE emitir el código específico, no OOS1004.

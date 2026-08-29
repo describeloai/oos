@@ -1,0 +1,63 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata:
+  name: acme-default
+
+# ---------------------------------------------------------------------------
+# Cada conducto declara, por retículo, la etiqueta MÁXIMA que admite.
+# Un conducto no listado aquí tiene autorización ⊥: no admite nada (P4).
+#
+# CODEOWNERS exige revisión de @acme/security para cualquier cambio en este
+# fichero. Elevar una autorización es una decisión de seguridad, no de dominio.
+# ---------------------------------------------------------------------------
+spec:
+  conduits:
+
+    # --- Materialización ----------------------------------------------------
+    materialization.index:
+      gdpr.sensitivity: medium
+      acme.residency:   eu_only
+      oos.maturity:     REVIEWED
+
+    materialization.cache:
+      gdpr.sensitivity: low
+      acme.residency:   eu_only
+      oos.maturity:     STABLE
+
+    # --- Superficies de contexto (MCP, GraphQL, SDK) ------------------------
+    # Dos superficies distintas con autorizaciones distintas. La global sirve
+    # a agentes desplegados fuera de la UE y por eso solo admite `global`.
+    contextSurface.eu:
+      gdpr.sensitivity: medium
+      acme.residency:   eu_only
+      oos.maturity:     STABLE
+
+    contextSurface.global:
+      gdpr.sensitivity: low
+      acme.residency:   global
+      oos.maturity:     STABLE
+
+    # --- Salidas ------------------------------------------------------------
+    # Todo conducto lleva instancia, también los que parecen singleton: puede
+    # haber más de un log (auditoría y depuración) con autorizaciones distintas.
+    export.default:
+      gdpr.sensitivity: none
+      acme.residency:   global
+      oos.maturity:     STABLE
+
+    log.default:
+      gdpr.sensitivity: none
+      acme.residency:   global
+      oos.maturity:     DEPRECATED
+
+    # --- Fuentes alcanzables por funciones ----------------------------------
+    # Las capacidades de una función son conductos como cualquier otro.
+    datasource.erp_snowflake:
+      gdpr.sensitivity: medium
+      acme.residency:   eu_only
+      oos.maturity:     STABLE
+
+    datasource.logistics_api:
+      gdpr.sensitivity: none
+      acme.residency:   global
+      oos.maturity:     STABLE

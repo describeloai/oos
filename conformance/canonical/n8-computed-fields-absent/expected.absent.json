@@ -1,0 +1,11 @@
+{
+  "description": "Campos que NO DEBEN aparecer en la forma canónica del PAQUETE FUENTE, aunque el compilador los calcule y el bundle sí los contenga.",
+  "mustNotContain": [
+    { "at": "/spec/properties/totalCompensation", "key": "labels",
+      "reason": "la etiqueta se computa: join(critical, critical) = critical" },
+    { "at": "/spec/properties/totalCompensation", "key": "lineage",
+      "reason": "el linaje es salida del compilador" },
+    { "at": "/spec/properties/baseSalary", "key": "consumers",
+      "reason": "el grafo de consumidores es salida del compilador" }
+  ]
+}

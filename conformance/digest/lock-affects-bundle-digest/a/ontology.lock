@@ -1,0 +1,17 @@
+lockfileVersion: 1
+generatedFor: minimal@0.1.0
+profiles:
+  oos:
+    version: v1alpha1
+    digest: sha256:4b1d7c9a2e5f80b36d4a1c8e07f92b5d3a6c0e18f4b7d92a5c3e60f18b4d7a2c
+packages:
+  - name: oos.dev/regulatory/gdpr
+    version: 2.1.4
+    range: "^2.1"
+    resolved: https://registry.oos.dev/regulatory/gdpr/-/gdpr-2.1.4.oob
+    digest: sha256:a3f91c7e0b58d24a6c1f83e07b95d4a2c60e17f3b8d95a4c2e70f16b8d3a5c94
+    requestedBy: root
+resolution:
+  digest: sha256:f06b3a91c74e0d825a6c13e70f94b28d5a0c61e83f7b45d92a0c38e61d7b4a17
+  packageCount: 1
+  conflicts: []

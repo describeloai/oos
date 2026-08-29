@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Contractor, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [contractorId]
+  properties:
+    contractorId: { type: String }

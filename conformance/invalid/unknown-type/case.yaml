@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#3
+level: L0
+expects: OOS3001
+summary: >
+  Tipo escalar fuera del conjunto cerrado. `Opaque` es la salida prevista para lo que OOS no modela.

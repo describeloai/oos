@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5008
+summary: >
+  Entidad STABLE devuelta a DRAFT. Retira el contrato y, con él, la visibilidad en producción.

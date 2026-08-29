@@ -1,0 +1,75 @@
+apiVersion: oos/v1alpha1
+kind: Resolution
+
+metadata:
+  name: CustomerIdentity
+  namespace: customers
+  status: STABLE
+  description: >
+    El problema más difícil de los datos empresariales, resuelto como código
+    revisable en vez de como una caja negra dentro de un pipeline.
+
+spec:
+  entity: customers.Customer
+
+  sources:
+    - { datasourceRef: salesforce_crm, key: "Account.Id" }
+    - { datasourceRef: postgres_erp,   key: "erp.customer.id" }
+
+  # Las estrategias se evalúan en orden. La primera que casa, gana.
+  strategies:
+
+    # ── 1. Determinista ────────────────────────────────────────────────────────
+    # Un join sobre clave natural. Encaja nativamente en el índice de topología:
+    # no requiere leer un solo valor de negocio más allá de la propia clave.
+    - id: tax-id-exact
+      type: deterministic
+      confidence: 1.0
+      match:
+        - { salesforce_crm: "Account.VAT_Number__c", postgres_erp: "erp.customer.tax_id" }
+      normalize: [trim, upper, strip_non_alphanumeric]
+
+    - id: duns-exact
+      type: deterministic
+      confidence: 1.0
+      match:
+        - { salesforce_crm: "Account.DunsNumber", postgres_erp: "erp.customer.duns" }
+
+    # ── 2. Probabilística ──────────────────────────────────────────────────────
+    # Requiere leer valores reales a escala. Por tanto exige materialización
+    # declarada Y aprobación humana — no puede activarse por descuido.
+    - id: fuzzy-name-address
+      type: probabilistic
+      requires:
+        materialization: cache        # sube de peldaño: es una excepción, no el defecto
+        approvedBy: "@acme/security"
+        approvalRef: "PR #1842"
+        reviewEvery: 180d             # caduca: hay que revalidarla
+      features:
+        - { property: legalName,      method: jaro_winkler, weight: 0.45 }
+        - { property: postalAddress,  method: normalized_levenshtein, weight: 0.35 }
+        - { property: country,        method: exact, weight: 0.20 }
+      threshold: 0.92
+      onAmbiguity: FLAG_FOR_REVIEW    # nunca fusiona a ciegas
+      maxCandidatesPerRecord: 5
+
+  # ── Precedencia de atributos ──────────────────────────────────────────────────
+  # Resueltas dos fuentes, ¿de cuál sale cada campo? Declarado, no implícito.
+  survivorship:
+    legalName:    { prefer: postgres_erp,   reason: "el ERP es el sistema de registro legal" }
+    contactEmail: { prefer: salesforce_crm, reason: "el CRM tiene el contacto más reciente" }
+    taxId:        { prefer: postgres_erp }
+    segment:      { prefer: salesforce_crm }
+
+  # ── Calidad, medida en CI ─────────────────────────────────────────────────────
+  quality:
+    goldenSet: tests/resolution_golden_set.yaml
+    thresholds:
+      precision: ">= 0.99"    # falsos positivos: fusionar dos empresas distintas
+      recall:    ">= 0.95"    # falsos negativos: no ver que son la misma
+    onRegression: FAIL_BUILD
+
+  audit:
+    recordDecisions: true     # qué estrategia unificó cada par, y con qué confianza
+    retention: 5y
+    sink: customer-managed

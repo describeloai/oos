@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#2.1
+level: L0
+expects: OOS2011
+summary: >
+  Mapeo que no cubre la clave primaria de la entidad destino. Sin clave no hay instancia identificable.

@@ -1,0 +1,253 @@
+# OOS · Open Ontology Specification
+
+**Ontology-as-Code.**
+
+> OOS convierte un repositorio de Git **descriptivo** en un paquete **portable, tipado y
+> versionado**, cuya **gobernanza se demuestra al compilar** —sin red, sin credenciales y
+> sin tocar un solo dato— y cuyo artefacto **ejecuta cualquier motor conforme**.
+
+Apache-2.0 · `oos.dev/v1alpha1` · **borrador inestable, no implementar en producción**
+
+<sub>*«Cualquier motor conforme» es una intención de diseño con evidencia —73 casos de
+conformidad, 52 códigos, identidad determinista, implementación de referencia sin
+privilegios— y **no una prueba**. Se vuelve un hecho el día que una segunda implementación
+independiente pasa la [suite](conformance/README.md).*</sub>
+
+---
+
+## El problema
+
+Tu empresa ya sabe describir sus datos. Tiene catálogos, contratos de datos, capas
+semánticas y diagramas. Lo que no tiene es una forma de **demostrar** que esa descripción
+es cierta, ni de **ejecutarla**.
+
+Las etiquetas de PII se ponen a mano y dejan de ser ciertas en seis meses. Las políticas
+viven en una plataforma y no en el pull request que cambia el dato. El linaje se escribe
+en Confluence. Y cuando un agente de IA pregunta, nadie puede decir con certeza qué tenía
+permitido saber ni quién lo autorizó.
+
+**El cuello de botella no es describir. Es que la descripción no obliga a nada.**
+
+---
+
+## Qué garantiza
+
+Cinco promesas. Una implementación conforme las cumple todas o no es conforme.
+
+| | Garantía |
+|---|---|
+| **G1** | **Identidad determinista.** El mismo commit produce el mismo digest, siempre y en cualquier máquina. |
+| **G2** | **Gobernanza demostrada.** Si compila, ningún dato clasificado alcanza un sumidero no autorizado. No es una alerta: es que **no compila**. |
+| **G3** | **Linaje que no miente.** El linaje lo produce el compilador. Nadie puede escribirlo a mano, así que nadie puede desincronizarlo. |
+| **G4** | **Verificable sin acceso.** G1 y G2 se comprueban leyendo el repositorio. **Un auditor externo valida tu gobernanza sin que le concedas acceso a un solo dato.** |
+| **G5** | **Portable.** El paquete se ejecuta sin su autor, sin su proveedor y sin ninguna plataforma. Cualquier motor conforme lo corre. |
+
+---
+
+## Las cuatro ideas de las que sale todo lo demás
+
+Una especificación es elegante cuando un puñado de ideas genera el resto. Estas son las
+cuatro:
+
+**1 · La clasificación es un tipo, no una etiqueta.**
+Y por tanto **se propaga**: si `netComp` se calcula desde `salary`, hereda su
+clasificación sin que nadie lo escriba. Los destinos —caché, exportación, superficie de
+agente, logs— tienen nivel de autorización. Un flujo cuesta arriba es un error de tipos.
+→ *De aquí salen la propagación, los sumideros y toda la familia de errores `OOS4xxx`.*
+
+**2 · La compilación es pura.**
+`bundle = f(fuente@commit, versión OOS, lock)`. Sin red, sin credenciales, sin reloj, sin
+aleatoriedad.
+→ *De aquí salen el digest reproducible, la firma, la promoción del mismo artefacto entre
+entornos, el rollback — y el hecho de que la comprobación de gobernanza no necesite datos.*
+
+**3 · Lo derivado no se declara.**
+Un campo que se puede computar **no puede** declararse. El linaje, la clasificación
+propagada y el grafo de consumidores son salida, nunca entrada.
+→ *De aquí sale que la documentación no pueda mentir, y que una política no pueda ser la
+salida de un programa: si lo fuera, nadie podría revisarla en un pull request.*
+
+**4 · El paquete se basta a sí mismo.**
+Lleva dentro su contrato de ejecución completo: qué significa, dónde está, quién puede
+verlo, qué se puede hacer y cómo se verifica.
+→ *De aquí sale que no haya plataforma obligatoria, que el motor sea reemplazable y que
+irse sea barato.*
+
+Y dos disciplinas: **denegación por defecto** en toda capacidad, acceso y
+materialización; y **componer antes que inventar**.
+
+---
+
+## Cómo se ve
+
+Un retículo importado, un conducto, una etiqueta y una derivada:
+
+```yaml
+# lattices/ · importado de oos.dev/regulatory/gdpr
+kind: Lattice
+metadata: { name: sensitivity, namespace: gdpr }
+spec: { levels: [none, low, medium, high, critical], join: max }
+```
+
+```yaml
+# conduits.yaml · qué sale por dónde   ← revisado por @acme/security
+kind: ConduitPolicy
+spec:
+  conduits:
+    materialization.cache: { gdpr.sensitivity: low }
+```
+
+```yaml
+# packages/hr/entities/Employee.yaml
+properties:
+  baseSalary: { type: Money<EUR,2>, labels: { gdpr.sensitivity: critical } }
+  bonus:      { type: Money<EUR,2>, labels: { gdpr.sensitivity: critical } }
+
+  totalCompensation:                        # sin etiqueta: el compilador la computa
+    derivedFrom: [baseSalary, bonus]        # join(critical, critical) = critical
+```
+
+```yaml
+# packages/hr/bindings/warehouse.yaml
+materialization: { mode: cache }            # ← escribiría totalCompensation en disco
+```
+
+```console
+$ ore compile
+
+error[OOS4001]: flujo de información no autorizado
+
+  hr.Employee.baseSalary  ──derivación──▶  totalCompensation  ──binding──▶  materialization.cache
+
+  etiqueta del origen      : gdpr.sensitivity = critical   (declarada)
+  etiqueta de la derivada  : gdpr.sensitivity = critical   (computada, join)
+  autorización del conducto: gdpr.sensitivity = low
+
+  → declarado en  packages/hr/entities/Employee.yaml:22
+  → propagado a   packages/hr/entities/Employee.yaml:31
+  → alcanza       packages/hr/bindings/warehouse.yaml:12
+
+  ayuda: baja el modo a `passthrough`, aplica un desclasificador autorizado
+         (`mask`, `aggregate`), o eleva la autorización del conducto en
+         conduits.yaml — lo último requiere revisión de @acme/security.
+```
+
+Nadie clasificó `totalCompensation`. El compilador lo hizo, y por eso la etiqueta sigue
+siendo cierta dentro de seis meses.
+
+Sin conexión a la base de datos. Sin credenciales. Sin un solo dato leído.
+
+---
+
+## Qué **no** es OOS
+
+| No es | Eso es |
+|---|---|
+| un vocabulario de modelado | **Apache Ossie** |
+| un formato de contrato de datos | **ODCS / Bitol** |
+| un lenguaje de autorización | **Cedar** |
+| un lenguaje de restricciones | **SHACL** |
+| una base de datos, un catálogo, un ETL o un lenguaje de consulta | otra cosa |
+| una plataforma | ninguna hace falta |
+
+> **Ossie y ODCS son vocabularios. OOS es un régimen.**
+> Un vocabulario dice cómo nombrar las cosas. Un régimen dice qué debe ser cierto, quién
+> lo comprueba y qué ocurre cuando no lo es.
+
+OOS **absorbe** todo el modelo semántico y contractual de Ossie y ODCS. Lo que define
+está sujeto al principio **P7**: todo campo que ya exista en otro estándar abierto y que
+OOS redefina lleva justificación escrita, o es un defecto.
+
+Lo que aporta son cuatro cosas, y solo la última son campos: un **régimen de identidad**,
+un **modelo de compilación**, un **contrato de conformidad** y un **vocabulario de
+gobernanza**.
+
+---
+
+## Niveles de conformidad
+
+| Nivel | Qué hace | ¿Acceso a datos? |
+|:---:|---|:---:|
+| **L0** · Validador | valida, normaliza, comprueba el flujo, emite digest | **no** |
+| **L1** · Servidor de contexto | entidades, relaciones, tipos, políticas, linaje | **no** |
+| **L2** · Ejecutor | resuelve bindings, aplica obligaciones, federa consultas | sí |
+| **L3** · Actor | ejecuta funciones y hace cumplir `autonomy` | sí, con escritura |
+
+**L0 es lo que hace de OOS un estándar.** Es hermético e implementable en cualquier
+lenguaje en un fin de semana: una acción de CI, un linter de editor, un `pre-commit`.
+
+La conformidad la decide la [suite](conformance/README.md), no una implementación. **ORE,
+la implementación de referencia, no tiene ningún privilegio** y ejecuta la suite como un
+consumidor externo más.
+
+---
+
+## Estado
+
+```
+spec/v1alpha1/     documentos normativos
+schemas/v1alpha1/  JSON Schema publicado — generado
+conformance/       suite de conformidad — NORMATIVA
+examples/          ontologías de referencia
+docs/              diseño y razonamiento — no normativo
+```
+
+| | v1alpha1 |
+|---|---|
+| `00-overview` · alcance, conformidad, principios, absorción | ✅ borrador |
+| `04-flow` · retículos, conductos, desclasificadores | ✅ borrador |
+| `90-canonical-form` · normalización, JCS, digest | ✅ borrador |
+| `99-errors` · registro de códigos | ✅ borrador |
+| `01-package` · `02-entity` · `03-binding` (perfiles) | ⬜ **siguiente** |
+| `91-versioning` · `schemas/` | ⬜ |
+| [`examples/acme-retail`](examples/acme-retail/README.md) | ✅ completo |
+
+Alcance cerrado de v1alpha1: cinco documentos. `Package`, `Entity` y `Binding` son
+**perfiles** sobre ODCS y Ossie; `Lattice` y `ConduitPolicy` son **la única gramática
+nueva que la especificación introduce**. Las políticas son **Cedar**, no un documento
+OOS. `Rule`, `Function`, `Test`, `Resolution` y la resolución de dependencias quedan
+aplazados.
+
+---
+
+## Prototipo
+
+Ordenado por riesgo retirado, no por capas.
+
+| Fase | Qué | Criterio de éxito |
+|---|---|---|
+| **0** · Esqueleto | esquemas, `ore validate`, `ore compile` | compila un paquete de ejemplo y emite digest estable |
+| **1** · `source add` · `discover` · `review` | separar secreto de conexión, introspección, FK→relaciones, heurísticas PII con confianza, **y una cola interactiva de decisiones para lo dudoso** | apuntar a un esquema sucio de ~50 tablas y que un arquitecto diga *"está un 80% bien"* tras contestar cinco preguntas |
+| **2** · La gobernanza que no compila | retículos, conductos, propagación por derivación, chequeo de flujo, Cedar embebido | `ore validate` falla con error legible y cadena causal ante PII que alcanza un conducto no autorizado |
+| **3** · Consumo | `ore dev` + servidor MCP + obligaciones en lectura | un agente pregunta por MCP y el PII vuelve enmascarado sin haber hecho nada |
+
+**Justo después del prototipo, y por delante de todo lo demás:** `dependencies` +
+`ontology.lock` + **el primer perfil de conector**. No es comodidad de adopción — sin él,
+`capabilities` es un campo que nadie rellena bien y la federación no funciona. Es
+prerrequisito de la segunda fuente de datos, no un lujo posterior.
+
+Detalle, estimaciones y qué queda fuera: [decisiones abiertas](docs/99-decisiones-abiertas.md).
+
+---
+
+## Diseño y razonamiento
+
+**[docs/DESIGN.md](docs/DESIGN.md)** — documento único, no normativo. El *porqué* detrás de
+cada decisión, y lo que queda fuera del alcance de la especificación:
+
+| Sección | Contenido |
+|---|---|
+| 1 · Por qué existe | problema y tesis |
+| 2 · El eje | los cuatro estados, las cinco piezas |
+| 3 · ORE | tres caras, dos planos, GitOps, conectar una fuente, superficie de servicio |
+| 4 · Materialización | la escalera de metadatos, por qué la topología |
+| 5 · Posición | Foundry y SuperRepo, Ossie y ODCS, catálogos, cuellos de botella |
+| 6 · Modelo de negocio | open core, mecánica de ingreso, licencia |
+| 7 · Decisiones abiertas | lo que falta por cerrar |
+
+**Reglas de trabajo:**
+
+1. **`spec/` manda.** Si `DESIGN.md` la contradice, el defecto está en `DESIGN.md`.
+2. **La suite de conformidad manda sobre `spec/`.** Si discrepan, el defecto está en el
+   texto normativo.
+3. **Sin duplicación.** Lo que define la especificación no se repite en `DESIGN.md`.

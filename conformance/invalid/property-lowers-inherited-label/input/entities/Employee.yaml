@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Employee
+  namespace: hr
+  labels: { gdpr.sensitivity: high }     # cierto del conjunto
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    nationalId:
+      type: String
+      labels: { gdpr.sensitivity: critical }   # elevar: legítimo
+    workEmail:
+      type: String
+      labels: { gdpr.sensitivity: low }        # rebajar: OOS4012

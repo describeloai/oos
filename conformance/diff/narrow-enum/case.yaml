@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5002
+summary: >
+  Valor retirado de un enum. El consumidor que lo manejaba deja de tener un caso válido.

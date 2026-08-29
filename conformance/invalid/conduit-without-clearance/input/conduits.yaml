@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata: { name: default }
+spec:
+  conduits:
+    # Solo se autoriza la caché. `materialization.index` no aparece, y por tanto
+    # su autorización es ⊥: no admite nada (P4).
+    materialization.cache:
+      gdpr.sensitivity: low

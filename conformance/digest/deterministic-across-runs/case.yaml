@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#2
+level: L0
+expects: stable
+summary: >
+  El mismo paquete compilado N veces produce el mismo digest. Verifica la pureza de la compilacion.

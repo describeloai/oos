@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/01-package.md#4
+level: L0
+expects: roundtrip
+format: odcs
+summary: >
+  Package a contrato ODCS v3.1.0 y vuelta debe ser la identidad. Ejercita las
+  cinco secciones del perfil mas la extension dependencies.

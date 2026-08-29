@@ -1,0 +1,1 @@
+{ "code": "OOS4003", "subject": "hr.Employee.email", "label": "gdpr.sensitivity:extreme", "path": "entities/Employee.yaml" }

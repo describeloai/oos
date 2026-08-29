@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+dependencies:
+  - { package: acme/alpha, version: "^1.0" }

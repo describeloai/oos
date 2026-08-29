@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5019
+summary: >
+  Origen fisico de una entidad indexada. No rompe a nadie: obliga a reconstruir el indice.

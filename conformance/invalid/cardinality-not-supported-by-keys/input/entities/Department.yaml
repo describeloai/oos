@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Department, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [departmentId]
+  properties:
+    departmentId: { type: String }

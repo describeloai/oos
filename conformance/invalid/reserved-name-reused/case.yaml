@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#8
+level: L0
+expects: OOS2006
+summary: >
+  Reutilización de un nombre reservado, con OTRO significado. Es el fallo más silencioso de una ontología viva.

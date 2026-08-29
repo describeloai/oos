@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#7
+level: L0
+expects: OOS3003
+summary: >
+  temporal declarado con transactionTime y sin validTime. El eje obligatorio es el del mundo, no el del sistema.

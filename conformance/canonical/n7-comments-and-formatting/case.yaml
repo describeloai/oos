@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N7
+level: L0
+expects: converge
+summary: >
+  Comentarios, indentacion, flow vs block y lineas en blanco no forman parte del significado.

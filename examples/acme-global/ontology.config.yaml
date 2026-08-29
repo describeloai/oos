@@ -1,0 +1,85 @@
+apiVersion: oos/v1alpha1
+kind: OntologyConfig
+
+metadata:
+  name: acme-global
+  namespace: acme
+  version: 2.4.0                    # semver semántico: minor = aditivo, major = rompedor
+  description: Ontología corporativa de Acme Global — clientes, cadena de suministro y personas
+
+spec:
+  # ── Requisitos de ejecución ──────────────────────────────────────────────────
+  runtime:
+    oreVersion: ">=0.9.0 <2.0.0"
+
+  # ── Comportamiento por defecto de todo el repositorio ────────────────────────
+  defaults:
+    language: es
+    timezone: Europe/Madrid
+
+    # Peldaño de materialización por defecto. Se sube explícitamente por binding.
+    materialization: passthrough
+
+    # Modo de enriquecimiento con IA durante el scaffolding.
+    #   local   → modelo local, nada sale de la máquina
+    #   byo     → clave del propio cliente contra su proveedor
+    #   managed → control plane del vendor
+    ai: byo
+
+    # Detección heurística de PII al ejecutar `ore discover`.
+    piiDetection: active
+
+    # Reglas de higiene que fallan la compilación, no advierten.
+    strict:
+      piiMaterialization: DENY        # PII + cache = error de compilación
+      untypedProperties: DENY
+      undeclaredBindings: DENY
+      profilingOnPII: DENY            # nada de min/max ni muestras sobre columnas PII
+
+  # ── Fuentes de datos ─────────────────────────────────────────────────────────
+  # Se declara QUÉ fuentes existen y DE DÓNDE sale su conexión.
+  # El secreto jamás toca Git.
+  datasources:
+    - name: salesforce_crm
+      type: salesforce
+      connectionEnv: SALESFORCE_CRM_URL
+      access: read-only
+
+    - name: postgres_erp
+      type: postgres
+      connectionEnv: ERP_DATABASE_URL
+      access: read-write              # necesario para functions/ con writeback
+
+    - name: snowflake_scm
+      type: snowflake
+      connectionEnv: SNOWFLAKE_SCM_URL
+      access: read-only
+      residency: eu-west-1            # se verifica contra policies/data_residency
+
+    - name: workday_hr
+      type: workday
+      connectionEnv: WORKDAY_API_URL
+      access: read-only
+      classification: CONFIDENTIAL    # eleva el listón de política para todo lo que cuelgue
+
+  # ── Identidad del sujeto en tiempo de consulta (para ABAC) ───────────────────
+  identity:
+    provider: oidc
+    issuerEnv: OIDC_ISSUER_URL
+    subjectAttributes:                # de dónde salen los atributos que evalúan las policies
+      employeeId:  claim: sub
+      department:  claim: "acme/department"
+      clearance:   claim: "acme/clearance"
+      country:     claim: "acme/country"
+
+  # ── Paquetes del repositorio ─────────────────────────────────────────────────
+  packages:
+    - customers
+    - supply_chain
+    - people
+
+  # ── Superficies de servicio expuestas por ORE ────────────────────────────────
+  serving:
+    mcp:     { enabled: true, expose: [STABLE] }        # los agentes solo ven STABLE
+    graphql: { enabled: true, expose: [STABLE, REVIEWED] }
+    native:  { enabled: true }

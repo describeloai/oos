@@ -1,0 +1,82 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+
+metadata:
+  name: hr
+  version: 2.4.0
+  status: active          # vocabulario de ODCS → oos.maturity: STABLE
+  domain: people
+  tags: [people, compensation]
+
+  # `id` no se escribe: se deriva del nombre cualificado (UUIDv5). Solo aparece
+  # explícito al importar un contrato ODCS existente.
+
+  # Forma estructurada de ODCS. `limitations` es la más valiosa en un artefacto
+  # de gobernanza: dice dónde NO se debe usar esto, que es justo lo que ningún
+  # esquema puede inferir.
+  description:
+    purpose: >
+      Modelo canónico de empleado y compensación para toda la organización.
+    limitations: >
+      No es fuente para nómina. Los importes son los vigentes según Workday y
+      no reflejan retenciones, regularizaciones ni pagos en especie.
+    usage: >
+      Consumo en lectura vía MCP o GraphQL. La compensación individual exige
+      finalidad declarada; los agregados exigen grupos de ocho o más.
+
+spec:
+  owner: team:people-platform     # handle, no nombre libre: alinea con CODEOWNERS
+
+  team:
+    name: People Platform
+    description: Mantiene el dominio de personas y sus contratos de datos.
+    members:
+      - username: daustin@acme.example
+        name: David Austin
+        role: Owner
+        dateIn: "2024-03-01"
+      - username: mhopper@acme.example
+        role: Data Steward
+        dateIn: "2025-01-15"
+
+  # Quién puede SOLICITAR acceso y quién lo aprueba. Es metadato de proceso —a
+  # quién dirigirse—, no una decisión evaluable: esa se toma en Cedar y la
+  # aplica el motor en cada consulta.
+  roles:
+    - role: hr_analyst
+      access: read
+      description: Lectura de compensación del propio departamento, enmascarada.
+      firstLevelApprovers: team:people-platform
+      secondLevelApprovers: team:security
+
+  support:
+    - channel: "#hr-ontology"
+      tool: slack
+      scope: interactive
+    - channel: hr-ontology@acme.example
+      tool: email
+      scope: announcements
+
+  sla:
+    # El ÚNICO campo normativo del SLA. `ore diff` falla si un cambio rompedor
+    # llega sin haberse anunciado con esta antelación (OOS5022).
+    breakingChangePolicy:
+      noticePeriod: 90d
+
+    # Todo lo demás viaja sin interpretar: OOS no lo evalúa, así que no lo tipa.
+    properties:
+      - property: availability
+        value: 99.9
+        unit: percent
+      - property: frequency
+        value: 15
+        unit: minutes
+        driver: operational
+
+  authoritativeDefinitions:
+    - url: https://wiki.acme.example/glosario/compensacion
+      type: businessDefinition
+      description: Glosario de compensación aprobado por el comité de personas.
+
+  dependencies:
+    - { package: acme/core-identity, version: "^1.2" }

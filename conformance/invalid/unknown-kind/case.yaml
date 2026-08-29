@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/00-overview.md#4
+level: L0
+expects: OOS1003
+summary: >
+  kind que no pertenece a los cinco documentos de v1alpha1. Segundo eslabón del despacho, después de apiVersion.

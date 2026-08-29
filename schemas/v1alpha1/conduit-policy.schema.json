@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/conduit-policy.schema.json",
+  "title": "ConduitPolicy",
+  "description": "Declara qué información puede salir por dónde.\n\nUn conducto es cualquier lugar por el que la información abandona su origen: una materialización en disco, una fuente alcanzable por una función, una superficie servida a un agente, una exportación, un log. Cada uno declara aquí la etiqueta MÁXIMA que admite, por retículo.\n\nLa regla que gobierna todo el sistema: la información con etiqueta `L` no debe alcanzar un conducto con autorización `C` salvo que `L ⊑ C`, o que atraviese un desclasificador autorizado. Toda la familia de errores OOS4xxx es una violación de esa regla.\n\nEste documento suele exigir revisión del equipo de seguridad vía CODEOWNERS: elevar una autorización es una decisión de seguridad, no de dominio.\n\nNormativo: spec/v1alpha1/04-flow.md §4",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+
+  "properties": {
+
+    "apiVersion": {
+      "description": "Versión de la especificación a la que se ajusta este documento.",
+      "const": "oos.dev/v1alpha1"
+    },
+
+    "kind": {
+      "const": "ConduitPolicy"
+    },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+
+        "name": {
+          "description": "Nombre de esta política de conductos. Un repositorio puede tener varias —típicamente una importada de un paquete regulatorio y otra local— y se combinan tomando la autorización MÁS RESTRICTIVA de cada conducto: una política local no puede aflojar lo que una importada restringe.",
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
+        "namespace": {
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
+        "description": {
+          "type": "string",
+          "maxLength": 2048
+        }
+      }
+    },
+
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conduits"],
+      "properties": {
+
+        "conduits": {
+          "description": "Autorización de cada conducto, por retículo.\n\nUn conducto NO listado aquí tiene autorización ⊥ y no admite nada: denegación por defecto (principio P4). Omitir un conducto no es dejarlo abierto, es cerrarlo.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "$ref": "type/basic.schema.json#/$defs/conduitRef" },
+          "additionalProperties": {
+            "description": "Autorización de un conducto: para cada retículo, la etiqueta máxima que admite.\n\nLas claves son nombres cualificados de retículo (`gdpr.sensitivity`) y los valores, niveles de ese retículo (`medium`). Que el nivel exista realmente en ese retículo es una relación entre documentos: el esquema solo comprueba la forma, y el compilador emite OOS4003 si la etiqueta no pertenece a ningún retículo declarado o importado.\n\nUn retículo omitido en un conducto concreto se trata como ⊥ para ese retículo.",
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" },
+            "additionalProperties": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+          }
+        }
+      }
+    }
+  },
+
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+
+  "$comment": "Clases de conducto admitidas en v1alpha1 —definidas en type/basic.schema.json#/$defs/conduitRef—: materialization, datasource, contextSurface, export, log. Es un conjunto CERRADO por la misma razón que lo es el vocabulario de desclasificadores: un conjunto abierto no sería analizable estáticamente."
+}

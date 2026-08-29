@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5020
+summary: >
+  Modo de materializacion cambiado. Legitimo en gobernanza y con consecuencias de rendimiento que hay que anunciar.

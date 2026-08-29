@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#4.1
+level: L0
+expects: different
+summary: >
+  Un centimo de diferencia produce digests distintos. Sensibilidad de G1 llevada al limite.

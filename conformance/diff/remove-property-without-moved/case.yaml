@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5001
+summary: >
+  Propiedad eliminada de una entidad STABLE sin declarar moved ni reserved.

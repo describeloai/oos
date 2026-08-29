@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/03-binding.md#5
+level: L0
+expects: roundtrip
+format: odcs
+summary: >
+  Binding a seccion Servers de ODCS y vuelta. Incluye una ruta fisica anidada
+  y materializacion en modo index.

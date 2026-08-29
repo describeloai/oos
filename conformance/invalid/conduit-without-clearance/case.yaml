@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#4
+level: L0
+expects: OOS4011
+summary: >
+  Binding que instancia un conducto sin autorización declarada. Ninguna
+  propiedad está etiquetada: falla por denegación por defecto, no por flujo.

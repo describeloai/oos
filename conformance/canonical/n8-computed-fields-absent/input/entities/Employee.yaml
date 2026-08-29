@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    baseSalary: { type: Money<EUR, 2>, labels: { gdpr.sensitivity: critical } }
+    bonus:      { type: Money<EUR, 2>, labels: { gdpr.sensitivity: critical } }
+    totalCompensation:
+      type: Money<EUR, 2>
+      derivedFrom: [hr.Employee.baseSalary, hr.Employee.bonus]

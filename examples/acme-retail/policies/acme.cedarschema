@@ -1,0 +1,112 @@
+// =============================================================================
+// GENERADO POR ORE — NO EDITAR
+//
+//   fuente : acme-retail @ 0.4.0
+//   oos    : oos.dev/v1alpha1
+//   digest : sha256:9f2c41a7e0b83d5c6e1f04a9b7d2c8e35f60a1b4d9c7e2a08a3b5d6c1e4f7a09
+//
+// Este fichero es DERIVADO (principio P2): se computa desde las etiquetas,
+// entidades y propiedades del paquete. Se compromete a Git únicamente para
+// que el tooling de Cedar funcione sin compilar, igual que un lockfile.
+// `ore validate` falla si está desincronizado.
+//
+// Regenerar:  ore compile --emit cedar-schema
+// =============================================================================
+
+namespace Acme {
+
+    // -------------------------------------------------------------------------
+    // Etiquetas.
+    //
+    // Cada valor de cada retículo se proyecta como una entidad Cedar. Es lo que
+    // permite escribir `resource in Label::"gdpr.sensitivity:critical"` en vez de
+    // enumerar propiedades: una entidad nueva queda gobernada el día que se
+    // etiqueta, sin tocar ninguna política.
+    // -------------------------------------------------------------------------
+    entity Label;
+    //   gdpr.sensitivity : none ⊑ low ⊑ medium ⊑ high ⊑ critical
+    //   oos.maturity     : DRAFT ⊑ REVIEWED ⊑ STABLE ⊑ DEPRECATED
+    //   acme.residency   : global ⊑ eu_and_us ⊑ eu_only
+
+    // -------------------------------------------------------------------------
+    // Recursos.
+    //
+    // `Property in [Label, EntityType]` es la proyección clave: una propiedad
+    // pertenece a la vez a su entidad y a todas sus etiquetas, así que el
+    // operador `in` de Cedar resuelve ambas jerarquías sin código adicional.
+    // -------------------------------------------------------------------------
+    entity EntityType in [Label] = {
+        "namespace": String,
+        "maturity":  String,
+    };
+
+    entity Property in [Label, EntityType] = {
+        "entity":    EntityType,
+        "owner":     Employee,          // sujeto al que se refiere el dato, si aplica
+        "derived":   Bool,
+    };
+
+    // -------------------------------------------------------------------------
+    // Principales.
+    //
+    // `Employee in [Employee]` modela la cadena jerárquica: la autorreferencia
+    // hr.Employee.manager se proyecta a la jerarquía de entidades de Cedar.
+    // Eso da ReBAC estilo Zanzibar sin añadir un segundo sistema.
+    // -------------------------------------------------------------------------
+    entity Role;
+
+    entity Employee in [Employee, Role, Department] = {
+        "department": Department,
+        "region":     String,
+    };
+
+    entity Department;
+
+    entity Agent in [Role] = {
+        "operator":     Employee,       // humano responsable del agente
+        "deployRegion": String,
+    };
+
+    // -------------------------------------------------------------------------
+    // Acciones.
+    //
+    // `read` y `aggregate` son distintas a propósito: `aggregate` admite el
+    // desclasificador que `read` no puede usar.
+    // -------------------------------------------------------------------------
+    action "read" appliesTo {
+        principal: [Employee, Agent],
+        resource:  [Property, EntityType],
+        context: {
+            "purpose": String,
+            "conduit": String,          // qué conducto sirve esta petición
+        }
+    };
+
+    action "aggregate" appliesTo {
+        principal: [Employee, Agent],
+        resource:  [Property],
+        context: {
+            "purpose":   String,
+            "conduit":   String,
+            "groupSize": Long,          // el motor lo rellena; la política lo compara
+        }
+    };
+
+    action "export" appliesTo {
+        principal: [Employee, Agent],
+        resource:  [Property, EntityType],
+        context: {
+            "purpose":     String,
+            "destination": String,
+        }
+    };
+
+    action "invoke" appliesTo {
+        principal: [Employee, Agent],
+        resource:  [EntityType],
+        context: {
+            "purpose":  String,
+            "function": String,
+        }
+    };
+}

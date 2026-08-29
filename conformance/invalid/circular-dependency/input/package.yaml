@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: hr, version: 1.0.0, status: active, domain: people }
+spec:
+  owner: team:people
+  dependencies:
+    # acme/alpha depende de acme/beta, que depende de acme/alpha.
+    - { package: acme/beta, version: "^1.0" }

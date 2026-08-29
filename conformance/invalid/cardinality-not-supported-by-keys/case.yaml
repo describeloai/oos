@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: OOS3005
+summary: >
+  Relación one_to_one sostenida por una propiedad que no es única. La cardinalidad afirma algo que las claves declaradas no respaldan.

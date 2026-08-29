@@ -1,0 +1,1 @@
+{ "code": "OOS2011", "subject": "hr.Employee", "missing": ["employeeId"], "path": "bindings/warehouse.yaml" }

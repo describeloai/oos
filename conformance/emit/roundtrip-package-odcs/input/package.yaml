@@ -1,0 +1,34 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata:
+  name: hr
+  version: 2.4.0
+  status: active
+  domain: people
+  tenant: AcmeInc
+  tags: [people, compensation]
+  description:
+    purpose: Modelo canonico de empleado y compensacion.
+    limitations: No es fuente para nomina.
+    usage: Consumo en lectura via MCP o GraphQL.
+spec:
+  owner: team:people-platform
+  team:
+    name: People Platform
+    members:
+      - { username: daustin@acme.example, role: Owner, dateIn: "2024-03-01" }
+  roles:
+    - role: hr_analyst
+      access: read
+      firstLevelApprovers: team:people-platform
+      secondLevelApprovers: team:security
+  support:
+    - { channel: "#hr-ontology", tool: slack, scope: interactive }
+  sla:
+    breakingChangePolicy: { noticePeriod: 90d }
+    properties:
+      - { property: availability, value: 99.9, unit: percent }
+  authoritativeDefinitions:
+    - { url: "https://wiki.acme.example/glosario", type: businessDefinition }
+  dependencies:
+    - { package: acme/core-identity, version: "^1.2" }

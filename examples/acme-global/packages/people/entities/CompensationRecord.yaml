@@ -1,0 +1,104 @@
+apiVersion: oos/v1alpha1
+kind: Entity
+
+metadata:
+  name: CompensationRecord
+  namespace: people
+  status: STABLE
+  description: >
+    Retribución de un empleado en un intervalo de vigencia. Un salario no es un número:
+    es una función del tiempo. Esta entidad es el ejemplo canónico de bitemporalidad.
+
+spec:
+  identity:
+    primaryKey: id
+
+  # ── Bitemporalidad ───────────────────────────────────────────────────────────
+  # Dos ejes distintos, y confundirlos es la fuente número uno de errores
+  # en auditoría retributiva:
+  #   validTime  → cuándo fue cierto en el mundo
+  #   systemTime → cuándo lo supo el sistema
+  # Una subida retroactiva aprobada en marzo con efecto desde enero tiene
+  # validFrom = enero y recordedAt = marzo. Un informe "a fecha de febrero"
+  # debe NO verla; un informe "según lo que sabíamos en abril" debe verla.
+  temporality:
+    mode: bitemporal
+    validTime:
+      from: effectiveFrom
+      to: effectiveTo               # null = vigente
+    systemTime:
+      recorded: recordedAt
+    defaultQuery: as_of_now         # ORE aplica esto si el consumidor no especifica
+
+  properties:
+    id:
+      type: string
+      format: uuid
+
+    employeeId:
+      type: string
+      format: uuid
+      description: Empleado al que corresponde esta retribución
+
+    # ── Dinero: nunca un número suelto ─────────────────────────────────────────
+    baseSalary:
+      type: Money
+      precision: 2
+      currency:
+        property: currency          # la divisa es un campo, no una suposición
+      fx:
+        # Cuando un consumidor pide esto en otra divisa, ORE convierte con el
+        # tipo vigente en el validTime del registro — no con el tipo de hoy.
+        policy: as_of_valid_time
+        source: finance.FxRate
+      tags: ["PII", "SENSITIVE"]
+      classification: CONFIDENTIAL
+
+    currency:
+      type: string
+      format: iso-4217              # EUR, USD, GBP…
+
+    bonusTarget:
+      type: Money
+      precision: 2
+      currency: { property: currency }
+      fx: { policy: as_of_valid_time, source: finance.FxRate }
+      tags: ["PII", "SENSITIVE"]
+      classification: CONFIDENTIAL
+      required: false
+
+    effectiveFrom:
+      type: date
+
+    effectiveTo:
+      type: date
+      required: false
+
+    recordedAt:
+      type: timestamp
+
+    changeReason:
+      type: string
+      enum: [HIRE, PROMOTION, MERIT_INCREASE, MARKET_ADJUSTMENT, ROLE_CHANGE, CORRECTION]
+
+    # ── Campo computado ────────────────────────────────────────────────────────
+    # Se declara lo que un humano decide. Se computa lo que se puede derivar.
+    # Un `lineage:` escrito a mano sería documentación, y la documentación miente.
+    totalTargetComp:
+      type: Money
+      precision: 2
+      currency: { property: currency }
+      computed:
+        by: rules/compute_total_comp.rules.yaml
+      tags: ["PII", "SENSITIVE"]
+      classification: CONFIDENTIAL
+
+  # Ninguna consulta a esta entidad se sirve sin evaluar esta política.
+  # No es una recomendación: el motor lo aplica.
+  governedBy:
+    - people.CompensationAccess
+
+  complianceFrameworks:
+    - GDPR_Art9
+    - EU_Pay_Transparency_Directive_2023_970
+    - SOX_404

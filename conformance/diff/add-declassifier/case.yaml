@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.2
+level: L0
+expects: OOS5017
+summary: >
+  Desclasificador anadido donde no lo habia. Abre flujos antes ilegales, aunque el dato servido sea menos.

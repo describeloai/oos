@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/99-errors.md#3
+level: L0
+expects: OOS1001
+summary: >
+  YAML sintácticamente inválido: llave sin cerrar. Falla antes de cualquier comprobación semántica.

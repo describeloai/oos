@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: hr, version: 1.0.0, status: active, domain: people }
+spec:
+  # Nombre libre en vez de handle. Debe ser `team:...` o `user:...`.
+  owner: People Platform

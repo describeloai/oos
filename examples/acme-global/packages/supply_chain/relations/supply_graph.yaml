@@ -1,0 +1,44 @@
+apiVersion: oos/v1alpha1
+kind: RelationSet
+
+metadata:
+  name: supply_graph
+  namespace: supply_chain
+  status: STABLE
+  description: >
+    Las aristas que se materializan en el índice de topología. Son las que
+    convierten "¿qué clientes se ven afectados si este proveedor cae?" —hoy,
+    semanas de análisis manual— en una travesía de milisegundos.
+
+spec:
+  relations:
+    - name: supplies
+      from: { entity: supply_chain.Supplier, cardinality: many }
+      to:   { entity: supply_chain.Product,  cardinality: many }
+      inverse: suppliedBy
+      traversal: { indexed: true, directions: [forward, reverse] }
+
+    - name: shippedBy
+      from: { entity: supply_chain.Shipment, cardinality: many }
+      to:   { entity: supply_chain.Supplier, cardinality: one }
+      inverse: shipments
+      traversal: { indexed: true, directions: [forward, reverse] }
+
+    - name: orderedFrom
+      from: { entity: supply_chain.PurchaseOrder, cardinality: many }
+      to:   { entity: supply_chain.Supplier,      cardinality: one }
+      traversal: { indexed: true, directions: [forward, reverse] }
+
+    # ── La arista que cruza dominios ──────────────────────────────────────────
+    # Vive en supply_chain pero apunta a customers. Es exactamente lo que un
+    # catálogo por sistema no puede representar: el ERP no sabe nada del CRM.
+    # Aquí, una interrupción de suministro se traduce a clientes afectados.
+    - name: orderContains
+      from: { entity: customers.Order,      cardinality: many }
+      to:   { entity: supply_chain.Product, cardinality: many }
+      inverse: orderedIn
+      traversal: { indexed: true, directions: [forward, reverse] }
+      crossPackage: true
+      requires:
+        package: customers
+        minVersion: "2.0.0"           # resuelto y fijado en ontology.lock

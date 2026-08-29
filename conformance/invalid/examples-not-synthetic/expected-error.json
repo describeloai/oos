@@ -1,0 +1,1 @@
+{ "code": "OOS4014", "subject": "hr.Employee.baseSalary", "label": "gdpr.sensitivity:critical", "path": "entities/Employee.yaml" }

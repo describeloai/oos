@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/ontology-config.schema.json",
+  "title": "OntologyConfig",
+  "description": "Manifiesto raíz de un repositorio ontológico: la FRONTERA del repositorio.\n\nDeclara qué unidades lo componen, de qué autoridad externa depende y con qué mundo físico se conecta. NO contiene semántica: ni una entidad, ni una relación, ni una decisión de etiqueta. Todo eso vive en los paquetes.\n\nRegla para decidir si algo pertenece aquí: es cierto del repositorio entero Y no es una afirmación sobre el significado de los datos.\n\nNormativo: spec/v1alpha1/01-package.md",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata"],
+
+  "properties": {
+
+    "apiVersion": { "const": "oos.dev/v1alpha1" },
+    "kind": { "const": "OntologyConfig" },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "$ref": "type/basic.schema.json#/$defs/packageName" },
+        "version": { "$ref": "type/basic.schema.json#/$defs/semver" },
+        "description": { "type": "string", "maxLength": 2048 }
+      }
+    },
+
+    "workspace": {
+      "description": "Qué directorios contienen paquetes. Omitirlo equivale a `members: [packages/*]`, que es la convención; declararlo solo hace falta con una disposición no estándar.\n\nNota: el valor por defecto lo aplica el COMPILADOR al normalizar. JSON Schema no rellena valores — `default` es pura anotación.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "maxLength": 256 },
+          "default": ["packages/*"]
+        },
+        "exclude": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 256 }
+        }
+      }
+    },
+
+    "dependencies": {
+      "description": "Paquetes de los que depende el repositorio entero.\n\nDeclarar una dependencia es TRANSFERIR AUTORIDAD: al escribir `gdpr@^2.1` esta organización afirma que la definición de qué es un dato personal no es suya, y se acoge a un enunciado concreto y auditable de esa autoridad.\n\nCriterio: si la respuesta a «¿quién decide si esto es correcto?» no es «nosotros», debe ser una dependencia.\n\nUn paquete individual puede declarar además las suyas propias en su package.yaml; estas son las compartidas por todo el repositorio.",
+      "type": "array",
+      "items": { "$ref": "type/basic.schema.json#/$defs/packageRef" }
+    },
+
+    "datasources": {
+      "description": "Las fuentes físicas alcanzables desde este repositorio.\n\nEs la única sección del manifiesto que no habla de semántica sino del mundo exterior: dónde vive realmente el dato.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "connectionEnv"],
+        "properties": {
+
+          "name": {
+            "description": "Identificador que los bindings referencian con `datasourceRef`.",
+            "$ref": "type/basic.schema.json#/$defs/identifier"
+          },
+
+          "type": {
+            "description": "Qué driver habla con esta fuente: postgres, snowflake, workday, rest…\n\nEs un conjunto ABIERTO, a diferencia de `capabilities` o del vocabulario de desclasificadores: el tipo de driver no interviene en el análisis de flujo, solo determina qué código se carga en tiempo de ejecución. Un conjunto abierto solo es problemático cuando el compilador tiene que razonar sobre sus valores.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "maxLength": 64
+          },
+
+          "connectionEnv": {
+            "description": "Nombre de la variable de entorno que contiene la cadena de conexión.\n\nEl secreto NUNCA aparece en un documento OOS. Este campo declara dónde buscarlo, no qué es. Es lo que hace publicable un repositorio ontológico, y `ore source add` lo separa automáticamente para que nadie tenga que acordarse.",
+            "$ref": "type/basic.schema.json#/$defs/envVarName"
+          },
+
+          "labels": {
+            "description": "Etiquetas que TODO lo enlazado a esta fuente hereda.\n\nLa ubicación física es un hecho del mundo, no una decisión de modelado: si esta fuente vive en la UE, todo lo que se enlace a ella queda `acme.residency: eu_only` sin que nadie lo escriba en la entidad. También sirve como suelo de sensibilidad: «todo lo que sale de este sistema de RRHH es al menos `high`».\n\nSe combinan con las etiquetas de la entidad tomando la más restrictiva (join).",
+            "type": "object",
+            "propertyNames": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" },
+            "additionalProperties": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+          },
+
+          "description": { "type": "string", "maxLength": 1024 }
+        }
+      }
+    }
+  },
+
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+
+  "$comment": "Deliberadamente AUSENTES: (1) `lattices` — la lista de retículos activos es derivable de los declarados más los importados, y lo derivable no se declara (P2). (2) `conduitPolicy` — el compilador localiza los documentos kind: ConduitPolicy sin que se le indique. (3) `defaults.materialization` — si el modo por defecto fuese configurable, cambiarlo materializaría todos los bindings en silencio; `passthrough` es EL valor por defecto de la especificación, no una preferencia del repositorio (P4)."
+}

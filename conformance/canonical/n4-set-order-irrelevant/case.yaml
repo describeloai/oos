@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: converge
+summary: >
+  Un campo declarado como CONJUNTO se ordena en la forma canonica: el orden de escritura no importa.

@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    baseSalary: { type: Money<EUR, 2> }
+    bonusUS:    { type: Money<USD, 2> }
+    # Sumar euros y dólares. Ni el esquema ni ningún estándar lo detectan:
+    # exige comparar los tipos de tres propiedades entre sí.
+    totalCompensation:
+      type: Money<EUR, 2>
+      derivedFrom: [hr.Employee.baseSalary, hr.Employee.bonusUS]
+      expression: "baseSalary + bonusUS"

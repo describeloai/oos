@@ -1,0 +1,63 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Shipment
+  namespace: supply
+  labels:
+    oos.maturity: STABLE
+
+spec:
+  profile: ossie/semantic-model@1.0
+  primaryKey: shipmentId
+
+  # Un dominio entero sin una sola etiqueta sensible, y está aquí a propósito.
+  # La mayor parte de una ontología empresarial no es sensible: si un ejemplo
+  # solo muestra PII, engaña sobre lo que el sistema pide en la práctica.
+  #
+  # Nada aquí exige revisión de seguridad, nada bloquea materialización, y
+  # todo puede servirse a la superficie global sin desclasificar nada.
+  labels:
+    gdpr.sensitivity: none
+    acme.residency:   global
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    shipmentId:
+      type: string
+      format: uuid
+
+    supplier:
+      type: ref
+      target: supply.Supplier
+      cardinality: many_to_one
+
+    sku:
+      type: ref
+      target: supply.Sku
+      cardinality: many_to_one
+
+    quantity:
+      type: integer
+
+    promisedAt:
+      type: timestamp
+
+    deliveredAt:
+      type: timestamp
+      nullable: true
+
+    # Derivada. join() sobre orígenes sin etiqueta da ⊥ = none.
+    delayDays:
+      type: integer
+      derivedFrom: [promisedAt, deliveredAt]
+      expression: "days_between(promisedAt, coalesce(deliveredAt, now()))"
+
+    status:
+      type: string
+      enum: [pending, in_transit, delivered, delayed, cancelled]
+
+  moved:
+    - { from: eta, to: promisedAt, since: 1.1.0 }

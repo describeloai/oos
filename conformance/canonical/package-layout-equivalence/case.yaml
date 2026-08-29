@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#5.2
+level: L0
+expects: converge
+summary: >
+  La forma plana y la multi-paquete del mismo paquete producen el mismo digest: las rutas del digest son relativas al PAQUETE, no al repositorio.

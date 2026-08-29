@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/01-package.md#3.1
+level: L0
+expects: OOS2002
+summary: >
+  Ciclo en el grafo de dependencias. Detectable sin descargar nada si el lock ya declara el grafo.

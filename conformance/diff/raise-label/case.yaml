@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5009
+summary: >
+  Elevar una etiqueta: COMPATIBLE en POLICY y ROMPEDOR en CONSUMER. El mismo cambio, dos veredictos opuestos.

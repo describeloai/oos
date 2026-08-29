@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/02-entity.md#4.1
+level: L0
+expects: OOS4012
+summary: >
+  Propiedad que rebaja la etiqueta heredada de su entidad. La misma entidad
+  eleva otra propiedad, que sí es legítimo.

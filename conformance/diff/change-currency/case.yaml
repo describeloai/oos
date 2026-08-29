@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5010
+summary: >
+  Cambio de divisa en un tipo paramétrico. Sin tipos paramétricos sería invisible para cualquier diff.

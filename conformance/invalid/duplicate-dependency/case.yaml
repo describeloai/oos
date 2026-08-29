@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: OOS2003
+summary: >
+  Duplicado por CLAVE SEMÁNTICA en un campo declarado como conjunto. uniqueItems no lo detecta porque los dos elementos son objetos distintos.

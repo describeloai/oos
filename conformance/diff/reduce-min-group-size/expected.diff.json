@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5016", "axis": "POLICY", "policy": "workforce-analytics", "from": 8, "to": 2 }
+  ],
+  "requiredBump": "major"
+}

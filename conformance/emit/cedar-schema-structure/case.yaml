@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/00-overview.md#4.1
+level: L0
+expects: structure
+format: cedar-schema
+summary: >
+  El esquema Cedar se deriva de los reticulos y las entidades. Se afirman
+  propiedades estructurales, no texto.

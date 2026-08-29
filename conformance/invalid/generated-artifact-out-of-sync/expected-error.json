@@ -1,0 +1,1 @@
+{ "code": "OOS2013", "artifact": "policies/acme.cedarschema", "missing": ["gdpr.sensitivity:critical"], "path": "policies/acme.cedarschema" }

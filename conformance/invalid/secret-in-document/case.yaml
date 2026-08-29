@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#2.1
+level: L0
+expects: OOS2012
+summary: >
+  Cadena de conexión con credencial pegada en un documento. Heurística determinista, no prueba de ausencia.
