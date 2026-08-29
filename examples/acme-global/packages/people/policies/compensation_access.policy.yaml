@@ -1,4 +1,4 @@
-apiVersion: oos/v1alpha1
+apiVersion: oos.dev/v1alpha1
 kind: Policy
 
 metadata:

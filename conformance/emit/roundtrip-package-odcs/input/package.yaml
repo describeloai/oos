@@ -27,7 +27,7 @@ spec:
   sla:
     breakingChangePolicy: { noticePeriod: 90d }
     properties:
-      - { property: availability, value: 99.9, unit: percent }
+      - { property: availability, value: "99.9", unit: percent }
   authoritativeDefinitions:
     - { url: "https://wiki.acme.example/glosario", type: businessDefinition }
   dependencies:

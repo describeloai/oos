@@ -13,10 +13,11 @@ generatedFor: acme-retail@0.4.0
 # -----------------------------------------------------------------------------
 # Perfiles fijados.
 #
-# Entity, Binding y Package son PERFILES sobre especificaciones externas
-# (00-overview §7.4). Una versión nueva de Ossie o de ODCS puede romper el
-# perfil, así que se fijan aquí con la misma disciplina que una dependencia.
-# Actualizar un perfil es un cambio de la especificación, no una actualización
+# Package y Binding son PERFILES de ODCS (00-overview §7.4). `Entity` no
+# perfila nada —es gramática propia— pero el bundle EMITE a Ossie, así que la
+# versión de Ossie condiciona la emisión igual que la de ODCS condiciona el
+# perfil. Ambas se fijan aquí con la misma disciplina que una dependencia:
+# actualizarlas es un cambio de la especificación, no una actualización
 # rutinaria.
 # -----------------------------------------------------------------------------
 profiles:

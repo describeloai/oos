@@ -1,0 +1,35 @@
+apiVersion: oos.dev/v1alpha1
+kind: Lattice
+metadata:
+  name: sensitivity
+  namespace: gdpr
+  description: >
+    Sensibilidad de datos personales según el RGPD.
+
+    La autoridad sobre este retículo NO es de ACME —la tiene un regulador— así
+    que su sitio natural es la dependencia `oos.dev/regulatory/gdpr`, que
+    `ontology.lock` ya fija y declara como `provides.lattices`.
+
+    Está declarado localmente porque en v1alpha1 la resolución de dependencias
+    PUEDE no estar implementada (04-flow §6), y un retículo local es el caso
+    degenerado de un paquete sin dependencias. El lockfile sabe el NOMBRE del
+    retículo importado, pero no sus niveles: sin ellos no hay orden con el que
+    computar un join, y aceptar la etiqueta igualmente sería confiar en un
+    orden que nadie ha declarado. Denegación por defecto (P4).
+
+    Cuando la resolución exista, este fichero se borra y no cambia nada más.
+
+spec:
+  # Secuencia ascendente por sensibilidad.
+  #   none ⊑ low ⊑ medium ⊑ high ⊑ critical
+  levels: [none, low, medium, high, critical]
+  join: max
+
+  # `bottom` y `top` NO se declaran: son levels[0] y levels[-1]. P2.
+
+  levelDescriptions:
+    none:     "No es dato personal."
+    low:      "Personal pero público o trivialmente inferible."
+    medium:   "Personal, no público. El caso normal de un CRM."
+    high:     "Identifica directamente a una persona: nombre, correo, teléfono."
+    critical: "Categoría especial del art. 9, identificador nacional o retribución."

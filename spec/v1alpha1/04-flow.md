@@ -77,12 +77,20 @@ Dos, y ambos usan la misma maquinaria:
 | Retículo | Etiquetas | Qué restringe |
 |---|---|---|
 | `sensitivity` | `none ⊑ low ⊑ medium ⊑ high ⊑ critical` | quién y qué destino pueden recibir el dato |
-| `maturity` | `DRAFT ⊑ REVIEWED ⊑ STABLE ⊑ DEPRECATED` | qué consumidores pueden depender de la definición |
+| `maturity` | `STABLE ⊑ REVIEWED ⊑ DRAFT ⊑ DEPRECATED` | qué consumidores pueden depender de la definición |
 
 > Que la madurez sea un retículo y no un caso especial es deliberado. **`ore promote` es
 > un desclasificador**: baja la etiqueta `DRAFT` a `REVIEWED` mediante una autorización
 > humana registrada en un commit. Es exactamente la misma operación que enmascarar un
 > campo, aplicada a otra dimensión.
+
+> **Por qué `STABLE` es el fondo y no el techo.** El orden de todo retículo es ascendente
+> **por restrictividad**, no por progresión del ciclo de vida, y en madurez las dos van en
+> sentidos contrarios: lo estable es lo que puede servirse a cualquiera, y un borrador es
+> lo que no puede salir. Se sigue de que `promote` sea un desclasificador —desclasificar es
+> **bajar**, luego `STABLE ⊑ REVIEWED ⊑ DRAFT`— y es lo que hace expresable el caso normal:
+> un `contextSurface` que sirve lo estable y rechaza el borrador. Con el orden inverso,
+> `cache` admitiría un borrador y `contextSurface` rechazaría lo estable.
 
 Un paquete **PUEDE** declarar retículos adicionales —residencia de datos, control de
 exportación, nivel de habilitación— sin que la especificación ni el motor cambien. **El

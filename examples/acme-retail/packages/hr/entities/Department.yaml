@@ -1,0 +1,59 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Department
+  namespace: hr
+
+  # `hr` es residencia europea de extremo a extremo. La unidad organizativa no
+  # es un dato personal, pero vive en el mismo paquete y hereda la etiqueta:
+  # la residencia es del conjunto, no de la sensibilidad.
+  labels:
+    acme.residency: eu_only
+
+  description: >
+    Unidad organizativa a la que se adscribe un empleado. Autoritativa para
+    estructura y centro de coste; no para presupuesto.
+
+  aiContext:
+    synonyms: [departamento, área, unidad organizativa, org unit]
+    guidance: >
+      La jerarquía de departamentos es independiente de la jerarquía de mando:
+      un empleado puede reportar fuera de su departamento.
+
+spec:
+  nature: entity
+  primaryKey: [departmentId]
+
+  uniqueKeys:
+    - [costCenter]
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    departmentId:
+      type: String
+      description: Identificador estable y opaco.
+
+    name:
+      type: String
+      description: Nombre visible. Cambia con las reorganizaciones.
+
+    costCenter:
+      type: String
+      description: Código contable. Único mientras el departamento esté vigente.
+
+    parentDepartmentId:
+      type: String
+      description: Clave del departamento superior. El DATO; la arista está abajo.
+
+  relations:
+
+    parent:
+      target: hr.Department          # autorreferencia: el árbol organizativo
+      cardinality: many_to_one
+      via: parentDepartmentId
+      required: false
+      description: Departamento superior. Ausente solo en la raíz.

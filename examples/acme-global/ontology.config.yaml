@@ -1,4 +1,4 @@
-apiVersion: oos/v1alpha1
+apiVersion: oos.dev/v1alpha1
 kind: OntologyConfig
 
 metadata:
@@ -67,10 +67,10 @@ spec:
     provider: oidc
     issuerEnv: OIDC_ISSUER_URL
     subjectAttributes:                # de dónde salen los atributos que evalúan las policies
-      employeeId:  claim: sub
-      department:  claim: "acme/department"
-      clearance:   claim: "acme/clearance"
-      country:     claim: "acme/country"
+      employeeId: { claim: sub }
+      department: { claim: "acme/department" }
+      clearance:  { claim: "acme/clearance" }
+      country:    { claim: "acme/country" }
 
   # ── Paquetes del repositorio ─────────────────────────────────────────────────
   packages:

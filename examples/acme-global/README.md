@@ -1,6 +1,6 @@
 # acme-global — ontología de referencia
 
-Repositorio ontológico de ejemplo bajo `oos/v1alpha1`. Tres superficies de negocio,
+Repositorio ontológico de ejemplo bajo `oos.dev/v1alpha1`. Tres superficies de negocio,
 cuatro sistemas de origen, cero bytes de datos copiados.
 
 ```

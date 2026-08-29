@@ -1,0 +1,52 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Supplier
+  namespace: supply
+
+  # `supply` es global a propósito: nada aquí es sensible ni tiene restricción
+  # de residencia, y una ontología que solo enseñara PII mentiría sobre el caso
+  # normal.
+  labels:
+    oos.maturity:     STABLE
+    gdpr.sensitivity: none
+    acme.residency:   global
+
+  description: >
+    Proveedor con contrato de suministro vigente o pasado. Autoritativo para
+    identidad del proveedor; no para condiciones comerciales.
+
+  aiContext:
+    synonyms: [proveedor, supplier, vendor]
+    guidance: >
+      Incluye proveedores dados de baja: hay que filtrar por validTime, no por
+      la existencia del registro.
+
+spec:
+  nature: entity
+  primaryKey: [supplierId]
+
+  uniqueKeys:
+    - [duns]
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    supplierId:
+      type: String
+      description: Identificador estable y opaco.
+
+    legalName:
+      type: String
+
+    duns:
+      type: String
+      description: >
+        Identificador DUNS. Clave natural, y por tanto lo que hace determinista
+        la resolución de identidad entre el ERP y el sistema de compras.
+
+    countryCode:
+      type: iso.CountryAlpha2        # tipo importado de oos.dev/types/iso

@@ -67,6 +67,17 @@ Un paquete **DEBE**:
    resolverse dentro del paquete o de sus dependencias declaradas.
 5. No contener datos de negocio ni secretos.
 
+**Qué documentos componen el paquete.** Un validador recorre la raíz del paquete y toma
+todo fichero `.yaml`, `.yml`, `.cedar` y el `ontology.lock`. Un directorio cuyo nombre
+empieza por `.` **NO DEBE** recorrerse: no forma parte del paquete. Cubre la caché
+derivada (`.ore/`) y la maquinaria del repositorio (`.github/`, `.git/`, `.vscode/`), y es
+una regla y no una lista para que la siguiente herramienta que invente un directorio
+oculto no exija una versión nueva de esta especificación.
+
+Sin ella, un repositorio no podría guardar junto a su ontología el CI que la valida: el
+validador entraría en `.github/workflows/` y le exigiría `apiVersion` a un workflow. Que
+un fichero YAML esté dentro de la raíz no lo convierte en un documento OOS.
+
 ### 3.2 Implementación conforme: niveles
 
 "Ejecutar una ontología" abarca capacidades muy distintas. La conformidad se declara por
@@ -123,7 +134,7 @@ El alcance de v1alpha1 es deliberadamente mínimo. Cinco documentos, ni uno más
 | `kind` | Naturaleza | Responde a |
 |---|---|---|
 | `Package` | **perfil de ODCS** | quién responde, desde cuándo, con qué garantía |
-| `Entity` | **perfil de Ossie** + 3 extensiones (§7.4) | qué existe |
+| `Entity` | **gramática propia** (§7.2-bis) | qué existe |
 | `Binding` | **perfil de ODCS** + `materialization` | dónde está y qué se copia |
 | `Lattice` | **gramática propia** | qué etiquetas existen y cómo se ordenan |
 | `ConduitPolicy` | **gramática propia** | qué sale por dónde y con qué autorización |
@@ -293,9 +304,19 @@ ese modelo y la compilación que las prueba.
 
 ### 7.4 · Consecuencia para v1alpha1
 
-Los documentos `Entity`, `Binding` y `Package` **DEBEN** definirse como **perfiles** —un
-subconjunto requerido de Ossie y ODCS, más las extensiones justificadas en 7.2— y no como
-formatos independientes.
+Los documentos `Package` y `Binding` **DEBEN** definirse como **perfiles** de ODCS —un
+subconjunto requerido, más las extensiones justificadas en 7.2— y no como formatos
+independientes.
+
+`Entity` **NO DEBE** definirse como perfil. Es la consecuencia directa del test de 7.2-bis:
+el `Dataset` de Ossie exige `source` y cada `Field` exige `expression`, y ninguno de los dos
+está en una entidad —están en el `Binding`—, así que una `Entity` sola no puede ser un
+documento Ossie válido. Conformar inventando esos campos no es perfilar. `Entity` es
+gramática propia y Ossie es objetivo de emisión del bundle; el argumento completo está en
+[`02-entity.md`](02-entity.md) §1.2.
+
+> Consecuencia comprobable: un documento `Entity` **NO DEBE** declarar `profile`. El campo
+> existe en `Binding`, que sí perfila.
 
 Las tres únicas extensiones al modelo semántico admitidas en v1alpha1, cada una con su
 justificación:
@@ -315,7 +336,7 @@ justificación:
 |---|---|---|
 | `00-overview.md` | — | este documento |
 | [`01-package.md`](01-package.md) | perfil de **ODCS** | manifiesto, propiedad, ciclo de vida, `dependencies` |
-| [`02-entity.md`](02-entity.md) | perfil de **Ossie** | propiedades, tipos, temporalidad, unidades, etiquetas, derivación, `moved`/`reserved` |
+| [`02-entity.md`](02-entity.md) | **gramática propia** | propiedades, tipos, temporalidad, unidades, etiquetas, derivación, `moved`/`reserved` |
 | [`03-binding.md`](03-binding.md) | perfil de **ODCS** | mapeo físico, `materialization`, `freshnessSLA`, perfil de conector |
 | [`04-flow.md`](04-flow.md) | **gramática propia** | retículos, conductos, desclasificadores, la regla de flujo |
 | [`90-canonical-form.md`](90-canonical-form.md) | — | normalización, serialización determinista, digest |

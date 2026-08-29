@@ -3,13 +3,6 @@ kind: Entity
 metadata:
   name: Shipment
   namespace: supply
-  labels:
-    oos.maturity: STABLE
-
-spec:
-  profile: ossie/semantic-model@1.0
-  primaryKey: shipmentId
-
   # Un dominio entero sin una sola etiqueta sensible, y está aquí a propósito.
   # La mayor parte de una ontología empresarial no es sensible: si un ejemplo
   # solo muestra PII, engaña sobre lo que el sistema pide en la práctica.
@@ -17,8 +10,13 @@ spec:
   # Nada aquí exige revisión de seguridad, nada bloquea materialización, y
   # todo puede servirse a la superficie global sin desclasificar nada.
   labels:
+    oos.maturity:     STABLE
     gdpr.sensitivity: none
     acme.residency:   global
+
+spec:
+  nature: entity
+  primaryKey: [shipmentId]
 
   temporal:
     validTime: { from: validFrom, to: validTo }
@@ -26,38 +24,53 @@ spec:
   properties:
 
     shipmentId:
-      type: string
-      format: uuid
+      type: String
+      description: Identificador estable y opaco.
 
-    supplier:
-      type: ref
-      target: supply.Supplier
-      cardinality: many_to_one
+    supplierId:
+      type: String
+      description: Clave del proveedor. El DATO; la arista está abajo.
 
-    sku:
-      type: ref
-      target: supply.Sku
-      cardinality: many_to_one
+    skuCode:
+      type: String
+      description: Clave de la referencia enviada. El DATO; la arista está abajo.
 
     quantity:
-      type: integer
+      type: Integer
 
     promisedAt:
-      type: timestamp
+      type: DateTime
 
     deliveredAt:
-      type: timestamp
+      type: DateTime
       nullable: true
 
-    # Derivada. join() sobre orígenes sin etiqueta da ⊥ = none.
+    # Derivada. join() sobre orígenes sin etiqueta da ⊥ = none, así que no se
+    # declara `labels`: se computa (OOS4008).
     delayDays:
-      type: integer
-      derivedFrom: [promisedAt, deliveredAt]
+      type: Integer
+      derivedFrom: [supply.Shipment.promisedAt, supply.Shipment.deliveredAt]
       expression: "days_between(promisedAt, coalesce(deliveredAt, now()))"
 
     status:
-      type: string
+      type: String
       enum: [pending, in_transit, delivered, delayed, cancelled]
+
+  # Las aristas del grafo, separadas de los datos. Son las dos que el binding
+  # materializa en `mode: index`: se copian las aristas, no la carga útil.
+  relations:
+
+    supplier:
+      target: supply.Supplier
+      cardinality: many_to_one
+      via: supplierId
+      required: true
+
+    sku:
+      target: supply.Sku
+      cardinality: many_to_one
+      via: skuCode
+      required: true
 
   moved:
     - { from: eta, to: promisedAt, since: 1.1.0 }

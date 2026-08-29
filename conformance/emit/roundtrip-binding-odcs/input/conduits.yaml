@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata: { name: default }
+spec:
+  conduits:
+    # Autorizacion vacia: el conducto existe y no admite nada por encima de bottom.
+    # Aqui no fluye ninguna etiqueta, pero la materializacion hay que declararla
+    # igual — P4, denegacion por defecto: no se obtiene un indice sin decir para
+    # que esta autorizado.
+    materialization.index: {}

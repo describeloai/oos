@@ -1,0 +1,38 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Sku
+  namespace: supply
+
+  labels:
+    oos.maturity:     STABLE
+    gdpr.sensitivity: none
+    acme.residency:   global
+
+  description: >
+    Referencia de catálogo. Es la unidad que se compra, se envía y se vende, y
+    el nodo por el que `supply` y `customers` se tocan.
+
+  aiContext:
+    synonyms: [sku, referencia, artículo, código de producto]
+
+spec:
+  nature: entity
+  primaryKey: [skuCode]
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    skuCode:
+      type: String
+      description: Código de catálogo. Estable durante la vida de la referencia.
+
+    name:
+      type: String
+
+    unitCost:
+      type: Money<EUR, 2>
+      description: Coste unitario de compra, sin impuestos.

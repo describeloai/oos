@@ -1,0 +1,59 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+
+metadata:
+  name: Order
+  namespace: customers
+
+  labels:
+    acme.residency: eu_only
+
+  description: >
+    Pedido confirmado de un cliente. Autoritativo para importe facturado;
+    no para el estado logístico, que vive en `supply`.
+
+  aiContext:
+    synonyms: [pedido, orden, order]
+    guidance: >
+      Incluye pedidos cancelados: hay que filtrar por `status`, no por la
+      existencia del registro.
+
+spec:
+  nature: entity
+  primaryKey: [orderId]
+
+  temporal:
+    validTime: { from: validFrom, to: validTo }
+
+  properties:
+
+    orderId:
+      type: String
+      description: Identificador estable y opaco.
+
+    customerId:
+      type: String
+      description: Clave del cliente. El DATO; la arista está abajo.
+
+    totalAmount:
+      type: Money<EUR, 2>
+      description: Importe total confirmado, impuestos incluidos.
+      labels: { gdpr.sensitivity: low }
+
+    placedAt:
+      type: DateTime
+
+    status:
+      type: String
+      enum: [placed, confirmed, shipped, delivered, cancelled]
+
+  # La arista que sostiene la clave, y el único lado que puede declararla.
+  # `Customer` obtiene su uno-a-muchos hacia `Order` por inversión de ésta:
+  # declararlo allí violaría P2 (02-entity §6).
+  relations:
+
+    customer:
+      target: customers.Customer
+      cardinality: many_to_one
+      via: customerId
+      required: true

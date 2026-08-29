@@ -3,15 +3,16 @@ kind: Entity
 metadata:
   name: Customer
   namespace: customers
+  # Las etiquetas de la entidad viven en `metadata` y las hereda toda propiedad
+  # que no las eleve (02-entity §4.1). No en `spec`: `spec` es la forma del
+  # dominio, `metadata` es lo que se dice sobre ella.
   labels:
-    oos.maturity: STABLE
+    oos.maturity:   STABLE
+    acme.residency: eu_only
 
 spec:
-  profile: ossie/semantic-model@1.0
-  primaryKey: customerId
-
-  labels:
-    acme.residency: eu_only
+  nature: entity
+  primaryKey: [customerId]
 
   temporal:
     validTime: { from: validFrom, to: validTo }
@@ -19,12 +20,11 @@ spec:
   properties:
 
     customerId:
-      type: string
-      format: uuid
+      type: String
+      description: Identificador estable y opaco.
 
     email:
-      type: string
-      format: email
+      type: String
       labels: { gdpr.sensitivity: high }
 
     countryCode:
@@ -32,7 +32,7 @@ spec:
       labels: { gdpr.sensitivity: low }
 
     segment:
-      type: string
+      type: String
       enum: [retail, business, enterprise]   # secuencia: el orden es semántico
       labels: { gdpr.sensitivity: none }
 
@@ -41,18 +41,28 @@ spec:
     # No hereda `critical` de nada porque nada crítico entra en el cálculo.
     # Que una empresa tenga PII no convierte todo su modelo en PII, y el
     # sistema de flujo lo demuestra en vez de suponerlo.
+    #
+    # Y por eso NO se declara `labels` aquí: la etiqueta de una derivada se
+    # computa, declararla sería OOS4008.
     lifetimeValue:
       type: Money<EUR, 2>
       derivedFrom: [customers.Order.totalAmount]
-      expression: "sum(orders.totalAmount)"
-      labels: { gdpr.sensitivity: low }
+      expression: "sum(orders.totalAmount)"     # documental, no se interpreta
+
+    accountManagerId:
+      type: String
+      description: Clave del responsable de cuenta. El DATO; la arista está abajo.
+
+  # Las aristas del grafo, separadas de los datos.
+  relations:
 
     # Relación entre paquetes. `customers` depende de `hr`, y la etiqueta
     # acme.residency = eu_only se propaga a través del enlace.
     accountManager:
-      type: ref
       target: hr.Employee
       cardinality: many_to_one
+      via: accountManagerId
+      required: false
 
     # `orders` NO se declara aquí. Un uno-a-muchos vive en el lado que sostiene
     # la clave —`Order.customer`, que es `many_to_one`— y el inverso es derivable

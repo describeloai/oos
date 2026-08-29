@@ -87,10 +87,15 @@ spec:
     departmentId:
       type: String
 
+    # El nivel profesional no parece dato sensible, y aun así NO lleva
+    # `gdpr.sensitivity: medium`: el datasource `hr_workday` declara un suelo de
+    # `high` para todo lo que sale de RRHH, y una propiedad puede elevar la
+    # etiqueta heredada pero no rebajarla (OOS4012). Relajar el suelo es una
+    # decisión que se toma donde se declaró —en `ontology.config.yaml`— y no en
+    # una propiedad suelta.
     grade:
       type: String
       enum: [IC1, IC2, IC3, IC4, M1, M2, M3]     # secuencia: retirar un valor rompe
-      labels: { gdpr.sensitivity: medium }
       examples:
         values: [IC3, M1]
         synthetic: true      # afirmación explícita, no descuido
