@@ -1,0 +1,5 @@
+{
+  "code": "OOS7006",
+  "function": "scm.approvePurchaseOrder",
+  "target": "scm.PurchaseOrder.totalWithTax"
+}

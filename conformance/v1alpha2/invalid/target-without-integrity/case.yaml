@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#4.1
+level: L0
+expects: OOS7005
+summary: >
+  El destino de un efecto no lleva etiqueta en ningun reticulo de eje `integrity`. No se
+  asume nada: falla.

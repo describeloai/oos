@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#3.2
+level: L0
+expects: OOS7004
+summary: >
+  `teamReview` no esta en el vocabulario cerrado de endosantes. Un endosante que el motor no
+  sabe verificar es una promesa, y una promesa no es una garantia.

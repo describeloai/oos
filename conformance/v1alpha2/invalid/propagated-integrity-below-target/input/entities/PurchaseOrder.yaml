@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: PurchaseOrder, namespace: scm }
+spec:
+  nature: entity
+  primaryKey: [orderId]
+  properties:
+    orderId: { type: String }
+    status:
+      type: String
+      labels: { acme.assurance: reviewed }
+    supplierScore:
+      type: Int
+      # Viene de un tercero: nadie ha revisado este numero.
+      labels: { acme.assurance: untrusted }

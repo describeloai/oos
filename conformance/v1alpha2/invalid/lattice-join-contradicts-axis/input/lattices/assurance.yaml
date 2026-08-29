@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha2
+kind: Lattice
+metadata: { name: assurance, namespace: acme }
+spec:
+  axis: integrity
+  levels: [untrusted, inferred, reviewed, attested]
+  # Resto de v1alpha1: contradice el eje.
+  join: max

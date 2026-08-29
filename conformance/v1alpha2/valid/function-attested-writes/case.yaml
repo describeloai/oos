@@ -1,0 +1,7 @@
+rule: spec/v1alpha2/02-function.md#6
+level: L0
+expects: accept
+summary: >
+  Una funcion atestada escribe una propiedad cuya integridad alcanza. Es el caso que hace
+  que todo lo demas signifique algo: sin un verde, ocho rojos no distinguen entre un regimen
+  estricto y uno roto.

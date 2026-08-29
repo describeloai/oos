@@ -1,0 +1,7 @@
+{
+  "code": "OOS7002",
+  "function": "scm.approvePurchaseOrder",
+  "target": "scm.PurchaseOrder.status",
+  "required": "acme.assurance:reviewed",
+  "actual": "acme.assurance:untrusted"
+}

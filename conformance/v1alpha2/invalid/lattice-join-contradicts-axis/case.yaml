@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#3.1
+level: L0
+expects: OOS7007
+summary: >
+  Un reticulo de eje `integrity` declarando `join: max`. El combinador se deriva del eje y
+  no se declara; si aparece, debe coincidir.

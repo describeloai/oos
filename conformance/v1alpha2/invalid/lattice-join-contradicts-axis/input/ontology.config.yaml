@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+datasources:
+  - { name: postgres_erp, type: postgres, connectionEnv: ERP_URL }
+  - { name: warehouse,    type: snowflake, connectionEnv: WH_URL }

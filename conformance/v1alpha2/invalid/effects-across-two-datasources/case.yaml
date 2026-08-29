@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/02-function.md#5.2
+level: L0
+expects: OOS7008
+summary: >
+  Una funcion con efectos sobre dos fuentes fisicas. La atomicidad entre fuentes no es algo
+  que este motor pueda prometer, asi que no compila.

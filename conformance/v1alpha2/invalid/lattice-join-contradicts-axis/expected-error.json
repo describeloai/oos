@@ -1,0 +1,7 @@
+{
+  "code": "OOS7007",
+  "lattice": "acme.assurance",
+  "axis": "integrity",
+  "declared": "max",
+  "implied": "min"
+}

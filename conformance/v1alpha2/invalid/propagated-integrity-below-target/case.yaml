@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#4.2
+level: L0
+expects: OOS7001
+summary: >
+  La integridad del valor escrito se computa por `meet` desde lo que la funcion lee, y cae
+  por debajo de lo que el destino exige. Nadie escribio `untrusted` en ninguna parte.

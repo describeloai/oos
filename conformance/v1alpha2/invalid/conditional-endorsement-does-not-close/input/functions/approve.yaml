@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha2
+kind: Function
+metadata: { name: approvePurchaseOrder, namespace: scm }
+spec:
+  runtime: wasm
+  entrypoint: dist/approve.wasm
+  effects:
+    - writes: scm.PurchaseOrder.status
+      datasourceRef: postgres_erp
+  endorsements:
+    # Se lee como prudencia y no eleva nada por debajo del umbral.
+    - endorser: humanApproval
+      when: 'target.totalAmount > 50000'

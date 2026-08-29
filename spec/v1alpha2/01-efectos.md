@@ -253,6 +253,23 @@ La consecuencia práctica: **el mismo motor de propagación de `flow` sirve para
 ejes**, cambiando el combinador según `axis`. La maquinaria de `derivedFrom` ya recorre el
 grafo; aquí lo recorre otra vez con `min`.
 
+**Y hay un segundo camino de propagación que `derivedFrom` no cubre: una función.**
+
+Una función lee —sus entradas vienen de propiedades, sus precondiciones consultan otras— y
+el valor que causa no puede ser más fiable que lo que leyó para decidirlo. Por tanto:
+
+> La integridad efectiva de un efecto es el **`meet`** de la integridad de la función y de
+> todo lo que la función lee.
+
+Sin esta cláusula, una función atestada podría leer un dato `untrusted` de un tercero y
+escribir su conclusión en una propiedad `reviewed`, y la firma del binario habría lavado la
+procedencia del dato. Es exactamente el fallo silencioso contra el que existe el eje: la
+atestación dice que **el código** es de fiar, no que **la entrada** lo sea.
+
+Elevar eso exige un endoso, que es la única forma declarada de decir *me hago responsable*.
+Y aquí es donde `OOS7001` se separa de `OOS7002`: nadie escribió `untrusted` en la función
+ni en su destino — lo computó el compilador recorriendo lo que la función lee.
+
 ---
 
 ## 5. La familia `OOS7xxx`

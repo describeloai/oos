@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: PurchaseOrder, namespace: scm }
+spec:
+  nature: entity
+  primaryKey: [orderId]
+  properties:
+    orderId: { type: String }
+    status:
+      type: String
+      labels: { acme.assurance: reviewed }
+    total:   { type: "Money<EUR, 2>" }
+    taxRate: { type: Int }
+    totalWithTax:
+      type: "Money<EUR, 2>"
+      derivedFrom: [scm.PurchaseOrder.total, scm.PurchaseOrder.taxRate]
+      labels: { acme.assurance: reviewed }

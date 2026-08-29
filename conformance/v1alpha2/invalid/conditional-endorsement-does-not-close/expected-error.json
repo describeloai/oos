@@ -1,0 +1,7 @@
+{
+  "code": "OOS7002",
+  "function": "scm.approvePurchaseOrder",
+  "target": "scm.PurchaseOrder.status",
+  "endorsement": "humanApproval",
+  "reason": "conditional"
+}

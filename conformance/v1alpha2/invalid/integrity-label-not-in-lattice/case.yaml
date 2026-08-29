@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#3.1
+level: L0
+expects: OOS7003
+summary: >
+  Etiqueta `acme.assurance:certified`, nivel que el reticulo no declara. Sin el nivel no hay
+  contra que comparar.

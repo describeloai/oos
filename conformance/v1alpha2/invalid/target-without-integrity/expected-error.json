@@ -1,0 +1,5 @@
+{
+  "code": "OOS7005",
+  "function": "scm.approvePurchaseOrder",
+  "target": "scm.PurchaseOrder.status"
+}

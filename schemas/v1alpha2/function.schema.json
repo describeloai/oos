@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha2/function.schema.json",
+  "title": "Function",
+  "description": "El único canal por el que la ontología puede causar algo, y por tanto el único punto donde termina la pureza del compilador.\n\nNo es un endpoint ni un paso de un flujo de trabajo: es una AUTORIDAD ENUMERADA. Lo que un actor puede causar es exactamente la unión de las funciones que puede invocar, y esa unión se lee en un pull request.\n\nNormativo: spec/v1alpha2/02-function.md",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+
+  "properties": {
+
+    "apiVersion": { "const": "oos.dev/v1alpha2" },
+    "kind": { "const": "Function" },
+
+    "metadata": {
+      "description": "Sin `labels`, y la ausencia es normativa.\n\nLa integridad de una función SE COMPUTA de sus endosos (02-function §6). Admitir una etiqueta aquí permitiría que una función escribiera `attested` sobre sí misma sin que exista atestación alguna — una afirmación sobre uno mismo no es una garantía. Es P2 en el eje de integridad, y al no existir el campo el error es estructural (OOS1005) en vez de semántico.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string", "maxLength": 4096 }
+      }
+    },
+
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "entrypoint", "effects"],
+      "properties": {
+
+        "runtime": {
+          "description": "Sin `network`: el sandbox NO TIENE red. Declararlo invitaría a `network: ALLOW`, y el aislamiento pasaría de propiedad del régimen a opción de despliegue.",
+          "const": "wasm"
+        },
+
+        "entrypoint": {
+          "description": "El binario que se ejecuta.",
+          "type": "string",
+          "minLength": 1
+        },
+
+        "source": {
+          "description": "Procedencia declarada, y NO una garantía por sí sola: nada ata este fichero a ese binario. Lo que sí lo ata es una atestación de procedencia, y por eso `attested` es a la vez el endosante de integridad y la única razón por la que este campo significa algo.",
+          "type": "string"
+        },
+
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "timeout": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration" },
+            "memory": { "type": "string", "pattern": "^[0-9]+(Ki|Mi|Gi)$" }
+          }
+        },
+
+        "input":  { "$ref": "#/$defs/parameters" },
+        "output": { "$ref": "#/$defs/parameters" },
+
+        "preconditions": {
+          "description": "Parte del CONTRATO, no validación dentro del código. La diferencia no es de estilo: si la comprobación vive dentro de la función, quien invoca tiene que INTENTARLO PARA SABER; si vive aquí, sabe qué puede intentar antes de intentarlo.\n\nUna precondición LEE, y su expresión está sujeta a la regla de flujo de 04-flow sin ninguna extensión.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "expr"],
+            "properties": {
+              "id": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+              "expr": { "$ref": "#/$defs/cel" },
+              "message": { "type": "string", "maxLength": 512 }
+            }
+          }
+        },
+
+        "effects": {
+          "description": "Se declaran, no se descubren — y hay un mecanismo detrás: LA FUNCIÓN NO ESCRIBE. El motor escribe en su nombre lo que ella declaró. Si pudiera escribir por su cuenta, esta sección sería documentación.\n\nTodos los efectos DEBEN apuntar al mismo `datasourceRef` (OOS7008): escribir atómicamente en dos fuentes no es algo que este motor pueda prometer.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["writes", "datasourceRef"],
+            "properties": {
+              "writes": {
+                "description": "La propiedad destino, cualificada. NO DEBE tener `derivedFrom` (OOS7006), y DEBE llevar etiqueta en un retículo de eje `integrity` (OOS7005).",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "datasourceRef": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+              "from": {
+                "description": "Acota la transición. Vive aquí y NO se repite como precondición: `from` y `to` no son una comprobación más, acotan LO QUE LA FUNCIÓN PUEDE CAUSAR, que es exactamente lo que la regla de integridad razona.",
+                "type": "string"
+              },
+              "to": { "type": "string" }
+            }
+          }
+        },
+
+        "endorsements": {
+          "description": "Vocabulario CERRADO de dos entradas, porque solo hay dos formas de ganar confianza de manera comprobable: demostrarla una vez y dejarlo escrito, o pagarla en cada uso.\n\nSolo los endosos INCONDICIONALES cuentan para satisfacer la regla de integridad (02-function §6.1): si `when` es falso no hay elevación, luego la carencia sigue abierta en el caso que importa.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["endorser"],
+            "properties": {
+              "endorser": { "enum": ["attested", "humanApproval"] },
+              "attestation": {
+                "description": "Ruta a la atestación firmada, verificable contra una clave declarada en `ontology.lock`. Obligatoria para `attested`.",
+                "type": "string"
+              },
+              "when": {
+                "description": "Convierte el endoso en un control de negocio adicional. Un endoso condicional NO cierra una carencia de integridad.",
+                "$ref": "#/$defs/cel"
+              }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "endorser": { "const": "attested" } }, "required": ["endorser"] },
+                "then": { "required": ["attestation"] }
+              }
+            ]
+          }
+        },
+
+        "authorization": {
+          "description": "La política Cedar que decide si un principal puede invocar. OOS no define un lenguaje de autorización y esta versión no reabre esa decisión.\n\nEste documento decide si la función PUEDE EXISTIR con los efectos que declara (L0, al compilar). Cedar decide si ESTE principal puede invocarla AHORA (L3, al invocar).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+
+        "idempotency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key"],
+          "properties": {
+            "key": { "type": "string", "minLength": 1 },
+            "window": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration" }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+
+    "cel": {
+      "description": "Expresión CEL: total, terminante y sin efectos. P3 prohíbe el cómputo arbitrario en un documento que gobierna — una expresión que pueda no terminar, o llamar a la red, deja de ser dato inerte revisable.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type"],
+        "properties": {
+          "type": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType" },
+          "required": { "type": "boolean" },
+          "description": { "type": "string", "maxLength": 512 }
+        }
+      },
+      "propertyNames": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" }
+    }
+  }
+}

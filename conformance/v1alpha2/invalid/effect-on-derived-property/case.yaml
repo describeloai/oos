@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/02-function.md#5.3
+level: L0
+expects: OOS7006
+summary: >
+  Efecto sobre una propiedad `derivedFrom`. Declarar que ademas se escribe es afirmar dos
+  origenes para el mismo valor.

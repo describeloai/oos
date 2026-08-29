@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/02-function.md#6.1
+level: L0
+expects: OOS7002
+summary: >
+  La carencia solo esta cubierta por un endoso condicional. Si la condicion es falsa no hay
+  elevacion, luego la carencia sigue abierta justo en el caso que importa.
