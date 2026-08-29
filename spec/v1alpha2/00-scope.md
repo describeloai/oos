@@ -3,6 +3,11 @@
 **Estado:** borrador de alcance. Ningún documento de esta carpeta es normativo todavía.
 `spec/v1alpha1/` sigue mandando.
 
+| | |
+|---|---|
+| `00-scope` | **este documento** — qué entra en v1alpha2, qué no, y qué queda abierto |
+| [`01-efectos`](01-efectos.md) | el núcleo — el régimen de efectos, del que se deriva todo lo demás |
+
 ---
 
 ## 1. La tesis
@@ -36,68 +41,27 @@ ninguno se pueda especificar bien por separado.
 
 ## 2. Lo que hay que añadir son dos cosas, no cuatro
 
-El error caro aquí sería escribir tres documentos con tres modelos de gobernanza. Casi
-todo lo que hace falta **ya está en v1alpha1**; lo que falta es una adición conceptual y
-una decisión de composición.
+El error caro sería escribir tres documentos con tres modelos de gobernanza. Casi todo lo
+que hace falta **ya está en v1alpha1**: lo que falta es un eje —**integridad**, el dual
+conocido de la confidencialidad, literatura de control de flujo desde los setenta— y una
+decisión de composición para las expresiones.
 
-### 2.1 · El eje de integridad
+Las dos se especifican en [`01-efectos.md`](01-efectos.md), que es el núcleo de esta
+versión. Aquí solo consta el alcance y su estado:
 
-La regla de flujo tiene un dual conocido y no hay que inventarlo. Es literatura de control
-de flujo de información desde los años setenta:
-
-| | Gobierna | Regla | Origen |
-|---|---|---|---|
-| **Confidencialidad** | lecturas | la información no sube a donde no está autorizada | Bell–LaPadula |
-| **Integridad** | escrituras | el efecto no baja de la confianza que exige su destino | Biba |
-
-Un retículo `gdpr.sensitivity` dice **cuán sensible** es un dato y gobierna quién lo ve. Un
-retículo de integridad dice **cuán fiable** es un actor o un dato, y gobierna qué puede
-modificar. Son ejes ortogonales y ambos son retículos: **el documento `Lattice` de v1alpha1
-ya sirve para los dos**, sin cambios.
-
-Lo que cambia es la dirección de la comparación. Para leer, `⊑`. Para escribir, `⊒`.
-
-### 2.2 · El endosante
-
-Si el desclasificador es la vía de escape autorizada de la confidencialidad, la integridad
-necesita la suya: algo que **suba** el nivel de confianza de forma auditada.
-
-```
-Desclasificador   baja confidencialidad   mask · tokenize · redact · aggregate · promote
-Endosante         sube integridad         ¿?
-```
-
-**Y los borradores ya lo inventaron sin nombrarlo, tres veces y de tres formas distintas:**
-
-| Borrador | Cómo lo llama |
+| | Estado |
 |---|---|
-| `Function` | `authorization.requireHumanApproval.when` |
-| `Resolution` | `requires.approvedBy: "@acme/security"` |
-| `Rule` | *(implícito: `status: STABLE` revisado en un PR)* |
+| **eje de integridad** — `Lattice` gana `axis`, y de ahí sale el combinador | decidido · `01-efectos` §1, §3.1, §4.2 |
+| **endosante** — el dual del desclasificador | nombrado y acotado; el vocabulario sigue sin cerrar · §3.2 |
+| **CEL** para expresiones — **P3** prohíbe el cómputo arbitrario en un documento que gobierna | adoptado; la superficie sigue sin decidir · §5 |
+| **la regla de integridad**, y qué parte de ella cae en L0 | decidido · §4.1 |
 
-Tres nombres para un concepto es exactamente el síntoma que precede a tres semánticas
-distintas. Nombrarlo unifica los tres documentos bajo una sola regla y hace que el
-vocabulario de endosantes sea **cerrado y auditable**, igual que el de desclasificadores.
-
-Candidatos para ese vocabulario cerrado, a decidir: aprobación humana registrada en un
-commit, revisión de un equipo de `CODEOWNERS`, una suite de pruebas en verde, una firma.
-
-### 2.3 · El lenguaje de expresiones
-
-Los tres documentos necesitan expresiones —`preconditions`, `expr`, `match`— y **P3 prohíbe
-el cómputo arbitrario en un documento que gobierna**. Un `expr` que pueda no terminar, o
-que pueda llamar a la red, deja de ser dato inerte revisable.
-
-Por **P6**, esto no se inventa. El candidato es **CEL** (Common Expression Language): total,
-terminante, sin efectos, y ya es el motor de las políticas de admisión de Kubernetes —
-exactamente el mismo problema. La sintaxis de los borradores ya es prácticamente CEL.
-
-Lo que hay que decidir y especificar es la **superficie**: qué funciones se exponen. Los
-borradores usan `graph.out`, `graph.in`, `graph.reachable`, `graph.depth`, `temporal.noOverlap`,
-`size`, `count`, `band(...)`. Cada una de ellas es una decisión de gobernanza disfrazada de
-utilidad, porque **cada una es una lectura**: `graph.reachable` sobre la jerarquía lee la
-topología, y `band(employeeId)` lee valores de negocio. Ambas son flujos, y la regla de
-flujo de v1alpha1 se les aplica sin ninguna extensión.
+Un hallazgo de alcance que sí pertenece aquí, porque es la razón de que los tres documentos
+vayan juntos: **el endosante ya estaba inventado tres veces con tres nombres** en los
+borradores de `docs/vision/` — `requireHumanApproval` en `Function`, `approvedBy` en
+`Resolution`, y el `status: STABLE` revisado en un PR de `Rule`. Un concepto con tres
+nombres acaba teniendo tres semánticas, y esa es exactamente la deriva que una versión
+conjunta evita.
 
 ---
 
@@ -134,12 +98,14 @@ sustrato. El borrador es fuerte y ya trae la honestidad de diseño que hay que c
 - **`transaction.scope: single-datasource`.** El borrador se niega a prometer atomicidad
   entre PostgreSQL y Salesforce. Esa negativa es una característica y se queda.
 - **`network: DENY` en el sandbox.** El aislamiento es parte del contrato, no del despliegue.
-- **`requireHumanApproval`** — que es el endosante de §2.2 y hay que renombrar.
+- **`requireHumanApproval`** — que es un endosante, y hay que renombrar
+  ([`01-efectos`](01-efectos.md) §3.2).
 
-Lo que falta y es el trabajo real: **la regla de integridad**. Una función solo puede
-causar un efecto sobre una propiedad si el actor que la invoca alcanza la integridad que
-esa propiedad exige, o si atraviesa un endosante autorizado. Es la frase dual de la regla
-de flujo, y tiene que ser igual de comprobable **sin ejecutar la función**.
+Lo que falta y es el trabajo real: **la regla de integridad**, especificada en
+[`01-efectos`](01-efectos.md) §4.1. Y conviene no enunciarla como sale de la intuición —
+«el actor que invoca alcanza la integridad que el destino exige»—, porque **al compilar no
+hay actor** y esa formulación deja el régimen fuera de L0. La regla se escribe sobre la
+función: `I(función) ⊒ I(destino)`. Quién invoca es Cedar, en ejecución.
 
 ### 3.3 · `Resolution`
 
@@ -211,5 +177,8 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
 3. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
    cada una es una lectura sujeta a la regla de flujo.
 4. **`maxDepth` en Cedar** — materializar la profundidad, o aceptar el cierre transitivo.
-5. **Qué es certificable.** De todo lo anterior, cuánto cae en L0. La regla de integridad
-   sí; la ejecución de una función, no. La suite solo puede crecer con lo primero.
+
+**Cerrada desde que se escribió el núcleo:** *qué es certificable*. La partición está en
+`01-efectos` §4.1 — la regla de integridad es L0 porque se escribe sobre la función y no
+sobre quien la invoca; la invocación es L3 y es de Cedar. La suite solo puede crecer con
+lo primero.
