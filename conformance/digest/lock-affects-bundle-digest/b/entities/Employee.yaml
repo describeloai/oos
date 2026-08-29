@@ -6,4 +6,4 @@ spec:
   primaryKey: [employeeId]
   properties:
     employeeId: { type: String }
-    baseSalary: { type: Money<EUR, 2> }
+    baseSalary: { type: "Money<EUR, 2>" }

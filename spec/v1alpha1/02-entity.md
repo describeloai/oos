@@ -114,6 +114,14 @@ incorrectas.
 Su serialización canónica es **cadena**, no número JSON
 ([`90-canonical-form`](90-canonical-form.md) §4.1).
 
+> **Trampa de YAML.** Un escalar plano no puede contener una coma **en estilo flow**, así
+> que `{ type: Money<EUR, 2> }` se parte por la coma y el tipo llega truncado. En estilo
+> block —el normal, y el que emite `ore discover`— no hay problema. Escrito en flow, el
+> tipo **DEBE** entrecomillarse: `{ type: "Money<EUR, 2>" }`.
+>
+> Una implementación **DEBERÍA** reconocer un paramétrico truncado —`Money<EUR` sin cerrar—
+> y señalar esta causa, que es la que el usuario no ve.
+
 ### 3.3 · Listas y referencias
 
 `list<T>` de escalares, un solo nivel. `ref` a otra entidad (§6).

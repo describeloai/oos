@@ -7,4 +7,4 @@ spec:
   properties:
     employeeId:  { type: String }
     addressCity: { type: String }
-    baseSalary:  { type: Money<EUR, 2> }
+    baseSalary:  { type: "Money<EUR, 2>" }
