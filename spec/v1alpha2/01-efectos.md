@@ -23,8 +23,9 @@ documento entero:
 | **prueba** | no compila | no compila |
 
 Cinco filas y una consecuencia: **no hace falta un modelo de gobernanza nuevo.** Hace falta
-leer el existente en la otra dirección. El documento `Lattice` sirve para ambos ejes sin un
-solo campo nuevo; lo que cambia es hacia dónde apunta la comparación.
+leer el existente en la otra dirección. El documento `Lattice` sirve para ambos ejes con un
+único campo nuevo —`axis`, del que sale el combinador—; todo lo demás que cambia es hacia
+dónde apunta la comparación.
 
 > Un conducto es por dónde **sale** un dato. Una función es por dónde **entra** un efecto.
 
@@ -88,6 +89,18 @@ spec:
   levels: [untrusted, inferred, reviewed, attested]
 ```
 
+**Normativo.**
+
+- `axis` **DEBE** valer `confidentiality` o `integrity`. Si se omite, es `confidentiality`:
+  es lo que hace que todo retículo de v1alpha1 siga significando lo mismo sin tocarlo.
+- El combinador **se deriva del eje** y **NO DEBE** declararse: `confidentiality` combina
+  por `join`, `integrity` por `meet` (§4.2). Un campo derivable no es declarable — **P2**.
+- `join`, que v1alpha1 admitía, queda **obsoleto**. Si un documento lo declara, **DEBE**
+  coincidir con lo que implica su eje; si no, `OOS7007`.
+- Una etiqueta cuyo retículo tenga eje `integrity` **NO DEBE** usarse donde se espera
+  confidencialidad, ni al revés. Los ejes son ortogonales y mezclarlos compara cosas que no
+  se comparan.
+
 ### 3.2 · El endosante
 
 Un desclasificador es una **pérdida autorizada**: se pierde precisión para ganar alcance.
@@ -98,14 +111,38 @@ Un endosante es lo contrario: una **confianza ganada**, y ganada tiene que signi
 
 > El precio tiene que ser **verificable al compilar**, sin reloj y sin red.
 
-Eso descarta cualquier endosante que dependa de consultar algo vivo, y deja exactamente los
-que **dejan rastro en el repositorio**: una revisión de `CODEOWNERS` registrada en un
-commit, una suite de pruebas en verde, una firma verificable, una atestación. Es la misma
-disciplina que ya usa `OOS5022`, donde el periodo de aviso se comprueba por lo que está
-escrito y no por qué hora es.
+Eso descarta cualquier endosante que dependa de consultar algo vivo, y deja solo los que
+**dejan rastro en el repositorio**. Es la misma disciplina que ya usa `OOS5022`, donde el
+periodo de aviso se comprueba por lo que está escrito y no por qué hora es.
 
-El vocabulario será **cerrado**, como el de desclasificadores, y por el mismo motivo: un
+Aplicada de verdad, esa restricción es más severa de lo que parece, y los candidatos
+evidentes se caen o colapsan:
+
+| Candidato | Qué le pasa |
+|---|---|
+| una revisión de `CODEOWNERS` | **colapsa**: lo que el compilador puede verificar no es que alguien revisara, sino la constancia firmada de que lo hizo |
+| una firma | **colapsa**: es la misma cosa con otro nombre |
+| una suite de pruebas en verde | **se cae**: ejecutarlas toca datos, y eso es L2. El compilador ve que existen, no que pasan, y «existe un fichero de pruebas» no es confianza ganada |
+
+El vocabulario es **cerrado**, como el de desclasificadores, y por el mismo motivo: un
 endosante que el motor no sabe verificar es una promesa, y una promesa no es una garantía.
+
+Y sale con **dos** entradas, no con cinco, porque solo hay dos formas de ganar confianza de
+manera comprobable: **demostrarla una vez y dejarlo escrito**, o **pagarla en cada uso**.
+
+| Endosante | Cuándo | Qué eleva | Cómo se verifica |
+|---|---|---|---|
+| `attested` | estático | la integridad de la **función**, siempre | una atestación firmada, presente en el repositorio y verificable contra una clave declarada en `ontology.lock` |
+| `humanApproval` | dinámico | la integridad de **una invocación** | el compilador verifica que la declaración cubre la carencia; el motor verifica el acto |
+
+Las dos son herméticas en lo que a cada una le toca. `attested` lo es del todo: comprobar
+una firma contra una clave que ya viaja en el lock no consulta nada vivo. `humanApproval`
+parte el trabajo por la misma costura que todo lo demás —**el compilador comprueba la
+declaración, el runtime comprueba el hecho**— y es lo que permite que un agente prepare y
+proponga mientras un humano firma por encima del umbral.
+
+Cualquier otro endosante es `OOS7004`. Ampliar el vocabulario es un cambio de esta
+especificación, igual que ampliar el de desclasificadores.
 
 Los borradores de `docs/vision/` ya lo habían inventado tres veces con tres nombres —
 `requireHumanApproval`, `approvedBy`, `status: STABLE`—. Un concepto con tres nombres
@@ -165,6 +202,24 @@ conducto. Aquí pasa igual si se cambia el sujeto:
 > propiedad cuya integridad exigida supere la suya, salvo que atraviese un endosante
 > autorizado.
 
+**Normativo.** Sea `E` un efecto declarado por una `Function` sobre una propiedad `P`:
+
+1. `P` **DEBE** llevar etiqueta en algún retículo de eje `integrity`. Sin ella no hay nada
+   contra qué comparar, y **no se asume nada**: es `OOS7005`. Es la misma disciplina que
+   `OOS4011` — un conducto sin autorización declarada no se autoriza solo, falla.
+2. La integridad de la función **DEBE** alcanzar la que `P` exige en **todos** los
+   retículos de eje `integrity` que `P` etiqueta, o el efecto **DEBE** declarar un
+   endosante autorizado que cubra la diferencia. Si no: `OOS7002`, o `OOS7001` cuando la
+   integridad de la función es **computada** y no declarada.
+3. `P` **NO DEBE** tener `derivedFrom`. Una propiedad derivada se computa; declarar que
+   además se escribe es afirmar dos orígenes para el mismo valor, y el compilador no puede
+   saber cuál gana. Es `OOS7006`, y es el dual exacto de `OOS4008`.
+
+Y una consecuencia que conviene no perder de vista: **la confidencialidad de una función no
+necesita reglas nuevas.** Sus argumentos se leen de propiedades etiquetadas, y el sandbox
+es un conducto como cualquier otro. Una función que recibe un dato `critical` en un sandbox
+sin autorización falla con `OOS4001` o `OOS4002`, que ya existen y ya están implementados.
+
 Y `I(función)` no es la identidad de nadie: es **el nivel de garantía que la propia función
 ha ganado** — sus pruebas, su revisión, su firma, su exigencia de aprobación humana. Todo
 declarado, todo en el repositorio, todo verificable sin ejecutar.
@@ -200,7 +255,33 @@ grafo; aquí lo recorre otra vez con `min`.
 
 ---
 
-## 5. El ecosistema
+## 5. La familia `OOS7xxx`
+
+Registro provisional. Se consolidará en un `99-errors.md` propio cuando v1alpha2 tenga más
+de un documento normativo; hasta entonces vive donde se define.
+
+| Código | Condición | § |
+|---|---|---|
+| `OOS7001` | violación de la regla de integridad **por propagación** | 4.1 · 4.2 |
+| `OOS7002` | violación **directa**: la función no alcanza la integridad que exige su destino | 4.1 |
+| `OOS7003` | etiqueta de integridad que no pertenece a ningún retículo de eje `integrity` | 3.1 |
+| `OOS7004` | endosante fuera del vocabulario cerrado | 3.2 |
+| `OOS7005` | destino de un efecto sin integridad declarada | 4.1 |
+| `OOS7006` | efecto sobre una propiedad `derivedFrom` | 4.1 |
+| `OOS7007` | `join` declarado incoherente con el `axis` del retículo | 3.1 |
+
+**La numeración no es decorativa.** `7001` y `7002` reproducen deliberadamente la distinción
+de `4001` y `4002`, y por la misma razón: la violación **declarada** la ve cualquiera
+leyendo el documento; la **computada** —la que sale de propagar `meet` por una cadena de
+derivaciones— no la ve nadie sin compilar. Es el error que justifica que exista un
+compilador, escrito otra vez para el otro eje.
+
+Y `7005` es `4011` con el signo cambiado, `7006` es `4008`, `7003` es `4003`. Que la familia
+sea casi un espejo es la mejor evidencia de que §1 no era una analogía bonita.
+
+---
+
+## 6. El ecosistema
 
 Acotado a propósito. Cada pieza está por **P6** —componer antes que inventar— y cada una
 trae escrito qué aporta y por qué no se reimplementa.
@@ -220,7 +301,7 @@ compensaciones distribuidas, el alcance se habría roto.
 
 ---
 
-## 6. Lo que este régimen no promete
+## 7. Lo que este régimen no promete
 
 Escrito aquí para que no haya que descubrirlo:
 
