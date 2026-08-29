@@ -7,6 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha2, qué no, y qué queda abierto |
 | [`01-efectos`](01-efectos.md) | el núcleo — el régimen de efectos, del que se deriva todo lo demás |
+| [`02-function`](02-function.md) | la superficie de efecto — el primer documento que aplica el régimen |
 
 ---
 
@@ -98,14 +99,14 @@ sustrato. El borrador es fuerte y ya trae la honestidad de diseño que hay que c
 - **`transaction.scope: single-datasource`.** El borrador se niega a prometer atomicidad
   entre PostgreSQL y Salesforce. Esa negativa es una característica y se queda.
 - **`network: DENY` en el sandbox.** El aislamiento es parte del contrato, no del despliegue.
-- **`requireHumanApproval`** — que es un endosante, y hay que renombrar
-  ([`01-efectos`](01-efectos.md) §3.2).
+- **`requireHumanApproval`** — que es un endosante, y se renombró
+  ([`01-efectos`](01-efectos.md) §3.2, [`02-function`](02-function.md) §6.1).
 
-Lo que falta y es el trabajo real: **la regla de integridad**, especificada en
-[`01-efectos`](01-efectos.md) §4.1. Y conviene no enunciarla como sale de la intuición —
-«el actor que invoca alcanza la integridad que el destino exige»—, porque **al compilar no
-hay actor** y esa formulación deja el régimen fuera de L0. La regla se escribe sobre la
-función: `I(función) ⊒ I(destino)`. Quién invoca es Cedar, en ejecución.
+Escrito en [`02-function`](02-function.md). Dos cosas que conviene no perder de vista al
+leer el borrador original: la regla **no** se enuncia como sale de la intuición —«el actor
+que invoca alcanza la integridad que el destino exige»—, porque al compilar no hay actor y
+esa formulación deja el régimen fuera de L0; y la integridad de una función **se computa**
+de sus endosos, nunca se declara.
 
 ### 3.3 · `Resolution`
 
