@@ -188,8 +188,9 @@ consumidor externo más.
 spec/v1alpha1/     documentos normativos
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA
-examples/          ontologías de referencia
+examples/          ontologías de referencia — validan con CERO diagnósticos
 docs/              diseño y razonamiento — no normativo
+docs/vision/       ontologías escritas contra el lenguaje completo — NO validan
 ```
 
 | | v1alpha1 |
@@ -200,11 +201,12 @@ docs/              diseño y razonamiento — no normativo
 | `99-errors` · registro de códigos | ✅ borrador |
 | `01-package` · `02-entity` · `03-binding` (perfiles) | ⬜ **siguiente** |
 | `91-versioning` · `schemas/` | ⬜ |
-| [`examples/acme-retail`](examples/acme-retail/README.md) | ✅ completo |
+| [`examples/acme-retail`](examples/acme-retail/README.md) | ✅ completo · en verde |
+| [`docs/vision/acme-global`](docs/vision/acme-global/README.md) | 🔭 visión · no valida, y es correcto |
 
-Alcance cerrado de v1alpha1: cinco documentos. `Package`, `Entity` y `Binding` son
-**perfiles** sobre ODCS y Ossie; `Lattice` y `ConduitPolicy` son **la única gramática
-nueva que la especificación introduce**. Las políticas son **Cedar**, no un documento
+Alcance cerrado de v1alpha1: cinco documentos. `Package` y `Binding` son **perfiles**
+sobre ODCS; `Entity`, `Lattice` y `ConduitPolicy` son **gramática propia** —Ossie es
+objetivo de emisión del bundle, no anfitrión de la entidad (`00-overview` §7.2-bis)—. Las políticas son **Cedar**, no un documento
 OOS. `Rule`, `Function`, `Test`, `Resolution` y la resolución de dependencias quedan
 aplazados.
 
