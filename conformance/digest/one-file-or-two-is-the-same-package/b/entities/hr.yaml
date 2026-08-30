@@ -1,0 +1,25 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId:   { type: String }
+    departmentId: { type: String }
+  relations:
+    department:
+      target: hr.Department
+      cardinality: many_to_one
+      via: departmentId
+      required: true
+---
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Department, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [departmentId]
+  properties:
+    departmentId: { type: String }
+    name:         { type: String }

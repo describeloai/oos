@@ -221,6 +221,32 @@ comparar dos paquetes se sabe exactamente qué documentos cambiaron sin volver a
 y la mejora: saberlo por identidad sobrevive a que alguien reorganice las carpetas, y saberlo
 por ruta no.
 
+### 5.3 · Un fichero es un **flujo**, no un documento
+
+Se sigue de lo anterior y conviene no dejarlo deducido. En YAML, un fichero es un *stream* y
+un *stream* contiene cero o más *documentos*, separados por `---`. La unidad de OOS y la
+unidad de YAML son la misma, y OOS no la inventó: la heredó, junto con la convención
+`apiVersion`/`kind`/`metadata` de Kubernetes, donde varios documentos por fichero es el
+idioma habitual.
+
+Un motor conforme **DEBE** leer **todos** los documentos de un fichero.
+
+No es una comodidad: es lo que hace cierta la frase de arriba. Si el nombre del fichero es
+incidental, **partir un fichero en dos o juntar dos en uno no puede cambiar el artefacto** —
+y un motor que lee el primero y descarta el resto convierte una decisión de organización en
+un cambio de contenido, sin decirlo.
+
+Y no abre ningún riesgo nuevo: el único que tendría juntar documentos —que dos acaben con la
+misma identidad— ya lo cierra `OOS2003`, que se aplica al paquete y no al fichero.
+
+> Descartar en silencio no es una tercera opción. Un motor que no quisiera admitir varios
+> documentos tendría que **decirlo**; leer uno y callar los demás es pérdida de datos con un
+> «ok» encima.
+
+**Una excepción, y es la que confirma la regla:** `ontology.lock` se localiza **por su
+nombre**, porque es un artefacto generado y no lleva `kind`. La regla precisa es que la
+identidad de un *documento de la ontología* vive dentro de él.
+
 Dos documentos con la misma identidad en un mismo paquete **DEBEN** rechazarse
 (`OOS2003`).
 

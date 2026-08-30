@@ -92,11 +92,12 @@
     },
 
     "scalarType": {
-      "description": "Tipos escalares del perfil. Los compuestos anidados NO están en v1alpha1: se aplanan en el binding, de modo que cada hoja recibe su propia etiqueta y el análisis de flujo no necesita atravesar estructuras.",
+      "description": "Tipos escalares del perfil. LOS FIJA `02-entity.md` §3.1, que es el texto normativo; este fichero lo refleja, y no al revés.\n\nLos nombres se alinean deliberadamente con el enum de Apache Ossie aunque no lo perfilemos: convierte la emisión en un mapeo sin renombrados.\n\nLos compuestos anidados NO están en v1alpha1: se aplanan en el binding, de modo que cada hoja recibe su propia etiqueta y el análisis de flujo no necesita atravesar estructuras.\n\nHasta que v1alpha5 necesitó una tabla de tipos exacta, este enum decía otra cosa —siete nombres en minúscula que no usaba ni un documento del repositorio— y nadie lo notaba, porque la última rama del oneOf aceptaba cualquier identificador suelto: las 375 propiedades escritas `String` validaban como «tipo importado» llamado `String`. Un $def con 375 usuarios y ninguno que lo usara.",
       "oneOf": [
         {
           "type": "string",
-          "enum": ["string", "integer", "number", "boolean", "date", "timestamp", "bytes"]
+          "enum": ["String", "Integer", "Decimal", "Float", "Boolean",
+                   "Date", "Time", "DateTime", "DateTimeTz", "Opaque"]
         },
         {
           "type": "string",
@@ -109,8 +110,10 @@
           "pattern": "^list<[a-zA-Z][a-zA-Z0-9_]*>$"
         },
         {
-          "$ref": "#/$defs/qualifiedName",
-          "description": "Tipo importado de un paquete de tipos: iso.CountryAlpha2"
+          "type": "string",
+          "maxLength": 512,
+          "description": "Tipo importado de un paquete de tipos: `iso.CountryAlpha2`.\n\nDEBE llevar al menos un punto, y esa exigencia es lo único que separa esta rama de un escalar mal escrito: sin ella `Blob` pasaría como tipo importado en vez de fallar con OOS3001, y el enum de arriba se quedaría sin trabajo.",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+$"
         }
       ]
     }

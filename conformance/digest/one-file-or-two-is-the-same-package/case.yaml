@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/90-canonical-form.md#5.3
+level: L0
+expects: same
+summary: >
+  Dos entidades en dos ficheros y las mismas dos en uno solo, separadas por
+  `---`, son el mismo paquete. El fichero es un flujo, y su nombre es incidental.
