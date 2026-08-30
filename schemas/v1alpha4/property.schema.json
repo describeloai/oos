@@ -84,6 +84,20 @@
           "description": "Qué otras palabras usa el negocio para esto.\n\nLA MISMA FORMA que en Entity, y por eso se referencia en vez de repetirse: la primera versión de este esquema la redeclaró con `notes` donde la otra dice `guidance`, que son dos nombres para un concepto separados por seis letras — el error que este proyecto lleva cuatro versiones corrigiendo.\n\nEs el campo que más gana al subir de nivel: los sinónimos de un concepto son los mismos en todos los sistemas donde aparece. Declararlos una vez, junto al concepto, evita que cada columna los vuelva a adivinar — y es exactamente el ancla contra la que un inductor propone.\n\nLas tres condiciones con que se adoptó siguen valiendo, y la tercera con más razón aquí: DESCRIPTIVO, NUNCA DIRECTIVO. Un concepto se importa desde fuera, así que su `aiContext` es texto de un tercero dentro de un artefacto gobernado.",
           "$ref": "entity.schema.json#/$defs/aiContext"
         },
+        "requiresGovernance": {
+          "description": "Qué clase de regla exige este concepto de quien lo lleve, CATEGÓRICAMENTE.\n\nLista de naturalezas y no un mapa por nivel, porque un concepto no tiene niveles: la exigencia se activa por SER lo que es. Es la forma que tiene la regulación de clasificar — el artículo 9 del RGPD enumera categorías (salud, biometría, convicciones) y sus obligaciones se activan en cuanto el dato cae en una de ellas, con independencia de lo sensible que sea en ese contexto.\n\nSe llama igual que en el retículo A PROPÓSITO: es la misma noción sobre otro sujeto, y ponerle otro nombre sería el error de los dos nombres para un concepto. Se compone con UNIÓN, igual que entre retículos, y solo puede exigir MÁS: no hay forma de descargar una obligación desde aquí, que es lo que impide que importar vocabulario laxo afloje una exigencia local.\n\nNo trae código propio: entra como un origen más en el cálculo de cobertura y falla con OOS8001.\n\nNormativo: spec/v1alpha4/02-property.md §3.3",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "constraint",
+              "authorization",
+              "obligation",
+              "transformation"
+            ]
+          }
+        },
         "confidence": {
           "description": "Acuñar un concepto es una inferencia, igual que mapear una columna a uno: «estas catorce columnas comparten un concepto; llámalo así». El mecanismo no distingue las dos, y no debe — son la misma clase de acto, y lo que las separa es la consecuencia, no la naturaleza.\n\nSujeto a la misma regla: un documento cuya madurez EFECTIVA no es DRAFT no puede llevarlo (OOS9003). Que la madurez sea efectiva y no declarada es por lo que esa comprobación es del compilador y no de este esquema.",
           "$ref": "../v1alpha1/type/basic.schema.json#/$defs/confidence"

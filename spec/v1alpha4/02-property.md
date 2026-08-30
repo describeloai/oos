@@ -117,6 +117,7 @@ en el primer caso que lo usó.
 | `description` | prosa |
 | `enum` | **secuencia**: retirar un valor o reordenarlos es un cambio observable |
 | `aiContext` | §2 |
+| `requiresGovernance` | §3.3 — qué clase de regla exige, **categóricamente** |
 | `confidence` | §4 |
 
 Un `Property` sin `type` es un fallo de forma —`OOS1004`—, y no por rigor: `type` es la mitad
@@ -126,6 +127,64 @@ nombra.
 Y ese `type` **se comprueba**. Si estuviera mal escrito se propagaría en silencio a las
 quince propiedades que lo mapean, que es el modo de fallo que el nivel compartido amplifica:
 un error en un concepto no vale por uno.
+
+### 3.3 · `requiresGovernance` — y por qué el concepto también puede exigir
+
+Un `Property` **PUEDE** declarar qué naturalezas de regla exige quien lo lleve:
+
+```yaml
+kind: Property
+metadata: { name: healthCondition, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  requiresGovernance: [authorization]
+```
+
+Hasta v1alpha3 esa exigencia solo vivía en el **retículo**, por nivel: *«todo lo que esté en
+`high` o por encima necesita una política»*. Que ahora viva también en el concepto no es una
+comodidad — es lo que hace coherente a esta versión entera, y hay una razón teórica y una
+arquitectónica.
+
+**La regulación no clasifica por nivel: clasifica por categoría.** El artículo 9 del RGPD
+enumera categorías especiales —salud, biometría, convicciones, orientación sexual— y sus
+obligaciones se activan **en cuanto el dato cae en una de ellas**, con independencia de lo
+sensible que sea en ese contexto concreto. No hay un umbral que evaluar: la obligación va
+pegada a *qué es* el dato, no a *cuánto* pesa.
+
+Un `requiresGovernance` que solo cuelgue del retículo **no puede expresar eso**. Obliga a
+traducir *«esto es un dato de salud»* a *«esto es `high`»*, y esa traducción es de alguien.
+
+**Y ese alguien es exactamente el problema que v1alpha4 existe para resolver:**
+
+> v1alpha3 gobierna **lo que alguien acertó a etiquetar**.
+
+Si la exigencia solo cuelga del nivel, un correo personal mal clasificado como `low` **se
+escapa de su obligación regulatoria**, y el paquete compila. Con la exigencia en el concepto,
+mapearlo basta: `is: gdpr.personalEmail` arrastra consigo lo que ese concepto exige, sin
+pasar por el juicio de nadie sobre cuánto pesa. **Es la misma frase de arriba, resuelta.**
+
+**Normativo.**
+
+- `requiresGovernance` en un `Property` es una **lista de naturalezas**, no un mapa por nivel:
+  un concepto no tiene niveles, y la exigencia es categórica.
+- Se llama igual que en el retículo **a propósito**. Es la misma noción —qué clase de regla
+  hace falta— sobre otro sujeto, y ponerle otro nombre sería el error de los dos nombres para
+  un concepto, cometido en la especificación que más lo persigue.
+- Las exigencias se componen con **unión**, igual que entre retículos: una propiedad debe
+  cubrir la unión de lo que exigen sus etiquetas efectivas **y** lo que exige su concepto.
+- Un concepto **no puede descargar** nada. Sin `requiresGovernance` no exige; con él, exige
+  más. **No hay forma de exigir menos**, que es lo que impide que importar vocabulario laxo
+  afloje una obligación local.
+
+La composición no necesita teoría nueva: la unión de conjuntos de naturalezas es asociativa,
+conmutativa e idempotente, así que **el orden en que se componen los tres orígenes —retículos,
+concepto y lo que venga— no puede cambiar el resultado**. Es la misma propiedad que hizo
+segura la conjunción entre retículos, un origen más allá.
+
+Y hereda el límite de siempre: `OOS8001` demuestra que **existe** una regla de la clase
+exigida, no que sea la adecuada. *El compilador decide la cobertura; el endoso registra la
+adecuación.*
 
 ---
 
@@ -258,10 +317,19 @@ dependencies:
   - { name: gdpr, version: "^2.0.0" }
 ```
 
-Eso es lo que convierte *«GDPR como dependencia»* en algo literal **y además clasificado**:
-el paquete no solo trae exigencias de gobierno, trae los conceptos **con su clasificación ya
-decidida**. Quien lo importa hereda las dos cosas, y la que hereda de más siempre puede
-elevarla.
+Eso es lo que convierte *«GDPR como dependencia»* en algo literal, y con §3.3 el paquete trae
+las **tres** cosas en un solo documento por concepto:
+
+| | Qué aporta |
+|---|---|
+| `type` | qué forma tiene el dato |
+| `labels` | **cómo de sensible es** — el suelo de clasificación |
+| `requiresGovernance` | **qué clase de regla exige**, categóricamente |
+
+Quien lo importa hereda las tres, y de las tres solo puede exigir **más**. Un paquete
+regulatorio deja de ser una lista de obligaciones abstractas y pasa a ser el vocabulario con
+el que se escribe la ontología — que es la diferencia entre cumplir y **poder demostrar que se
+cumple**.
 
 > **Mapear es hablar el vocabulario de otro. Acuñar es ampliar el tuyo.**
 
@@ -280,27 +348,26 @@ ser cierto, y es una decisión que alguien firma.
 | `OOS3001` | `type` fuera del conjunto | v1alpha1, sin cambios |
 | `OOS4012` | una propiedad **rebaja** la clasificación del concepto | v1alpha1, **sin cambios** |
 | `OOS6003` | `confidence` escrito como número | v1alpha1, sin cambios |
+| `OOS8001` | una propiedad que no cubre lo que su **concepto** exige | v1alpha3, sin cambios |
 | `OOS9003` | `confidence` fuera de una madurez efectiva `DRAFT` | **nuevo** |
 | `OOS9004` | un concepto declarado al que nada referencia | **nuevo** |
 
-**Dos códigos nuevos de siete.** Cinco de los siete los pone maquinaria anterior sin una
-letra de cambio, y `OOS4012` es el caso que hay que mirar dos veces: la regla más antigua del
-proyecto gobierna el mecanismo más nuevo **exactamente como estaba escrita**, porque la
-herencia desde un concepto se enchufó como tercera fuente en la propagación que ya existía,
-al lado de la entidad y del `datasource`.
+**Dos códigos nuevos de ocho**, y las dos filas que no son nuevas son las que hay que mirar
+dos veces.
 
-Si hubiera hecho falta un plano nuevo de análisis, la cobertura habría visto una etiqueta y
-el flujo otra.
+`OOS4012` — la regla más antigua del proyecto gobierna el mecanismo más nuevo **exactamente
+como estaba escrita**, porque la herencia desde un concepto se enchufó como tercera fuente en
+la propagación que ya existía, al lado de la entidad y del `datasource`. Si hubiera hecho
+falta un plano nuevo de análisis, la cobertura habría visto una etiqueta y el flujo otra.
+
+`OOS8001` — la exigencia categórica de §3.3 **no trae código propio**. Entra como un origen
+más en el cálculo de cobertura y falla con el mismo código, el mismo mensaje y el mismo
+diagnóstico. Un origen nuevo de exigencia y **cero códigos nuevos** es la señal de que la
+pieza encajó donde debía.
 
 ---
 
 ## 9. Aplazado
-
-**¿Puede un concepto exigir gobierno?** Hoy `requiresGovernance` vive en el retículo. Si un
-`Property` pudiera declararlo, un paquete regulatorio traería concepto **y** exigencia en un
-solo documento, que es atractivo. Va contra ello que la exigencia dejaría de estar en un solo
-sitio: la conjunción entre retículos ya fue difícil de dejar segura, y sumarle un tercer
-origen sin un caso medido es exactamente lo que **P7** prohíbe.
 
 **Relaciones entre conceptos.** Que `gdpr.personalEmail` sea *un tipo de* `gdpr.contactPoint`
 es representable y no está representado. Sin ello, un `Ruleset` no puede apuntar a una

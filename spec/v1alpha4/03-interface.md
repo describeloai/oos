@@ -55,8 +55,8 @@ y la única manera de gobernarlo es **describirlo tal como está**.
 
 | | Por qué no |
 |---|---|
-| **acciones** | en Foundry una interfaz lleva propiedades, enlaces y *actions*. Aquí una acción es una `Function`, y que una `Function` pueda apuntar a una interfaz es una pregunta de **v1alpha2** — §7 |
-| **herencia** | que `Employee implements Person implements Party` sea transitivo es plausible y no está escrito. Sin caso de uso medido, **P7** — §7 |
+| **acciones** | en Foundry una interfaz lleva propiedades, enlaces y *actions*. Aquí una acción es una `Function`, y **una `Function` no puede apuntar a una interfaz** — §9 |
+| **herencia** | y no porque falte: `I ⊑ J` **se computa** de la inclusión entre sus `requires`. Un `extends` sería un segundo sitio donde decirlo, y podría contradecirlo — **P2**, §4.2 |
 | `owner` | un `Ruleset` lo necesita porque **restringe lo ajeno**; una interfaz solo nombra. Un campo del que nada se computa acaba adquiriendo un significado que nadie escribió |
 | `labels` | no porta datos, luego no tiene clasificación. Lo mismo que `Ruleset` |
 | **exigencias estructurales** | `primaryKey`, `timeKey`, cardinalidades. Es el apartado 5, y es lo más importante que este documento excluye |
@@ -122,6 +122,70 @@ porque no mapea `gdpr.personalEmail`. Que se llame igual que lo que falta es pre
 modo de fallo: una comprobación por nombre la habría dado por buena, y esa columna habría
 quedado fuera de todo lo que gobierna a `Party` **pareciendo que estaba dentro**.
 
+### 4.2 · La jerarquía **se computa**, no se declara
+
+`Employee` exige `{personalEmail, legalName, employeeId}`; `Party` exige
+`{personalEmail, legalName}`. Entonces:
+
+> `Party.requires ⊆ Employee.requires`, luego **toda entidad que satisface `Employee`
+> satisface `Party`**. No es una declaración: es un teorema sobre dos documentos.
+
+De ahí sale la respuesta a si debe haber herencia entre interfaces: **no como campo.** Un
+`extends: [acme.Party]` sería un segundo sitio donde decir algo que `requires` ya dice, y
+podría **contradecirlo** — declararse extensión de `Party` sin exigir lo que `Party` exige.
+Es **P2** literal: *lo derivable no se declara*.
+
+**Y esto no es una analogía prestada de los lenguajes de programación: es la respuesta de la
+propia disciplina.** En OWL, una clase con condiciones **necesarias y suficientes** es una
+*clase definida*, y un razonador **computa** su lugar en la jerarquía; la jerarquía asertada
+se reserva para las clases *primitivas*, cuya pertenencia no se puede calcular. Un `Interface`
+es una clase definida por construcción —`requires` es exactamente una condición necesaria y
+suficiente de la forma—, así que **su jerarquía es inferida por definición**.
+
+La misma decisión, tomada desde el otro extremo de la informática: Go no tiene palabra clave
+`implements`, y un tipo satisface una interfaz en cuanto su conjunto de métodos es un
+superconjunto del de ella. Es la misma inclusión de conjuntos, comprobada en compilación.
+
+**Normativo.**
+
+- `I ⊑ J` **si y solo si** `J.requires ⊆ I.requires`. Se computa; no hay campo.
+- Un objetivo `implements: [J]` alcanza también a las entidades que declaran `I`, para
+  cualquier `I ⊑ J`.
+- Dos interfaces con el mismo `requires` se subsumen mutuamente: **son la misma forma con dos
+  nombres**, y con esta regla eso queda a la vista en lugar de escondido.
+
+La monotonía se comporta como en `atLeast`, que es el precedente que lo hace seguro: si una
+regla se aplica a una forma, aplicarla también a una forma **más exigente** es la dirección
+correcta. Una regla que dejara de aplicarse cuando la entidad tiene *más* de lo que se pide
+sería un defecto, igual que una que dejara de aplicarse cuando el dato es más sensible.
+
+### 4.3 · Entonces ¿por qué `implements` **sí** se declara?
+
+Es la pregunta que la sección anterior obliga a contestar. Si la subsunción entre interfaces
+se computa, computar la satisfacción de una entidad también sería posible: mirar sus `is` y
+ver si cubren lo que `Party` exige. No hace falta adivinar nada. Go lo hace exactamente así y
+no lleva `implements`.
+
+**Se declara porque no es un hecho: es un compromiso.**
+
+| | Qué dice | Qué pasa cuando deja de cumplirse |
+|---|---|---|
+| **computado** | *«esta entidad, hoy, cubre lo que `Party` exige»* | deja de cubrirlo, **y no pasa nada** |
+| **declarado** | *«esta entidad se compromete a cubrirlo»* | `OOS9001`, y la compilación se rompe |
+
+Sin la declaración, borrar una propiedad haría que la entidad dejara de satisfacer `Party` en
+silencio, y una regla que apunta a `Party` dejaría de alcanzarla **sin que nadie lo note**.
+Es el mismo argumento que `OOS8002` y `OOS9004`, por tercera vez:
+
+> **Lo que deja de gobernar tiene exactamente el mismo aspecto que lo que gobierna.**
+
+Así que la asimetría tiene nombre en cada lado y no es una incoherencia:
+
+| | Naturaleza | Cómo se obtiene |
+|---|---|---|
+| `I ⊑ J` entre interfaces | una relación entre **dos definiciones**, estable | **se computa** |
+| `E implements I` | un compromiso sobre **algo que cambia** | **se declara** |
+
 ---
 
 ## 5. Por qué no absorbe `nature`
@@ -180,7 +244,8 @@ Party`, una regla sobre `Party` lo alcanza.
 ### 6.1 · Y lo que **no** alcanza
 
 > Selecciona **las propiedades que mapean a los conceptos que la interfaz exige**, en toda
-> entidad que declare implementarla. **No toda propiedad de esas entidades.**
+> entidad que declare implementarla **o implementar cualquier forma que la subsuma** (§4.2).
+> **No toda propiedad de esas entidades.**
 
 Es la parte fácil de hacer mal, y hacerla mal es inseguro. Una regla sobre `Party` habla de
 nombres legales y correos personales; si `crm.Customer` tiene además una `internalNote`
@@ -235,21 +300,88 @@ casualidad: **lo declarado es decidible, lo omitido no lo es nunca.**
 
 **Un código nuevo de cuatro**, y `OOS2010` no se retira: §5.
 
+Y la subsunción de §4.2 **no aparece en esta tabla**, que es el resultado que la hace buena:
+computar `I ⊑ J` no puede fallar —es una inclusión de conjuntos entre dos documentos que ya
+validaron— así que no hay nada que diagnosticar. Un `extends` declarado sí habría traído un
+código, para el caso de declarar una extensión que no se cumple.
+
+**Lo derivable no se declara, y por eso no se puede escribir mal.**
+
 ---
 
-## 9. Aplazado
+## 9. Una `Function` **no** puede apuntar a una interfaz
 
-**¿Puede una `Function` apuntar a una interfaz?** Es el titular de Foundry —*los flujos
-apuntan a la interfaz, no a los tipos concretos*— y sería lo que convertiría una `Function`
-escrita una vez en reutilizable sobre quince entidades sucias. **Toca v1alpha2, cuyo alcance
-está cerrado**, y por eso no se resuelve metiéndolo aquí. La pregunta que hay que contestar
-antes: los efectos de una función se declaran sobre destinos concretos y `OOS7008` exige una
-sola fuente física — una interfaz implementada por entidades de tres fuentes rompería eso, o
-lo obligaría a significar otra cosa.
+Es el titular de Foundry —*los flujos apuntan a la interfaz, no a los tipos concretos*— y
+sería lo que convertiría una `Function` escrita una vez en reutilizable sobre quince
+entidades sucias. La respuesta es **no**, y no por prudencia: por **dónde cae el cuantificador
+respecto de la frontera del paquete**.
 
-**Herencia entre interfaces.** Si aparece la presión. Hoy, declarar `implements: [Person,
-Party]` expresa lo mismo con una línea más y sin inventar un cierre transitivo.
+### 9.1 · El cuantificador está del lado equivocado
+
+Las dos construcciones parecen simétricas y no lo son:
+
+| | Qué garantiza | Dónde se comprueba |
+|---|---|---|
+| `Ruleset` → interfaz | *toda propiedad clasificada de esta selección tiene regla* | **donde vive el dato** |
+| `Function` → interfaz | *escribo con integridad suficiente para mi destino* | **donde se define la función** |
+
+Una regla se comprueba en la unidad de compilación que contiene las entidades, y ahí el
+conjunto de implementadores **está completo por construcción**: son los del paquete. Que otro
+paquete añada uno no puede falsear nada aquí, porque ese paquete computa su propia cobertura
+sobre sus propias entidades.
+
+Una función **se exporta**. Su garantía —`I(f) ⊒ I(destino)`— tendría que sostenerse frente al
+join de la integridad de *todos* los implementadores, y los que importan son los del paquete
+que la **invoca**, que la definición nunca vio. Un paquete C que añade una entidad
+implementando `Party` con más integridad exigida **falsea una garantía compilada en el paquete
+A**, y A no se recompila.
+
+> Una propiedad universal sobre un conjunto **abierto** no es estable bajo extensión. La de la
+> regla lo es porque su conjunto se cierra dentro de cada unidad; la de la función no, porque
+> el suyo se abre justo al cruzar la frontera.
+
+**Y tiene precedente exacto.** Rust prohíbe implementar un rasgo ajeno para un tipo ajeno —la
+*orphan rule*— con un objetivo declarado: que se puedan tomar dos crates cualesquiera y
+combinarlos sin que aparezcan implementaciones incompatibles. Es una restricción sobre **dónde
+pueden vivir los implementadores**, aceptada a cambio de conservar el razonamiento global.
+
+La restricción equivalente aquí sería exigir que todos los implementadores de una interfaz
+fueran visibles desde la función: **un mundo cerrado**. Y OOS no lo asume — importar un
+vocabulario ajeno e implementarlo en casa es el caso de uso central de esta versión entera.
+
+De los dos precios se paga el que no rompe nada: **la función se queda apuntando a destinos
+concretos.**
+
+### 9.2 · Y por qué la regla sí puede
+
+Conviene comprobarlo en vez de suponerlo, porque si el argumento de arriba valiera también
+para `Ruleset`, §6 sobraría.
+
+No vale, y la diferencia es que **una regla no se invoca**. Es una restricción que se evalúa
+donde está el dato: si un paquete importa un `Ruleset` que apunta a `Party` y tiene entidades
+que la implementan, su propia compilación las selecciona y comprueba su cobertura. Si no las
+tiene, el objetivo no casa con nada **en ese paquete** y sale `OOS8002` — allí, donde alguien
+puede arreglarlo.
+
+Añadir un implementador solo puede **agrandar** el conjunto gobernado, y agrandar es la
+dirección segura. Añadir un implementador a una interfaz que una función escribe puede
+**subir el suelo de integridad exigido**, y eso invalida hacia atrás.
+
+### 9.3 · Qué la reabriría
+
+Que aparezca una forma de escribir el efecto que se compruebe **en el punto de invocación** y
+no en el de definición: la función queda genérica y el chequeo de integridad se instancia por
+destino, como una monomorfización. Es construible, y **es una pregunta de v1alpha2**, cuyo
+alcance está cerrado. Dejar escrito el mecanismo evita volver a discutirlo desde cero.
+
+---
+
+## 10. Aplazado
 
 **Interfaces incorporadas.** No las hay, y §5 dice por qué la vía obvia no sirve. Si alguna
 vez hicieran falta exigencias estructurales compartidas, **no serían un `Interface`**: serían
 otro documento, y lo primero que habría que justificar es por qué no basta con `nature`.
+
+**Interfaces con cardinalidad.** *«`Party` exige al menos un `contactPoint`»* no es
+expresable: `requires` es un conjunto de conceptos y no cuenta. Sería representable —un mapa
+`concepto → mínimo`— y no hay caso medido. **P7**.

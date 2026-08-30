@@ -169,8 +169,9 @@ el error contra el que va toda la versión.
 ## 5. Lo que NO entra
 
 **Acciones en una interfaz.** En Foundry una interfaz lleva propiedades, enlaces y *actions*.
-Aquí una acción es una `Function`, y que una `Function` pueda apuntar a una interfaz es una
-pregunta de **v1alpha2** — va como decisión abierta, no se resuelve metiéndola aquí.
+Aquí una acción es una `Function`, y **una `Function` no puede apuntar a una interfaz**: la
+garantía de una función se compila donde se define y se invoca en otra parte, así que
+dependería de un conjunto de implementadores que crece fuera de su vista. §6.1.
 
 **Inferir el concepto de una propiedad.** Adivinar significado desde un nombre basaría la
 solidez en parsear cadenas, y `02-entity` ya decidió que no. Un inductor **propone** —y para
@@ -183,25 +184,94 @@ un modelo y cómo pregunta son **ergonomía del motor**, no del artefacto — la
 ejecución»*. Aquí solo se define **el molde**: qué es un concepto, qué es una forma y qué
 tiene que cumplir lo que se escriba.
 
-**Herencia entre interfaces.** Que `Employee implements Person implements Party` sea
-transitivo es plausible y no está escrito. Sin caso de uso medido, no entra — **P7**.
+**Un campo de herencia entre interfaces.** No hace falta: `I ⊑ J` **se computa** de la
+inclusión entre sus `requires`, así que un `extends` sería un segundo sitio donde decir lo que
+`requires` ya dice — **P2**. La relación sí existe y se usa; lo que no entra es declararla.
+§6.3.
 
 **Fusionar, normalizar o limpiar datos.** Un mapeo dice que dos cosas significan lo mismo. No
 las hace iguales. Fusionar registros es `Resolution`, y es otra fila de la misma tabla.
 
 ---
 
-## 6. Decisiones abiertas
+## 6. Decisiones
 
-1. **¿Puede una `Function` apuntar a una interfaz?** Es el titular de Foundry —*los flujos
-   apuntan a la interfaz, no a los tipos concretos*— y es lo que convertiría una `Function`
-   escrita una vez en reutilizable sobre quince entidades sucias. Toca v1alpha2, cuyo alcance
-   está cerrado.
-2. **¿Puede un concepto exigir gobierno?** Un `Property` declara `labels`; ¿puede declarar
-   también `requiresGovernance`, o eso es solo del retículo? Si pudiera, un paquete
-   regulatorio traería concepto **y** exigencia en un solo documento.
-3. **Herencia entre interfaces**, si aparece la presión (§5).
-### Cerradas
+**No queda ninguna abierta.** Las tres que quedaban se cerraron con teoría delante, y las
+tres se decidieron por el mismo criterio: **preguntar de qué clase de objeto se está
+hablando**, en vez de sopesar comodidades.
+
+| | Decisión | Lo que la decidió |
+|---|---|---|
+| **1** | una `Function` **NO** puede apuntar a una interfaz | el cuantificador cae del lado equivocado de la frontera del paquete |
+| **2** | un concepto **SÍ** puede exigir gobierno | la regulación clasifica por **categoría**, no por nivel |
+| **3** | la herencia entre interfaces **se computa**, no se declara | un `Interface` es una *clase definida*: su jerarquía es inferida por construcción |
+
+### 6.1 · `Function` sobre interfaz — no, y por qué no es prudencia
+
+Una regla y una función parecen simétricas sobre una interfaz, y no lo son: **una regla se
+evalúa donde vive el dato; una función se compila donde se define y se invoca en otra parte.**
+La garantía de la regla se cierra dentro de cada unidad de compilación; la de la función
+—`I(f) ⊒ I(destino)`— tendría que sostenerse frente a un conjunto de implementadores que
+**crece en paquetes que la definición nunca verá**.
+
+> Una propiedad universal sobre un conjunto **abierto** no es estable bajo extensión.
+
+Rust paga ese precio con la *orphan rule*, que restringe **dónde pueden vivir los
+implementadores** para que dos crates cualesquiera se puedan combinar sin sorpresas. La
+restricción equivalente aquí sería un mundo cerrado, y OOS no lo asume: importar vocabulario
+ajeno e implementarlo en casa es el caso de uso central de esta versión.
+
+Detalle y la vía que lo reabriría —una instanciación por destino, en el punto de invocación—
+en [`03-interface`](03-interface.md) §9.
+
+### 6.2 · Exigir gobierno desde el concepto — sí, y cierra el hueco de la versión
+
+El artículo 9 del RGPD enumera **categorías** —salud, biometría, convicciones— y sus
+obligaciones se activan en cuanto el dato cae en una de ellas, **con independencia de lo
+sensible que sea en ese contexto**. La obligación va pegada a *qué es* el dato, no a *cuánto*
+pesa, y un `requiresGovernance` que solo cuelgue del retículo no puede expresarlo.
+
+Y es exactamente el hueco que esta versión existe para cerrar:
+
+> v1alpha3 gobierna **lo que alguien acertó a etiquetar**.
+
+Con la exigencia solo en el nivel, un dato de salud mal clasificado se escapa de su obligación
+y el paquete compila. Con la exigencia en el concepto, **mapearlo basta**. Se compone por
+unión —asociativa, conmutativa e idempotente, luego el orden de los orígenes no puede cambiar
+el resultado— y **no trae código nuevo**: falla con el `OOS8001` que ya existía.
+
+Detalle en [`02-property`](02-property.md) §3.3.
+
+### 6.3 · Herencia entre interfaces — se computa
+
+`I ⊑ J` si y solo si `J.requires ⊆ I.requires`. Es un teorema sobre dos documentos, no una
+declaración, y un `extends` sería un segundo sitio donde decirlo con la posibilidad de
+contradecirlo — **P2**.
+
+**La disciplina ya lo había contestado.** En OWL, una clase con condiciones necesarias y
+suficientes es una *clase definida* y el razonador **computa** su jerarquía; la asertada se
+reserva para las clases primitivas, cuya pertenencia no se puede calcular. Un `Interface` es
+una clase definida por construcción. Go llegó a lo mismo desde el otro extremo: sin palabra
+clave, por inclusión de conjuntos.
+
+Lo que obliga a contestar esa decisión es por qué `implements` **sí** se declara, y la
+respuesta afina el régimen entero: **no es un hecho, es un compromiso**. Computado, dejar de
+satisfacer una forma no produce nada; declarado, produce `OOS9001`. Tercera vez que aparece la
+misma ley — *lo que deja de gobernar tiene el mismo aspecto que lo que gobierna*.
+
+Detalle en [`03-interface`](03-interface.md) §4.2 y §4.3.
+
+### 6.4 · Lo que cuesta construirlas
+
+Ninguna de las tres exige un plano nuevo, y **ninguna añade un código**:
+
+| | Qué toca |
+|---|---|
+| **1** | nada. Es una prohibición que ya se cumple por no existir el campo |
+| **2** | un campo en el esquema de `Property`, y un origen más en el cálculo de cobertura |
+| **3** | una clausura por inclusión de conjuntos al resolver un objetivo `implements` |
+
+### Cerradas antes
 
 **`expression` y `derivedFrom` junto a `is`** — y se cierra porque **medirlo destapó un
 agujero**. Los dos campos conviven sin problema y `OOS4015` no se enturbia; lo que fallaba

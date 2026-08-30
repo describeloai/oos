@@ -269,8 +269,13 @@ Encontró tres defectos, uno de ellos **con cuatro versiones de antigüedad**
 ([`00-scope`](spec/v1alpha4/00-scope.md) §7.1). Los dos documentos se redactaron después, con
 la implementación delante.
 
-Falta **decidir**, no escribir: las cuatro decisiones abiertas del alcance, ninguna de las
-cuales bloquea.
+Y **no queda ninguna decisión abierta**. Las tres últimas se cerraron con teoría delante y
+por el mismo criterio —*preguntar de qué clase de objeto se está hablando*—: una `Function`
+**no** puede apuntar a una interfaz porque su garantía se compila donde se define y se invoca
+en otra parte; un concepto **sí** puede exigir gobierno porque la regulación clasifica por
+categoría y no por nivel; y la herencia entre interfaces **se computa**, porque un `Interface`
+es una clase definida y su jerarquía es inferida por construcción
+([`00-scope`](spec/v1alpha4/00-scope.md) §6). Ninguna añade un código nuevo.
 
 ---
 
