@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5007", "axis": "CONSUMER", "subject": "acme.legalName" }
+  ],
+  "requiredBump": "major"
+}

@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/00-scope.md#8
+level: L0
+expects: accept
+summary: >
+  La misma interfaz al reves: encoger `requires` no rompe nada. Mas formas la subsumen,
+  luego una regla que apunte a ella alcanza mas — la direccion segura.

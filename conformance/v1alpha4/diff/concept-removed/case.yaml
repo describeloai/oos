@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/00-scope.md#8
+level: L0
+expects: OOS5007
+summary: >
+  Un concepto publicado desaparece. Todo `is` que lo nombre queda colgando, en paquetes
+  que no se han tocado.

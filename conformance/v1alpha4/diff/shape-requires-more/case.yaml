@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/00-scope.md#8
+level: L0
+expects: OOS5025
+summary: >
+  Una interfaz publicada anade un concepto a `requires`. Quien declaraba implementarla
+  deja de satisfacerla, y eso no es un aviso: es que no compila.

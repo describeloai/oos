@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5025", "axis": "CONSUMER", "subject": "acme.Party", "nowRequires": ["acme.taxId"] }
+  ],
+  "requiredBump": "major"
+}

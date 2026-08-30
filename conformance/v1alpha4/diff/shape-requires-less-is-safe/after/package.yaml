@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: acme, version: 1.1.0, status: active, domain: shared }
+spec: { owner: team:data }

@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 20/20.** Certifica el régimen de significado de
+**Borrador — 24/24.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -38,9 +38,15 @@ Cuatro árboles, cuatro marcadores.
 | `invalid/unknown-governance-nature` | `OOS1004` | una naturaleza mal escrita **no exigía nada, en silencio** |
 | `diff/concept-drops-its-demand` | `OOS5024` | un concepto publicado retira una obligación |
 | `digest/order-of-sets-is-irrelevant` | — | **G1**: los tres campos nuevos son conjuntos, y ahora lo son de verdad |
+| `diff/concept-lowers-its-classification` | `OOS5011` | **`OOS4012` entre versiones** — lo que no se puede hacer dentro de un paquete |
+| `diff/concept-removed` | `OOS5007` | lo que otros nombran deja de existir |
+| `diff/shape-requires-more` | `OOS5025` | una forma exige más: quien la implementaba **no compila** |
+| `diff/shape-requires-less-is-safe` | — | y encogerla **no rompe**: la asimetría es un teorema |
 
-Veinte casos y **tres códigos nuevos**. La proporción es la señal: diecisiete de los veinte
-se certifican con maquinaria que ya existía.
+Veinticuatro casos y **cuatro códigos nuevos**. La proporción es la señal: veinte de los
+veinticuatro se certifican con maquinaria que ya existía — y de los cuatro cambios que la
+fase 2 mete en el `diff`, **tres reutilizan códigos de v1alpha1 sin tocarlos**, porque un
+concepto declara lo mismo que una propiedad y sus cambios son los mismos cambios.
 
 Los seis últimos son las dos decisiones que quedaban abiertas, ya construidas: **la exigencia
 categórica de un concepto** y **la subsunción entre formas**. Ninguna de las dos añadió un

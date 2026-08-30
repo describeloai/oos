@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5011", "axis": "POLICY", "subject": "acme.personalEmail", "from": "gdpr.sensitivity:high", "to": "gdpr.sensitivity:low" }
+  ],
+  "requiredBump": "major"
+}

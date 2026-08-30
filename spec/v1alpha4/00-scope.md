@@ -10,10 +10,10 @@
 | [`02-property`](02-property.md) | el concepto — su superficie normativa |
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Estado: ocho de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
+**Estado: nueve de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
 la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
-atraviesan siete de las doce estaciones de la cadena. `diff` no los ve y al emitir pierden lo que
-heredan — la estación 8, la forma canónica, **cayó en la fase 1**. La definición de listo, la medición y las
+atraviesan siete de las doce estaciones de la cadena. al emitir pierden lo que heredan. Las
+estaciones 8 y 10 —forma canónica y compatibilidad— **cayeron en las fases 1 y 2**. La definición de listo, la medición y las
 cuatro fases están en **§8**.
 
 Los esquemas, la suite y el motor se escribieron **antes** que `02` y `03`, y a propósito: §7
@@ -395,17 +395,13 @@ compila, falla cuando debe y tiene casos en verde.
 | 1 – 7 | ✅ | 19 casos, tres códigos nuevos, la herencia llega a la propagación y a la cobertura |
 | 8 · forma canónica | ✅ | **fase 1, hecha.** Los tres campos entran en `CONJUNTOS`, y el retículo de v1alpha3 con ellos — §8.5 |
 | 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio, y ya **estable** |
-| **10 · compatibilidad** | ❌ | `Shape` no tiene conceptos ni interfaces |
+| 10 · compatibilidad | ✅ | **fase 2, hecha.** `Shape` gana conceptos y formas, con **un solo código nuevo** — §8.5 |
 | **11 · emisión** | ❌ | una propiedad con `is` sale a ODCS **sin tipo y sin clasificación** |
 | **12 · dependencia** | ❓ | sin caso: el mecanismo es el de siempre y **no está probado** |
 
 Las tres que fallan se miden, no se opinan:
 
 ```
-un concepto cambia de `type`, BAJA su clasificación de `high` a `low`,
-y otro concepto DESAPARECE
-  { "requiredBump": "patch", "CONSUMER": "compatible" }
-
 export a ODCS de una propiedad mapeada
   {"name": "email"}                    ← ni tipo ni clasificación
   {"name": "id", "x-oos-type": "String"}   ← declarada localmente
@@ -452,7 +448,7 @@ condiciones que ya se cumplen y conviene dejar contadas:
 |---|---|---|
 | **a** | ninguna decisión abierta | ✅ §6 |
 | **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
-| **c** | las doce estaciones, con caso cada una | ❌ **ocho de doce** |
+| **c** | las doce estaciones, con caso cada una | ❌ **nueve de doce** |
 
 La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
 que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones
@@ -506,7 +502,7 @@ de lo que un concepto y una forma **son**, no de una lluvia de ideas:
 | su `type` **cambia** | quince propiedades heredan otro tipo sin haberse editado |
 | su clasificación **baja** | es `OOS4012` entre versiones: lo que impide rebajar dentro de un paquete no puede ser libre entre dos |
 | su `requiresGovernance` **encoge** | ya cubierto — `OOS5024` |
-| el `requires` de una interfaz **crece** | los implementadores dejan de satisfacerla, **y una regla que apuntaba a esa forma deja de alcanzarlos** |
+| el `requires` de una interfaz **crece** | los implementadores dejan de satisfacerla, y eso no es un aviso: **es que no compilan** (`OOS9001`) |
 | el `requires` de una interfaz **encoge** | **no rompe**: más formas la subsumen, luego la regla alcanza más. Es la dirección segura |
 
 La última fila es la que demuestra que la lista está derivada y no inventada: sale de §4.2 de
@@ -514,6 +510,21 @@ La última fila es la que demuestra que la lista está derivada y no inventada: 
 
 *Se da por terminada cuando:* el paquete de prueba de §8.2 —tipo cambiado, clasificación
 rebajada, concepto desaparecido— deja de decir `patch`.
+
+**Hecha, y con un solo código nuevo de cinco.** Retirar un concepto es `OOS5007`, cambiarle
+el tipo es `OOS5002`, estrechar su `enum` también, y mover su clasificación es `OOS5009` /
+`OOS5011` — todos de v1alpha1, sin tocar. La razón es que **un concepto declara `type`,
+`labels` y `enum`, que es exactamente lo que declara una propiedad**, así que sus cambios
+pasan por las mismas dos funciones. Es la tesis de [`01-significado`](01-significado.md) §3
+comprobándose sola.
+
+El único nuevo es `OOS5025` —*una forma exige más conceptos que antes*—, y hace falta porque
+no hay nada en v1alpha1 que signifique *«un contrato existente pasa a exigir más»*.
+
+Y la fila de arriba estaba **mal redactada**, lo que se vio al medirla: al crecer `requires`,
+una regla que apunta a esa forma no deja de alcanzar a los implementadores —los sigue
+seleccionando— sino que **el paquete de quien la implementa deja de compilar**. El efecto es
+más duro que lo que decía esta tabla, no más suave.
 
 ---
 
