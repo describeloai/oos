@@ -176,9 +176,9 @@ gobernanza**.
 **L0 es lo que hace de OOS un estándar.** Es hermético e implementable en cualquier
 lenguaje en un fin de semana: una acción de CI, un linter de editor, un `pre-commit`.
 
-La conformidad la decide la [suite](conformance/README.md), no una implementación. **ORE,
-la implementación de referencia, no tiene ningún privilegio** y ejecuta la suite como un
-consumidor externo más.
+La conformidad la decide la [suite](conformance/README.md), no una implementación.
+**[ORE](https://github.com/describeloai/ore), la implementación de referencia, no tiene
+ningún privilegio** y ejecuta la suite como un consumidor externo más.
 
 ---
 
@@ -239,6 +239,14 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 ---
 
 ## Prototipo
+
+El motor es **[ORE](https://github.com/describeloai/ore)** —Rust, Apache-2.0—, y vive en su
+propio repositorio a propósito: **si la especificación no pudiera existir sin el motor, la
+frase que la vende sería falsa por construcción del repositorio.** OOS entra ahí como
+submódulo; nunca al revés.
+
+El estado de cada fase se lee en su README y no aquí: duplicar un marcador garantiza que una
+de las dos copias acabe mintiendo.
 
 Ordenado por riesgo retirado, no por capas.
 

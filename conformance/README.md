@@ -8,8 +8,9 @@
 De ahí la regla de precedencia que ya está en el README raíz: donde `spec/` y la suite
 discrepen, **manda la suite** y el defecto está en el texto.
 
-No es un banco de pruebas de ORE. **ORE es un cliente de la suite como cualquier otro**, y
-la ejecuta por su CLI pública, sin acceso privilegiado a sus estructuras internas. Es lo
+No es un banco de pruebas de ORE. **[ORE](https://github.com/describeloai/ore) es un cliente
+de la suite como cualquier otro**, y la ejecuta por su CLI pública, sin acceso privilegiado a
+sus estructuras internas. Es lo
 único que impide que la especificación acabe teniendo la forma de su implementación de
 referencia.
 

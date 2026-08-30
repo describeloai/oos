@@ -113,9 +113,11 @@ Y cinco piezas, cada una con un trabajo:
 
 ## 3 · ORE — el motor
 
-Lo que sigue **no** es OOS. OOS define el artefacto; ORE define la ergonomía y la
-ejecución. La separación es sana: otro proveedor podría construir una experiencia mejor y
-seguir produciendo paquetes conformes.
+Lo que sigue **no** es OOS. OOS define el artefacto;
+[ORE](https://github.com/describeloai/ore) define la ergonomía y la ejecución. La separación
+es sana: otro proveedor podría construir una experiencia mejor y seguir produciendo paquetes
+conformes — y es literal, no retórica: son dos repositorios, y el de OOS no depende del otro
+en ninguna dirección.
 
 ### 3.1 · Tres caras, tres fronteras de confianza
 
