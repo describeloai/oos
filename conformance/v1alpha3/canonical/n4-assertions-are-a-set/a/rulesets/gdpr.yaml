@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata: { name: gdpr-minimization, namespace: eu }
+spec:
+  owner: team:compliance
+  targets:
+    - atLeast: { gdpr.sensitivity: high }
+  assertions:
+    - { id: sin-nulos, metric: nullValues, mustBe: 0, severity: error }
+    - { id: sin-duplicados, metric: duplicateValues, mustBe: 0, severity: error }

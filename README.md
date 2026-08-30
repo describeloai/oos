@@ -219,7 +219,7 @@ políticas son **Cedar**, no un documento OOS.
 | [`02-function`](spec/v1alpha2/02-function.md) · la superficie de escritura gobernada | ✅ |
 | [`03-resolution`](spec/v1alpha2/03-resolution.md) · el efecto sobre la identidad | ✅ |
 | [`04-expression`](spec/v1alpha2/04-expression.md) · la promoción de `expression` | ✅ |
-| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **17/17** |
+| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **18/18** |
 
 **v1alpha1 gobierna lo que se puede saber; v1alpha2, lo que se puede causar.** Añade los dos
 verbos —`Function` y `Resolution`—, **una promoción** —`expression`, que pasa de prosa
@@ -233,7 +233,7 @@ cincuenta casos.
 `Test` y lo temporal siguen aplazados.
 
 **v1alpha3 abre la capa de gobierno** —[`spec/v1alpha3/`](spec/v1alpha3/00-scope.md), con
-esquema y [17 casos](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
+esquema y [19 casos](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
 plano: lo termina. v1alpha1 ya declaraba el vocabulario cerrado de obligaciones
 y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, y sale gratis:
 *una etiqueta ya es un conjunto*. El retículo que v1alpha1 usa para comparar dos elementos

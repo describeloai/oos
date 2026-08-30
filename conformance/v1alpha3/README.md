@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha3
 
-**Borrador — 17/17.** Certifica el régimen de gobierno de
+**Borrador — 19/19.** Certifica el régimen de gobierno de
 [`spec/v1alpha3/`](../../spec/v1alpha3/), cuyo **alcance está cerrado** y que **no es
 normativo todavía**.
 
@@ -39,7 +39,7 @@ directorio tenga cincuenta casos.
 | `diff/weaken-coverage` | `OOS5023` | retirar reglas deja propiedades sin la clase que tenían |
 | `diff/relax-requirement` | `OOS5024` | el retículo importado deja de exigir una clase |
 
-**Diecisiete casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
+**19 casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
 función, y `OOS2001` lleva reservado desde v1alpha1 para *«tipos de referencia nuevos»* que
 `Function`, `Resolution` y `Test` iban a introducir. Activar una reserva es mejor que inflar
 una familia.

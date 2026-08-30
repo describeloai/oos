@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha2
+kind: Function
+metadata: { name: approvePurchaseOrder, namespace: scm }
+spec:
+  runtime: wasm
+  entrypoint: dist/approve.wasm
+  effects:
+    - writes: scm.PurchaseOrder.status
+      datasourceRef: postgres_erp
+      to: "APPROVED"
+  endorsements:
+    - endorser: attested
+      attestation: attestations/approve.intoto.jsonl
+    - endorser: humanApproval
+      when: "context.amount > 1000"

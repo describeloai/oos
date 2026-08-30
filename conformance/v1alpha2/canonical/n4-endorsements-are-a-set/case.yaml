@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: converge
+summary: >
+  Los endosos de una funcion son un conjunto. El mismo hueco de N4, en la version anterior.

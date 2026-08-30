@@ -73,6 +73,14 @@ Cada campo de tipo lista **DEBE** declarar en su esquema si es un **conjunto** o
 > Sin esta distinción, dos autores que escriben las mismas etiquetas en distinto orden
 > producen digests distintos, y el diff semántico se llena de ruido.
 
+**Y la obligación es de cada versión, no solo de esta.** v1alpha2 y v1alpha3 añadieron nueve
+campos de tipo lista —`effects`, `endorsements`, `preconditions`, `sources`, `weights`,
+`targets`, `assertions`, `masks`, `duties`— y **ninguno declaró su naturaleza**, así que la
+implementación de referencia los trataba a todos como secuencias. Reordenar los endosos de
+una función o las aserciones de un `Ruleset` producía otro digest: **G1 rota en silencio, por
+no aplicar una regla que ya existía.** Se dice aquí porque la regla estaba bien y lo que
+falló fue obedecerla.
+
 ### N5 · Normalización Unicode
 
 Todo texto **DEBE** normalizarse a **NFC**.

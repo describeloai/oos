@@ -1,7 +1,7 @@
 # OOS v1alpha3 — alcance
 
 **Estado:** **alcance cerrado — primera versión.** Los tres documentos están escritos, su
-suite va 15/15, **ninguna decisión del plano queda abierta** y la implementación de
+suite va 19/19, **ninguna decisión del plano queda abierta** y la implementación de
 referencia va al día. Lo que aquí se cierra es el **diseño**, no la ratificación:
 `spec/v1alpha1/` sigue siendo la versión normativa.
 
@@ -9,7 +9,7 @@ referencia va al día. Lo que aquí se cierra es el **diseño**, no la ratificac
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha3, qué no, y qué queda abierto |
 | [`schemas/v1alpha3/`](../../schemas/v1alpha3/) | `ruleset` y `lattice` — el segundo cierra además un hueco de v1alpha2 |
-| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 17 casos, árbol y marcador propios |
+| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 19 casos, árbol y marcador propios |
 | [`01-gobierno`](01-gobierno.md) | el núcleo — el régimen de gobierno, del que se deriva todo lo demás |
 | [`02-ruleset`](02-ruleset.md) | el documento — el objetivo, las aserciones, las máscaras y los deberes |
 

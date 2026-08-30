@@ -3,143 +3,268 @@
   "$id": "https://oos.dev/schemas/v1alpha2/resolution.schema.json",
   "title": "Resolution",
   "description": "El efecto sobre la identidad, y el peligroso de los tres. `Rule` cambia el contenido y `Function` cambia el mundo; los dos son reversibles. Esto decide que DOS REGISTROS SON LA MISMA COSA, y eso no es un cambio sobre la ontología: es un cambio sobre a qué se refieren todos los demás.\n\nSin `labels` en `metadata`, por lo mismo que `Function`: la integridad que una resolución puede producir se deriva de sus estrategias, no se declara.\n\nNormativo: spec/v1alpha2/03-resolution.md",
-
   "type": "object",
   "additionalProperties": false,
-  "required": ["apiVersion", "kind", "metadata", "spec"],
-
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
   "properties": {
-
-    "apiVersion": { "const": "oos.dev/v1alpha2" },
-    "kind": { "const": "Resolution" },
-
+    "apiVersion": {
+      "const": "oos.dev/v1alpha2"
+    },
+    "kind": {
+      "const": "Resolution"
+    },
     "metadata": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "namespace"],
+      "required": [
+        "name",
+        "namespace"
+      ],
       "properties": {
-        "name": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
-        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
-        "description": { "type": "string", "maxLength": 4096 }
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
       }
     },
-
     "spec": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["entity", "sources", "strategies"],
+      "required": [
+        "entity",
+        "sources",
+        "strategies"
+      ],
       "properties": {
-
         "entity": {
           "description": "La entidad cuya identidad se resuelve. Exactamente una: fusionar registros de dos entidades distintas no es resolución, es modelado mal hecho.",
           "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
         },
-
         "sources": {
-          "description": "Las fuentes entre las que se resuelve, con la clave que identifica un registro en cada una.",
+          "description": "Las fuentes entre las que se resuelve, con la clave que identifica un registro en cada una.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["datasourceRef", "key"],
+            "required": [
+              "datasourceRef",
+              "key"
+            ],
             "properties": {
-              "datasourceRef": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
-              "key": { "type": "string", "minLength": 1 }
+              "datasourceRef": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "key": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         },
-
         "strategies": {
-          "description": "SECUENCIA, no conjunto: se evalúan en orden y la primera que casa gana. Reordenarlas cambia qué registros se fusionan, así que N4 preserva el orden y no lo ordena — una forma canónica que las ordenase daría el mismo digest a dos ontologías que resuelven identidades distintas.\n\nNo hay campo `confidence`. La confianza que una estrategia merece se expresa en el eje de integridad (03-resolution §3), no como un número suelto: `confidence: \"1.0\"` en una estrategia determinista es derivable —determinista SIGNIFICA 1.0— y dos formas de decir lo mismo acaban con dos semánticas.",
+          "description": "SECUENCIA, no conjunto: se evalúan en orden y la primera que casa gana. Reordenarlas cambia qué registros se fusionan, así que N4 preserva el orden y no lo ordena — una forma canónica que las ordenase daría el mismo digest a dos ontologías que resuelven identidades distintas.\n\nNo hay campo `confidence`. La confianza que una estrategia merece se expresa en el eje de integridad (03-resolution §3), no como un número suelto: `confidence: \"1.0\"` en una estrategia determinista es derivable —determinista SIGNIFICA 1.0— y dos formas de decir lo mismo acaban con dos semánticas.\n\nN4 · SECUENCIA: el orden ES semántico y la forma canónica lo preserva.",
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "type"],
+            "required": [
+              "id",
+              "type"
+            ],
             "properties": {
-              "id": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
-              "type": { "enum": ["deterministic", "probabilistic"] },
-
+              "id": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "type": {
+                "enum": [
+                  "deterministic",
+                  "probabilistic"
+                ]
+              },
               "match": {
                 "description": "Solo para `deterministic`. Un mapa de `datasourceRef` a la columna que porta la clave natural: un NIF, un DUNS. LEE LA CLAVE Y NADA MÁS, y por eso no es un conducto — encaja en el índice de topología sin tocar un valor de negocio.",
                 "type": "array",
                 "minItems": 1,
                 "items": {
                   "type": "object",
-                  "additionalProperties": { "type": "string" },
-                  "propertyNames": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" }
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "propertyNames": {
+                    "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                  }
                 }
               },
-
               "normalize": {
-                "description": "Normalizaciones aplicadas a la clave antes de comparar. Vocabulario cerrado: son transformaciones que el motor tiene que saber ejecutar de forma idéntica en dos implementaciones, o la resolución deja de ser determinista.",
+                "description": "Normalizaciones aplicadas a la clave antes de comparar. Vocabulario cerrado: son transformaciones que el motor tiene que saber ejecutar de forma idéntica en dos implementaciones, o la resolución deja de ser determinista.\n\nN4 · SECUENCIA: el orden ES semántico y la forma canónica lo preserva.",
                 "type": "array",
-                "items": { "enum": ["trim", "upper", "lower", "strip_non_alphanumeric", "nfc"] }
+                "items": {
+                  "enum": [
+                    "trim",
+                    "upper",
+                    "lower",
+                    "strip_non_alphanumeric",
+                    "nfc"
+                  ]
+                }
               },
-
               "conduit": {
                 "description": "OBLIGATORIO para `probabilistic` (OOS7009). Comparar nombres y direcciones es hacer fluir esos nombres y direcciones hacia algo que los lee: un emparejador probabilístico ES UN CONDUCTO, y como tal exige autorización declarada que alcance la etiqueta de cada propiedad que pondera.\n\nEl borrador lo escribía como `requires.materialization: cache`, que se lee como una opción de rendimiento. No lo es.",
                 "$ref": "../v1alpha1/type/basic.schema.json#/$defs/conduitRef"
               },
-
               "threshold": {
                 "description": "El corte por debajo del cual no se fusiona. Cadena, no número: es un decimal, y un decimal sin comillas no tiene forma canónica (OOS6003).",
                 "type": "string",
                 "pattern": "^0\\.[0-9]+$|^1\\.0+$"
               },
-
               "weights": {
                 "type": "array",
                 "minItems": 1,
                 "items": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["property", "method", "weight"],
+                  "required": [
+                    "property",
+                    "method",
+                    "weight"
+                  ],
                   "properties": {
-                    "property": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
-                    "method": {
-                      "enum": ["exact", "jaro_winkler", "levenshtein", "normalized_levenshtein", "jaccard", "soundex"]
+                    "property": {
+                      "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
                     },
-                    "weight": { "type": "string", "pattern": "^0\\.[0-9]+$|^1\\.0+$" }
+                    "method": {
+                      "enum": [
+                        "exact",
+                        "jaro_winkler",
+                        "levenshtein",
+                        "normalized_levenshtein",
+                        "jaccard",
+                        "soundex"
+                      ]
+                    },
+                    "weight": {
+                      "type": "string",
+                      "pattern": "^0\\.[0-9]+$|^1\\.0+$"
+                    }
                   }
-                }
+                },
+                "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
               }
             },
-
             "allOf": [
               {
-                "if": { "properties": { "type": { "const": "probabilistic" } }, "required": ["type"] },
-                "then": { "required": ["conduit", "threshold", "weights"] }
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "probabilistic"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "conduit",
+                    "threshold",
+                    "weights"
+                  ]
+                }
               },
               {
-                "if": { "properties": { "type": { "const": "deterministic" } }, "required": ["type"] },
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "deterministic"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
                 "then": {
-                  "required": ["match"],
-                  "not": { "anyOf": [{ "required": ["threshold"] }, { "required": ["weights"] }, { "required": ["conduit"] }] }
+                  "required": [
+                    "match"
+                  ],
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "threshold"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "weights"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "conduit"
+                        ]
+                      }
+                    ]
+                  }
                 }
               }
             ]
           }
         },
-
         "endorsements": {
-          "description": "El mismo mecanismo que `Function` (02-function §6), y que sea el mismo importa: un régimen con dos formas de decir «que lo mire una persona» acaba con dos semánticas.\n\nAquí levanta el techo de integridad que una estrategia probabilística impone (OOS7011). Solo cuentan los incondicionales.",
+          "description": "El mismo mecanismo que `Function` (02-function §6), y que sea el mismo importa: un régimen con dos formas de decir «que lo mire una persona» acaba con dos semánticas.\n\nAquí levanta el techo de integridad que una estrategia probabilística impone (OOS7011). Solo cuentan los incondicionales.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["endorser"],
+            "required": [
+              "endorser"
+            ],
             "properties": {
-              "endorser": { "enum": ["attested", "humanApproval"] },
-              "attestation": { "type": "string" },
-              "when": { "type": "string", "minLength": 1, "maxLength": 2048 }
+              "endorser": {
+                "enum": [
+                  "attested",
+                  "humanApproval"
+                ]
+              },
+              "attestation": {
+                "type": "string"
+              },
+              "when": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              }
             },
             "allOf": [
               {
-                "if": { "properties": { "endorser": { "const": "attested" } }, "required": ["endorser"] },
-                "then": { "required": ["attestation"] }
+                "if": {
+                  "properties": {
+                    "endorser": {
+                      "const": "attested"
+                    }
+                  },
+                  "required": [
+                    "endorser"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "attestation"
+                  ]
+                }
               }
             ]
           }

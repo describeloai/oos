@@ -1,7 +1,7 @@
 # OOS v1alpha2 — alcance
 
 **Estado:** **alcance cerrado — primera versión.** Los cuatro documentos están escritos y su
-borrador de conformidad va 17/17. Lo que aquí se cierra es el **diseño**, no la ratificación:
+borrador de conformidad va 18/18. Lo que aquí se cierra es el **diseño**, no la ratificación:
 `spec/v1alpha1/` sigue siendo la versión normativa.
 
 | | |

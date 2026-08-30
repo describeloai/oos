@@ -422,14 +422,16 @@
           "minItems": 1,
           "items": {
             "$ref": "#/$defs/mask"
-          }
+          },
+          "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
         },
         "duties": {
           "type": "array",
           "minItems": 1,
           "items": {
             "$ref": "#/$defs/duty"
-          }
+          },
+          "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
         }
       }
     }

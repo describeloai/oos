@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: converge
+summary: >
+  Las aserciones de un Ruleset son un conjunto: escribirlas en otro orden es la misma
+  ontologia.

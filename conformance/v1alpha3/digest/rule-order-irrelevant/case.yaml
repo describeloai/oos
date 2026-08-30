@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: same
+summary: >
+  La contrapartida a nivel de digest: dos ordenes de las mismas aserciones producen el mismo
+  artefacto.
