@@ -94,7 +94,9 @@ dice que una propiedad **PUEDE** elevar la etiqueta que hereda y **NO DEBE** reb
 
 ### 4.1 · El concepto
 
-Un `Property` no dice dónde vive un dato ni cómo se llama. Dice **qué es**.
+Un `Property` no dice dónde vive un dato ni cómo se llama. Dice **qué es**. Su superficie
+completa —campo a campo, y por qué `required` no cabe y `aiContext` sí— está en
+[`02-property`](02-property.md).
 
 ```yaml
 apiVersion: oos.dev/v1alpha4
@@ -272,7 +274,8 @@ ser cierto, y es una decisión que alguien firma.
 ### 4.3 · La forma
 
 Un `Interface` nombra un conjunto de entidades **por su forma**, y la forma se expresa en
-conceptos, no en nombres:
+conceptos, no en nombres. Su superficie completa está en
+[`03-interface`](03-interface.md):
 
 ```yaml
 apiVersion: oos.dev/v1alpha4

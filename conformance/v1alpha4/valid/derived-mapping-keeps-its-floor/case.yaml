@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#5
+level: L0
+expects: accept
+summary: >
+  Una propiedad derivada que ademas mapea a un concepto. El join de sus origenes da `low`
+  y el concepto dice `high`: el concepto entra en el join como un origen mas, y gana.

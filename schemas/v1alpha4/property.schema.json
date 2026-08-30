@@ -81,23 +81,8 @@
           }
         },
         "aiContext": {
-          "description": "Qué otras palabras usa el negocio para esto.\n\nEs el campo que más gana al subir de nivel, y merece decirse: los sinónimos de un concepto son los mismos en todos los sistemas donde aparece. Declararlos una vez, junto al concepto, es lo que evita que cada columna los vuelva a adivinar — y es exactamente el ancla contra la que un inductor propone.",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "synonyms": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "string",
-                "maxLength": 128
-              }
-            },
-            "notes": {
-              "type": "string",
-              "maxLength": 4096
-            }
-          }
+          "description": "Qué otras palabras usa el negocio para esto.\n\nLA MISMA FORMA que en Entity, y por eso se referencia en vez de repetirse: la primera versión de este esquema la redeclaró con `notes` donde la otra dice `guidance`, que son dos nombres para un concepto separados por seis letras — el error que este proyecto lleva cuatro versiones corrigiendo.\n\nEs el campo que más gana al subir de nivel: los sinónimos de un concepto son los mismos en todos los sistemas donde aparece. Declararlos una vez, junto al concepto, evita que cada columna los vuelva a adivinar — y es exactamente el ancla contra la que un inductor propone.\n\nLas tres condiciones con que se adoptó siguen valiendo, y la tercera con más razón aquí: DESCRIPTIVO, NUNCA DIRECTIVO. Un concepto se importa desde fuera, así que su `aiContext` es texto de un tercero dentro de un artefacto gobernado.",
+          "$ref": "entity.schema.json#/$defs/aiContext"
         },
         "confidence": {
           "description": "Acuñar un concepto es una inferencia, igual que mapear una columna a uno: «estas catorce columnas comparten un concepto; llámalo así». El mecanismo no distingue las dos, y no debe — son la misma clase de acto, y lo que las separa es la consecuencia, no la naturaleza.\n\nSujeto a la misma regla: un documento cuya madurez EFECTIVA no es DRAFT no puede llevarlo (OOS9003). Que la madurez sea efectiva y no declarada es por lo que esa comprobación es del compilador y no de este esquema.",

@@ -7,12 +7,14 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha4, qué no, y qué queda abierto |
 | [`01-significado`](01-significado.md) | el núcleo — el régimen de significado, del que se deriva todo lo demás |
-| `02-property` · `03-interface` | los documentos — **pendientes** |
+| [`02-property`](02-property.md) | el concepto — su superficie normativa |
+| [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Estado de la implementación.** Los esquemas, la suite y el motor van por delante de esos
-dos documentos, y a propósito: §7 de este alcance exige enfrentar el vocabulario a algo que
-lo use *«antes de escribir los esquemas»*, y escribirlos fue esa prueba. Doce casos en verde
-y **tres correcciones que solo aparecen al usarlo** — §4.2, §5 y §7 — están medidas abajo.
+**Los esquemas, la suite y el motor se escribieron antes que `02` y `03`**, y a propósito:
+§7 de este alcance exige enfrentar el vocabulario a algo que lo use *«antes de escribir los
+esquemas»*, y construirlo fue esa prueba. Doce casos en verde y **tres correcciones que solo
+aparecen al usarlo** — §7.1. Los dos documentos de abajo se redactaron después, con la
+implementación delante, que es el orden que este proyecto lleva cuatro versiones defendiendo.
 
 ---
 
@@ -199,11 +201,22 @@ las hace iguales. Fusionar registros es `Resolution`, y es otra fila de la misma
    también `requiresGovernance`, o eso es solo del retículo? Si pudiera, un paquete
    regulatorio traería concepto **y** exigencia en un solo documento.
 3. **Herencia entre interfaces**, si aparece la presión (§5).
-4. **Qué pasa con `expression` y `derivedFrom`** cuando la propiedad mapea a un concepto:
-   siguen siendo de la propiedad concreta, pero `OOS4015` compara lecturas contra
-   `derivedFrom` y habrá que comprobar que el mapeo no lo enturbie.
-
 ### Cerradas
+
+**`expression` y `derivedFrom` junto a `is`** — y se cierra porque **medirlo destapó un
+agujero**. Los dos campos conviven sin problema y `OOS4015` no se enturbia; lo que fallaba
+era la clasificación.
+
+La propagación tiene dos pasadas: la primera hereda —de la entidad, del `datasource` y, desde
+v1alpha4, del concepto— y la segunda computa el `join` de una derivada empezando de cero. La
+segunda **pisaba lo heredado del concepto**, así que **añadir `derivedFrom` a una propiedad
+mapeada le borraba la clasificación en silencio**: lo que sin `derivedFrom` rompía con
+`OOS8001` compilaba sin una sola regla.
+
+Cerrado en la dirección que se sigue de lo que un concepto es: **entra en el `join` como un
+origen más y solo puede subir**, porque un concepto compartido fija *un suelo de
+clasificación, no un valor* ([`02-property`](02-property.md) §5). Caso
+`valid/derived-mapping-keeps-its-floor`.
 
 **Acuñar frente a mapear** — y se cierra **sacándola de aquí**. Son la misma clase de acto:
 las dos son inferencias, las dos llevan `confidence` y las dos caen bajo `OOS9003`. Lo que

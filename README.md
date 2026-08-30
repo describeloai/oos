@@ -252,7 +252,8 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 |---|---|
 | [`00-scope`](spec/v1alpha4/00-scope.md) · alcance, la prueba de fuego y lo que encontró | ✅ |
 | [`01-significado`](spec/v1alpha4/01-significado.md) · el régimen: el concepto, el mapeo, la forma | ✅ |
-| `02-property` · `03-interface` | ⬜ **siguientes** |
+| [`02-property`](spec/v1alpha4/02-property.md) · el concepto: qué cabe en él y qué hereda quien lo referencia | ✅ |
+| [`03-interface`](spec/v1alpha4/03-interface.md) · la forma: qué es satisfacerla y qué alcanza una regla | ✅ |
 | [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **12/12** |
 
 **v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
@@ -262,10 +263,14 @@ son la misma — *v1alpha3 gobierna lo que alguien acertó a etiquetar*. Un `Pro
 concepto, un `Interface` es la forma, y `is` hace hacia arriba lo que un `Binding` hace hacia
 abajo. La herencia no se inventó: `OOS4012` sube un nivel **sin cambiar una letra**.
 
-Los esquemas y la suite van **por delante** de `02-property` y `03-interface`, y a propósito:
-el alcance exige enfrentar el vocabulario a algo que lo use antes de escribirlo del todo.
+Los esquemas y la suite se escribieron **antes** que `02-property` y `03-interface`, y a
+propósito: el alcance exige enfrentar el vocabulario a algo que lo use antes de cerrarlo.
 Encontró tres defectos, uno de ellos **con cuatro versiones de antigüedad**
-([`00-scope`](spec/v1alpha4/00-scope.md) §7.1).
+([`00-scope`](spec/v1alpha4/00-scope.md) §7.1). Los dos documentos se redactaron después, con
+la implementación delante.
+
+Falta **decidir**, no escribir: las cuatro decisiones abiertas del alcance, ninguna de las
+cuales bloquea.
 
 ---
 

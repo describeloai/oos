@@ -1,0 +1,18 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Customer, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    customerId: { type: String }
+    localPart:
+      type: String
+      labels: { gdpr.sensitivity: low }
+    domain:
+      type: String
+      labels: { gdpr.sensitivity: low }
+    fullEmail:
+      is: gdpr.personalEmail
+      derivedFrom: [crm.Customer.localPart, crm.Customer.domain]
+      expression: localPart + "@" + domain

@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 12/12.** Certifica el régimen de significado de
+**Borrador — 13/13.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -24,6 +24,7 @@ Cuatro árboles, cuatro marcadores.
 | `valid/vocabulary-package-has-no-entities` | — | publicar vocabulario es un paquete sin entidades |
 | `valid/draft-carries-confidence` | — | lo que un inductor escribe **compila** |
 | `valid/mapping-may-raise` | — | elevar la clasificación heredada es legítimo |
+| `valid/derived-mapping-keeps-its-floor` | — | y una **derivada** también hereda: el concepto entra en el `join` |
 | `invalid/implements-not-satisfied` | `OOS9001` | una forma declarada que no se cumple |
 | `invalid/confidence-outside-draft` | `OOS9003` | una conjetura fuera de `DRAFT` |
 | `invalid/coined-concept-outside-draft` | `OOS9003` | y acuñar cae bajo la misma regla que mapear |
@@ -31,7 +32,7 @@ Cuatro árboles, cuatro marcadores.
 | `invalid/redeclares-the-inherited-type` | `OOS1004` | el guardarraíl, **sin código propio** |
 | `invalid/mapping-cannot-lower` | `OOS4012` | rebajar la del concepto, con el código de v1alpha1 **intacto** |
 
-Doce casos y **tres códigos nuevos**. La proporción es la señal: nueve de los doce se
+Trece casos y **tres códigos nuevos**. La proporción es la señal: diez de los trece se
 certifican con maquinaria que ya existía.
 
 ## Los dos casos que hay que leer juntos
@@ -58,6 +59,12 @@ escribirlos, que es el método:
 | una propiedad con `is` no declara `type` **ni `labels`**… y puede elevar la clasificación | **se contradecía**: elevar exige escribir | `01-significado` §4.2 |
 | `entity` y `event` pasan a ser interfaces incorporadas | `requires` nombra conceptos, y `primaryKey` no lo es | `01-significado` §5 |
 | `confidence` es un `number` desde v1alpha1 | un decimal sin comillas no tiene forma canónica: `OOS6003` | `type/basic.schema.json` |
+| `derivedFrom` junto a `is` «habrá que comprobar que no lo enturbie» | **borraba la clasificación del concepto en silencio** | `00-scope` §6 · cerrada |
 
 El tercero llevaba **cuatro versiones** en el árbol y era invisible porque **ningún documento
 referenciaba el campo**. Darle su primer usuario lo destapó en el primer caso que lo usó.
+
+El cuarto es el peor de los cuatro, porque **compilaba**: añadir `derivedFrom` a una propiedad
+mapeada le quitaba la etiqueta que heredaba del concepto, y con ella toda la exigencia de
+gobierno. Sin `derivedFrom` el mismo paquete rompe con `OOS8001`. Lo destapó medir una
+decisión abierta en vez de razonarla — `valid/derived-mapping-keeps-its-floor`.
