@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#6
+level: L0
+expects: OOS8001
+summary: >
+  La propiedad la cubre una asercion con severity: warning. Un aviso no descarga la
+  obligacion de gobernar.

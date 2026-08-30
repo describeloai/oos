@@ -1,0 +1,7 @@
+{
+  "code": "OOS8003",
+  "ruleset": "eu.gdpr-minimization",
+  "declassifier": "tokenize",
+  "to": "gdpr.sensitivity:high",
+  "target": "gdpr.sensitivity:high"
+}

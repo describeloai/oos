@@ -1,0 +1,6 @@
+{
+  "code": "OOS8006",
+  "ruleset": "eu.gdpr-minimization",
+  "lattice": "acme.assurance",
+  "axis": "integrity"
+}

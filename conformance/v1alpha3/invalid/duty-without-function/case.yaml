@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#5
+level: L0
+expects: OOS2001
+summary: >
+  Deber que nombra una Function inexistente. Es OOS2001, que v1alpha1 reservo exactamente
+  para esto.

@@ -235,7 +235,9 @@ al revés.
 
 **Normativo.**
 
-- `call` **DEBE** resolver a una `Function` existente; si no, `OOS8004`.
+- `call` **DEBE** resolver a una `Function` existente; si no, **`OOS2001`** — reservado
+  desde v1alpha1 para los tipos de referencia que `Function` iba a introducir
+  ([`02-ruleset`](02-ruleset.md) §5).
 - Un deber **no tiene condición propia**: el objetivo del documento es la condición. Un
   segundo selector dentro del mismo documento sería un segundo lenguaje de selección
   ([`02-ruleset`](02-ruleset.md) §5).
@@ -348,10 +350,9 @@ estructural, `OOS1005`. Un código semántico para algo que el esquema resuelve 
 |---|---|
 | `OOS8001` | propiedad que exige gobierno y **no la cubre ninguna regla** (§6) |
 | `OOS8002` | objetivo que no casa con nada (§3) |
-| `OOS8003` | máscara sobre una propiedad sin clasificar, o cuyo desclasificador no baja la etiqueta (§5.2) |
-| `OOS8004` | deber que no resuelve a una `Function` existente (§5.3) |
+| `OOS8003` | máscara cuyo nivel de salida no es estrictamente menor que el del objetivo (§5.2) |
 | `OOS8005` | aserción `sql` cuyo objetivo abarca más de una fuente física (§5.1) |
-| `OOS8006` | objetivo o `requiresGovernance` sobre un retículo de eje `integrity` — [`02-ruleset`](02-ruleset.md) §9 |
+| `OOS8006` | **objetivo** sobre un retículo de eje `integrity` — [`02-ruleset`](02-ruleset.md) §9 |
 
 `OOS8001` es el `OOS4001` de este plano: el error que ningún revisor encuentra, porque el
 defecto **no está escrito en ninguna parte** — es la ausencia de una línea que nadie
@@ -370,6 +371,10 @@ funcionando, no un fallo de planificación.
 Lo que aquel documento añade y este no podía anticipar es **qué cuenta** para `OOS8001`:
 solo lo que el compilador puede leer y lo que puede fallar ([`02-ruleset`](02-ruleset.md)
 §6). Sin esa regla, la cobertura se satisface con un aviso que no para nada.
+
+Y escribir el esquema encogió el registro en vez de ampliarlo: `OOS8004` se retiró a favor de
+`OOS2001` —reservado desde v1alpha1—, y `OOS8003` y `OOS8006` perdieron una causa cada uno
+porque el esquema las absorbe. **Cinco códigos, cuatro familias reutilizadas.**
 
 ---
 

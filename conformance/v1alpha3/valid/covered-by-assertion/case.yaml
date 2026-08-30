@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#6
+level: L0
+expects: accept
+summary: >
+  Una propiedad que exige gobierno, cubierta por una asercion legible que puede fallar. Es
+  el caso que define que significa cubierta.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#3
+level: L0
+expects: OOS8005
+summary: >
+  Asercion sql cuyo objetivo selecciona propiedades de dos fuentes fisicas. Una regla atada
+  a un dialecto no cruza dos fuentes.

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha3/lattice.schema.json",
+  "title": "Lattice",
+  "description": "El retículo, acumulando lo que v1alpha2 y v1alpha3 le añaden. Frente a v1alpha1: `axis` (v1alpha2 §3.1), `join` obsoleto, y `requiresGovernance` (v1alpha3).\n\nEscribir este esquema destapó un hueco propio: **v1alpha2 añadió `axis` y nunca publicó un esquema para él**. Los casos del borrador de efectos declaran `axis: integrity` contra `schemas/v1alpha1/lattice.schema.json`, que ni lo admite ni lo conoce. Aquí queda cerrado.\n\nNormativo: spec/v1alpha1/04-flow.md §3 · spec/v1alpha2/01-efectos.md §3.1 · spec/v1alpha3/01-gobierno.md §6.1",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+
+  "properties": {
+
+    "apiVersion": { "enum": ["oos.dev/v1alpha2", "oos.dev/v1alpha3"] },
+    "kind": { "const": "Lattice" },
+
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string", "maxLength": 2048 }
+      }
+    },
+
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["levels"],
+      "properties": {
+
+        "levels": {
+          "description": "Las etiquetas en orden ASCENDENTE de restrictividad. SECUENCIA, no conjunto: su orden ES el orden parcial. El primero es ⊥ y el último ⊤, y no se declaran por separado porque son derivables (P2).",
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" }
+        },
+
+        "levelDescriptions": {
+          "type": "object",
+          "propertyNames": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+          "additionalProperties": { "type": "string", "maxLength": 1024 }
+        },
+
+        "axis": {
+          "description": "De qué eje es el retículo, y de ahí sale el combinador: `confidentiality` combina por `join`, `integrity` por `meet`. Si se omite, es `confidentiality` — es lo que hace que todo retículo de v1alpha1 siga significando lo mismo sin tocarlo.\n\nLos dos ejes son ORTOGONALES: una etiqueta de un retículo `integrity` no debe usarse donde se espera confidencialidad, ni al revés.",
+          "enum": ["confidentiality", "integrity"],
+          "default": "confidentiality"
+        },
+
+        "join": {
+          "description": "OBSOLETO desde v1alpha2: el combinador se DERIVA del eje y un campo derivable no es declarable (P2). Si se declara, DEBE coincidir con lo que implica el eje; si no, OOS7007.",
+          "const": "max",
+          "deprecated": true
+        },
+
+        "requiresGovernance": {
+          "description": "Desde qué nivel —ese y por encima— la cobertura es obligatoria. Toda propiedad que lo alcance DEBE estar cubierta por alguna regla que cuente, o OOS8001.\n\nEs lo que hace que «GDPR como dependencia» deje de ser una metáfora: importar el paquete de clasificación importa SU EXIGENCIA, y a partir de ahí el paquete no compila si alguien clasifica una propiedad y no la cubre nadie. Invierte la relación de una dependencia normal —se importa para quedar sujeto a ella, no para usarla— y es exactamente lo que un paquete regulatorio tiene que ser.\n\nDEBE ser uno de los `levels` de este retículo; que lo sea es una relación entre campos y la comprueba el compilador.\n\nNO DEBE declararse en un retículo de eje `integrity` (OOS8006): la monotonía corre al revés en ese eje —en confidencialidad se gobierna hacia arriba, más sensible más gobierno; en integridad se gobernaría hacia abajo, menos fiable más gobierno— y hasta que eso esté escrito es un error y no un comportamiento sin definir.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        }
+      },
+
+      "allOf": [
+        {
+          "comment": "OOS8006 en su forma estructural. La otra causa —un objetivo de Ruleset sobre un retículo de eje integrity— no es estructural: cruza dos documentos, y la emite el compilador.",
+          "if": {
+            "properties": { "axis": { "const": "integrity" } },
+            "required": ["axis"]
+          },
+          "then": { "not": { "required": ["requiresGovernance"] } }
+        }
+      ]
+    }
+  },
+
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Las claves de nivel superior desconocidas DEBEN llevar prefijo `x-<proveedor>-`; cualquier otra es OOS1005."
+    }
+  }
+}

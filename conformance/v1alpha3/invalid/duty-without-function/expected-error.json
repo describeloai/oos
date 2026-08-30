@@ -1,0 +1,6 @@
+{
+  "code": "OOS2001",
+  "ruleset": "eu.gdpr-minimization",
+  "reference": "compliance.NotifyDPO",
+  "expectedKind": "Function"
+}

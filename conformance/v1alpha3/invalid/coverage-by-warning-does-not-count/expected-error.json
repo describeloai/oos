@@ -1,0 +1,6 @@
+{
+  "code": "OOS8001",
+  "property": "customers.Customer.taxId",
+  "label": "gdpr.sensitivity:high",
+  "requires": "gdpr.sensitivity:high"
+}

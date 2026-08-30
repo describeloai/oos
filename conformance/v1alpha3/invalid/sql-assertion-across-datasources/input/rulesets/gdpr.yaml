@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata: { name: gdpr-minimization, namespace: eu }
+spec:
+  owner: team:compliance
+  targets:
+    - atLeast: { gdpr.sensitivity: high }
+  assertions:
+    - id: sin-solapes
+      type: sql
+      query: |
+        SELECT COUNT(*) FROM {object} WHERE {property} IS NULL
+      mustBe: 0

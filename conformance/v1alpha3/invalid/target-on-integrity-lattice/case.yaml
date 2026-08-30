@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#9
+level: L0
+expects: OOS8006
+summary: >
+  Objetivo sobre un reticulo de eje integrity. La monotonia del gobierno corre al reves en
+  ese eje, y hasta que este escrito es un error y no un comportamiento sin definir.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#2
+level: L0
+expects: OOS8002
+summary: >
+  Objetivo que no casa con ninguna propiedad. Una regla que no gobierna nada tiene el mismo
+  aspecto que una que funciona.

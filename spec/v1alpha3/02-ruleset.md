@@ -229,13 +229,19 @@ hueco que [`99-errors`](../v1alpha1/99-errors.md) registró para v1alpha2 y v1al
 **Normativo.**
 
 - `declassifier` **DEBE** pertenecer al conjunto cerrado de
-  [`04-flow`](../v1alpha1/04-flow.md) §5 — `mask`, `tokenize`, `redact`, `aggregate`,
-  `promote`. v1alpha1 prohíbe los definidos por el usuario y esa prohibición no se reabre.
+  [`04-flow`](../v1alpha1/04-flow.md) §5. v1alpha1 prohíbe los definidos por el usuario y esa
+  prohibición no se reabre.
+- De ese conjunto, **`promote` no es admisible como máscara**, y excluirlo no es retirarlo:
+  `promote` sube por un retículo de ciclo de vida y **una máscara tiene que bajar**. Sigue
+  siendo un desclasificador para su propio uso. Quedan `mask`, `tokenize`, `redact` y
+  `aggregate`.
 - `to` **DEBE** declarar el nivel resultante, y ese nivel **DEBE** ser **estrictamente
   menor** que el `atLeast` de cada objetivo del documento. Si no, `OOS8003`.
 - `to` **NO DEBE** declararse sobre `redact`: redactar hace desaparecer el valor, luego su
   salida es siempre el ínfimo del retículo. **Un campo derivable no es declarable** —P2, y
-  la cuarta vez que este proyecto quita algo por la misma razón.
+  la cuarta vez que este proyecto quita algo por la misma razón. **Y es estructural**: cabe
+  entero en el esquema, así que es `OOS1005` y no `OOS8003`. Escribir el esquema dejó a
+  `OOS8003` con una sola causa, igual que dejó a `OOS7010` sin ninguna.
 - La comprobación es **local al documento**: compara dos niveles declarados. No hace falta
   recorrer las propiedades seleccionadas, porque ninguna puede estar por debajo del `atLeast`
   que las seleccionó.
@@ -257,7 +263,7 @@ es una salvaguarda —es teatro con coste de cómputo—, y aquí el compilador 
 
 **Normativo.**
 
-- `call` **DEBE** resolver a una `Function` declarada; si no, `OOS8004`.
+- `call` **DEBE** resolver a una `Function` declarada; si no, **`OOS2001`**.
 - La función **DEBE** alcanzar la integridad que exija su propio destino. No hace falta
   código nuevo: es `OOS7001`, aplicado donde ya estaba.
 - Un deber **NO TIENE** condición propia. **El objetivo del documento es la condición.**
@@ -285,6 +291,15 @@ las obligaciones, que no se corresponden limpiamente con ningún sistema de cont
 conocido»*: nombraban deberes que ningún runtime sabía ejecutar. Una referencia a una función
 declarada trae su integridad computada, sus precondiciones, su endoso y su destino
 comprobado.
+
+**Y el código no es propio, que es lo interesante.** El borrador le dio `OOS8004`; escribir
+los casos dejó ver que `OOS2001` lleva reservado desde v1alpha1 para exactamente esto:
+
+> *«Se reserva porque `Function`, `Resolution` y `Test` introducen tipos de referencia nuevos
+> en v1alpha2.»*
+
+Un deber es el primer tipo de referencia nuevo que llega. **Activar una reserva es mejor que
+inflar una familia**, así que `OOS8004` queda retirado antes de implementarse.
 
 ---
 
@@ -339,18 +354,27 @@ son distintos**, y ahora está escrito por qué.
 |---|---|
 | `OOS8001` | propiedad que exige gobierno y ninguna regla **que cuente** la cubre (§6) |
 | `OOS8002` | objetivo que no casa con ninguna propiedad (§2.6) |
-| `OOS8003` | máscara cuyo `to` no es estrictamente menor que el `atLeast` del objetivo, o `to` declarado sobre un `redact` |
-| `OOS8004` | deber que no resuelve a una `Function` declarada |
-| `OOS8005` | aserción `sql` cuyo objetivo abarca más de una fuente física |
-| `OOS8006` | `requiresGovernance`, o un objetivo, sobre un retículo de eje `integrity` (§9) |
+| `OOS8003` | máscara cuyo `to` no es estrictamente menor que el `atLeast` del objetivo (§4) |
+| `OOS8005` | aserción `sql` cuyo objetivo abarca más de una fuente física (§3) |
+| `OOS8006` | **objetivo** sobre un retículo de eje `integrity` (§9) |
 
-**`OOS8006` salió de escribir este documento**, igual que `OOS7008` salió de escribir
-`Function`. No estaba en el registro de [`01-gobierno`](01-gobierno.md) §8 y se añade.
+`OOS8006` salió de escribir este documento, igual que `OOS7008` salió de escribir `Function`.
+No estaba en el registro de [`01-gobierno`](01-gobierno.md) §8 y se añade.
+
+**Y escribir el esquema encogió tres de ellos**, que es el mismo mecanismo en la otra
+dirección:
+
+| | Antes | Ahora |
+|---|---|---|
+| `OOS8003` | dos causas | **una** — `to` sobre un `redact` cabe en el esquema |
+| `OOS8006` | dos causas | **una** — `requiresGovernance` en un eje `integrity` también cabe |
+| `OOS8004` | un código | **retirado** — es `OOS2001`, reservado desde v1alpha1 (§5) |
 
 Y los que **no** hacen falta, que es igual de informativo: un retículo o un nivel inexistentes
 en un objetivo son `OOS4003`; una función que no alcanza su destino es `OOS7001`; un
-`Ruleset` sin `owner` es `OOS1005`, porque es una clave obligatoria y el esquema ya lo
-resuelve. **Este documento añade seis códigos y reutiliza tres familias.**
+`Ruleset` sin `owner` es `OOS1005`. **Este documento añade cinco códigos y reutiliza cuatro
+familias** —`OOS1005`, `OOS2001`, `OOS4003` y `OOS7001`—, y esa proporción es la señal de que
+la partición de [`01-gobierno`](01-gobierno.md) §4 estaba bien hecha.
 
 ---
 

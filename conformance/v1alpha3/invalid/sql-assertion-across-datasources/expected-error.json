@@ -1,0 +1,9 @@
+{
+  "code": "OOS8005",
+  "ruleset": "eu.gdpr-minimization",
+  "assertion": "sin-solapes",
+  "datasources": [
+    "postgres_erp",
+    "salesforce_crm"
+  ]
+}

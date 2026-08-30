@@ -1,0 +1,5 @@
+{
+  "code": "OOS8002",
+  "ruleset": "eu.gdpr-minimization",
+  "target": "gdpr.sensitivity:high"
+}

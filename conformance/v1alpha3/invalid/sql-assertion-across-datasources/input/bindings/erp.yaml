@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: erp, namespace: customers }
+spec:
+  targetEntity: customers.Customer
+  datasourceRef: postgres_erp
+  source: "public.tb_customer"
+  properties:
+    customerId: "cust_id"
+    taxId: "vat_number"

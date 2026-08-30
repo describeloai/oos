@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: crm, namespace: customers }
+spec:
+  targetEntity: customers.Order
+  datasourceRef: salesforce_crm
+  source: "Order"
+  properties:
+    orderId: "Id"
+    billingRef: "Billing_Ref__c"

@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#4
+level: L0
+expects: OOS8003
+summary: >
+  Mascara cuyo nivel de salida no es estrictamente menor que el suelo del objetivo. Un
+  desclasificador que no baja no es una salvaguarda.

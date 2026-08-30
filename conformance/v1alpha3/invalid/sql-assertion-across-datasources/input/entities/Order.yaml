@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Order, namespace: customers }
+spec:
+  nature: entity
+  primaryKey: [orderId]
+  properties:
+    orderId: { type: String }
+    billingRef:
+      type: String
+      labels: { gdpr.sensitivity: high }

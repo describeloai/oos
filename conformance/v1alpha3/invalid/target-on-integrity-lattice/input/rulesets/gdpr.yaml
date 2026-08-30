@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata: { name: gdpr-minimization, namespace: eu }
+spec:
+  owner: team:compliance
+  targets:
+    - atLeast: { acme.assurance: reviewed }
+  assertions:
+    - id: no-nulls
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
