@@ -5,16 +5,21 @@
 
 | | |
 |---|---|
-| `00-scope` | **este documento** — qué entra en v1alpha4, qué no, y qué queda abierto |
+| `00-scope` | **este documento** — qué entra, qué no, y **qué falta para estar listo** (§8) |
 | [`01-significado`](01-significado.md) | el núcleo — el régimen de significado, del que se deriva todo lo demás |
 | [`02-property`](02-property.md) | el concepto — su superficie normativa |
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Los esquemas, la suite y el motor se escribieron antes que `02` y `03`**, y a propósito:
-§7 de este alcance exige enfrentar el vocabulario a algo que lo use *«antes de escribir los
-esquemas»*, y construirlo fue esa prueba. Doce casos en verde y **tres correcciones que solo
-aparecen al usarlo** — §7.1. Los dos documentos de abajo se redactaron después, con la
-implementación delante, que es el orden que este proyecto lleva cuatro versiones defendiendo.
+**Estado: siete de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
+la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
+atraviesan siete de las doce estaciones de la cadena. No entran en la forma canónica, `diff`
+no los ve y al emitir pierden lo que heredan. La definición de listo, la medición y las
+cuatro fases están en **§8**.
+
+Los esquemas, la suite y el motor se escribieron **antes** que `02` y `03`, y a propósito: §7
+exige enfrentar el vocabulario a algo que lo use *«antes de escribir los esquemas»*, y
+construirlo fue esa prueba — encontró **tres defectos que no se ven leyendo** (§7.1). Los dos
+documentos se redactaron después, con la implementación delante.
 
 ---
 
@@ -344,3 +349,202 @@ decisión, con las mismas palabras, ya estaba escrita en `Resolution.threshold` 
 que llegó antes al problema por el camino contrario: tenía usuario desde el primer día.
 
 > Un `$def` sin usuario no está esperando: **está sin comprobar.**
+
+---
+
+## 8. Listo para v1
+
+La prueba de fuego dice si el **vocabulario** sirve. No dice si la versión está terminada, y
+esas son dos preguntas distintas: v1alpha4 pasó la primera hace tres rondas y **no ha pasado
+la segunda**, porque hasta ahora nadie había escrito en qué consiste.
+
+Este apartado la escribe. Y lo primero que hay que decir es que **la pregunta no era de
+v1alpha4**:
+
+> **El criterio de «listo» nunca estuvo escrito, y por eso cada versión terminó en una
+> estación distinta — sin que ninguna lo dijera.**
+
+### 8.1 · La cadena tiene estaciones, y son doce
+
+Un `kind` no está terminado cuando su documento valida. Está terminado cuando **atraviesa la
+cadena entera**, y la cadena no es una metáfora: cada estación es un comando y una garantía.
+
+| | Estación | Comando | Qué tiene que ser cierto |
+|---|---|---|---|
+| **1** | despacho | — | el `kind` se reconoce y elige su esquema por `apiVersion` |
+| **2** | forma | `validate` | claves, obligatoriedad y exclusiones — `OOS1004` |
+| **3** | referencias | `validate` | lo que nombra existe — `OOS2001` · `OOS2005` |
+| **4** | tipos | `validate` | lo que declara es un tipo de OOS — `OOS3xxx` |
+| **5** | flujo | `validate` | su clasificación **se propaga** — `OOS4xxx` |
+| **6** | gobierno | `validate` | la cobertura lo tiene en cuenta — `OOS8xxx` |
+| **7** | significado | `validate` | la regla de su versión — `OOS9xxx` |
+| **8** | forma canónica | `compile` | sus **conjuntos se ordenan** — **G1** |
+| **9** | sellado | `compile` | entra en el bundle con digest propio |
+| **10** | compatibilidad | `diff` | sus cambios se clasifican por eje — **G2 en el tiempo** |
+| **11** | emisión | `export` | lo emitido **refleja lo que el documento dice** |
+| **12** | dependencia | `validate` | funciona igual cuando viene de otro paquete |
+
+Las siete primeras son *«¿es correcto?»*. Las cinco últimas son *«¿sirve para algo?»*, y son
+justo las que se olvidan, porque un `kind` que llega a la séptima **ya se siente terminado**:
+compila, falla cuando debe y tiene casos en verde.
+
+### 8.2 · Dónde está v1alpha4, medido
+
+| Estación | | |
+|---|---|---|
+| 1 – 7 | ✅ | 19 casos, tres códigos nuevos, la herencia llega a la propagación y a la cobertura |
+| **8 · forma canónica** | ❌ | `requires`, `implements` y el `requiresGovernance` del concepto **no están en `CONJUNTOS`** |
+| 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio — pero **inestable mientras la 8 falle** |
+| **10 · compatibilidad** | ❌ | `Shape` no tiene conceptos ni interfaces |
+| **11 · emisión** | ❌ | una propiedad con `is` sale a ODCS **sin tipo y sin clasificación** |
+| **12 · dependencia** | ❓ | sin caso: el mecanismo es el de siempre y **no está probado** |
+
+Las tres que fallan se miden, no se opinan:
+
+```
+mismo paquete, `requires` en otro orden
+  a  bundle: sha256:98a64775…
+  b  bundle: sha256:64cc5462…          ← G1 roto
+
+un concepto cambia de `type`, BAJA su clasificación de `high` a `low`,
+y otro concepto DESAPARECE
+  { "requiredBump": "patch", "CONSUMER": "compatible" }
+
+export a ODCS de una propiedad mapeada
+  {"name": "email"}                    ← ni tipo ni clasificación
+  {"name": "id", "x-oos-type": "String"}   ← declarada localmente
+```
+
+La tercera merece leerse dos veces: **el contrato que produce una propiedad mapeada es peor
+que el de una escrita a mano.** Usar `is` empeora hoy lo que el consumidor recibe, que es lo
+contrario exacto de lo que la versión promete.
+
+### 8.3 · Y no es un problema de esta versión
+
+Al medir las estaciones 8 y 10 sobre todo lo que existe, sale esto:
+
+| Versión | `kind` | 8 · canónica | 10 · diff | 11 · emisión |
+|---|---|---|---|---|
+| **v1alpha1** | `Entity` · `Binding` · `Lattice` · `ConduitPolicy` | ✅ | ✅ | ✅ |
+| **v1alpha2** | `Function` · `Resolution` | ✅ | ❌ | — |
+| **v1alpha3** | `Ruleset` | ✅ | ◐ solo por su **efecto** | — |
+| **v1alpha4** | `Property` · `Interface` | ❌ | ❌ | ❌ |
+
+`Shape` tiene diez campos y ninguno es una `Function`, una `Resolution` ni un `Ruleset`. El
+`Ruleset` llega a la estación 10 **de rebote**, porque lo que cubre entra en `gobernadas`; el
+documento en sí no se compara.
+
+> **v1alpha1 llegó al final. Cada borrador posterior se quedó antes, y ninguno lo escribió.**
+
+Eso es lo que hace que `73/73` signifique algo y que `19/19` signifique menos de lo que
+parece: los 73 certifican una versión que atravesó las doce estaciones; los 19 certifican
+siete de doce. **Los dos números están bien, y no miden lo mismo.**
+
+Esta tabla no es una acusación a las versiones anteriores: es la razón de escribir el
+criterio. Sin él, «terminado» quiere decir *«dejé de encontrar cosas que arreglar»*, que es
+una propiedad del que mira y no del artefacto.
+
+### 8.4 · La definición
+
+> **Un `kind` está listo cuando atraviesa las doce estaciones y cada tránsito tiene un caso
+> que lo certifica.**
+
+Y una versión está lista cuando lo están todos los `kind` que introduce, **más** las tres
+condiciones que ya se cumplen y conviene dejar contadas:
+
+| | Condición | Estado |
+|---|---|---|
+| **a** | ninguna decisión abierta | ✅ §6 |
+| **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
+| **c** | las doce estaciones, con caso cada una | ❌ **siete de doce** |
+
+La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
+que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones
+en el árbol contradiciendo una regla del proyecto porque nada lo usaba.
+
+### 8.5 · Las fases
+
+Cuatro, en este orden y no en otro. Cada una **termina en verde** y aporta una garantía
+completa, no un trozo.
+
+---
+
+**Fase 1 · Determinismo** — estación 8, y **G1**.
+
+`requires`, `implements` y el `requiresGovernance` de un concepto entran en `CONJUNTOS`. Es
+una lista de nombres de campo, y lo caro no es escribirla: es no haberlo hecho.
+
+*Se da por terminada cuando:* un caso de `digest/` toma dos paquetes idénticos con esos tres
+campos en distinto orden y exige **el mismo digest**. Hoy da dos distintos.
+
+*Va primera porque* es la única cuyo fallo es **silencioso y contagioso**: todo lo que viene
+después —el sellado, el diff, el lock— se computa encima del digest. Un digest inestable no
+rompe nada hoy y lo rompe todo mañana.
+
+---
+
+**Fase 2 · Compatibilidad** — estación 10, y **G2 en el tiempo**.
+
+`Shape` gana conceptos e interfaces, y sus cambios se clasifican. Lo que hay que cubrir sale
+de lo que un concepto y una forma **son**, no de una lluvia de ideas:
+
+| Cambio | Por qué rompe |
+|---|---|
+| un concepto **desaparece** | todo `is` que lo nombre queda colgando, en paquetes que no se tocaron |
+| su `type` **cambia** | quince propiedades heredan otro tipo sin haberse editado |
+| su clasificación **baja** | es `OOS4012` entre versiones: lo que impide rebajar dentro de un paquete no puede ser libre entre dos |
+| su `requiresGovernance` **encoge** | ya cubierto — `OOS5024` |
+| el `requires` de una interfaz **crece** | los implementadores dejan de satisfacerla, **y una regla que apuntaba a esa forma deja de alcanzarlos** |
+| el `requires` de una interfaz **encoge** | **no rompe**: más formas la subsumen, luego la regla alcanza más. Es la dirección segura |
+
+La última fila es la que demuestra que la lista está derivada y no inventada: sale de §4.2 de
+[`03-interface`](03-interface.md), y **la asimetría es el contenido**.
+
+*Se da por terminada cuando:* el paquete de prueba de §8.2 —tipo cambiado, clasificación
+rebajada, concepto desaparecido— deja de decir `patch`.
+
+---
+
+**Fase 3 · Emisión** — estación 11.
+
+`is` se resuelve **antes** de emitir. ODCS recibe el tipo y la clasificación heredados; el
+esquema de Cedar recibe las etiquetas del concepto.
+
+*Se da por terminada cuando:* se cumple esta invariante, que es la misma que gobierna la
+herencia un piso más abajo —
+
+> **Emitir una propiedad mapeada y emitir la misma propiedad con lo heredado escrito a mano
+> dan exactamente lo mismo.**
+
+Si difieren, `is` no es un mapeo: es una pérdida de información con buena prensa.
+
+---
+
+**Fase 4 · Dependencia** — estación 12.
+
+Un caso de conformidad con **dos paquetes**: el concepto en uno, la entidad en otro, fijado
+en el lock. No hace falta nada nuevo —un `Property` se importa como cualquier documento— y
+justamente por eso hay que probarlo: *«GDPR como dependencia»* es el argumento central de
+[`02-property`](02-property.md) §7 y hoy **es una afirmación sin caso**.
+
+*Se da por terminada cuando:* el caso existe y pasa, y su gemelo negativo también — un `is` a
+un concepto de un paquete **no declarado como dependencia** tiene que fallar.
+
+---
+
+### 8.6 · Lo que **no** entra en v1
+
+**El resolutor de dependencias.** ORE valida el `ontology.lock` y no descarga nada: los
+documentos de un paquete importado funcionan si sus ficheros están en el árbol. Eso **no es
+un hueco de v1alpha4** —afecta igual a todas las versiones y a todos los `kind`— y es del
+motor, no del molde. Lo que v1alpha4 debe demostrar es que un concepto **se comporta igual
+viniendo de otro paquete**, y eso es la fase 4.
+
+**Que la versión sea normativa.** «Listo para v1» quiere decir *la primera versión completa
+del borrador*, en el mismo sentido en que se cerró la de v1alpha2. Sigue siendo **alpha**:
+sin garantías de compatibilidad, y la escalera hacia `v1beta1` tiene sus propias condiciones,
+medidas y no cumplidas.
+
+**Poner al día las estaciones 10 y 11 de v1alpha2 y v1alpha3.** §8.3 las mide y no las
+arregla aquí. Sería un cambio de alcance de dos versiones cerradas, y este documento no puede
+tomarlo — pero ahora está escrito, que es la diferencia entre una deuda y un descuido.
