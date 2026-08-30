@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  uniqueKeys: [[nationalId]]
+  properties:
+    employeeId: { type: String }
+    nationalId: { type: String, labels: { gdpr.sensitivity: critical } }

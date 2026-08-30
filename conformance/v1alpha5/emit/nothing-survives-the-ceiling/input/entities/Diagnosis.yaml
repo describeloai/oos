@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Diagnosis, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [diagnosisId]
+  properties:
+    diagnosisId: { type: String, labels: { gdpr.sensitivity: critical } }
+    code:        { type: String, labels: { gdpr.sensitivity: critical } }

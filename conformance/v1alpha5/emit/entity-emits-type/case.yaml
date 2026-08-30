@@ -1,0 +1,7 @@
+rule: spec/v1alpha5/01-emision-graphql.md#2
+level: L0
+expects: structure
+format: graphql
+summary: >
+  El nucleo del mapeo: entidad a tipo, clave a @key, relacion a nulabilidad y
+  escalar parametrico a escalar especializado. Es el peldano 1 de §6.

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: clinical, namespace: hr }
+spec:
+  targetEntity: hr.Diagnosis
+  datasourceRef: hr_db
+  source: "public.tb_diagnosis"
+  properties:
+    diagnosisId: "diag_id"
+    code:        "code"

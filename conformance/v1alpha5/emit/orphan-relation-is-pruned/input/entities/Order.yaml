@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Order, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [orderId]
+  properties:
+    orderId:   { type: String }
+    patientId: { type: String }
+  relations:
+    patient:
+      target: hr.Diagnosis
+      cardinality: many_to_one
+      via: patientId
+      required: false

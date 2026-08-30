@@ -1,0 +1,7 @@
+rule: spec/v1alpha5/01-emision-graphql.md#5
+level: L0
+expects: emit-fails
+format: graphql
+summary: >
+  Emitir una entidad sin binding debe fallar: el campo existiria en el contrato y
+  no habria con que resolverlo. Misma causa que ossie-requires-binding.

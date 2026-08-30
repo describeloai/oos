@@ -273,6 +273,15 @@ y validan solo porque la última rama del `oneOf` es `qualifiedName` y se las tr
 de tipos exacta**; arreglarlo es un cambio de v1alpha1, con su caso y su entrada en el
 registro, y no cabe en esta pieza sin dejar de estar acotada.
 
+**Fijar el modelo de fichero.** Escribir
+[`orphan-relation-is-pruned`](../../conformance/v1alpha5/emit/orphan-relation-is-pruned) con
+dos `Binding` separados por `---` destapó que **un fichero con varios documentos YAML pierde
+todo menos el primero, en silencio**: el segundo no existía para el compilador y
+`ore validate` decía *ok · sin errores* aunque apuntara a un `datasourceRef` inexistente. La
+especificación **no dice nada** sobre varios documentos por fichero, y **ninguno de los 146
+casos usa `---`**, así que nada lo habría descubierto. El caso quedó partido en dos ficheros;
+decidir si un documento por fichero es normativo —y hacerlo cumplir— es de v1alpha1.
+
 **El importador — aplazado, no prohibido.** §7 fija su regla: se importa **induciendo**, en
 `DRAFT` y sin etiquetas. Lo que no entra aquí es su implementación y sus casos, porque la
 suite no tiene hoy una expectativa para una importación sola —`roundtrip` no sirve, y §7.2

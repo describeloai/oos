@@ -1,0 +1,14 @@
+{
+  "description": "El techo de contextSurface es `gdpr.sensitivity: medium`. Se afirman las dos direcciones: lo que sobrevive y lo que no.",
+  "mustContain": [
+    { "type": "Customer", "field": "customerId", "as": "ID!" },
+    { "type": "Customer", "field": "country",
+      "reason": "`none` esta por debajo del techo" },
+    { "type": "Customer", "field": "email",
+      "reason": "`medium` ES el techo, y el techo es inclusivo: L subsumido por C" }
+  ],
+  "mustNotContain": [
+    { "type": "Customer", "field": "nationalId",
+      "reason": "`critical` excede el techo. Sale AUSENTE, no prohibida: no hay directiva, ni error, ni marca" }
+  ]
+}

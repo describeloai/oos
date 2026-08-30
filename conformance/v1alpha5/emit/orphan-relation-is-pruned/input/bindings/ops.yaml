@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: ops, namespace: hr }
+spec:
+  targetEntity: hr.Order
+  datasourceRef: hr_db
+  source: "public.tb_order"
+  properties:
+    orderId:   "order_id"
+    patientId: "patient_id"
