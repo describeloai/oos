@@ -608,7 +608,7 @@ medio, y eso se filtra a las decisiones en el año cinco.
 |---|---|
 | **Marca del namespace** | `node-ecosystems` para un motor Rust manda la señal equivocada. Decidir antes de publicar artefactos |
 | **Qué NO se construye** | Foundry entrega apps operativas. *"Somos la capa semántica, tus apps las construyes con lo que ya usas"* es mejor respuesta que un intento a medias — pero hay que decirla en voz alta |
-| **`Test`** | El único que queda de la lista original. `Function` y `Resolution` cierran alcance en v1alpha2 —y `Function` arrastra la `autonomy` que desbloquea la IA agéntica—; `Rule` se **retiró** como documento |
+| **`Test`** | El único que queda de la lista original. `Function` y `Resolution` cierran alcance en v1alpha2 —y `Function` arrastra el **endoso de integridad** que desbloquea la IA agéntica: `humanApproval`, que es lo que permite que un agente prepare y proponga mientras un humano firma—; `Rule` se **retiró** como documento |
 
 ### 7.5 · Cerradas
 

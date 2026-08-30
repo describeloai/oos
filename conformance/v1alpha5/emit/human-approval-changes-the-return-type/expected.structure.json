@@ -1,0 +1,15 @@
+{
+  "description": "El endoso de firma humana decide el tipo de retorno.",
+  "mustContain": [
+    { "contains": ["approveOrder(note: String, orderId: String!): ApprovalRequired!"],
+      "reason": "en el instante de la llamada el acto no ha ocurrido: no hay resultado que devolver" },
+    { "contains": ["type ApprovalRequired", "request: ID!", "endorsement: String!"],
+      "reason": "el esquema declara el tipo que referencia" }
+  ],
+  "mustNotContain": [
+    { "contains": ["ApproveOrderResult"],
+      "reason": "prometer el resultado romperia al cliente en produccion" },
+    { "contains": ["humanApproval"],
+      "reason": "el endoso NO se emite: se ejecuta al emitir, igual que la clasificacion" }
+  ]
+}

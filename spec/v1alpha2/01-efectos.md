@@ -148,6 +148,17 @@ Los borradores de `docs/vision/` ya lo habían inventado tres veces con tres nom
 `requireHumanApproval`, `approvedBy`, `status: STABLE`—. Un concepto con tres nombres
 acaba teniendo tres semánticas.
 
+> **Y hubo un cuarto, dentro de la propia especificación.** `00-overview` §7.2 vendía
+> `autonomy` como *«un diferenciador que no existe en ningún estándar»*, y la definición de
+> **L3** se apoyaba en él. No existía en ningún esquema ni en ningún caso — porque lo que
+> nombraba **ya estaba aquí**, construido, documentado y en verde, desde esta versión.
+> Corregido: los dos sitios nombran ahora el endoso.
+>
+> La lección es la de arriba, y esta vez se la aplicó el documento a sí mismo: **un concepto
+> se bautiza una vez.** Que el cuarto nombre lo pusiera la especificación y no un borrador
+> solo lo hace más caro, porque un claim se repite en la portada y una carencia declarada
+> orienta el trabajo hacia rellenar un hueco que estaba lleno.
+
 ### 3.3 · La función
 
 Es el único punto donde la ontología toca el mundo, y por tanto **el único donde termina la

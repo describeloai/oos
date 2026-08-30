@@ -297,11 +297,21 @@ suite no tiene hoy una expectativa para una importación sola —`roundtrip` no 
 demuestra por qué— y añadirla duplicaría esta pieza. La regla queda escrita ahora, como
 `01-package` §4.2 escribió la importación de ODCS antes de que nada la implementara.
 
-**La superficie de escritura completa.** `Function` mapea a `Mutation`, pero una mutación que
-exige firma humana no cabe en petición/respuesta, y el vocabulario que lo gobernaría
-—`autonomy`— **no existe**: se nombra en `00-overview` §7.2 como uno de los siete
-diferenciadores de OOS y no aparece en ningún esquema. Esta versión emite las mutaciones que
-hoy son expresables y deja dicho que la otra mitad depende de un vocabulario que falta.
+**El quórum de endosos.** `Function` mapea a `Mutation` y el endoso entra en el contrato
+como tipo de retorno ([`01-emision-graphql`](01-emision-graphql.md) §2.8.1), así que la
+superficie de escritura **sí** entra en esta versión.
+
+Lo que no entra es **contar firmas**. `endorsements` es un conjunto cuya identidad es
+`(endorser, attestation)`, de modo que dos `humanApproval` sin atestación colapsan en uno:
+**el control dual —dos juicios humanos independientes— no es expresable**. Es la decisión
+abierta nº 1 de [`v1alpha2/00-scope`](../v1alpha2/00-scope.md) §6 —*«el vocabulario cerrado
+de endosantes»*— y exige decidir **cómo se cuenta**, que es vocabulario y no emisión.
+
+> El borrador de esta versión decía aquí que el vocabulario de la aprobación humana **no
+> existía**, citando `autonomy`. Era falso: existe desde v1alpha2, se llama `humanApproval`,
+> está documentado en `01-efectos` §3.2, lo comprueba el motor y tiene tres casos. Lo que
+> faltaba no era el vocabulario: era **traerlo al contrato**, que es lo que hace esta
+> versión.
 
 ---
 

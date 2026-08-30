@@ -171,7 +171,7 @@ gobernanza**.
 | **L0** · Validador | valida, normaliza, comprueba el flujo, emite digest | **no** |
 | **L1** · Servidor de contexto | entidades, relaciones, tipos, políticas, linaje | **no** |
 | **L2** · Ejecutor | resuelve bindings, aplica obligaciones, federa consultas | sí |
-| **L3** · Actor | ejecuta funciones y hace cumplir `autonomy` | sí, con escritura |
+| **L3** · Actor | ejecuta funciones y **verifica el acto que un endoso declara** | sí, con escritura |
 
 **L0 es lo que hace de OOS un estándar.** Es hermético e implementable en cualquier
 lenguaje en un fin de semana: una acción de CI, un linter de editor, un `pre-commit`.

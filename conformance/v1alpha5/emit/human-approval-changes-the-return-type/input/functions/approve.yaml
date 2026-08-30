@@ -1,0 +1,18 @@
+apiVersion: oos.dev/v1alpha2
+kind: Function
+metadata: { name: approveOrder, namespace: scm }
+spec:
+  runtime: wasm
+  entrypoint: dist/approve.wasm
+  input:
+    orderId: { type: String, required: true }
+    note:    { type: String }
+  output:
+    status:    { type: String, required: true }
+    approvedAt: { type: DateTime }
+  effects:
+    - writes: scm.PurchaseOrder.status
+      datasourceRef: postgres_erp
+      to: "APPROVED"
+  endorsements:
+    - endorser: humanApproval

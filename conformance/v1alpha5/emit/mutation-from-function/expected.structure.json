@@ -1,0 +1,16 @@
+{
+  "description": "Una Function sin endoso de firma humana emite su mutacion con su tipo de resultado.",
+  "mustContain": [
+    { "contains": ["type Mutation"] },
+    { "contains": ["approveOrder(note: String, orderId: String!): ApproveOrderResult!"],
+      "reason": "argumentos en orden canonico; `required: true` da el `!` y su ausencia no" },
+    { "contains": ["type ApproveOrderResult", "status: String!", "approvedAt: DateTime"],
+      "reason": "`output` es un mapa de parametros y GraphQL exige un tipo de retorno" }
+  ],
+  "mustNotContain": [
+    { "contains": ["ApprovalRequired"],
+      "reason": "sin endoso de firma humana no hay solicitud que devolver" },
+    { "contains": ["idempotency", "authorization", "precondition"],
+      "reason": "publicar la cerradura junto a la puerta" }
+  ]
+}

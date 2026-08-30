@@ -91,7 +91,7 @@ niveles inferiores.
 | **L0** | **Validador** | analiza, normaliza, valida esquema e integridad referencial, **ejecuta la comprobación de flujo `OOS4xxx`**, emite el digest | **no** |
 | **L1** | **Servidor de contexto** | sirve el plano de contexto: entidades, relaciones, tipos, políticas, linaje | **no** |
 | **L2** | **Ejecutor** | resuelve bindings contra fuentes reales, aplica políticas y obligaciones en lectura, federa consultas | sí |
-| **L3** | **Actor** | ejecuta funciones con capacidades y hace cumplir `autonomy` | sí, con escritura |
+| **L3** | **Actor** | ejecuta funciones con capacidades y **verifica el acto que un endoso declara** | sí, con escritura |
 
 **L0 es el nivel que hace que OOS sea un estándar.** Es completamente hermético: sin red,
 sin credenciales, sin tocar un dato. Es implementable en cualquier lenguaje en un fin de
@@ -314,7 +314,7 @@ Cada entrada satisface la carga de la prueba del principio P7.
 | **Comprobación hermética en compilación** | ODCS y Ossie son documentos: no tienen objetivo de compilación, ni artefacto, ni motor. Nada comprueba nada. La familia `OOS4xxx` no tiene equivalente. |
 | **Obligaciones como vocabulario cerrado** | Cedar solo resuelve `permit`/`forbid`. ODCS no tiene modelo de decisión evaluable —sus `roles` describen a quién pedir acceso, no bajo qué condición se concede ni cómo se transforma el dato. Enmascarar, tokenizar y `aggregateOnly` no existen en ninguno. |
 | **`materialization` declarada** | ODCS `servers` dice dónde vive el dato. Ningún estándar declara **qué se copia, a dónde y bajo qué restricción**, ni convierte una violación en error. |
-| **`autonomy`** | Qué puede hacer un agente por su cuenta y qué exige aprobación humana. No existe en ningún estándar de datos, de semántica ni de autorización. |
+| **El endoso de integridad** | Qué puede hacer un agente por su cuenta y qué exige una firma humana. Un endosante es a la integridad lo que un desclasificador es a la confidencialidad: `attested` eleva la de una **función**, `humanApproval` la de una **invocación**, y la regla `I(f) ⊒ I(destino)` decide si basta. Cedar concede o niega un permiso; nada en él ni en ningún estándar de datos dice **cuántos juicios humanos** hacen falta antes de que algo ocurra. |
 | **Forma canónica, digest y bundle** | Ossie y ODCS describen; no compilan. Sin digest determinista no hay diff semántico, ni firma, ni promoción entre entornos, ni rollback. |
 
 ### 7.2-bis · Anfitriones y objetivos de emisión

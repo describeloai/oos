@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: erp, namespace: scm }
+spec:
+  targetEntity: scm.PurchaseOrder
+  datasourceRef: postgres_erp
+  source: "public.tb_order"
+  properties:
+    orderId: "order_id"
+    status:  "status"
+    total:   "total"

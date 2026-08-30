@@ -173,16 +173,67 @@ puede preguntar.
 
 ### 2.8 · Mutaciones
 
-Una `Function` emite una `Mutation` **si y solo si** todos sus `effects` apuntan a
-propiedades del paquete que se emite. `input` y `output` emiten los tipos correspondientes.
+Una `Function` emite una `Mutation` **si y solo si** cada propiedad que escribe está en el
+contrato. Si una sola de ellas quedó fuera por el conducto, la mutación **no se emite**:
+publicar una escritura sobre un campo que el consumidor no puede leer le pediría que confíe
+en un efecto que no puede comprobar.
 
-`preconditions`, `endorsements`, `authorization` e `idempotency` **NO** se emiten: son
-condiciones que el motor comprueba, no forma que el cliente pueda pedir. Emitirlas sería
-publicar la cerradura junto a la puerta.
+- `input` emite los argumentos, con `!` donde `required: true`.
+- `output` emite un tipo de resultado propio, `<Nombre>Result`.
+- Sin `output`, la mutación devuelve `Boolean!`. Un `Function` siempre escribe algo
+  —`effects` es obligatorio— así que hay un hecho que devolver aunque no haya un valor.
 
-> **Lo que falta, y está dicho en [`00-scope`](00-scope.md) §8:** una mutación que exige
-> firma humana no cabe en petición/respuesta, y el vocabulario que lo gobernaría —`autonomy`—
-> no existe en ningún esquema. Esta versión emite las mutaciones hoy expresables.
+`preconditions`, `authorization` e `idempotency` **NO** se emiten: son condiciones que el
+motor comprueba, no forma que el cliente pueda pedir. Emitirlas sería publicar la cerradura
+junto a la puerta.
+
+#### 2.8.1 · El endoso no se emite: **se ejecuta al emitir**
+
+Es la misma tesis de §4, en la otra dirección.
+
+> Una `Function` con un endoso `humanApproval` **no puede devolver su `output`**. Devuelve
+> `ApprovalRequired`.
+
+Y no es política metida en el contrato: es **aritmética del tipo de retorno**. `01-efectos`
+§3.2 fija que `humanApproval` es un endosante **dinámico** —*«el compilador verifica que la
+declaración cubre la carencia; el motor verifica el acto»*—, así que en el instante de la
+llamada **el acto no ha ocurrido**. No hay resultado que devolver, y tipar la respuesta como
+si lo hubiera sería mentir en el contrato.
+
+```graphql
+type Mutation {
+  recalculateTotals(orderId: ID!): RecalculateTotalsResult!
+  refundOrder(orderId: ID!, amount: Money_EUR_2!): ApprovalRequired!
+}
+
+"La invocacion quedo propuesta y espera la firma que su endoso declara."
+type ApprovalRequired {
+  request: ID!
+  endorsement: String!
+}
+```
+
+**Y lo comprueba el sistema de tipos del cliente.** Quien esperaba `RefundResult` de
+`refundOrder` no compila. Eso es `G2` en la dirección de escritura, y **es nuevo**: mientras
+el endoso vivía solo dentro del artefacto, el consumidor no podía verlo.
+
+> **Una escritura que exige firma humana no se puede consumir como si no la exigiera, porque
+> el tipo no encaja.**
+
+#### 2.8.2 · Un endoso condicional **sí** cambia el tipo
+
+`02-function` §6.1 fija que un endoso con `when:` **no cierra** una carencia de integridad.
+Aquí cuenta igual que uno incondicional, y la asimetría no es un descuido: **son dos
+preguntas distintas sobre el mismo campo.**
+
+| Pregunta | Quién la hace | Un `when:` |
+|---|---|---|
+| ¿basta este endoso para **escribir**? | la regla `I(f) ⊒ I(destino)` | **no cuenta** — una condición no es una garantía |
+| ¿qué recibe **quien llama**? | el contrato | **cuenta** — puede activarse, y entonces no hay resultado |
+
+La primera es sobre lo que la función *tiene*; la segunda, sobre lo que el consumidor *puede
+esperar*. Un contrato que prometiera el resultado y devolviera una solicitud rompería a su
+cliente en producción, así que la emisión promete lo menos de los dos.
 
 ### 2.9 · Documentación
 
@@ -352,7 +403,8 @@ La emisión cubre hoy el núcleo de GraphQL. Lo que falta, y en qué orden se ga
 |---|---|---|
 | tipos · campos · interfaces · enums · claves · mutaciones | — | **entra en v1alpha5** |
 | `union` | una noción de disyunción que OOS no tiene. Candidata: `nature` como discriminante | por decidir |
-| tipos de entrada de mutación | `Function.input` ya los describe; es mapeo, no diseño | siguiente |
+| tipos de entrada de mutación | `Function.input` ya los describe; es mapeo, no diseño | **entra en v1alpha5** |
+| **quórum de endosos** | un conjunto no cuenta: dos `humanApproval` sin atestación colapsan en uno, así que **el control dual no es expresable**. Es la decisión abierta nº1 de [`v1alpha2/00-scope`](../v1alpha2/00-scope.md) §6 | por decidir |
 | `subscription` | un modelo de cambio. Es lo mismo que bloquea `Test` y lo temporal: va después de L2 | aplazado |
 | directivas de Federation v2 | `@shareable`, `@external`, `@provides`. Salen del grafo de dependencias entre paquetes | siguiente |
 
@@ -396,8 +448,9 @@ diseña eso: se sigue de que las dos particiones ya coincidían.
 cerrado de consultas por su hash y admitir solo esas. Es **la misma forma que un bundle**: un
 conjunto cerrado, un hash, comprobado antes de ejecutar. Compilar el conjunto de preguntas
 que un agente puede hacer —cada una con su digest, ninguna improvisada— convierte *«qué puede
-preguntar este agente»* en una pregunta con respuesta auditable. Es el complemento natural de
-`autonomy` en la dirección de lectura, y no exige nada que GraphQL no tenga ya.
+preguntar este agente»* en una pregunta con respuesta auditable. Es el complemento natural del **endoso** en la dirección de
+lectura —uno acota qué se puede hacer, el otro qué se puede preguntar— y no exige nada que
+GraphQL no tenga ya.
 
 **Las herramientas del agente se derivan.** Un servidor MCP sobre un esquema emitido no
 diseña herramientas: las obtiene por introspección. La lista de lo que un agente puede hacer
