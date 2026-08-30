@@ -168,6 +168,12 @@ defecto que `OOS4008` —lo derivable no se declara, **P2**— aplicado al otro 
 | ninguno | **⊥** — el mínimo del retículo |
 | `attested` verificado | el nivel que la atestación afirma |
 | `humanApproval` **incondicional** | el nivel que el endosante declare cubrir |
+| `humanApproval` con `quorum: n` | **el mismo** — ver abajo |
+
+El quórum **no aparece** en esta tabla, y su ausencia es la afirmación: pedir dos firmas en
+vez de una **no eleva la integridad de la función**. La carencia la cierra el primer endoso
+incondicional; el segundo no la cierra más. `quorum` responde *cuántos juicios
+independientes*, que es una cuenta y no un orden ([`01-efectos`](01-efectos.md) §3.2.1).
 
 ### 6.1 · Un endoso condicional no cierra una carencia
 

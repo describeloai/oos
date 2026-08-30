@@ -130,7 +130,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | añadir un `permit` que amplía el acceso efectivo | `OOS5013` |
 | eliminar o debilitar un `forbid` | `OOS5014` |
 | ampliar el conjunto de finalidades de una política | `OOS5015` |
-| reducir `minGroupSize` de un desclasificador `aggregate` | `OOS5016` |
+| **aflojar un parámetro de seguridad** — `minGroupSize`, un umbral, una cota, un `quorum` | `OOS5016` |
 | añadir un desclasificador donde no lo había | `OOS5017` |
 
 ### 5.3 · Rompedor en `INDEX`

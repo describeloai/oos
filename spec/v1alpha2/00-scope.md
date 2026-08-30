@@ -246,8 +246,11 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
 
 ## 6. Decisiones abiertas
 
-1. **El vocabulario cerrado de endosantes.** Hoy son dos —`attested` y `humanApproval`— y
-   falta escribir cómo se verifica una atestación al compilar, sin reloj y sin red.
+1. **Cómo se verifica una atestación al compilar**, sin reloj y sin red. Es lo que queda de
+   esta decisión: el vocabulario sigue cerrado en dos —`attested` y `humanApproval`— y **ya no
+   le falta el control dual**, que entra como `quorum` sobre el endoso humano
+   ([`01-efectos`](01-efectos.md) §3.2.1). No hizo falta un endosante nuevo: hacía falta
+   **contar**, porque `endorsements` es un conjunto y un conjunto no cuenta.
 2. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
    cada una es una lectura sujeta a la regla de flujo. Ahora incluye también las que
    `Entity.expression` necesite (§3.1).

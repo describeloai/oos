@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: scm, version: 2.0.0, status: active, domain: supply }
+spec: { owner: team:supply }

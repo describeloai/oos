@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha2/type/endorsement.schema.json",
+  "title": "OOS · el endoso",
+  "description": "El endoso, definido UNA VEZ. `Function` y `Resolution` lo referencian.\n\nEstuvo escrito dos veces —una en cada esquema— mientras la prosa de `Resolution` insistia en que «es el mismo mecanismo, y que sea el mismo importa: un regimen con dos formas de decir 'que lo mire una persona' acaba con dos semanticas». Dos definiciones no habian divergido todavia; anadirles `quorum` por separado habria sido la primera vez.\n\nNormativo: `spec/v1alpha2/01-efectos.md` §3.2 y `02-function.md` §6.",
+  "$defs": {
+    "endorsement": {
+      "description": "Vocabulario CERRADO de dos entradas, porque solo hay dos formas de ganar confianza de manera comprobable: demostrarla una vez y dejarlo escrito, o pagarla en cada uso.\n\nSolo los endosos INCONDICIONALES cuentan para satisfacer la regla de integridad `I(f) ⊒ I(destino)`: una condicion no es una garantia.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endorser"
+      ],
+      "properties": {
+        "endorser": {
+          "enum": [
+            "attested",
+            "humanApproval"
+          ]
+        },
+        "attestation": {
+          "description": "Ruta a la atestacion firmada, verificable contra una clave declarada en `ontology.lock`. Obligatoria para `attested`.",
+          "type": "string"
+        },
+        "when": {
+          "description": "Convierte el endoso en un control de negocio adicional. Un endoso condicional NO cierra una carencia de integridad.",
+          "$ref": "../function.schema.json#/$defs/cel"
+        },
+        "quorum": {
+          "description": "Cuantos juicios humanos DISTINTOS hace falta reunir. Ausente es 1, asi que no se escribe: lo derivable no se declara (P2). El minimo escribible es 2, que es el control dual.\n\nDISTINTOS es la palabra que carga el campo: una misma persona firmando dos veces es una firma. Quien puede firmar lo decide `authorization` —eso es Cedar— y cuantos hacen falta lo decide esto; son preguntas distintas y por eso viven en sitios distintos.\n\nNO eleva `I(f)`. La regla de integridad pregunta si BASTA para escribir, y un endoso incondicional ya cierra esa carencia; el quorum pregunta CUANTOS JUICIOS, que es otra cosa. Meterlo en el reticulo seria poner una cuenta donde hay un orden de confianza.\n\nSolo tiene sentido sobre `humanApproval`: una atestacion es un artefacto firmado, y dos atestaciones son dos rutas distintas — ya se distinguen sin contar.",
+          "type": "integer",
+          "minimum": 2
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "endorser": {
+                "const": "attested"
+              }
+            },
+            "required": [
+              "endorser"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "quorum"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "description": "El quorum entra en el contrato por los dos sitios que lo necesitan.",
+  "mustContain": [
+    { "contains": ["\"Requiere 2 firmas humanas distintas.\""],
+      "reason": "lo lee una persona antes de escribir el cliente" },
+    { "contains": ["type ApprovalRequired", "quorum: Int!"],
+      "reason": "lo lee el programa en cada respuesta" },
+    { "contains": ["approveOrder(note: String, orderId: String!): ApprovalRequired!"] }
+  ],
+  "mustNotContain": [
+    { "contains": ["@quorum", "directive"],
+      "reason": "descriptivo, nunca directivo: una directiva es una instruccion a la herramienta" }
+  ]
+}

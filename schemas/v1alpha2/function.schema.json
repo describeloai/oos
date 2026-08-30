@@ -134,49 +134,11 @@
           }
         },
         "endorsements": {
-          "description": "Vocabulario CERRADO de dos entradas, porque solo hay dos formas de ganar confianza de manera comprobable: demostrarla una vez y dejarlo escrito, o pagarla en cada uso.\n\nSolo los endosos INCONDICIONALES cuentan para satisfacer la regla de integridad (02-function §6.1): si `when` es falso no hay elevación, luego la carencia sigue abierta en el caso que importa.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
+          "description": "El endoso vive en `type/endorsement.schema.json`: `Function` y `Resolution` usan el mismo mecanismo y ahora tambien la misma definicion.",
           "type": "array",
+          "minItems": 1,
           "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "endorser"
-            ],
-            "properties": {
-              "endorser": {
-                "enum": [
-                  "attested",
-                  "humanApproval"
-                ]
-              },
-              "attestation": {
-                "description": "Ruta a la atestación firmada, verificable contra una clave declarada en `ontology.lock`. Obligatoria para `attested`.",
-                "type": "string"
-              },
-              "when": {
-                "description": "Convierte el endoso en un control de negocio adicional. Un endoso condicional NO cierra una carencia de integridad.",
-                "$ref": "#/$defs/cel"
-              }
-            },
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "endorser": {
-                      "const": "attested"
-                    }
-                  },
-                  "required": [
-                    "endorser"
-                  ]
-                },
-                "then": {
-                  "required": [
-                    "attestation"
-                  ]
-                }
-              }
-            ]
+            "$ref": "type/endorsement.schema.json#/$defs/endorsement"
           }
         },
         "authorization": {

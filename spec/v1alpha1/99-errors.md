@@ -162,7 +162,7 @@ La dirección invertida: no rompe a ningún consumidor y **concede acceso en sil
 | `OOS5013` | añadir un `permit` que amplía el acceso efectivo |
 | `OOS5014` | eliminar o debilitar un `forbid` |
 | `OOS5015` | ampliar el conjunto de finalidades de una política |
-| `OOS5016` | reducir `minGroupSize` de un desclasificador `aggregate` |
+| `OOS5016` | **aflojar un parámetro de seguridad**: `minGroupSize` de un desclasificador `aggregate`, el umbral de una `Resolution`, la cota de una aserción, el `quorum` de un endoso |
 | `OOS5017` | añadir un desclasificador donde no lo había |
 
 ### Eje `INDEX`

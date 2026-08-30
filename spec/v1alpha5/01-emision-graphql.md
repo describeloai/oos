@@ -206,12 +206,27 @@ type Mutation {
   refundOrder(orderId: ID!, amount: Money_EUR_2!): ApprovalRequired!
 }
 
-"La invocacion quedo propuesta y espera la firma que su endoso declara."
+"La invocacion quedo propuesta y espera las firmas que su endoso declara."
 type ApprovalRequired {
   request: ID!
   endorsement: String!
+  quorum: Int!
 }
 ```
+
+Y cuando el endoso pide más de una firma, **el contrato lo dice**: la mutación lleva su
+exigencia en la documentación, que es donde un cliente la lee sin ejecutarla.
+
+```graphql
+type Mutation {
+  "Requiere 2 firmas humanas distintas."
+  refundOrder(orderId: ID!): ApprovalRequired!
+}
+```
+
+El campo `quorum` del resultado y la línea de documentación dicen lo mismo desde dos sitios, y
+no es duplicación: uno lo lee una **persona** antes de escribir el cliente, el otro lo lee el
+**programa** en cada respuesta. Ninguno de los dos sirve para lo del otro.
 
 **Y lo comprueba el sistema de tipos del cliente.** Quien esperaba `RefundResult` de
 `refundOrder` no compila. Eso es `G2` en la dirección de escritura, y **es nuevo**: mientras

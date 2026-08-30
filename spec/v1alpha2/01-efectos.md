@@ -130,10 +130,35 @@ endosante que el motor no sabe verificar es una promesa, y una promesa no es una
 Y sale con **dos** entradas, no con cinco, porque solo hay dos formas de ganar confianza de
 manera comprobable: **demostrarla una vez y dejarlo escrito**, o **pagarla en cada uso**.
 
-| Endosante | Cuándo | Qué eleva | Cómo se verifica |
-|---|---|---|---|
-| `attested` | estático | la integridad de la **función**, siempre | una atestación firmada, presente en el repositorio y verificable contra una clave declarada en `ontology.lock` |
-| `humanApproval` | dinámico | la integridad de **una invocación** | el compilador verifica que la declaración cubre la carencia; el motor verifica el acto |
+| Endosante | Cuándo | Qué eleva | Cómo se verifica | `quorum` |
+|---|---|---|---|:---:|
+| `attested` | estático | la integridad de la **función**, siempre | una atestación firmada, presente en el repositorio y verificable contra una clave declarada en `ontology.lock` | **no** |
+| `humanApproval` | dinámico | la integridad de **una invocación** | el compilador verifica que la declaración cubre la carencia; el motor verifica el acto | **sí** |
+
+#### 3.2.1 · `quorum` — cuántos juicios, que no es cuánta confianza
+
+`humanApproval` **PUEDE** declarar `quorum: n`, y significa **`n` juicios humanos
+distintos**. Ausente es `1`, así que no se escribe: lo derivable no se declara (P2). El
+mínimo escribible es `2`, que es el control dual.
+
+**`distintos` es la palabra que carga el campo.** Una misma persona firmando dos veces es
+una firma. Y las dos mitades de esa frase viven en sitios distintos a propósito:
+
+| Pregunta | Quién la contesta |
+|---|---|
+| **quién** puede firmar | `authorization` — es Cedar |
+| **cuántos** hacen falta | `quorum` — es esto |
+
+**`quorum` NO eleva `I(f)`,** y esto es lo que hay que tener claro para no meterlo donde no
+va. La regla de integridad pregunta *«¿basta este endoso para escribir?»*, y un endoso
+incondicional **ya cierra esa carencia** — una segunda firma no la cierra más. El quórum
+pregunta otra cosa: **cuántos juicios independientes**. Ponerlo en el retículo sería meter
+una cuenta donde hay un orden de confianza.
+
+Y no cabe en `attested` porque allí no hace falta: una atestación es un artefacto firmado, y
+dos atestaciones son dos rutas distintas — **ya se distinguen sin contar**. `quorum` existe
+porque `endorsements` es un conjunto cuya identidad es `(endorser, attestation)`, de modo que
+dos `humanApproval` sin atestación **colapsan en uno**. Un conjunto no cuenta; un número sí.
 
 Las dos son herméticas en lo que a cada una le toca. `attested` lo es del todo: comprobar
 una firma contra una clave que ya viaja en el lock no consulta nada vivo. `humanApproval`

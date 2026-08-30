@@ -224,49 +224,11 @@
           }
         },
         "endorsements": {
-          "description": "El mismo mecanismo que `Function` (02-function §6), y que sea el mismo importa: un régimen con dos formas de decir «que lo mire una persona» acaba con dos semánticas.\n\nAquí levanta el techo de integridad que una estrategia probabilística impone (OOS7011). Solo cuentan los incondicionales.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
+          "description": "El mismo mecanismo que `Function` (02-function §6), y ahora literalmente la misma definicion. Aqui levanta el techo de integridad que una estrategia puede alcanzar.",
           "type": "array",
+          "minItems": 1,
           "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "endorser"
-            ],
-            "properties": {
-              "endorser": {
-                "enum": [
-                  "attested",
-                  "humanApproval"
-                ]
-              },
-              "attestation": {
-                "type": "string"
-              },
-              "when": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 2048
-              }
-            },
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "endorser": {
-                      "const": "attested"
-                    }
-                  },
-                  "required": [
-                    "endorser"
-                  ]
-                },
-                "then": {
-                  "required": [
-                    "attestation"
-                  ]
-                }
-              }
-            ]
+            "$ref": "type/endorsement.schema.json#/$defs/endorsement"
           }
         }
       }

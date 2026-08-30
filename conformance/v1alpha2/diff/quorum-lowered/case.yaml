@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.2
+level: L0
+expects: OOS5016
+summary: >
+  Bajar el quorum de un endoso es aflojar un parametro de seguridad, y lo
+  clasifica el codigo que ya existia para eso.

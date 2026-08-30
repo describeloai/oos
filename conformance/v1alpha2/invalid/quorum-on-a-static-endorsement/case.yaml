@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/01-efectos.md#3.2.1
+level: L0
+expects: OOS1004
+summary: >
+  `quorum` sobre `attested` no significa nada: dos atestaciones son dos rutas
+  distintas y ya se distinguen sin contar.

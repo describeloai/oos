@@ -1,0 +1,8 @@
+{
+  "changes": [
+    { "code": "OOS5016", "axis": "POLICY", "subject": "scm.approvePurchaseOrder",
+      "endorser": "humanApproval", "from": "3", "to": "2" }
+  ],
+  "verdicts": { "POLICY": "breaking" },
+  "requiredBump": "major"
+}
