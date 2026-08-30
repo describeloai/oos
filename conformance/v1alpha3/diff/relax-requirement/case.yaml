@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5024
+summary: >
+  El reticulo importado deja de exigir una clase de gobierno. Una linea en un fichero
+  desgobierna un paquete entero sin tocarlo.

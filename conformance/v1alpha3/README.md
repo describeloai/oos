@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha3
 
-**Borrador — 15/15.** Certifica el régimen de gobierno de
+**Borrador — 17/17.** Certifica el régimen de gobierno de
 [`spec/v1alpha3/`](../../spec/v1alpha3/), cuyo **alcance está cerrado** y que **no es
 normativo todavía**.
 
@@ -36,8 +36,10 @@ directorio tenga cincuenta casos.
 | `valid/authorization-covers` | — | una política de Cedar descarga `authorization` |
 | `invalid/two-lattices-require-both` | `OOS8001` | **conjunción**: dos clasificaciones exigen las dos |
 | `invalid/mask-annotation-unresolved` | `OOS2001` | `@oosMask` nombra una máscara que no existe |
+| `diff/weaken-coverage` | `OOS5023` | retirar reglas deja propiedades sin la clase que tenían |
+| `diff/relax-requirement` | `OOS5024` | el retículo importado deja de exigir una clase |
 
-**Quince casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
+**Diecisiete casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
 función, y `OOS2001` lleva reservado desde v1alpha1 para *«tipos de referencia nuevos»* que
 `Function`, `Resolution` y `Test` iban a introducir. Activar una reserva es mejor que inflar
 una familia.

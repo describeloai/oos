@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5023
+summary: >
+  Retirar un Ruleset deja propiedades sin la clase de gobierno que tenian. Rompedor en
+  POLICY, y hasta ahora invisible.

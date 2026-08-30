@@ -6,6 +6,28 @@ distintos: **cadena de suministro** (nada sensible), **clientes** (sensibilidad 
 
 Construida sobre OOS `v1alpha1`. Cada fichero está anotado con qué demuestra.
 
+## El plano de gobierno, sobre esto mismo
+
+Dos añadidos de **v1alpha3** —borrador— convierten esta ontología en la demostración de que
+la clasificación tiene consecuencias:
+
+| | |
+|---|---|
+| `lattices/gdpr.yaml` gana `requiresGovernance` | desde `high`, `constraint`; desde `critical`, además `authorization` |
+| `rulesets/gdpr-minimization.yaml` | el paquete de reglas del equipo de cumplimiento, con **su propio `owner`** |
+
+Un `Ruleset` con **un solo objetivo** —`atLeast: { gdpr.sensitivity: high }`— gobierna
+**once propiedades** repartidas por tres paquetes. Y varias de ellas no llevan la etiqueta
+escrita: `hr.Employee.employeeId` entra porque el `datasource` de RRHH declara un suelo
+—*todo lo que sale de aquí es al menos `high`*— y la propagación lo lleva hasta el gobierno.
+
+Bórralo y el paquete **deja de compilar con once errores**, uno por propiedad. Rebájalo a
+`severity: warning` y ocurre exactamente lo mismo: un aviso no descarga la obligación de
+gobernar.
+
+Y es lo que separa esto de un cuadro de mando: la cobertura no es un porcentaje que alguien
+mira una vez al mes — **es una condición de compilación.**
+
 ---
 
 ## Estructura

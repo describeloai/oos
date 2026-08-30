@@ -1,0 +1,8 @@
+{
+  "changes": [
+    { "code": "OOS5024", "axis": "POLICY", "lattice": "gdpr.sensitivity",
+      "level": "high", "noLongerRequired": ["authorization"] }
+  ],
+  "verdicts": { "POLICY": "breaking" },
+  "requiredBump": "major"
+}

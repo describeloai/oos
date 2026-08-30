@@ -1,0 +1,8 @@
+{
+  "changes": [
+    { "code": "OOS5023", "axis": "POLICY", "property": "hr.Employee.email",
+      "lost": ["constraint"] }
+  ],
+  "verdicts": { "POLICY": "breaking" },
+  "requiredBump": "major"
+}

@@ -1,0 +1,32 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata:
+  name: gdpr-minimization
+  namespace: eu
+  description: >
+    Las reglas del equipo de cumplimiento sobre lo que el RGPD clasifica.
+
+    Vive en su propio documento, con su propio `owner`, porque quien responde
+    del cumplimiento tiene que poder restringir el modelo SIN poder editarlo.
+    Con reglas colgando de cada propiedad eso es estructuralmente imposible:
+    serían el mismo fichero, el mismo CODEOWNERS y el mismo permiso de
+    escritura.
+
+    Y apunta por CLASIFICACIÓN, no por nombre: una propiedad que alguien
+    clasifique `high` mañana queda gobernada el mismo día, sin que nadie toque
+    este fichero. Es la diferencia entre una regla que se pudre y una que no.
+spec:
+  owner: team:compliance
+
+  targets:
+    - atLeast: { gdpr.sensitivity: high }
+
+  assertions:
+    - id: sin-nulos
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      businessImpact: >
+        Un dato personal ausente no se puede rectificar ni borrar a petición
+        del interesado: el derecho existe y no hay sobre qué ejercerlo.

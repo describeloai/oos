@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha1
+apiVersion: oos.dev/v1alpha3
 kind: Lattice
 metadata:
   name: sensitivity
@@ -24,6 +24,14 @@ spec:
   #   none ⊑ low ⊑ medium ⊑ high ⊑ critical
   levels: [none, low, medium, high, critical]
   join: max
+
+  # v1alpha3. La exigencia viaja CON la clasificación: quien importa este
+  # retículo queda sujeto a esto sin tener que enterarse. Y nombra CLASES, no
+  # solo un nivel — una comprobación de nulos no descarga lo que el RGPD pide
+  # como política.
+  requiresGovernance:
+    high:     [constraint]
+    critical: [constraint, authorization]
 
   # `bottom` y `top` NO se declaran: son levels[0] y levels[-1]. P2.
 
