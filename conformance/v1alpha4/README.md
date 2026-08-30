@@ -51,8 +51,8 @@ herencia** en la propagación que ya estaba, al lado de la entidad y del `dataso
 
 ## Lo que estos casos encontraron
 
-Los tres defectos siguientes **no se ven leyendo la especificación**. Aparecieron al
-escribirlos, que es el método:
+Los cuatro defectos siguientes **no se ven leyendo la especificación**. Aparecieron al
+escribir los casos y al medir una decisión abierta en vez de razonarla, que es el método:
 
 | Qué decía la spec | Qué pasó | Dónde está escrito |
 |---|---|---|
