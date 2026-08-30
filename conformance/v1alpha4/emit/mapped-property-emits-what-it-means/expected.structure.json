@@ -1,0 +1,17 @@
+{
+  "description": "El contrato emitido para una propiedad que solo declara `is` DEBE llevar lo que hereda. No se afirma el texto completo: se afirma que la informacion esta.",
+  "mustContain": [
+    { "contains": ["\"x-oos-is\": \"acme.personalEmail\""],
+      "reason": "el concepto viaja, y es lo que permite deshacer la fusion al importar" },
+    { "contains": ["\"x-oos-type\": \"String\""],
+      "reason": "el tipo lo pone el concepto y el consumidor lo necesita para usar el dato" },
+    { "contains": ["\"gdpr.sensitivity\": \"high\""],
+      "reason": "la clasificacion tambien: sin ella el contrato no dice que el dato es sensible" },
+    { "contains": ["\"work\"", "\"personal\""],
+      "reason": "el `enum` del concepto es parte de lo que el dato ES" }
+  ],
+  "mustNotContain": [
+    { "contains": ["\"name\": \"email\",\n          \"x-oos-type\": \"String\",\n          \"x-oos-type\""],
+      "reason": "guardarrail trivial: no se duplica nada al fundir" }
+  ]
+}

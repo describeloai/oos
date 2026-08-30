@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 24/24.** Certifica el régimen de significado de
+**Borrador — 26/26.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -42,11 +42,13 @@ Cuatro árboles, cuatro marcadores.
 | `diff/concept-removed` | `OOS5007` | lo que otros nombran deja de existir |
 | `diff/shape-requires-more` | `OOS5025` | una forma exige más: quien la implementaba **no compila** |
 | `diff/shape-requires-less-is-safe` | — | y encogerla **no rompe**: la asimetría es un teorema |
+| `emit/mapped-property-emits-what-it-means` | — | lo que hereda **llega al contrato**: tipo, clasificación y `enum` |
+| `emit/mapped-property-roundtrip` | — | y la vuelta es la identidad, que es **por lo que se emite `x-oos-is`** |
 
-Veinticuatro casos y **cuatro códigos nuevos**. La proporción es la señal: veinte de los
-veinticuatro se certifican con maquinaria que ya existía — y de los cuatro cambios que la
-fase 2 mete en el `diff`, **tres reutilizan códigos de v1alpha1 sin tocarlos**, porque un
-concepto declara lo mismo que una propiedad y sus cambios son los mismos cambios.
+Veintiséis casos y **cuatro códigos nuevos**. La proporción es la señal: veintidós de los
+veintiséis se certifican con maquinaria que ya existía — y de los cuatro cambios que la fase
+2 mete en el `diff`, **tres reutilizan códigos de v1alpha1 sin tocarlos**, porque un concepto
+declara lo mismo que una propiedad y sus cambios son los mismos cambios.
 
 Los seis últimos son las dos decisiones que quedaban abiertas, ya construidas: **la exigencia
 categórica de un concepto** y **la subsunción entre formas**. Ninguna de las dos añadió un
@@ -79,6 +81,8 @@ escribir los casos y al medir una decisión abierta en vez de razonarla, que es 
 | `confidence` es un `number` desde v1alpha1 | un decimal sin comillas no tiene forma canónica: `OOS6003` | `type/basic.schema.json` |
 | `derivedFrom` junto a `is` «habrá que comprobar que no lo enturbie» | **borraba la clasificación del concepto en silencio** | `00-scope` §6 · cerrada |
 | el vocabulario de naturalezas de `requiresGovernance` estaba cerrado **y nadie lo validaba** | una naturaleza mal escrita se descartaba: la exigencia no exigía nada | `02-property` §3.3 |
+| `CONJUNTOS` mira la clave inmediata, y en un retículo las naturalezas cuelgan del nivel | el mismo campo, **ordenado en un concepto y sin ordenar en un retículo** | `00-scope` §8.5 |
+| el importador de ODCS sellaba **siempre** `v1alpha1` | la vuelta producía un documento que declara una versión **donde `is` no existe** | `00-scope` §8.5 |
 
 El tercero llevaba **cuatro versiones** en el árbol y era invisible porque **ningún documento
 referenciaba el campo**. Darle su primer usuario lo destapó en el primer caso que lo usó.

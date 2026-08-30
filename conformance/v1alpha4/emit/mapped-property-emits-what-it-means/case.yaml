@@ -1,0 +1,7 @@
+rule: spec/v1alpha4/00-scope.md#8
+level: L0
+expects: structure
+format: odcs
+summary: >
+  Una propiedad que solo declara `is` sale al contrato con el tipo, la clasificacion y
+  el enum que hereda. Antes salia como un nombre y nada mas.

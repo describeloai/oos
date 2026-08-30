@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: acme }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  enum: [work, personal]
+  description: La direccion de correo de una persona fisica.

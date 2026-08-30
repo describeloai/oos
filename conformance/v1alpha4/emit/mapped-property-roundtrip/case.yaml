@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/00-scope.md#8
+level: L0
+expects: roundtrip
+summary: >
+  OOS -> ODCS -> OOS sobre una propiedad mapeada es la identidad. Lo que sale resuelto
+  vuelve a ser una referencia, porque el documento decia `is` y no decia un tipo.

@@ -10,10 +10,11 @@
 | [`02-property`](02-property.md) | el concepto — su superficie normativa |
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Estado: nueve de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
+**Estado: diez de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
 la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
-atraviesan siete de las doce estaciones de la cadena. al emitir pierden lo que heredan. Las
-estaciones 8 y 10 —forma canónica y compatibilidad— **cayeron en las fases 1 y 2**. La definición de listo, la medición y las
+atraviesan siete de las doce estaciones de la cadena. lo único que falta es la **dependencia**: que
+un concepto importado de otro paquete tenga caso. Las estaciones 8, 10 y 11 cayeron en las
+fases 1, 2 y 3. La definición de listo, la medición y las
 cuatro fases están en **§8**.
 
 Los esquemas, la suite y el motor se escribieron **antes** que `02` y `03`, y a propósito: §7
@@ -396,20 +397,23 @@ compila, falla cuando debe y tiene casos en verde.
 | 8 · forma canónica | ✅ | **fase 1, hecha.** Los tres campos entran en `CONJUNTOS`, y el retículo de v1alpha3 con ellos — §8.5 |
 | 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio, y ya **estable** |
 | 10 · compatibilidad | ✅ | **fase 2, hecha.** `Shape` gana conceptos y formas, con **un solo código nuevo** — §8.5 |
-| **11 · emisión** | ❌ | una propiedad con `is` sale a ODCS **sin tipo y sin clasificación** |
+| 11 · emisión | ✅ | **fase 3, hecha.** El emisor resuelve `is` contra los conceptos **del propio bundle** — §8.5 |
 | **12 · dependencia** | ❓ | sin caso: el mecanismo es el de siempre y **no está probado** |
 
 Las tres que fallan se miden, no se opinan:
 
+Y el estado de partida, que ya no es el actual, merece quedar escrito porque era el más
+elocuente de los tres:
+
 ```
 export a ODCS de una propiedad mapeada
-  {"name": "email"}                    ← ni tipo ni clasificación
+  {"name": "email"}                        ← ni tipo ni clasificación
   {"name": "id", "x-oos-type": "String"}   ← declarada localmente
 ```
 
-La tercera merece leerse dos veces: **el contrato que produce una propiedad mapeada es peor
-que el de una escrita a mano.** Usar `is` empeora hoy lo que el consumidor recibe, que es lo
-contrario exacto de lo que la versión promete.
+**El contrato que producía una propiedad mapeada era peor que el de una escrita a mano.**
+Usar `is` empeoraba lo que el consumidor recibía, que es lo contrario exacto de lo que la
+versión promete.
 
 ### 8.3 · Y no es un problema de esta versión
 
@@ -448,7 +452,7 @@ condiciones que ya se cumplen y conviene dejar contadas:
 |---|---|---|
 | **a** | ninguna decisión abierta | ✅ §6 |
 | **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
-| **c** | las doce estaciones, con caso cada una | ❌ **nueve de doce** |
+| **c** | las doce estaciones, con caso cada una | ❌ **diez de doce** |
 
 La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
 que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones
@@ -540,6 +544,30 @@ herencia un piso más abajo —
 > dan exactamente lo mismo.**
 
 Si difieren, `is` no es un mapeo: es una pérdida de información con buena prensa.
+
+**Hecha, y la invariante se cumple al carácter con una excepción que resultó ser lo
+importante:** la mapeada lleva además `x-oos-is`. Esa clave no está para documentar — está
+porque **es lo que permite deshacer la fusión al importar**. Sin ella, la vuelta ODCS → OOS
+traería el tipo heredado escrito a mano, y eso es una copia que miente el día que el concepto
+cambie: el fallo que el guardarraíl de `is` existe para impedir, entrando por la puerta de
+atrás de un formato ajeno.
+
+> **Una traducción que no se puede invertir no es una traducción: es una pérdida.**
+
+Dos decisiones más que la fase obligó a tomar:
+
+- **Se resuelve en el emisor, no en la forma canónica.** La forma canónica conserva *lo
+  escrito* —la identidad de un documento es lo que dice—; la emisión traduce *lo que
+  significa*. Meterlo en `normalize` habría hecho que cambiar un concepto cambiara el digest
+  de quince entidades que nadie tocó.
+- **Se resuelve contra los conceptos del propio bundle**, no del paquete fuente. Eso es lo
+  que hace que **un bundle se baste a sí mismo para emitir**: quien recibe el artefacto
+  firmado produce el contrato sin tener delante un solo fichero YAML.
+
+Y destapó un defecto que no era de esta estación: el importador sellaba **siempre**
+`v1alpha1`, así que la vuelta producía un documento que declara una versión **en la que `is`
+no existe** y que no valida contra su propio esquema. Un importador que emite algo que el
+validador rechazaría es peor que uno que no importa.
 
 ---
 
