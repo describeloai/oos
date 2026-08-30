@@ -84,6 +84,17 @@ en el lock como cualquier otro documento. Un paquete regulatorio puede traer ses
 conceptos con su clasificación ya decidida, y eso convierte *«GDPR como dependencia»* en algo
 que además **clasifica**, no solo exige.
 
+**Y hay una razón estructural, más allá de la reutilización, para que el concepto sea un
+documento y no un campo:** cuando una ontología se **induce** en vez de escribirse, la
+propiedad es **la unidad que aparece primero**. Una columna descubierta es una propiedad
+*buscando una clase* — `kunde_nr` se encuentra antes de saber si pertenece a `Customer` o a
+`Party`, y esa decisión es justamente la que hay que diferir a un humano. Si el único sitio
+donde puede vivir una propiedad es dentro de una entidad, **no hay dónde poner lo hallado
+hasta haber decidido la entidad**.
+
+Es la misma forma que emiten las herramientas que inducen ontologías: el acelerador de AWS
+almacena clases y propiedades por separado, y llama a lo segundo *ontologías inducidas*.
+
 **Normativo.**
 
 - `type` y `labels` los declara el concepto. Es lo único que declara.
@@ -254,8 +265,8 @@ de capa semántica, de BI. **No tiene interfaces ni propiedades compartidas.** A
 es adoptar: es **inventar**, y **P7** exige pagarlo:
 
 > Sin el concepto compartido, la clasificación sobre la que descansa todo v1alpha3 es
-> arbitraria, y `discover` escribe cuatro mil conjeturas independientes en vez de cuatro mil
-> mapeos sobre un vocabulario decidido.
+> arbitraria, y cualquier inductor escribe cuatro mil conjeturas independientes en vez de
+> cuatro mil mapeos sobre un vocabulario decidido.
 
 De **Foundry** se adopta una cosa y se rechaza otra, y conviene separarlas. Se adopta **el
 mapeo** —el concepto posee el significado, la entidad el nombre—, que es la parte que resuelve

@@ -265,6 +265,17 @@ Ordenado por riesgo retirado, no por capas.
 |---|---|---|
 | **0** · Esqueleto | esquemas, `ore validate`, `ore compile` | compila un paquete de ejemplo y emite digest estable |
 | **1** · `source add` · `discover` · `review` | separar secreto de conexión, introspección, FK→relaciones, heurísticas PII con confianza, **y una cola interactiva de decisiones para lo dudoso** | apuntar a un esquema sucio de ~50 tablas y que un arquitecto diga *"está un 80% bien"* tras contestar cinco preguntas |
+
+**El criterio de la fase 1 depende de v1alpha4, y conviene decir por qué.** *«Cinco
+preguntas»* solo es formulable con un vocabulario controlado: sobre conceptos —*«¿esta columna
+es un `personalEmail`?»*— se contestan cinco; sobre etiquetas —*«¿qué clasificación merece
+esta columna?»*— son cinco ensayos. La especificación aporta **el molde**
+([`spec/v1alpha4/`](spec/v1alpha4/00-scope.md)); esta fase es la herramienta que escribe
+contra él, y sin el molde escribiría conjeturas.
+
+Y la frontera al revés también: **cómo** se induce —qué se introspecciona, si hay un modelo
+de por medio, cómo se pregunta— es de ORE y no de OOS. La especificación no dice cómo se
+descubre; dice qué tiene que cumplir lo descubierto.
 | **2** · La gobernanza que no compila | retículos, conductos, propagación por derivación, chequeo de flujo, Cedar embebido | `ore validate` falla con error legible y cadena causal ante PII que alcanza un conducto no autorizado |
 | **3** · Consumo | `ore dev` + servidor MCP + obligaciones en lectura | un agente pregunta por MCP y el PII vuelve enmascarado sin haber hecho nada |
 

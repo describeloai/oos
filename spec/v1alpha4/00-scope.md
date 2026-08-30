@@ -35,10 +35,12 @@ Ese es el hueco, y esta versión existe para cerrarlo.
 
 ## 2. Por qué ahora, y no antes
 
-Porque el siguiente paso del motor lo exige, y sin esto produciría ruido.
+Porque una ontología de un patrimonio real **no se escribe: se induce**, y sin vocabulario
+controlado la inducción produce ruido.
 
-`discover` va a introspeccionar miles de columnas de un esquema real. La pregunta que decide
-si eso sirve para algo es **qué escribe**:
+Un inductor —una herramienta que introspecciona esquemas, o una que lee documentos, con IA o
+sin ella— recorre miles de columnas. La pregunta que decide si eso sirve para algo es **qué
+escribe**:
 
 | | Sin vocabulario | Con vocabulario |
 |---|---|---|
@@ -47,13 +49,19 @@ si eso sirve para algo es **qué escribe**:
 | lo que se le pregunta a un humano | *«¿qué etiqueta merece esta columna?»* | *«¿esta columna es un `personalEmail`?»* |
 | revisable | **no** | **sí** |
 
-El criterio de éxito de la fase 1 de ORE —*«apuntar a un esquema sucio de ~50 tablas y que un
-arquitecto diga que está un 80 % bien tras contestar cinco preguntas»*— **no es formulable sin
-un vocabulario controlado**. Cinco preguntas sobre conceptos se contestan; cinco preguntas
-sobre etiquetas son cinco ensayos.
+Cinco preguntas sobre conceptos se contestan; cinco preguntas sobre etiquetas son cinco
+ensayos. Y la diferencia no es de comodidad — es si el resultado se puede **revisar**.
 
-**Un concepto compartido no es una comodidad de modelado: es el sustrato sin el cual el
-descubrimiento produce ruido en vez de ontología.**
+**Esto no es una conjetura nuestra.** El *Context Ontology Accelerator* de AWS —que induce
+ontologías con IA y las somete a revisión humana— crea ontologías *«desde cero **o ancladas a
+estándares de industria o definidos por el cliente**»*, y llama a lo segundo **grounding**.
+Llegaron al mismo sitio por otro camino: una IA que redacta sin vocabulario produce texto
+libre; anclada a uno, produce mapeos.
+
+Un paquete de `Property` publicado **es ese anclaje**.
+
+> Un concepto compartido no es una comodidad de modelado: es el sustrato sin el cual inducir
+> una ontología produce ruido en lugar de ontología.
 
 ---
 
@@ -128,8 +136,15 @@ Aquí una acción es una `Function`, y que una `Function` pueda apuntar a una in
 pregunta de **v1alpha2** — va como decisión abierta, no se resuelve metiéndola aquí.
 
 **Inferir el concepto de una propiedad.** Adivinar significado desde un nombre basaría la
-solidez en parsear cadenas, y `02-entity` ya decidió que no. `discover` **propone**; el mapeo
-lo confirma un humano en un commit.
+solidez en parsear cadenas, y `02-entity` ya decidió que no. Un inductor **propone** —y para
+eso `basic.schema.json` ya tiene `confidence`, presente solo en `DRAFT`—; el mapeo lo
+confirma un humano en un commit.
+
+**Y esta especificación no dice cómo se induce.** Qué introspecciona una herramienta, si usa
+un modelo y cómo pregunta son **ergonomía del motor**, no del artefacto — la frontera que
+`docs/DESIGN.md` §3 fija: *«OOS define el artefacto; ORE define la ergonomía y la
+ejecución»*. Aquí solo se define **el molde**: qué es un concepto, qué es una forma y qué
+tiene que cumplir lo que se escriba.
 
 **Herencia entre interfaces.** Que `Employee implements Person implements Party` sea
 transitivo es plausible y no está escrito. Sin caso de uso medido, no entra — **P7**.
@@ -160,11 +175,15 @@ las hace iguales. Fusionar registros es `Resolution`, y es otra fila de la misma
 Antes de dar por buena esta versión hay una comprobación que no es una suite y que decide si
 el diseño sirve:
 
-> **`discover` tiene que poder escribir contra este vocabulario.**
+> **Un inductor tiene que poder escribir contra este vocabulario.**
 
 Si al enfrentarlo a un esquema real resulta que un concepto no basta para expresar lo que la
 introspección encuentra —o que el mapeo pide información que nadie tiene en ese momento— el
 vocabulario está mal, y es mejor saberlo antes de escribir los esquemas que después.
+
+La instancia que la ejecutará es `ore discover`, y eso es un detalle de **quién** hace la
+prueba: la propiedad que se comprueba es del molde y la tendría que satisfacer cualquier
+inductor, incluida una importación desde una herramienta ajena.
 
 Es el mismo método que destapó los tres defectos de la ronda anterior: **el diseño se decide
 con contacto, no con analogía.**
