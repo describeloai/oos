@@ -6,7 +6,7 @@
 | | |
 |---|---|
 | `00-scope` | **este documento** — qué entra, qué no, y por qué GraphQL |
-| `01-emision-graphql` | la superficie normativa del mapeo |
+| [`01-emision-graphql`](01-emision-graphql.md) | la superficie normativa del mapeo, y **qué significa que esto esté listo** (§6) |
 
 Esta versión **no añade ningún `kind`**, ningún esquema y ningún código de error. Añade **un
 objetivo de emisión** y los casos que lo certifican. Es la versión de menor radio de impacto
@@ -261,6 +261,17 @@ servicio, y `00-overview` §1 lo pone fuera de alcance junto con el lenguaje de 
 distinción se mantiene: OOS dice qué tiene que cumplir lo servido, no cómo se sirve.
 
 **Suscripciones.** `subscription` exige un modelo de cambio que OOS no tiene.
+
+**Unificar el vocabulario de escalares.** Escribir la tabla de tipos de
+[`01-emision-graphql`](01-emision-graphql.md) §2.2 destapó que **hay dos vocabularios y no
+comparten un solo nombre**: `basic.schema.json` declara siete en minúscula —`string`,
+`integer`, `number`, `boolean`, `date`, `timestamp`, `bytes`— y el motor acepta diez
+capitalizados —`String`, `Integer`, `Decimal`, `Float`, `Boolean`, `Date`, `Time`,
+`DateTime`, `DateTimeTz`, `Opaque`—. **Las 375 propiedades del repositorio usan el segundo**,
+y validan solo porque la última rama del `oneOf` es `qualifiedName` y se las traga como
+«tipo importado». Se destapa aquí porque **esta es la primera versión que necesita una tabla
+de tipos exacta**; arreglarlo es un cambio de v1alpha1, con su caso y su entrada en el
+registro, y no cabe en esta pieza sin dejar de estar acotada.
 
 **El importador — aplazado, no prohibido.** §7 fija su regla: se importa **induciendo**, en
 `DRAFT` y sin etiquetas. Lo que no entra aquí es su implementación y sus casos, porque la
