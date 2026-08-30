@@ -66,12 +66,44 @@ Cada campo de tipo lista **DEBE** declarar en su esquema si es un **conjunto** o
 
 - **Conjunto** — el orden no es semántico. **DEBE** ordenarse ascendentemente por su
   forma canónica serializada. Los duplicados **DEBEN** rechazarse (`OOS2003`).
-  Ejemplos: `classification`, `reviewers`, `action`, `capabilities.datasources`.
+  Ejemplos: `derivedFrom`, `reserved`, `uniqueKeys`, `dependencies`, `targets`.
 - **Secuencia** — el orden es semántico. **DEBE** preservarse.
-  Ejemplos: `enum`, `moved`, obligaciones encadenadas.
+  Ejemplos: `levels`, `primaryKey`, `enum`, `strategies`.
 
 > Sin esta distinción, dos autores que escriben las mismas etiquetas en distinto orden
 > producen digests distintos, y el diff semántico se llena de ruido.
+
+**Los ejemplos de arriba se corrigieron midiendo, y conviene decir qué eran antes:**
+`classification`, `reviewers` y `action` —tres de los cuatro ejemplos de conjunto— **no son
+campos de OOS**, y `moved` figuraba como secuencia siendo un conjunto. Uno de esos ejemplos
+llegó a la implementación de referencia como una entrada de su lista de conjuntos y estuvo
+clasificando un campo inexistente desde v1alpha1.
+
+> **Un ejemplo en prosa acaba en código.** Si es falso, el código hereda la falsedad y nada
+> lo comprueba, porque un ejemplo no tiene esquema ni caso.
+
+### N4.1 · La exigencia, y por qué no se cumplía
+
+La primera frase de este apartado es normativa y **no se cumplía en ninguna parte**: ni los
+esquemas publicados declaran si una lista es conjunto o secuencia, ni la implementación de
+referencia tenía forma de saberlo. Su lista se mantenía a mano, y por eso `G1` se rompió
+**cuatro veces**, una por versión, incluida esta:
+
+| Roto en | Campos | Descubierto |
+|---|---|---|
+| v1alpha2 | `effects`, `endorsements`, `preconditions`, `sources`, `weights` | comparando dos digests |
+| v1alpha3 | `targets`, `assertions`, `masks`, `duties`, `named` | comparando dos digests |
+| v1alpha3 | las naturalezas de `requiresGovernance` | al añadir el mismo campo un nivel más arriba |
+| **v1alpha1** | `derivedFrom`, `reserved`, `uniqueKeys`, `support`, `moved`… | al preguntarse si todo estaba realmente en verde |
+
+Ninguna se descubrió leyendo. Las cuatro, comparando dos digests a mano.
+
+> **Una lista que hay que acordarse de actualizar es una lista de la que nadie se acuerda.**
+
+Una implementación conforme **DEBE** poder demostrar que clasifica todo campo lista de los
+esquemas que dice soportar. Cómo lo demuestre es suyo; que un campo sin clasificar sea
+indistinguible de uno bien clasificado es lo que hay que hacer imposible — es la misma ley
+que `OOS8002`.
 
 **Y la obligación es de cada versión, no solo de esta.** v1alpha2 y v1alpha3 añadieron nueve
 campos de tipo lista —`effects`, `endorsements`, `preconditions`, `sources`, `weights`,

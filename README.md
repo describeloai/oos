@@ -8,7 +8,7 @@
 
 Apache-2.0 · `oos.dev/v1alpha1` · **borrador inestable, no implementar en producción**
 
-<sub>*«Cualquier motor conforme» es una intención de diseño con evidencia —73 casos de
+<sub>*«Cualquier motor conforme» es una intención de diseño con evidencia —74 casos de
 conformidad, 52 códigos, identidad determinista, implementación de referencia sin
 privilegios— y **no una prueba**. Se vuelve un hecho el día que una segunda implementación
 independiente pasa la [suite](conformance/README.md).*</sub>
@@ -236,7 +236,7 @@ documental a CEL comprobada— y la resolución de dependencias. `quality` de OD
 **cuerpo** de una aserción y su **destino de emisión**, y no se escribe colgando de la
 propiedad: eso sería una segunda superficie de autoría sin dueño propio. `Rule` se retiró como documento
 ([`00-scope`](spec/v1alpha2/00-scope.md) §3.1). Su suite vive en un árbol aparte y se cuenta
-por separado, para que **73/73 siga queriendo decir lo mismo** cuando este directorio tenga
+por separado, para que **74/74 siga queriendo decir lo mismo** cuando este directorio tenga
 cincuenta casos.
 
 `Test` y lo temporal siguen aplazados.

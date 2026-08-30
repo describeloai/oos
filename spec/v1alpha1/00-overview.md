@@ -248,7 +248,7 @@ aplica a un paquete.
 | **3** | **arnés de runtime para L1** | **no.** No existe |
 
 La segunda no es teórica y esta versión tiene la prueba: `v1alpha3/02-ruleset` afirmaba que
-N4 ordena las aserciones de un `Ruleset`, la implementación no lo hacía, y **los 73 casos
+N4 ordena las aserciones de un `Ruleset`, la implementación no lo hacía, y **los casos
 siguieron en verde** porque ninguno salía de esa frase. Con la suite extraída del texto, esa
 afirmación habría generado su propio caso y la divergencia habría sido imposible.
 

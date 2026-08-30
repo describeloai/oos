@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  uniqueKeys: [[email], [taxId]]
+  reserved: [alfa, beta]
+  properties:
+    employeeId: { type: String }
+    email: { type: String }
+    taxId: { type: String }
+    baseSalary: { type: Integer }
+    bonus: { type: Integer }
+    total:
+      type: Integer
+      derivedFrom: [hr.Employee.baseSalary, hr.Employee.bonus]

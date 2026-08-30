@@ -423,8 +423,15 @@ Al medir las estaciones 8 y 10 sobre todo lo que existe, sale esto:
 |---|---|---|---|---|
 | **v1alpha1** | `Entity` · `Binding` · `Lattice` · `ConduitPolicy` | ✅ | ✅ | ✅ |
 | **v1alpha2** | `Function` · `Resolution` | ✅ | ❌ | — |
-| **v1alpha3** | `Ruleset` | ✅ | ◐ solo por su **efecto** | — |
-| **v1alpha4** | `Property` · `Interface` | ❌ | ❌ | ❌ |
+| **v1alpha3** | `Ruleset` | ✅ | ◐ solo por su **efecto** | ✅ `quality` de ODCS |
+| **v1alpha4** | `Property` · `Interface` | ✅ | ✅ | ✅ |
+
+**La primera fila costó una segunda medición.** Al preguntarse si todo estaba realmente en
+verde, resultó que la forma canónica de **v1alpha1** también estaba rota: `derivedFrom`,
+`reserved`, `uniqueKeys` y `support` daban dos digests para el mismo contenido. La versión
+cerrada no había llegado al final tampoco — solo había llegado más lejos. Está arreglado, con
+su caso, y la exigencia de `90-canonical-form` §N4 —que era normativa desde el primer día—
+la comprueba ahora un test. La tabla de arriba es el estado **después** de eso.
 
 `Shape` tiene diez campos y ninguno es una `Function`, una `Resolution` ni un `Ruleset`. El
 `Ruleset` llega a la estación 10 **de rebote**, porque lo que cubre entra en `gobernadas`; el
@@ -432,9 +439,10 @@ documento en sí no se compara.
 
 > **v1alpha1 llegó al final. Cada borrador posterior se quedó antes, y ninguno lo escribió.**
 
-Eso es lo que hace que `73/73` signifique algo y que `19/19` signifique menos de lo que
-parece: los 73 certifican una versión que atravesó las doce estaciones; los 19 certifican
-siete de doce. **Los dos números están bien, y no miden lo mismo.**
+Eso es lo que hacía que `73/73` significase más que `19/19`: aquellos certificaban una
+versión que había atravesado casi toda la cadena. **Los dos números estaban bien y no medían
+lo mismo** — y ninguno de los dos decía cuánto de la cadena cubría, que es justo lo que este
+apartado existe para que se pueda decir.
 
 Esta tabla no es una acusación a las versiones anteriores: es la razón de escribir el
 criterio. Sin él, «terminado» quiere decir *«dejé de encontrar cosas que arreglar»*, que es

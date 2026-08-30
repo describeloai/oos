@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/90-canonical-form.md#N4
+level: L0
+expects: same
+summary: >
+  Cuatro campos de v1alpha1 que son conjuntos, escritos en otro orden: `derivedFrom`,
+  `reserved`, `uniqueKeys` y `support`. Daban cuatro digests distintos.
