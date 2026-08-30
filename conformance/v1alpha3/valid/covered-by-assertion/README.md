@@ -4,7 +4,7 @@
 
 ---
 
-`gdpr.sensitivity` declara `requiresGovernance: high`, y `taxId` esta clasificada `high`.
+`gdpr.sensitivity` exige `constraint` desde `high`, y `taxId` esta clasificada `high`.
 La cubre una asercion `library` con `severity: error`.
 
 Es el positivo que da sentido a los dos negativos de `OOS8001`, y hay que leerlo con la

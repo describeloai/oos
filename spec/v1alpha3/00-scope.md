@@ -1,7 +1,9 @@
 # OOS v1alpha3 — alcance
 
-**Estado:** borrador de alcance. Ningún documento de esta carpeta es normativo todavía.
-`spec/v1alpha1/` sigue mandando.
+**Estado:** **alcance cerrado — primera versión.** Los tres documentos están escritos, su
+suite va 15/15, **ninguna decisión del plano queda abierta** y la implementación de
+referencia va al día. Lo que aquí se cierra es el **diseño**, no la ratificación:
+`spec/v1alpha1/` sigue siendo la versión normativa.
 
 | | |
 |---|---|
@@ -58,7 +60,7 @@ Una precisión de naturaleza, porque es el error de encuadre más caro:
 
 Dónde vive cada una no es cuestión de gusto: sale de preguntar **si hay sujeto**
 ([`01-gobierno`](01-gobierno.md) §4). Con sujeto, Cedar. Sin él, un `Ruleset`. Y la
-naturaleza 2 ya está colocada en `Entity.expr` desde v1alpha2.
+naturaleza 2 ya está colocada en `Entity.expression` desde v1alpha2.
 
 ---
 

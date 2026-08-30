@@ -30,5 +30,5 @@ cobertura, una propiedad clasificada que ningun objetivo alcanza rompe la compil
 silencio, no la enumeracion, lo que hacia dano — y el silencio ya no es posible.
 
 Este caso lo demuestra en las dos direcciones a la vez: el objetivo por nombre **selecciona**
-y **cuenta** para la cobertura, porque `gdpr.sensitivity` declara `requiresGovernance: high` y
+y **cuenta** para la cobertura, porque `gdpr.sensitivity` exige `constraint` desde `high` y
 el paquete compila.

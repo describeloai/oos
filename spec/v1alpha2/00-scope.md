@@ -34,7 +34,7 @@ Los tres documentos de v1alpha2 son, los tres, sobre lo contrario:
 |---|---|
 | `Function` | el **mundo** — escribe en una fuente física |
 | `Resolution` | la **identidad** — decide que dos registros son uno |
-| `Entity.expr` | el **contenido** — deriva hechos que no están en ninguna tabla (§3.1) |
+| `Entity.expression` | el **contenido** — deriva hechos que no están en ninguna tabla (§3.1) |
 
 > **v1alpha1 gobierna lo que se puede saber. v1alpha2 gobierna lo que se puede causar.**
 
@@ -250,7 +250,7 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
    falta escribir cómo se verifica una atestación al compilar, sin reloj y sin red.
 2. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
    cada una es una lectura sujeta a la regla de flujo. Ahora incluye también las que
-   `Entity.expr` necesite (§3.1).
+   `Entity.expression` necesite (§3.1).
 3. ~~**`maxDepth` en Cedar**~~ — **cerrada** en v1alpha3: no se admite implícitamente, y
    quien necesite profundidad acotada la materializa como propiedad
    ([`v1alpha3/00-scope`](../v1alpha3/00-scope.md) §6).

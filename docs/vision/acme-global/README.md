@@ -14,7 +14,7 @@
 |---|---|
 | `Entity`, `Binding`, `Package`, `Lattice`, `ConduitPolicy`, `OntologyConfig` | **v1alpha1.** Ver `examples/acme-retail` |
 | `Function`, `Resolution` | **v1alpha2**, con otra forma. Escritos en [`spec/v1alpha2/`](../../../spec/v1alpha2/); lo de aquí es anterior y no valida |
-| `Policy`, `Relation`, `RelationSet`, `RuleSet`, `TestSuite` | **No existen.** Las políticas son Cedar; `RuleSet` se **retiró** (`constraint` es `quality` de ODCS, `inference` es `Entity.expr`); `Test` sigue aplazado |
+| `Policy`, `Relation`, `RelationSet`, `RuleSet`, `TestSuite` | **No existen.** Las políticas son Cedar; `RuleSet` se **retiró** (`constraint` es `quality` de ODCS, `inference` es `Entity.expression`, promovida); `Test` sigue aplazado |
 | `spec.identity`, `spec.temporality`, `spec.governedBy`, `spec.complianceFrameworks`, `spec.entities`, `metadata.status` | Vocabulario **pre-especificación**, anterior a que los tres perfiles se fijaran |
 
 Cada fila de la segunda categoría es material para el **P7**: si alguna de esas
@@ -168,7 +168,8 @@ un despliegue que un CISO aprueba.
 
 > **`kind: RuleSet` no existe, y `Rule` tampoco llegó a existir.** v1alpha2 lo retiró como
 > documento: una restricción de calidad es `quality` de ODCS y una inferencia es
-> `Entity.expr` ([`spec/v1alpha2/00-scope.md`](../../../spec/v1alpha2/00-scope.md) §3.1).
+> `Entity.expression`, que v1alpha2 **promueve** de prosa documental a CEL comprobada
+> ([`spec/v1alpha2/04-expression.md`](../../../spec/v1alpha2/04-expression.md)).
 > Que *apunten por clasificación* en vez de enumerar es v1alpha3 (§7 del mismo documento).
 
 ```yaml

@@ -1,6 +1,6 @@
 # El régimen de gobierno
 
-**Estado:** borrador. `spec/v1alpha1/` sigue mandando.
+**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
 
 El núcleo de v1alpha3. Todo lo demás de esta versión se deriva de lo que aquí se decide.
 
@@ -107,7 +107,7 @@ cinco naturalezas ([`00-scope`](00-scope.md) §2) se reparten con **una sola pre
 | Naturaleza | ¿Sujeto? | Dónde vive | Estado |
 |---|---|---|---|
 | **1** · restricción | no | `Ruleset` — o la propiedad, si es una sola | §5.1 |
-| **2** · derivación | no | `Entity.expr` | ya colocada · v1alpha2 |
+| **2** · derivación | no | `Entity.expression` | ya colocada · v1alpha2 |
 | **3** · autorización | **sí** | Cedar | ya colocada · v1alpha1 |
 | **4** · obligación | depende | `Ruleset` sin sujeto · anotación de Cedar con él | §5.3 |
 | **5** · transformación | depende | igual que la 4 | §5.2 |
