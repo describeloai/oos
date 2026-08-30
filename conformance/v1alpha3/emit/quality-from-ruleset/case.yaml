@@ -1,0 +1,7 @@
+rule: spec/v1alpha2/04-expression.md#3.4
+level: L0
+expects: structure
+format: odcs
+summary: >
+  Las aserciones de un Ruleset se emiten colgando de la propiedad que gobiernan, que es
+  donde ODCS las espera, y llevan escrito quien las exige.

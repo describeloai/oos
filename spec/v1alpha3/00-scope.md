@@ -7,7 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha3, qué no, y qué queda abierto |
 | [`schemas/v1alpha3/`](../../schemas/v1alpha3/) | `ruleset` y `lattice` — el segundo cierra además un hueco de v1alpha2 |
-| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 10 casos, árbol y marcador propios |
+| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 11 casos, árbol y marcador propios |
 | [`01-gobierno`](01-gobierno.md) | el núcleo — el régimen de gobierno, del que se deriva todo lo demás |
 | [`02-ruleset`](02-ruleset.md) | el documento — el objetivo, las aserciones, las máscaras y los deberes |
 
@@ -173,17 +173,17 @@ ocupa para la entidad ([`01-gobierno`](01-gobierno.md) §9).
 2. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
    puede comprobar sin reimplementar el evaluador de Cedar** — que es justo lo que P6 dice
    que no hagamos.
-3. **La proyección de las aserciones a ODCS.** El cuerpo se emite colgando de la propiedad,
-   que es donde ODCS lo espera y donde Soda, Great Expectations y dbt saben leerlo, y **no
-   está construida**: el emisor trabaja sobre la forma canónica y proyectarlo exige atravesar
-   la selección de cada `Ruleset`
-   ([`v1alpha2/04-expression`](../v1alpha2/04-expression.md) §3.4).
-4. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
+3. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
    retículos y cada uno declara su `requiresGovernance`, la interacción no está escrita.
-5. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
+4. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
    ([`02-ruleset`](02-ruleset.md) §9).
 
 ### Cerradas
+
+**La proyección de las aserciones a ODCS** — construida. Salen colgando de la propiedad, que
+es donde ODCS las espera, y con `x-oos-ruleset` diciendo **quién las exige**. La selección no
+se recomputa al emitir: la da la misma fase que decide `OOS8001`, porque dos selecciones
+serían dos semánticas ([`v1alpha2/04-expression`](../v1alpha2/04-expression.md) §3.4).
 
 **¿Una regla inline descarga una exigencia importada?** — **por construcción ya no hay reglas
 inline.** `quality` se retiró como superficie de autoría

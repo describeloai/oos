@@ -165,12 +165,28 @@ OOS es un artefacto de gobierno, y estaba eligiendo la ergonomía del otro.
 contrato ODCS emitido desde un paquete OOS lleva sus aserciones colgando de la propiedad,
 que es donde ODCS las espera y donde Soda, Great Expectations y dbt saben leerlas.
 
-**Esa proyección no está construida.** Se dice aquí para que no se deduzca de que la
-especificación la describe: el emisor de ODCS trabaja hoy sobre la forma canónica, y
-proyectar las aserciones exige atravesar la selección de cada `Ruleset`. Queda anotado, no
-improvisado — y hasta entonces `ore export --format odcs` emite un contrato **sin** sección
-de calidad, que es menos de lo que podría y no es falso.
+```json
+{ "name": "taxId",
+  "quality": [
+    { "id": "sin-nulos", "metric": "nullValues", "mustBe": 0,
+      "x-oos-ruleset": "eu.nif" } ] }
+```
 
-Simétricamente, importar un contrato ODCS con `quality` inline **levantará** un `Ruleset` con
-objetivos por nombre, de modo que la ida y vuelta siga siendo la identidad que exige
-`emit/roundtrip-odcs-unknown-sections`.
+Dos decisiones de esa proyección, y las dos importan más que la mecánica:
+
+**La selección no se recomputa al emitir: la da la misma fase que decide `OOS8001`.** Dos
+selecciones serían dos semánticas, y la que gobierna al compilar tiene que ser exactamente la
+que se emite. Lo único que la emisión aporta es el reparto — una aserción a cada propiedad que
+su regla gobierna.
+
+**`x-oos-ruleset` viaja con cada aserción**, y es lo que hace auditable el contrato: dice
+**quién exige** la regla. Un contrato que enumera obligaciones sin decir de dónde vienen no se
+puede revisar; hay que creérselo. Es la misma razón por la que un `Ruleset` tiene `owner`.
+
+Un contrato importado no trae `Ruleset`, así que la ida y vuelta no proyecta nada: **no puede
+inventar una obligación que nadie declaró**, y por eso la identidad que exige
+`emit/roundtrip-odcs-unknown-sections` sigue en pie.
+
+Queda la dirección contraria: importar un contrato ODCS con `quality` inline **levantando** un
+`Ruleset` con objetivos por nombre. Hoy esa sección entra por el paso a través y sale intacta,
+que conserva la fidelidad y no la convierte en gobierno.

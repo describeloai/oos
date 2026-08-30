@@ -1,0 +1,8 @@
+{
+  "contains": [
+    "\"quality\"",
+    "\"id\": \"sin-nulos\"",
+    "\"metric\": \"nullValues\"",
+    "\"x-oos-ruleset\": \"eu.nif\""
+  ]
+}
