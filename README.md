@@ -254,7 +254,8 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 | [`01-significado`](spec/v1alpha4/01-significado.md) · el régimen: el concepto, el mapeo, la forma | ✅ |
 | [`02-property`](spec/v1alpha4/02-property.md) · el concepto: qué cabe en él y qué hereda quien lo referencia | ✅ |
 | [`03-interface`](spec/v1alpha4/03-interface.md) · la forma: qué es satisfacerla y qué alcanza una regla | ✅ |
-| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **12/12** |
+| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **19/19** |
+| **listo para v1** | ⬜ **7 de 12 estaciones** — [`00-scope`](spec/v1alpha4/00-scope.md) §8 |
 
 **v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
 debajo**. Toda la maquinaria de v1alpha1 y v1alpha3 opera sobre etiquetas y nada comprobaba
@@ -268,6 +269,15 @@ propósito: el alcance exige enfrentar el vocabulario a algo que lo use antes de
 Encontró tres defectos, uno de ellos **con cuatro versiones de antigüedad**
 ([`00-scope`](spec/v1alpha4/00-scope.md) §7.1). Los dos documentos se redactaron después, con
 la implementación delante.
+
+**Y 19/19 no quiere decir terminado.** Un `kind` atraviesa doce estaciones —despacho, forma,
+referencias, tipos, flujo, gobierno, significado, forma canónica, sellado, compatibilidad,
+emisión y dependencia— y `Property` e `Interface` pasan siete: no entran en la forma canónica
+—luego su digest depende del orden en que se escribieron—, `diff` llama *parche* a rebajar la
+clasificación de un concepto, y una propiedad con `is` se emite **sin tipo y sin
+clasificación**. El criterio de «listo» **nunca había estado escrito** —por eso cada borrador
+terminó en una estación distinta sin decirlo— y ahora lo está, con las cuatro fases que
+faltan: [`00-scope`](spec/v1alpha4/00-scope.md) §8.
 
 Y **no queda ninguna decisión abierta**. Las tres últimas se cerraron con teoría delante y
 por el mismo criterio —*preguntar de qué clase de objeto se está hablando*—: una `Function`
