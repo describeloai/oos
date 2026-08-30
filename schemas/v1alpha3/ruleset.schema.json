@@ -180,7 +180,7 @@
       "properties": {
 
         "owner": {
-          "description": "Y es independiente del dueño de los paquetes a los que apunta. Ahí está la razón de que esto sea un documento y no un bloque dentro de Entity: en un entorno regulado el responsable de cumplimiento tiene que poder RESTRINGIR la ontología sin poder EDITARLA, y con reglas locales eso es estructuralmente imposible porque son el mismo fichero, el mismo CODEOWNERS y el mismo permiso de escritura.\n\nUn Ruleset sin dueño es OOS1005 y no un código propio: es una clave obligatoria y el esquema ya lo resuelve. Un código semántico para algo estructural es peso muerto —la lección de OOS7010.",
+          "description": "Y es independiente del dueño de los paquetes a los que apunta. Ahí está la razón de que esto sea un documento y no un bloque dentro de Entity: en un entorno regulado el responsable de cumplimiento tiene que poder RESTRINGIR la ontología sin poder EDITARLA, y con reglas locales eso es estructuralmente imposible porque son el mismo fichero, el mismo CODEOWNERS y el mismo permiso de escritura.\n\nUn Ruleset sin dueño es OOS1004 —forma— y no un código propio: es una clave obligatoria y el esquema ya lo resuelve. Un código semántico para algo estructural es peso muerto —la lección de OOS7010.",
           "type": "string",
           "minLength": 1,
           "maxLength": 256

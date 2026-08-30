@@ -240,7 +240,8 @@ hueco que [`99-errors`](../v1alpha1/99-errors.md) registró para v1alpha2 y v1al
 - `to` **NO DEBE** declararse sobre `redact`: redactar hace desaparecer el valor, luego su
   salida es siempre el ínfimo del retículo. **Un campo derivable no es declarable** —P2, y
   la cuarta vez que este proyecto quita algo por la misma razón. **Y es estructural**: cabe
-  entero en el esquema, así que es `OOS1005` y no `OOS8003`. Escribir el esquema dejó a
+  entero en el esquema, así que es `OOS1004` —forma— y no `OOS8003`. Escribir el esquema
+  dejó a
   `OOS8003` con una sola causa, igual que dejó a `OOS7010` sin ninguna.
 - La comprobación es **local al documento**: compara dos niveles declarados. No hace falta
   recorrer las propiedades seleccionadas, porque ninguna puede estar por debajo del `atLeast`
@@ -370,11 +371,20 @@ dirección:
 | `OOS8006` | dos causas | **una** — `requiresGovernance` en un eje `integrity` también cabe |
 | `OOS8004` | un código | **retirado** — es `OOS2001`, reservado desde v1alpha1 (§5) |
 
-Y los que **no** hacen falta, que es igual de informativo: un retículo o un nivel inexistentes
-en un objetivo son `OOS4003`; una función que no alcanza su destino es `OOS7001`; un
-`Ruleset` sin `owner` es `OOS1005`. **Este documento añade cinco códigos y reutiliza cuatro
-familias** —`OOS1005`, `OOS2001`, `OOS4003` y `OOS7001`—, y esa proporción es la señal de que
-la partición de [`01-gobierno`](01-gobierno.md) §4 estaba bien hecha.
+Y los que **no** hacen falta, que es igual de informativo:
+
+| Condición | Código | De dónde sale |
+|---|---|---|
+| `Ruleset` sin `owner`, sin `targets`, o sin ninguna regla | `OOS1004` | forma |
+| `to` declarado sobre un `redact` | `OOS1004` | forma |
+| retículo o nivel inexistentes en un objetivo | `OOS4003` | v1alpha1 |
+| desclasificador fuera del conjunto cerrado | `OOS4006` | v1alpha1 |
+| deber que no resuelve a una `Function` | `OOS2001` | reservado en v1alpha1 |
+| la función de un deber no alcanza su destino | `OOS7001` | v1alpha2, sin tocar nada |
+
+**Cinco códigos nuevos y seis condiciones resueltas por cuatro familias que ya existían**, y
+esa proporción es la señal de que la partición de [`01-gobierno`](01-gobierno.md) §4 estaba
+bien hecha: casi nada hubo que inventarlo.
 
 ---
 

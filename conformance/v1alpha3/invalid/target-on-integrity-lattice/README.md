@@ -19,5 +19,5 @@ inventar vocabulario para no pensar.
 Hasta entonces, error explicito en vez de comportamiento sin definir.
 
 La otra causa que este codigo tuvo en el borrador —`requiresGovernance` en un reticulo de eje
-`integrity`— **es estructural**: cabe en el esquema del reticulo, y por tanto es `OOS1005`.
+`integrity`— **es estructural**: cabe en el esquema del reticulo.
 `OOS8006` se queda con la que cruza dos documentos, que es la que ningun esquema puede ver.

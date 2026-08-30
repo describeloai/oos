@@ -129,8 +129,8 @@ Quedan el esquema JSON y los casos de conformidad.
 
 ### 4.3 · La familia `OOS8xxx`
 
-**Cinco códigos, y cuatro familias reutilizadas** —`OOS1005`, `OOS2001`, `OOS4003` y
-`OOS7001`—. El detalle está en [`02-ruleset`](02-ruleset.md) §8. `OOS8001`, la cobertura, es
+**Cinco códigos nuevos, y seis condiciones más resueltas por cuatro familias que ya
+existían** —`OOS1004`, `OOS2001`, `OOS4003`, `OOS4006` y `OOS7001`—. El detalle está en [`02-ruleset`](02-ruleset.md) §8. `OOS8001`, la cobertura, es
 el `OOS4001` de este plano: el defecto **no está escrito en ninguna parte**, porque es la
 ausencia de una línea que nadie escribió.
 

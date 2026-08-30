@@ -338,8 +338,8 @@ mismo permiso de escritura.
 - Un `Ruleset` es un documento con identidad, digest y versión como cualquier otro: puede
   publicarse, firmarse y depender de él. La firma es in-toto/Sigstore, ya adoptado.
 
-No hay código para *«paquete sin dueño»*: es una clave obligatoria y por tanto un fallo
-estructural, `OOS1005`. Un código semántico para algo que el esquema resuelve es peso muerto
+No hay código para *«paquete sin dueño»*: es una clave obligatoria y por tanto un fallo de
+forma, `OOS1004`. Un código semántico para algo que el esquema resuelve es peso muerto
 —lección de `OOS7010`, y esta vez antes de escribirlo.
 
 ---
@@ -359,9 +359,11 @@ defecto **no está escrito en ninguna parte** — es la ausencia de una línea q
 escribió. Los otros cuatro son comprobaciones locales.
 
 Y los que **no** hacen falta, que es igual de informativo: un objetivo que referencia un
-retículo inexistente es `OOS4003`; una función que no alcanza su destino es `OOS7001`; un
-`Ruleset` sin dueño es `OOS1005`. **Este plano añade cinco códigos y reutiliza tres
-familias**, que es lo que se espera cuando la partición de §4 es la correcta.
+retículo inexistente es `OOS4003`; un desclasificador fuera del conjunto cerrado, `OOS4006`;
+una función que no alcanza su destino, `OOS7001`; un `Ruleset` sin dueño, `OOS1004`. **Cinco
+códigos nuevos y cuatro familias que ya existían** —el detalle en
+[`02-ruleset`](02-ruleset.md) §8—, que es lo que se espera cuando la partición de §4 es la
+correcta.
 
 **Y se movió al escribir [`02-ruleset`](02-ruleset.md)**, exactamente como estaba previsto:
 `OOS8006` no estaba aquí. Ya había pasado dos veces —`OOS7008` apareció al escribir

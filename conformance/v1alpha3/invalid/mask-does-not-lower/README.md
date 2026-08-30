@@ -17,5 +17,5 @@ otro lado, y por tanto nadie puede decir si lo que sale puede ir a donde va.
 
 La otra causa que este codigo tuvo en el borrador —declarar `to` sobre un `redact`— **ya no
 es suya**: redactar hace desaparecer el valor, luego su salida es siempre el infimo del
-reticulo, y al escribir el esquema quedo claro que eso es estructural. Es `OOS1005`, y es la
+reticulo, y al escribir el esquema quedo claro que eso es estructural. Es `OOS1004`, y es la
 misma leccion de `OOS7010`.
