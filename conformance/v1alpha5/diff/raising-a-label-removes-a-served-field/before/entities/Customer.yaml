@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Customer, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    customerId: { type: String }
+    country:    { type: String, labels: { gdpr.sensitivity: none } }
+    email:      { type: String, labels: { gdpr.sensitivity: low } }

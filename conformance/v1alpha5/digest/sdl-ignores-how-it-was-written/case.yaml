@@ -1,0 +1,8 @@
+rule: spec/v1alpha5/01-emision-graphql.md#6
+level: L0
+expects: same
+format: graphql
+summary: >
+  Dos escrituras del mismo paquete emiten el MISMO SDL, byte a byte. Es G1 sobre
+  la emision: el contrato es funcion de lo que el paquete dice, no de como se
+  escribio.

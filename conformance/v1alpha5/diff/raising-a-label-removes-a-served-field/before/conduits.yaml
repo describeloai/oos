@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata: { name: default }
+spec:
+  conduits:
+    contextSurface:
+      gdpr.sensitivity: medium
+      oos.maturity: REVIEWED

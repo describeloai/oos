@@ -1,0 +1,7 @@
+rule: spec/v1alpha5/01-emision-graphql.md#6
+level: L0
+expects: OOS5009
+summary: >
+  Elevar la etiqueta de una propiedad servida la saca del contrato de GraphQL. Es
+  una ruptura de CONSUMER y la clasifica un codigo que ya existia: peldano 4 sin
+  anadir nada al registro.

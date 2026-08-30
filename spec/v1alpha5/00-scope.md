@@ -273,6 +273,15 @@ y validan solo porque la última rama del `oneOf` es `qualifiedName` y se las tr
 de tipos exacta**; arreglarlo es un cambio de v1alpha1, con su caso y su entrada en el
 registro, y no cabe en esta pieza sin dejar de estar acotada.
 
+**Reclasificar «endurecer un conducto».**
+[`91-versioning` §5.4](../v1alpha1/91-versioning.md) lo lista entre los cambios
+**compatibles**, y desde que `contextSurface` tiene consumidor **saca campos del contrato**,
+que es ruptura de `CONSUMER`. Lo era cuando se escribió: endurecer un conducto solo
+restringía materialización, exportación y log. El síntoma es idéntico al de elevar una
+etiqueta —`OOS5009`—, y el registro emite *un código por síntoma, no por causa*, así que los
+dos caminos deberían compartir veredicto. **No falta un código: sobra una fila donde está.**
+Es de v1alpha1.
+
 **Fijar el modelo de fichero.** Escribir
 [`orphan-relation-is-pruned`](../../conformance/v1alpha5/emit/orphan-relation-is-pruned) con
 dos `Binding` separados por `---` destapó que **un fichero con varios documentos YAML pierde

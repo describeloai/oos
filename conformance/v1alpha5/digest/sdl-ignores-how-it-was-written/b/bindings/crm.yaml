@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: crm, namespace: hr }
+spec:
+  targetEntity: hr.Customer
+  datasourceRef: hr_db
+  source: "public.tb_customer"
+  properties:
+    customerId: "cust_id"
+    externalId: "ext_id"
+    country:    "country"
+    email:      "email"

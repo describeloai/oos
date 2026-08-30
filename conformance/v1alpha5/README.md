@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha5
 
-**Borrador — 6 casos.** Certifica la emisión a GraphQL de
+**Borrador — 8 casos.** Certifica la emisión a GraphQL de
 [`spec/v1alpha5/`](../../spec/v1alpha5/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -29,6 +29,8 @@ es viajar por este conducto.
 | `emit/nothing-survives-the-ceiling` | si no queda un tipo, no hay esquema que emitir | — |
 | `emit/entity-without-binding-fails` | sin `Binding` no hay resolver, y un campo sin resolver es una promesa vacía | — |
 | `emit/partial-key-fails` | **media clave no es una clave**: un `@key` incompleto es una identidad falsa | — |
+| `digest/sdl-ignores-how-it-was-written` | dos escrituras del mismo paquete emiten el **mismo SDL** | **3 · es identificable** |
+| `diff/raising-a-label-removes-a-served-field` | sacar un campo del contrato se clasifica **sin un código nuevo** | **4 · es versionable** |
 
 ## Los dos que cargan la tesis
 
@@ -42,28 +44,51 @@ desapareció, y no por limpieza: un campo `patient: Diagnosis` revela que existe
 llama *el más delicado y el que nadie discute* — **saber que el paciente X está enlazado con
 la clínica oncológica Y es el diagnóstico.**
 
-## Qué falta para los peldaños 3 y 4
+## Los cuatro peldaños, certificados
 
-Los cuatro peldaños están en
+Los peldaños están en
 [`01-emision-graphql` §6](../../spec/v1alpha5/01-emision-graphql.md#6-listo--cuatro-peldaños).
-Este árbol certifica los dos primeros. Los otros dos necesitan casos de otra forma:
+Los dos últimos necesitaban casos de otra forma, y por eso viven fuera de `emit/`:
 
-- **3 · es identificable** — un caso `digest/`: el mismo bundle emite el mismo SDL byte a
-  byte. Es `G1` sobre la emisión, y se afirma comparando dos ejecuciones, no una estructura.
-- **4 · es versionable** — un caso `diff/`: retirar una propiedad servida se clasifica como
-  ruptura de `CONSUMER` **sin añadir un código**. Si hiciera falta uno nuevo, el defecto
-  estaría en el mapeo, no en el registro.
+**`digest/sdl-ignores-how-it-was-written`** compara **dos escrituras**, no dos ejecuciones.
+Ejecutar dos veces sobre el mismo fichero solo descarta un mapa sin orden o un reloj; lo que
+rompe `G1` de verdad es que **dos autores** describan la misma ontología y obtengan contratos
+distintos. Los dos árboles ya dan el mismo digest de paquete —`sha256:80541eff…`—, así que la
+forma canónica normaliza las dos diferencias y el caso está bien fundado: lo que exige es que
+**la emisión pase por ella**.
+
+**`raising-a-label-removes-a-served-field`** certifica una **ausencia**: que no hace falta un
+código nuevo. Medido contra el motor:
+
+```
+OOS5009 · CONSUMER · hr.Customer.email · gdpr.sensitivity:low -> high
+veredictos: CONSUMER breaking · POLICY compatible · bump major
+```
+
+Si emitir a GraphQL hubiera necesitado su propia familia, querría decir que la emisión
+introdujo un eje de cambio que el artefacto no tenía. Que reutilice el registro entero es la
+prueba de que el SDL es una **proyección** del bundle y no una superficie con vida propia.
 
 ## Lo que estos casos encontraron al escribirse
 
-Dos cosas, ninguna de esta versión, las dos anotadas en
+Tres cosas, ninguna de esta versión, las tres anotadas en
 [`00-scope` §8](../../spec/v1alpha5/00-scope.md):
 
 1. **El vocabulario de escalares está duplicado y divergente** — el esquema declara siete
    nombres en minúscula que no usa ni un documento del repositorio; el motor acepta diez
    capitalizados; las 375 propiedades existentes validan por la puerta de escape de
    `qualifiedName`.
-2. **Un fichero con varios documentos YAML pierde todo menos el primero, en silencio.** Se
+2. **Una fila de la tabla de compatibilidad quedó obsoleta.** Hay dos caminos para sacar un
+   campo del contrato y producen **el mismo síntoma**: elevar la etiqueta de la propiedad
+   —`OOS5009`, ruptura de `CONSUMER`— y **endurecer el techo del conducto**, que
+   [`91-versioning` §5.4](../../spec/v1alpha1/91-versioning.md) lista literalmente entre los
+   cambios **compatibles**. Y lo era: hasta esta versión, endurecer un conducto solo
+   restringía materialización, exportación y log — sin consumidor al otro lado.
+   `contextSurface` era el único conducto sin consumidor, **y la tabla se escribió cuando eso
+   era cierto**. Por el criterio del propio registro —*un código por síntoma, no por causa*—
+   los dos deberían compartir veredicto. No es un código que falte: **es una fila mal
+   clasificada**.
+3. **Un fichero con varios documentos YAML pierde todo menos el primero, en silencio.** Se
    descubrió al escribir `orphan-relation-is-pruned` con dos `Binding` separados por `---`:
    el segundo no existía para el compilador, y `ore validate` decía *ok · sin errores* aunque
    apuntara a un `datasourceRef` inexistente. La especificación **no dice nada** sobre varios
