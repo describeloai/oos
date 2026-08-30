@@ -192,12 +192,23 @@ las hace iguales. Fusionar registros es `Resolution`, y es otra fila de la misma
 4. **Qué pasa con `expression` y `derivedFrom`** cuando la propiedad mapea a un concepto:
    siguen siendo de la propiedad concreta, pero `OOS4015` compara lecturas contra
    `derivedFrom` y habrá que comprobar que el mapeo no lo enturbie.
-5. **Acuñar frente a mapear.** Un inductor puede mapear a conceptos existentes o **proponer
-   conceptos nuevos**, y el segundo modo tiene un modo de fallo propio: si acuñar es barato
-   salen cuatro mil conceptos, uno por columna, **que es igual que no tener vocabulario**. La
-   intuición es que acuñar tiene que costar más que mapear —revisión aparte, dueño explícito—
-   pero el molde todavía no dice cómo se expresa esa diferencia. Es el `severity: warning`
-   de esta versión: una escapatoria gratis vacía el mecanismo.
+
+### Cerradas
+
+**Acuñar frente a mapear** — y se cierra **sacándola de aquí**. Son la misma clase de acto:
+las dos son inferencias, las dos llevan `confidence` y las dos caen bajo `OOS9003`. Lo que
+las separa es la consecuencia, no el mecanismo.
+
+Y la intuición de que acuñar deba «costar más» **no es expresable en el molde**: distinguir
+cuatro mil conceptos legítimos de sesenta mal unificados exigiría reconocer *sameness* no
+declarada, que es indetectable por decisión de v1alpha1. Lo que el molde sí hace es exigir que
+nada acuñado sobreviva a la promoción sin un humano, y que un concepto que nadie usa no
+compile (`OOS9004`).
+
+El resto —sesgar a quien propone hacia mapear, mostrar juntas las columnas candidatas para que
+la unificación se decida una vez— es **ergonomía del inductor**
+([`01-significado`](01-significado.md) §4.2.2), y ponerlo aquí habría sido el error que §2
+existe para evitar.
 
 ---
 

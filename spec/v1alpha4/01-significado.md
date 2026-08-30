@@ -48,7 +48,7 @@ Es la frontera de `docs/DESIGN.md` §3 —*«OOS define el artefacto; ORE define
 la ejecución»*— y aquí importa más que en ninguna versión anterior, porque es la primera vez
 que una parte del vocabulario existe **para que otro la escriba**.
 
-De ahí sale la forma que tienen todas las reglas de este documento, y §3.2.1 es su mejor
+De ahí sale la forma que tienen todas las reglas de este documento, y §4.2.1 es su mejor
 ilustración:
 
 > **El molde no dice lo que una herramienta debe hacer. Dice lo que tiene que ser cierto — y
@@ -125,10 +125,15 @@ almacena clases y propiedades por separado, y llama a lo segundo *ontologías in
 
 **Normativo.**
 
-- `type` y `labels` los declara el concepto. Es lo único que declara.
+- `type` y `labels` son lo que el concepto **declara**.
 - Un `Property` **NO DEBE** declarar `derivedFrom`, `expression` ni `examples`: eso es de la
   propiedad concreta, no del concepto. Un correo personal significa lo mismo se calcule como
   se calcule.
+- Un `Property` **PUEDE** llevar `confidence`, con las mismas dos reglas que un mapeo
+  (§4.2.1): **acuñar un concepto es una inferencia**, y una de las caras.
+- Un `Property` declarado **localmente** al que ninguna propiedad del paquete referencia es
+  una palabra que nadie habla: `OOS9004`. La regla no se aplica a un paquete **sin
+  entidades**, que es el caso degenerado de publicar vocabulario para que otros lo importen.
 
 ### 4.2 · El mapeo
 
@@ -168,7 +173,7 @@ sucio**: no se limpia para gobernar, se mapea.
 > `ore promote` la elimina.»*
 
 Y hasta hoy **ningún documento lo referenciaba**: un `$def` sin usuario, esperando a que
-existiera algo que infiriera. El mapeo es ese algo.
+existiera algo que infiriera. Esta versión trae dos cosas que infieren.
 
 ```yaml
 properties:
@@ -177,9 +182,21 @@ properties:
     confidence: 0.87          # esto lo propuso una máquina
 ```
 
-**El mapeo es el único sitio donde `confidence` significa algo**, y la razón es exacta: es la
-confianza de **una inferencia**, y un mapeo escrito a mano no es una inferencia — es una
-decisión. Nadie declara cuánta confianza tiene en algo que acaba de decidir.
+`confidence` significa algo **allí donde hubo una inferencia**, y un documento escrito a mano
+no la tuvo: es una decisión, y nadie declara cuánta confianza tiene en algo que acaba de
+decidir.
+
+Y hay **dos** inferencias distintas, no una:
+
+| | La inferencia | Su radio |
+|---|---|---|
+| **mapear** | *«esta columna es `personalEmail`»* | una propiedad |
+| **acuñar** | *«estas catorce columnas comparten un concepto; llámalo así»* | **el vocabulario, para siempre** |
+
+Las dos llevan `confidence` y las dos caen bajo la misma regla, así que el mecanismo no las
+distingue — y **no debe**, porque son la misma clase de acto. Lo que las separa es la
+consecuencia: un mapeo equivocado está mal en un sitio; **un concepto equivocado es una
+palabra que otros van a hablar.**
 
 **Normativo.**
 
@@ -212,6 +229,34 @@ con autor y diff, y un digest que cambia**.
 Y la madurez es **efectiva**, no declarada: se hereda como cualquier otra etiqueta —de la
 entidad, del `datasource`— y por eso la comprobación es del compilador y no del esquema.
 Nadie promueve una entidad dejando una propiedad atrás.
+
+### 4.2.2 · Lo que el molde **no** puede hacer con acuñar
+
+La intuición de que *«acuñar tiene que costar más que mapear»* es correcta y **no es
+expresable aquí**. Conviene decir por qué, porque el motivo es el mismo que ya limita §6.1.
+
+El modo de fallo que preocupa es la **inflación**: cuatro mil columnas producen cuatro mil
+conceptos, uno por columna, que es lo mismo que no tener vocabulario. Pero un compilador **no
+puede distinguir** cuatro mil conceptos legítimamente distintos de sesenta mal unificados:
+para verlo tendría que reconocer que quince columnas son la misma cosa, y eso es exactamente
+la *sameness* no declarada que §9 declara indetectable.
+
+> El molde no puede hacer que acuñar sea caro. Solo puede hacer que **nada acuñado sobreviva
+> sin que alguien responda**, y que **un concepto que nadie usa no compile**.
+
+Lo demás —sesgar a quien propone hacia mapear antes que acuñar, mostrar juntas las quince
+columnas para que la unificación se decida una vez y no quince— es **ergonomía del inductor**,
+y por tanto de fuera de esta especificación. Ponerlo aquí sería el error que §2 existe para
+evitar.
+
+Lo que sí deja el molde escrito es de quién es cada cosa, y sale del `namespace` sin añadir
+nada:
+
+> **Mapear es hablar el vocabulario de otro. Acuñar es ampliar el tuyo.**
+
+En un patrimonio gobernado, la mayoría de los conceptos que importan **se importan**. Una
+organización que acuña cuatro mil ha decidido que nada de lo que tiene es estándar — puede
+ser cierto, y es una decisión que alguien firma.
 
 ### 4.3 · La forma
 
@@ -317,6 +362,7 @@ decidible, lo omitido no lo es nunca.**
 | `OOS9001` | una entidad declara implementar una interfaz y no la satisface |
 | `OOS9002` | una propiedad con `is` redeclara lo que hereda —`type` o `labels`— |
 | `OOS9003` | `confidence` en un documento cuya madurez efectiva no es `DRAFT` |
+| `OOS9004` | un concepto declarado localmente al que **nada referencia** |
 
 Y los que **no** hacen falta, que es lo informativo:
 
@@ -328,7 +374,12 @@ Y los que **no** hacen falta, que es lo informativo:
 | tipo fuera del conjunto en un concepto | `OOS3001` | v1alpha1 |
 | `nature` incoherente con su forma | `OOS9001` | **absorbe `OOS2010`** |
 
-**Tres códigos nuevos y uno retirado.** Este registro se moverá al escribir los esquemas y
+`OOS9004` es `OOS8002` un piso más arriba —*un objetivo que no casa con nada*— y por el mismo
+motivo: **una regla que no gobierna nada y un concepto que nadie habla tienen exactamente el
+mismo aspecto que los que funcionan.** No se aplica a un paquete sin entidades, que es como se
+publica un vocabulario.
+
+**Cuatro códigos nuevos y uno retirado.** Este registro se moverá al escribir los esquemas y
 los casos —pasó las tres veces anteriores— y la dirección esperable es que encoja.
 
 `OOS9003` es del compilador y no del esquema por una razón concreta: la madurez es
@@ -377,6 +428,9 @@ alcance como decisión abierta — no se resuelve metiéndola aquí.
 - **Descubrir sameness no declarada.** Dos propiedades que son el mismo concepto y no lo
   dicen son indistinguibles de dos que no lo son. Adivinarlo desde el nombre sería basar la
   solidez en parsear cadenas, y eso está decidido que no.
+- **Impedir la inflación del vocabulario.** §4.2.2. Cuatro mil conceptos correctos y sesenta
+  mal unificados son indistinguibles para un compilador, y hacer que acuñar «cueste» es
+  ergonomía de quien propone, no una propiedad del artefacto.
 - **Que un `confidence` alto signifique que el mapeo es correcto.** El número es una
   afirmación de quien lo escribió, y el compilador no lo interpreta: **no hay umbral**.
   Lo único que hace con él es impedir que sobreviva a la promoción — que es la diferencia
