@@ -1,6 +1,6 @@
 # El régimen de gobierno
 
-**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
+**Estado:** alcance cerrado, primera versión. Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 
 El núcleo de v1alpha3. Todo lo demás de esta versión se deriva de lo que aquí se decide.
 

@@ -184,11 +184,18 @@ ningún privilegio** y ejecuta la suite como un consumidor externo más.
 
 ## Estado
 
+**Las tres versiones son `alpha`**, y eso significa exactamente lo que dice
+[`00-overview` §6](spec/v1alpha1/00-overview.md): pueden romper compatibilidad en cualquier
+publicación, sin garantías. El siguiente peldaño es `v1beta1` —la escalera no se salta— y
+sus tres condiciones, con su estado medido, están en §6.1 del mismo documento.
+
+**Promover no es una decisión: es una comprobación.**
+
 ```
-spec/v1alpha1/     documentos normativos
-spec/v1alpha2/     alcance cerrado — NO normativo todavía
-spec/v1alpha3/     borrador de alcance — la capa de gobierno
-schemas/v1alpha3/  ruleset y lattice — borrador
+spec/v1alpha1/     documentos normativos — y alpha: sin garantías
+spec/v1alpha2/     alcance cerrado — los efectos y la derivación
+spec/v1alpha3/     alcance cerrado — la capa de gobierno
+schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos

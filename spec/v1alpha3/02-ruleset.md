@@ -1,6 +1,6 @@
 # `Ruleset` — la regla que apunta
 
-**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
+**Estado:** alcance cerrado, primera versión. Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 Aplica el régimen de [`01-gobierno`](01-gobierno.md).
 
 ---

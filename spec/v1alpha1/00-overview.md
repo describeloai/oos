@@ -1,6 +1,8 @@
 # Open Ontology Specification — v1alpha1
 
-**Estado:** borrador de trabajo. Inestable. No implementar en producción.
+**Estado:** normativo. Parte de OOS v1alpha1 — y v1alpha1 es **alpha**: puede romper
+compatibilidad en cualquier publicación, sin garantías (§6). Las dos cosas a la vez: es lo
+que gobierna, y no promete nada.
 **Licencia:** Apache-2.0.
 
 ---
@@ -230,7 +232,50 @@ El campo `apiVersion` **DEBE** estar presente en todo documento y **DEBE** usar 
 espacio de nombres DNS inverso `oos.dev/<versión>`.
 
 La política de qué constituye un cambio rompedor **de la especificación** se define en
-[91 · Versionado](91-versioning.md).
+[91 · Versionado](91-versioning.md) §7, y es la misma taxonomía de cuatro ejes que se
+aplica a un paquete.
+
+### 6.1 · Qué exige el peldaño siguiente, y dónde estamos
+
+**Promover no es una decisión: es una comprobación.** El siguiente peldaño es `v1beta1`, no
+`v1` —la escalera no se salta—, y sus tres condiciones ya estaban fijadas en
+[`docs/DESIGN.md`](../../docs/DESIGN.md) §1 antes de que hiciera falta medirlas:
+
+| | Condición | Estado |
+|---|---|---|
+| **1** | compatibilidad de la **propia especificación** | **a medias.** La política existe —§7 de [91](91-versioning.md)— y el **mecanismo no**: `ore diff` compara paquetes, no especificaciones. Hoy se juzga a ojo |
+| **2** | **suite extraída del texto** | **no.** Está escrita a mano, así que la especificación y la suite pueden divergir sin que nada avise |
+| **3** | **arnés de runtime para L1** | **no.** No existe |
+
+La segunda no es teórica y esta versión tiene la prueba: `v1alpha3/02-ruleset` afirmaba que
+N4 ordena las aserciones de un `Ruleset`, la implementación no lo hacía, y **los 73 casos
+siguieron en verde** porque ninguno salía de esa frase. Con la suite extraída del texto, esa
+afirmación habría generado su propio caso y la divergencia habría sido imposible.
+
+### 6.2 · Por qué `v1` no está disponible, y no es prudencia
+
+`v1` promete que **no habrá cambios rompedores dentro de la versión mayor**. Es una promesa
+irrevocable, y se mide contra una sola cosa: **si los defectos siguen apareciendo.**
+
+Siguen. Solo en las dos últimas revisiones aparecieron cuatro en material de v1alpha1:
+
+| | |
+|---|---|
+| `nullable: true` | la ontología de referencia usaba una clave que el perfil no admite — enseñando una gramática que no existe |
+| la descripción de `required` | decía *«si la propiedad admite ausencia de valor»* para un campo que significa lo contrario |
+| `Entity.expr` | nombrado como campo real en ocho sitios, uno de ellos normativo. **Nunca existió** |
+| N4 sin aplicar | nueve campos de lista sin clasificar desde v1alpha1, con lo que reordenar los endosos de una función daba otro digest — **G1 rota** |
+
+El cuarto es el que decide. G1 —*el mismo commit produce el mismo digest*— es una de las dos
+garantías que definen el producto, y estuvo rota sin que nada lo dijera.
+
+> **Se promueve cuando los defectos dejan de aparecer, no cuando se decide que ya está.**
+
+Y hay un quinto que no cuenta como defecto heredado y prueba la condición 2 mejor que
+ninguno: durante esta misma revisión se publicó un esquema con **JSON inválido** y la suite
+entera siguió verde, porque nada comprobaba que los esquemas publicados parseasen. Se añadió
+la comprobación. Lo que no se puede añadir de uno en uno es la clase entera de fallo — para
+eso está la suite extraída del texto.
 
 ---
 

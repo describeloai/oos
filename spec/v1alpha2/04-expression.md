@@ -1,7 +1,6 @@
 # `expression`, promovida
 
-**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión
-normativa.
+**Estado:** alcance cerrado, primera versión. Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 
 v1alpha2 se cerró declarando **dos documentos nuevos y dos campos añadidos a documentos que
 ya existen**. Los documentos se escribieron; de los campos, **uno no debía existir y el otro

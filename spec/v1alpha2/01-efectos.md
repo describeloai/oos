@@ -1,6 +1,6 @@
 # El régimen de efectos
 
-**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
+**Estado:** alcance cerrado, primera versión. Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 
 El núcleo de v1alpha2. Todo lo demás de esta versión —`Function`, `Resolution`, y los dos
 campos que `Entity` gana— se deriva de lo que aquí se decide.

@@ -2,7 +2,7 @@
 
 **Estado:** **alcance cerrado — primera versión.** Los cuatro documentos están escritos y su
 borrador de conformidad va 18/18. Lo que aquí se cierra es el **diseño**, no la ratificación:
-`spec/v1alpha1/` sigue siendo la versión normativa.
+Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 
 | | |
 |---|---|

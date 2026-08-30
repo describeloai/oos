@@ -3,7 +3,7 @@
 **Estado:** **alcance cerrado — primera versión.** Los tres documentos están escritos, su
 suite va 19/19, **ninguna decisión del plano queda abierta** y la implementación de
 referencia va al día. Lo que aquí se cierra es el **diseño**, no la ratificación:
-`spec/v1alpha1/` sigue siendo la versión normativa.
+Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 
 | | |
 |---|---|

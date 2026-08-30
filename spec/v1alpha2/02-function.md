@@ -1,6 +1,6 @@
 # `Function` — la superficie de efecto
 
-**Estado:** alcance cerrado, primera versión. `spec/v1alpha1/` sigue siendo la versión normativa.
+**Estado:** alcance cerrado, primera versión. Gobierna los documentos que declaran su `apiVersion`, y **sigue siendo alpha**: sin garantías de compatibilidad.
 Aplica el régimen de [`01-efectos`](01-efectos.md).
 
 ---
