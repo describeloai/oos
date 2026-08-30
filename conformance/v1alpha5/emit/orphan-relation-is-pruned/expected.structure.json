@@ -1,16 +1,31 @@
 {
   "description": "El techo es `medium`. Diagnosis queda sin campos y no se emite; la arista que apunta a el tampoco.",
   "mustContain": [
-    { "type": "Order", "field": "orderId", "as": "ID!" },
-    { "type": "Order", "field": "patientId", "as": "String",
-      "reason": "una clave opaca sin clasificar no dice a que apunta: el DATO sobrevive" }
+    {
+      "contains": [
+        "type Order",
+        "orderId: ID!"
+      ]
+    },
+    {
+      "contains": [
+        "patientId: String"
+      ],
+      "reason": "una clave opaca sin clasificar no dice a que apunta: el DATO sobrevive"
+    }
   ],
   "mustNotContain": [
-    { "type": "Diagnosis",
-      "reason": "todas sus propiedades exceden el techo; un tipo sin campos no se emite" },
-    { "type": "Order", "field": "patient",
-      "reason": "la ARISTA revelaria que Diagnosis existe y que un pedido se relaciona con uno. Es la fuga por topologia de DESIGN 4.1" },
-    { "type": "Query", "field": "diagnosis",
-      "reason": "un tipo no emitido no aporta raiz" }
+    {
+      "contains": [
+        "Diagnosis"
+      ],
+      "reason": "todas sus propiedades exceden el techo; un tipo sin campos no se emite, y su raiz tampoco"
+    },
+    {
+      "contains": [
+        "patient:"
+      ],
+      "reason": "la ARISTA revelaria que Diagnosis existe y que un pedido se relaciona con uno. Es la fuga por topologia de DESIGN 4.1"
+    }
   ]
 }

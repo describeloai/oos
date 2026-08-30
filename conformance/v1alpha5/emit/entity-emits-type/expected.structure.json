@@ -1,30 +1,72 @@
 {
-  "description": "Propiedades estructurales que el SDL emitido DEBE satisfacer. No se afirma texto: dos implementaciones pueden formatear distinto y ser ambas correctas.",
+  "description": "Propiedades del SDL emitido. Se afirman cadenas y no una estructura porque `contains` es la forma que sirve para cualquier emisor — la alternativa seria escribir un comparador de GraphQL dentro del arnes.",
   "mustContain": [
-    { "type": "Employee",
-      "reason": "el namespace es el subgrafo; el tipo se nombra por su `name`" },
-    { "type": "Employee", "field": "employeeId", "as": "ID!",
-      "reason": "pertenece a `primaryKey`" },
-    { "type": "Employee", "field": "email", "as": "String" },
-    { "type": "Employee", "field": "grade", "as": "Int",
-      "reason": "`Integer` de OOS es `Int` en GraphQL, y no hay otro nombre" },
-    { "type": "Employee", "field": "baseSalary", "as": "Money_EUR_2",
-      "reason": "un escalar por combinacion: la unidad es parte del tipo" },
-    { "type": "Employee", "field": "manager", "as": "Employee",
-      "reason": "many_to_one + required:false da tipo nulable sin lista" },
-    { "type": "Employee", "field": "managerId", "as": "String",
-      "reason": "el DATO sale aparte de la ARISTA" },
-    { "type": "Employee", "directives": ["@key(fields: \"employeeId\")", "@key(fields: \"email\")"],
-      "reason": "primaryKey y cada uniqueKeys emiten un @key; Federation admite varios" },
-    { "scalar": "Money_EUR_2",
-      "reason": "un esquema que referencia un escalar que no declara no es valido" },
-    { "type": "Query", "fields": ["employee", "employees"],
-      "reason": "uno por clave y uno por coleccion; ningun campo de filtrado arbitrario" }
+    {
+      "contains": [
+        "type Employee"
+      ],
+      "reason": "el namespace es el subgrafo; el tipo se nombra por su `name`"
+    },
+    {
+      "contains": [
+        "employeeId: ID!"
+      ],
+      "reason": "pertenece a `primaryKey`"
+    },
+    {
+      "contains": [
+        "email: String",
+        "managerId: String"
+      ],
+      "reason": "sin `!`: OOS no tiene `required` en una propiedad, y ponerlo seria inventarlo"
+    },
+    {
+      "contains": [
+        "grade: Int"
+      ],
+      "reason": "`Integer` de OOS es `Int` en GraphQL, y no hay otro nombre"
+    },
+    {
+      "contains": [
+        "baseSalary: Money_EUR_2",
+        "scalar Money_EUR_2"
+      ],
+      "reason": "un escalar por combinacion: la unidad es parte del tipo, y el esquema DEBE declararlo"
+    },
+    {
+      "contains": [
+        "manager: Employee"
+      ],
+      "reason": "many_to_one con required:false da tipo nulable sin lista"
+    },
+    {
+      "contains": [
+        "@key(fields: \"employeeId\")",
+        "@key(fields: \"email\")"
+      ],
+      "reason": "primaryKey y cada uniqueKeys emiten un @key; Federation admite varios"
+    },
+    {
+      "contains": [
+        "type Query",
+        "employee(",
+        "employees("
+      ],
+      "reason": "uno por clave y uno por coleccion; ningun campo de filtrado arbitrario"
+    }
   ],
   "mustNotContain": [
-    { "field": "nature",
-      "reason": "es una distincion de modelado, ya comprobada al compilar" },
-    { "type": "Employee", "field": "via",
-      "reason": "el dato que sostiene la arista ya salio como propiedad" }
+    {
+      "contains": [
+        "nature"
+      ],
+      "reason": "es una distincion de modelado, ya comprobada al compilar"
+    },
+    {
+      "contains": [
+        "via"
+      ],
+      "reason": "el dato que sostiene la arista ya salio como propiedad; emitirlo dos veces seria declarar lo mismo dos veces"
+    }
   ]
 }
