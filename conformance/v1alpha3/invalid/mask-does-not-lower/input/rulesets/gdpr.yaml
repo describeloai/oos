@@ -6,5 +6,6 @@ spec:
   targets:
     - atLeast: { gdpr.sensitivity: high }
   masks:
-    - declassifier: tokenize
+    - id: m1
+      declassifier: tokenize
       to: { gdpr.sensitivity: high }

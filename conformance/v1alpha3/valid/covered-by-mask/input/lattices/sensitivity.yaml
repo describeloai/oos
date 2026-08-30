@@ -3,4 +3,5 @@ kind: Lattice
 metadata: { name: sensitivity, namespace: gdpr }
 spec:
   levels: [none, low, medium, high, critical]
-  requiresGovernance: high
+  requiresGovernance:
+    high: [transformation]

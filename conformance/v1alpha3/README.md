@@ -31,8 +31,12 @@ directorio tenga cincuenta casos.
 | `invalid/target-on-integrity-lattice` | `OOS8006` | gobierno sobre el eje cuya monotonía corre al revés |
 | `valid/target-by-name` | — | el **caso enumerado**, dentro de un `Ruleset` y con dueño |
 | `emit/quality-from-ruleset` | — | la aserción sale a ODCS colgando de la propiedad, y dice quién la exige |
+| `invalid/wrong-nature-does-not-cover` | `OOS8001` | el **error de categoría**: sobra la regla equivocada |
+| `valid/authorization-covers` | — | una política de Cedar descarga `authorization` |
+| `invalid/two-lattices-require-both` | `OOS8001` | **conjunción**: dos clasificaciones exigen las dos |
+| `invalid/mask-annotation-unresolved` | `OOS2001` | `@oosMask` nombra una máscara que no existe |
 
-**Once casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
+**Quince casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
 función, y `OOS2001` lleva reservado desde v1alpha1 para *«tipos de referencia nuevos»* que
 `Function`, `Resolution` y `Test` iban a introducir. Activar una reserva es mejor que inflar
 una familia.
@@ -54,13 +58,30 @@ pasaría a medir que alguien escribió un fichero**.
 
 Un solo carácter separa los dos.
 
+## Los cuatro que cierran el plano
+
+[`wrong-nature-does-not-cover`](invalid/wrong-nature-does-not-cover/) es el que hay que leer
+segundo, después del par de `OOS8001`. Antes de tipar la cobertura **ese paquete compilaba**:
+había una regla, y la regla contaba. Con la cobertura tipada, el diagnóstico dice lo que pasa
+de verdad — **el fallo no es que falte una regla, es que sobra la equivocada**, y es el error
+de categoría, que es el frecuente.
+
+Los otros tres hacen normativa una decisión cada uno: que una política de Cedar descargue
+`authorization` **leyendo a qué clasificación apunta, sin evaluar nada**; que dos
+clasificaciones se combinen por **conjunción** —porque si bastara una, importar un paquete
+laxo sería la forma de escapar de uno estricto—; y que `@oosMask` **nombre** una máscara en
+vez de declararla, con el código que v1alpha1 reservó para las referencias nuevas.
+
 ## Lo que los casos no pueden probar todavía
 
-`OOS8001` demuestra que **existe** una regla, no que sea **la adecuada**: una política que
-permite todo cubre igual que una que no permite nada. Los casos de aquí cierran los tres
-huecos baratos —lo ilegible, lo que no puede fallar, lo que no puede fallar al compilar— y no
-el caro. Tipar la cobertura por naturaleza está anotado en
-[`02-ruleset`](../../spec/v1alpha3/02-ruleset.md) §9, no improvisado.
+`OOS8001` demuestra que existe una regla **de la clase exigida**. Eso cierra los huecos
+baratos y el frecuente, y **no** el caro: una política que permite todo cubre igual que una
+que no permite nada, y la diferencia no está en el documento sino en lo que la organización
+quería.
+
+No está aplazado — **es indecidible**, y está escrito como límite:
+[`01-gobierno`](../../spec/v1alpha3/01-gobierno.md) §6.2. **El compilador decide la
+cobertura; el endoso registra la adecuación.**
 
 ## Anatomía
 

@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/01-gobierno.md#6.1
+level: L0
+expects: OOS8001
+summary: >
+  Una propiedad etiquetada por dos clasificaciones debe satisfacer las dos. Si bastara una,
+  importar un paquete laxo seria la forma de escapar de uno estricto.

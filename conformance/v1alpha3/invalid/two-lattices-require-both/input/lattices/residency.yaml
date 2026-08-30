@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha3
+kind: Lattice
+metadata: { name: residency, namespace: acme }
+spec:
+  levels: [global, eu_only]
+  requiresGovernance:
+    eu_only: [transformation]

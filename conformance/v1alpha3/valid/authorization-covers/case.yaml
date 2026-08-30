@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/01-gobierno.md#6.1
+level: L0
+expects: accept
+summary: >
+  Una politica de Cedar cuyo ambito alcanza la etiqueta descarga la exigencia de
+  autorizacion. Se lee a que clasificacion apunta, sin evaluar nada.

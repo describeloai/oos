@@ -1,0 +1,10 @@
+{
+  "code": "OOS8001",
+  "property": "hr.Employee.taxId",
+  "requires": [
+    "authorization"
+  ],
+  "has": [
+    "constraint"
+  ]
+}

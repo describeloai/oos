@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/01-gobierno.md#6.1
+level: L0
+expects: OOS8001
+summary: >
+  El reticulo exige una politica y la propiedad solo tiene una regla de calidad. El fallo no
+  es que falte una regla: es que sobra la equivocada.

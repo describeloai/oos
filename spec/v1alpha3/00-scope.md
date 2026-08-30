@@ -7,7 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha3, qué no, y qué queda abierto |
 | [`schemas/v1alpha3/`](../../schemas/v1alpha3/) | `ruleset` y `lattice` — el segundo cierra además un hueco de v1alpha2 |
-| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 11 casos, árbol y marcador propios |
+| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 15 casos, árbol y marcador propios |
 | [`01-gobierno`](01-gobierno.md) | el núcleo — el régimen de gobierno, del que se deriva todo lo demás |
 | [`02-ruleset`](02-ruleset.md) | el documento — el objetivo, las aserciones, las máscaras y los deberes |
 
@@ -177,21 +177,13 @@ contestó **dejando de tratarla como una pregunta**.
 Lo que sigue abierto **no es del plano de gobierno**: la exigibilidad de un deber necesita el
 operador temporal, que lleva aplazado desde v1alpha1 y va con `Test`, después de L2.
 
-### Divergencia declarada con la implementación
+### La implementación va al día
 
-Cerrar las decisiones movió dos formas, y **la implementación de referencia todavía trae las
-viejas**. Se escribe aquí en vez de dejar que se descubra:
+La tabla de divergencia que esta sección tuvo **está vacía**: `requiresGovernance` tipado, el
+`id` de una máscara y `@oosMask` están construidos y certificados. Lo que la especificación
+dice de este plano es lo que el compilador hace.
 
-| | Especificación | ORE hoy |
-|---|---|---|
-| `requiresGovernance` | mapa `nivel → [naturalezas]` | una cadena: solo el nivel |
-| máscara | lleva `id`, para poder nombrarla desde Cedar | sin `id` |
-| `@oosMask` | especificada | no se lee |
-
-Sus casos de conformidad siguen en verde **sobre la forma vieja**, y por eso conviene decir
-qué significa ese verde: que lo implementado no ha dejado de funcionar, no que la
-especificación esté cubierta. **Declarar v1 exige que esta tabla esté vacía** — es
-exactamente la comprobación que hace falta antes de reclamar la versión.
+Es la comprobación que quedaba antes de poder **reclamar v1**.
 
 ### Cerradas antes
 
