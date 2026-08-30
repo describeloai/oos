@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5007
+summary: >
+  Una `Resolution` desaparece. Quien dependia de que dos registros se fundieran deja de
+  tenerlo, y sin aviso.

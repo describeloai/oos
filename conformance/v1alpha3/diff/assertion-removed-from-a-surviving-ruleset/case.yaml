@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5007
+summary: >
+  Un `Ruleset` con dos aserciones se queda con una. La cobertura no cambia —el hermano la
+  sostiene— y por eso hasta ahora no lo veia nadie.

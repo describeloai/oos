@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha2
+kind: Function
+metadata: { name: anonymize, namespace: crm }
+spec:
+  runtime: python3.12
+  entrypoint: main:handler
+  input: { type: String }
+  output: { type: String }
+  preconditions:
+    - { id: p1, expr: "x > 0", message: "no" }
+  endorsements:
+    - { endorser: human, attestation: reviewed }

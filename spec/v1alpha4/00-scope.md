@@ -422,9 +422,12 @@ Al medir las estaciones 8 y 10 sobre todo lo que existe, sale esto:
 | Versión | `kind` | 8 · canónica | 10 · diff | 11 · emisión |
 |---|---|---|---|---|
 | **v1alpha1** | `Entity` · `Binding` · `Lattice` · `ConduitPolicy` | ✅ | ✅ | ✅ |
-| **v1alpha2** | `Function` · `Resolution` | ✅ | ❌ | — |
-| **v1alpha3** | `Ruleset` | ✅ | ◐ solo por su **efecto** | ✅ `quality` de ODCS |
+| **v1alpha2** | `Function` · `Resolution` | ✅ | ✅ | — no hay destino |
+| **v1alpha3** | `Ruleset` | ✅ | ✅ | ✅ `quality` de ODCS |
 | **v1alpha4** | `Property` · `Interface` | ✅ | ✅ | ✅ |
+
+**Las cuatro filas están en verde, y ninguna lo estaba cuando este apartado se escribió.**
+La tabla original —v1alpha1 completo, v1alpha4 vacío— resultó ser falsa por los dos extremos.
 
 **La primera fila costó una segunda medición.** Al preguntarse si todo estaba realmente en
 verde, resultó que la forma canónica de **v1alpha1** también estaba rota: `derivedFrom`,
@@ -617,6 +620,23 @@ documentos de un paquete importado funcionan si sus ficheros están en el árbol
 un hueco de v1alpha4** —afecta igual a todas las versiones y a todos los `kind`— y es del
 motor, no del molde. Lo que v1alpha4 debía demostrar es que un concepto **se comporta igual
 viniendo de otro paquete**, y eso lo hizo la fase 4.
+
+**Cinco cambios de v1alpha2 y v1alpha3 que el `diff` sigue sin ver.** La estación 10 de esas
+dos versiones se cerró **sin un solo código nuevo** —el símbolo de cada cambio ya tenía uno—
+pero cinco no encajaron en ninguno, y conviene tenerlos escritos en vez de descubiertos:
+
+| Cambio | Por qué no encaja |
+|---|---|
+| `mustBe` / `mustNotBe` de una aserción cambia | son **igualdades, no cotas**. `mustBe 0 → 999` no es *más flojo*: es **otra cosa**, y llamarlo relajación inventaría una dirección que el operador no tiene |
+| `strategies` de una `Resolution` **se reordena** | el orden es el significado —la primera que casa gana— y **no hay código para «una secuencia se reordenó»** |
+| el desclasificador de una máscara se debilita — `mask(FULL)` → `mask(LAST4)` | exigiría un **orden de fuerza** entre los argumentos de una máscara, y ese orden no está escrito en ninguna parte. `FULL`, `LAST4` y `HASH` no forman una cadena |
+| `effects` de una `Function` crece | escribe donde no escribía. No rompe a quien la llama, así que ningún código de compatibilidad le corresponde — y sin embargo es un cambio de superficie de escritura |
+| el `owner` de un `Ruleset` cambia | cambia **quién responde**. Ningún código lo cubre, y no está claro que sea una cuestión de compatibilidad |
+
+Los tres primeros son decisiones de especificación, no de implementación: el primero pregunta
+si **cualquier** cambio de una aserción es rompedor; el segundo, si reordenar una secuencia
+merece un código; el tercero exige decidir un orden entre desclasificadores que hoy no existe.
+Ninguno se puede resolver reutilizando, que es exactamente por lo que están aquí.
 
 **Y el alcance de las referencias entre paquetes**, que la fase 4 midió y que **no es lo
 mismo que el resolutor**. Comprobar que una referencia cruza una dependencia declarada es una

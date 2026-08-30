@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha2
 
-**Borrador — 18/18.** Certifica el régimen de efectos y la promoción de `expression` de
+**Borrador — 22/22.** Certifica el régimen de efectos y la promoción de `expression` de
 [`spec/v1alpha2/`](../../spec/v1alpha2/), cuyo **alcance está cerrado** y que **no es
 normativo todavía**.
 

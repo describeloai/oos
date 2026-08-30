@@ -1,0 +1,18 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata: { name: calidad, namespace: eu }
+spec:
+  owner: team:compliance
+  targets:
+    - atLeast: { gdpr.sensitivity: high }
+  assertions:
+    - id: sin-nulos
+      metric: nullValues
+      mustBeLessThan: 1
+      dimension: completeness
+      severity: error
+    - id: pocos-vacios
+      metric: nullValues
+      mustBeLessThan: 9
+      dimension: completeness
+      severity: error

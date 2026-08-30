@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: crm, version: 2.0.0, status: active, domain: sales }
+spec: { owner: team:data }

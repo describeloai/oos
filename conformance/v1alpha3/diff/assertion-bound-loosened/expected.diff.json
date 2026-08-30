@@ -1,0 +1,6 @@
+{
+  "changes": [
+    {"code": "OOS5016", "axis": "POLICY", "subject": "eu.calidad.pocos-nulos.mustBeLessThan", "from": "5", "to": "5000"}
+  ],
+  "requiredBump": "major"
+}

@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha2
+kind: Resolution
+metadata: { name: dedup, namespace: crm }
+spec:
+  entity: crm.Customer
+  sources: [crm_a, crm_b]
+  strategies:
+    - id: probable
+      kind: probabilistic
+      threshold: "0.95"
+      weights:
+        - { property: email, method: jaro_winkler, weight: "1.0" }

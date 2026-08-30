@@ -1,0 +1,6 @@
+{
+  "changes": [
+    {"code": "OOS5007", "axis": "POLICY", "subject": "eu.calidad.pocos-vacios"}
+  ],
+  "requiredBump": "major"
+}

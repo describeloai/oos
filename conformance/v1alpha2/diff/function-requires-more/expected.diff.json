@@ -1,0 +1,6 @@
+{
+  "changes": [
+    {"code": "OOS5025", "axis": "CONSUMER", "subject": "crm.anonymize", "nowRequires": ["p2"]}
+  ],
+  "requiredBump": "major"
+}

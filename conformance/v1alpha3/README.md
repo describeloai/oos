@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha3
 
-**Borrador — 20/20.** Certifica el régimen de gobierno de
+**Borrador — 22/22.** Certifica el régimen de gobierno de
 [`spec/v1alpha3/`](../../spec/v1alpha3/), cuyo **alcance está cerrado** y que **no es
 normativo todavía**.
 

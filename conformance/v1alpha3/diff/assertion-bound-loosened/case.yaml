@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#4.1
+level: L0
+expects: OOS5016
+summary: >
+  Una asercion pasa de `mustBeLessThan 5` a `5000`. La regla sigue ahi, cubre igual, y ha
+  dejado de significar algo.

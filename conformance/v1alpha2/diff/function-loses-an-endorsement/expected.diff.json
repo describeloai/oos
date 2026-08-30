@@ -1,0 +1,6 @@
+{
+  "changes": [
+    {"code": "OOS5011", "axis": "POLICY", "subject": "crm.anonymize", "lostEndorsements": ["test/verified"]}
+  ],
+  "requiredBump": "major"
+}

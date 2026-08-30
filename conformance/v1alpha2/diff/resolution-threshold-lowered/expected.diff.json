@@ -1,0 +1,6 @@
+{
+  "changes": [
+    {"code": "OOS5016", "axis": "POLICY", "subject": "crm.dedup.probable", "from": "0.95", "to": "0.55"}
+  ],
+  "requiredBump": "major"
+}
