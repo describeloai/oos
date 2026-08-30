@@ -43,7 +43,7 @@ spec:
 
     deliveredAt:
       type: DateTime
-      nullable: true
+      required: false
 
     # Derivada. join() sobre orígenes sin etiqueta da ⊥ = none, así que no se
     # declara `labels`: se computa (OOS4008).

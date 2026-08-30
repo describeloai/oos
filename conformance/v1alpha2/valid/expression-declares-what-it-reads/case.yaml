@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/04-campos.md#2
+level: L0
+expects: accept
+summary: >
+  Una propiedad derivada cuya expresion CEL lee exactamente lo que declara en derivedFrom.
+  Es el positivo que da sentido a OOS4015.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/04-campos.md#2
+level: L0
+expects: OOS4015
+summary: >
+  La expresion lee una propiedad que derivedFrom no declara. La etiqueta de la propiedad
+  derivada queda por debajo de la que le corresponde, y no lo ve nadie.

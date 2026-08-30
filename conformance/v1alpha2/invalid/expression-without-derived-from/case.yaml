@@ -1,0 +1,5 @@
+rule: spec/v1alpha2/04-campos.md#2
+level: L0
+expects: OOS1004
+summary: >
+  Computacion sin procedencia declarada. Es de forma y no lleva codigo propio.

@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha2
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  quality:
+    - id: sin-solapes
+      type: sql
+      query: "SELECT COUNT(*) FROM {object}"
+      mustBe: 0
+  properties:
+    employeeId: { type: String }

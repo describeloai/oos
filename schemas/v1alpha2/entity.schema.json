@@ -1,0 +1,556 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha2/entity.schema.json",
+  "title": "Entity",
+  "description": "La entidad, con lo que v1alpha2 le añade. Frente a v1alpha1: `quality` —a nivel de entidad y de propiedad— y `expression` PROMOVIDA.\n\n`expression` no es un campo nuevo. Existe en v1alpha1 como prosa documental que no se interpreta; aquí pasa a ser CEL y a comprobarse. Añadir un `expr` al lado habrían sido DOS NOMBRES PARA UN CONCEPTO separados por tres letras, que es el error que este proyecto ya corrigió cuatro veces.\n\nUn concepto de negocio: qué existe, qué significa, qué tan delicado es y cómo se relaciona.\n\nPrincipio que gobierna todo el documento:\n\n  Una propiedad declara exactamente lo que alguien necesita saber para usarla con seguridad, y nada sobre dónde vive.\n\nEl tipo, la etiqueta, la procedencia y la temporalidad dicen CÓMO USAR esto sin equivocarse. La columna física, la expresión SQL y la tabla de origen dicen DÓNDE ESTÁ, y pertenecen al Binding. Una entidad que supiera de columnas dejaría de ser estable en cuanto la empresa migrase de almacén.\n\nGramática propia: no perfila Apache Ossie. Entity + Binding COMPILAN a Ossie (02-entity.md §9).\n\nNormativo: spec/v1alpha1/02-entity.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "description": "Hay un esquema por apiVersion: el valor no es una opción, es el discriminante. Un documento de v1alpha1 conserva su `expression` en prosa y sigue siendo válido — por eso promoverla no exige migración.",
+      "const": "oos.dev/v1alpha2"
+    },
+    "kind": {
+      "const": "Entity"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "description": "Nombre de la entidad. El nombre cualificado `<namespace>.<name>` es el que usan las relaciones, los bindings y las políticas Cedar.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "labels": {
+          "description": "Etiquetas heredadas por TODAS las propiedades de la entidad. Una propiedad puede elevarlas y no debe rebajarlas (OOS4012).\n\nSirve para lo que es cierto del conjunto: «nada de RRHH sale de la UE» se declara una vez aquí, no cincuenta veces abajo.",
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nature",
+        "properties"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "nature": {
+                "const": "entity"
+              }
+            },
+            "required": [
+              "nature"
+            ]
+          },
+          "then": {
+            "required": [
+              "primaryKey"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "nature": {
+                "const": "event"
+              }
+            },
+            "required": [
+              "nature"
+            ]
+          },
+          "then": {
+            "required": [
+              "timeKey"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "nature": {
+          "description": "`entity` tiene identidad estable y estado actual, y EXIGE `primaryKey`.\n`event` es append-only y ordenado en el tiempo, sin identidad estable por registro: EXIGE `timeKey` y la clave primaria es opcional.\n\nUn tema de Kafka o un log de clics no tienen clave estable, y exigírsela los excluiría del modelo. Toda la maquinaria de gobernanza es idéntica para ambos: solo cambia el requisito de identidad, y eso no justifica un tipo de documento aparte.",
+          "enum": [
+            "entity",
+            "event"
+          ]
+        },
+        "primaryKey": {
+          "description": "Propiedades que identifican una instancia. Es una SECUENCIA: en claves compuestas el orden es semántico y se preserva en la forma canónica.\n\nSin identidad no hay índice de topología, no hay recurso identificable en una política y no se puede responder a una solicitud de acceso de un interesado.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        },
+        "timeKey": {
+          "description": "Propiedad que ordena los registros de un `event`. Sustituye a la identidad estable: no identifica un sujeto, sitúa un hecho.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "uniqueKeys": {
+          "description": "Claves alternativas. Cada elemento es una clave, simple o compuesta.\n\nSon las que hacen posible la resolución DETERMINISTA de identidad entre fuentes: el mismo cliente es `SF-4471` en Salesforce y `0001234` en SAP, pero comparten NIF. Sin claves alternativas declaradas, esa unión no se puede computar y hay que caer en resolución probabilística, que exige materializar datos.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            }
+          }
+        },
+        "temporal": {
+          "description": "Historia del DATO. Es el tercer eje temporal del sistema, junto al commit del bundle y la marca de agua del índice; los tres responden a preguntas distintas.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "validTime"
+          ],
+          "properties": {
+            "validTime": {
+              "description": "Cuándo fue cierto EN EL MUNDO. Sin esto, un salario es un número en lugar de una función del tiempo.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from"
+              ],
+              "properties": {
+                "from": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                },
+                "to": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                }
+              }
+            },
+            "transactionTime": {
+              "description": "Cuándo lo SUPO EL SISTEMA DE ORIGEN. Opcional: responde a una pregunta distinta de «qué sabía el agente el martes», que se contesta con el commit y la marca de agua.",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            }
+          }
+        },
+        "properties": {
+          "description": "Los atributos de la entidad. Solo datos: las aristas del grafo van en `relations`.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/property"
+          }
+        },
+        "relations": {
+          "description": "Las aristas del grafo.\n\nVan separadas de `properties` a propósito: `managerId` es un DATO y `manager` es una ARISTA. Mezclarlos confunde dos cosas distintas y obliga a un esquema con unión discriminada, que produce mensajes de error peores.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "moved": {
+          "description": "Renombrados declarados. Permiten que los consumidores migren solos durante la ventana de deprecación en lugar de romperse. Es el bloque `moved` de Terraform.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "since"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "to": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "since": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "reserved": {
+          "description": "Nombres retirados que NO pueden reutilizarse. Es el campo reservado de Protobuf, y previene el fallo más silencioso y más caro de una ontología viva: una consulta antigua que devuelve una cifra correcta para la pregunta equivocada. Usar uno es OOS2006.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "until": {
+                "description": "Ausente significa para siempre, que es el caso normal.",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "quality": {
+          "description": "Aserciones sobre la entidad entera —`rowCount`, unicidad compuesta—, no sobre una propiedad. ODCS admite los dos niveles y se perfilan los dos.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/quality"
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+  "$defs": {
+    "labelMap": {
+      "description": "Etiquetas de retículo. La clave es el nombre cualificado del retículo (`gdpr.sensitivity`); el valor, uno de sus niveles (`high`).\n\nQue ese nivel exista realmente en ese retículo es una relación entre documentos: el esquema comprueba la forma y el compilador emite OOS4003.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+      },
+      "additionalProperties": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    },
+    "aiContext": {
+      "description": "Contexto para herramientas de IA: qué otras palabras usa el negocio para esto.\n\nEl problema es real —un agente al que preguntan «¿cuánto facturamos?» necesita saber que eso es `netRevenue`— pero se adopta con tres condiciones:\n\n1. ESTRUCTURADO, no texto libre: lo libre no se valida ni se difunde bien.\n2. HEREDA LAS ETIQUETAS de la propiedad o entidad que lo contiene. Un sinónimo puede ser confidencial, y fluye por el conducto `contextSurface` como cualquier otra cosa.\n3. DESCRIPTIVO, NUNCA DIRECTIVO. Un motor conforme NO DEBE tratar su contenido como instrucciones: es la diferencia entre documentar un campo y abrir una superficie de inyección dentro de un artefacto gobernado.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "synonyms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "guidance": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "examples": {
+          "description": "Preguntas de ejemplo que esta propiedad responde. NO son valores de dato: para eso está `examples` de la propiedad, que sí está sujeto al análisis de flujo.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+        },
+        "labels": {
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "required": {
+          "description": "Si la propiedad admite ausencia de valor. Endurecerla es un cambio rompedor.",
+          "type": "boolean"
+        },
+        "unique": {
+          "type": "boolean"
+        },
+        "temporal": {
+          "description": "Si esta propiedad se historiza según el `temporal` de la entidad. Un salario lo es; un identificador no.",
+          "type": "boolean"
+        },
+        "enum": {
+          "description": "Valores admitidos. Es una SECUENCIA: retirar un valor o reordenarlos es un cambio observable.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "derivedFrom": {
+          "description": "De qué propiedades procede esta.\n\nEn v1alpha1 es una DECLARACIÓN DE PROCEDENCIA, NO UNA COMPUTACIÓN: el compilador la usa para propagar etiquetas —join(critical, low) = critical— y para computar el linaje, pero no calcula el valor. Una propiedad derivada necesita binding como cualquier otra; el cálculo ocurre aguas arriba o en un `Rule`, que está aplazado.\n\nEs obligatoria y no se infiere porque un análisis de contaminación sólido no puede depender de parsear cadenas de expresión. ODCS tiene `transformSourceObjects`, pero su granularidad es de TABLAS, y eso es insuficiente para propagar a nivel de propiedad.\n\nUna propiedad con `derivedFrom` NO DEBE declarar `labels`: se computan (OOS4008).",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "expression": {
+          "description": "Cómo se calcula, en CEL.\n\nEn v1alpha1 era prosa y no se interpretaba. Aquí se comprueba, y la comprobación tiene UNA dirección: `derivedFrom` es normativo y la expresión se contrasta CONTRA él, nunca al revés. v1alpha1 ya dio el motivo —«un análisis de contaminación sólido no puede depender de parsear cadenas de expresión»— y eso no se reabre.\n\nToda propiedad que la expresión lee DEBE estar declarada en `derivedFrom` (OOS4015). Si no, el compilador propaga menos etiquetas de las que debe y la propiedad derivada queda clasificada por debajo de lo que le corresponde: es el modo de fallo de OOS4001 con la etiqueta escrita en la línea de al lado.\n\nEl análisis es conservador y solo puede APRETAR: lo que se le escape no afloja nada, porque la propagación no depende de él.\n\nUna propiedad con `expression` DEBE declarar `derivedFrom` (OOS1004). Y NO se evalúa: el compilador no calcula el valor, ni aquí ni después — eso exige datos, es L2, y rompería la pureza de la compilación.",
+          "type": "string",
+          "maxLength": 2048
+        },
+        "examples": {
+          "description": "Valores de ejemplo.\n\nSon útiles para un agente Y SON DATOS REALES: los ejemplos de una columna de salarios son salarios. Una propiedad con etiqueta por encima de ⊥ no debe declararlos salvo que estén marcados como sintéticos (OOS4014).\n\nNadie suele pensar en esto, y el análisis de flujo lo atrapa porque `examples` alcanza la superficie de contexto como cualquier otro texto.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "values"
+          ],
+          "properties": {
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "items": {}
+            },
+            "synthetic": {
+              "description": "Afirmación explícita de que estos valores no proceden de datos reales. Obligar a declararlo es intencionado: convierte un descuido silencioso en una decisión consciente.",
+              "type": "boolean"
+            }
+          }
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        },
+        "quality": {
+          "description": "Aserciones de calidad sobre ESTA propiedad. El caso enumerado: una regla sobre UNA propiedad se escribe donde está la propiedad. Una regla sobre una CLASE de propiedades se escribe donde está la clase, y eso es un `Ruleset` de v1alpha3.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/quality"
+          }
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "cardinality",
+        "via"
+      ],
+      "properties": {
+        "target": {
+          "description": "Entidad al otro extremo, por nombre cualificado. Puede pertenecer a otro paquete: las etiquetas se propagan a través del enlace.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "cardinality": {
+          "description": "Explícita, y no inferida de la dirección.\n\n`ore diff` necesita detectar que endurecerla —de `0..n` a `1..n`— es un cambio rompedor (OOS5003), y eso no se puede saber si la cardinalidad es implícita.\n\nMany-to-many se modela como ENTIDAD PUENTE en v1alpha1: es honesto, porque una tabla puente casi siempre acaba teniendo atributos propios, y evita introducir un tipo de documento nuevo.",
+          "enum": [
+            "one_to_one",
+            "one_to_many",
+            "many_to_one"
+          ]
+        },
+        "via": {
+          "description": "Propiedad local que sostiene el enlace.\n\nLas relaciones unen PROPIEDADES, nunca columnas: el binding traduce a físico. Es el principio del documento aplicado al grafo, y es lo que permite migrar de almacén sin tocar una sola relación.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        }
+      }
+    },
+    "quality": {
+      "description": "Perfil de `quality` de ODCS v3.1. El cuerpo no se inventa: se adopta, y con él la biblioteca de métricas, los operadores y el vocabulario de dimensiones.\n\n`schedule` y `scheduler` de ODCS NO se perfilan, por la misma frontera que 01-efectos §6 fija para las funciones: ningún planificador. Un documento declara qué debe sostenerse; cuándo se comprueba es del motor que lo ejecute, y ODCS mismo dice que ese motor es Soda, Great Expectations o dbt.\n\nNormativo: spec/v1alpha2/04-campos.md §3\n\nUna entidad admite `library`, `text` y `custom`; NO admite `sql`. La partición es por PLANO: una regla `library` afirma algo sobre el SIGNIFICADO —esta propiedad no es nula nunca— y no tiene dialecto; una `sql` está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente. Escribir `sql` aquí es un valor fuera del conjunto, y por tanto un fallo estructural que no necesita código propio.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "description": "Obligatorio: es lo que permite que un error apunte a la aserción concreta dentro de una entidad que puede tener veinte.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "type": {
+          "description": "Una entidad admite `library`, `text` y `custom`; NO admite `sql`. La partición es por PLANO: una regla `library` afirma algo sobre el SIGNIFICADO —esta propiedad no es nula nunca— y no tiene dialecto; una `sql` está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente. Escribir `sql` aquí es un valor fuera del conjunto, y por tanto un fallo estructural que no necesita código propio.",
+          "enum": [
+            "library",
+            "text",
+            "custom"
+          ],
+          "default": "library"
+        },
+        "metric": {
+          "description": "Biblioteca cerrada de ODCS v3.1.",
+          "enum": [
+            "nullValues",
+            "missingValues",
+            "invalidValues",
+            "duplicateValues",
+            "rowCount"
+          ]
+        },
+        "mustBe": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        "mustNotBe": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        "mustBeGreaterThan": {
+          "type": "number"
+        },
+        "mustBeGreaterOrEqualTo": {
+          "type": "number"
+        },
+        "mustBeLessThan": {
+          "type": "number"
+        },
+        "mustBeLessOrEqualTo": {
+          "type": "number"
+        },
+        "mustBeBetween": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "mustNotBeBetween": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "unit": {
+          "enum": [
+            "rows",
+            "percent"
+          ]
+        },
+        "dimension": {
+          "description": "Vocabulario cerrado de ODCS. Se toman los nombres largos y no los sinónimos de dos letras: dos formas de escribir lo mismo darían dos formas canónicas.",
+          "enum": [
+            "accuracy",
+            "completeness",
+            "conformity",
+            "consistency",
+            "coverage",
+            "timeliness",
+            "uniqueness"
+          ]
+        },
+        "severity": {
+          "description": "Solo `error` cuenta para la cobertura de v1alpha3 (OOS8001). Un aviso es, por definición, «lo vimos y no paramos nada».",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "default": "error"
+        },
+        "query": {
+          "description": "Solo para `type: sql`. Marcador `{object}` de ODCS para la tabla. `{property}` NO está disponible: una aserción de binding es de nivel de esquema, y las que motivaron este campo —comparar entre registros— lo son por naturaleza.",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "businessImpact": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "customProperties": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "authoritativeDefinitions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "sql"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "query"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "library"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "metric"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

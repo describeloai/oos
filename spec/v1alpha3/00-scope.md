@@ -168,12 +168,21 @@ ocupa para la entidad ([`01-gobierno`](01-gobierno.md) §9).
    cobertura por naturaleza** —que una propiedad con PII exija una regla de *autorización* y
    no le valga una de calidad—, y eso pide una tabla de qué naturaleza satisface qué
    exigencia que nadie ha escrito.
-2. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
+2. **¿Una regla inline descarga una exigencia importada?** Es la decisión 1 vista desde el
+   otro lado, y se vuelve real ahora que [`v1alpha2/04-campos`](../v1alpha2/04-campos.md)
+   construye `quality` colgando de la propiedad. Por la letra de
+   [`02-ruleset`](02-ruleset.md) §6 —*«solo cuenta lo que el compilador puede leer y lo que
+   puede fallar»*— una aserción inline con `severity: error` **contaría**. Pero entonces el
+   equipo que clasifica una propiedad puede **descargarse a sí mismo** la exigencia que le
+   impuso un paquete de cumplimiento importado, y `requiresGovernance` deja de exigir nada.
+   La implementación de referencia ya decidió —solo cuentan los `Ruleset`— y **el texto no lo
+   dice**: hasta que se escriba, hay una divergencia declarada entre spec e implementación.
+3. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
    puede comprobar sin reimplementar el evaluador de Cedar** — que es justo lo que P6 dice
    que no hagamos.
-3. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
+4. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
    retículos y cada uno declara su `requiresGovernance`, la interacción no está escrita.
-4. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
+5. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
    ([`02-ruleset`](02-ruleset.md) §9).
 
 ### Cerradas

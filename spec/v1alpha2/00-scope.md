@@ -10,6 +10,7 @@ borrador de conformidad va 14/14. Lo que aquí se cierra es el **diseño**, no l
 | [`01-efectos`](01-efectos.md) | el núcleo — el régimen de efectos, del que se deriva todo lo demás |
 | [`02-function`](02-function.md) | la superficie de efecto — el primer documento que aplica el régimen |
 | [`03-resolution`](03-resolution.md) | el efecto sobre la identidad — el más peligroso de los tres |
+| [`04-campos`](04-campos.md) | los dos campos: `expression` promovida y `quality` |
 
 ---
 
@@ -114,9 +115,15 @@ v1alpha1 ya declara la procedencia de una propiedad derivada, ya computa su etiq
 una regla de inferencia añade es **la expresión**, y una expresión es un campo, no un
 documento.
 
-Así que `Entity.properties.<nombre>` gana `expr` junto a `derivedFrom`, y no hace falta nada
-más: las referencias de la expresión son `OOS2005`, sus lecturas están sujetas a la regla de
-flujo, y su etiqueta ya se propaga.
+Esta redacción decía que `Entity.properties.<nombre>` ganaba un campo `expr`. **Escribir
+[`04-campos`](04-campos.md) lo desmintió:** `expression` ya existe en v1alpha1 —prosa,
+documental, no interpretada— y un `expr` al lado serían dos nombres para un concepto,
+separados por tres letras. v1alpha2 no añade un campo: **promueve** el que hay, de prosa a
+CEL y de documental a comprobado, y el `apiVersion` es el discriminante.
+
+Lo que sí cuesta es un código, y tampoco sale de aquí: `OOS4015` comprueba que lo que la
+expresión lee esté declarado en `derivedFrom`, que es una deuda de v1alpha1 que solo se hace
+visible cuando la expresión pasa a ser comprobable.
 
 #### Lo que esto cierra — y lo que no
 
@@ -150,8 +157,9 @@ retículo**— que toca el retículo, Cedar y la regla de flujo a la vez. No cab
 reescribir la proyección Cedar antes de haber ejecutado nunca una `Function` contra una base
 de datos real. **Es el núcleo de v1alpha3** (§7).
 
-v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, dos campos añadidos
-a documentos que ya existen —`expr` y `quality`—, y la resolución de dependencias.
+v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, **un campo añadido
+y otro promovido** —`quality` y `expression`, [`04-campos`](04-campos.md)—, y la resolución
+de dependencias.
 
 ### 3.2 · `Function`
 

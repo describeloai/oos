@@ -1,0 +1,6 @@
+rule: spec/v1alpha2/04-campos.md#3
+level: L0
+expects: OOS1004
+summary: >
+  Asercion de tipo sql en una entidad. La particion es por plano: lo que tiene dialecto vive
+  donde se declara la fuente.

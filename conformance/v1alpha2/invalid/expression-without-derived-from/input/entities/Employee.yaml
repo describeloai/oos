@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha2
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    baseSalary: { type: Integer }
+    bonus:      { type: Integer }
+    totalComp:
+      type: Integer
+      expression: "baseSalary + bonus"

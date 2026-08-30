@@ -1,0 +1,8 @@
+{
+  "code": "OOS4015",
+  "property": "hr.Employee.totalComp",
+  "reads": "bonus",
+  "declared": [
+    "hr.Employee.baseSalary"
+  ]
+}
