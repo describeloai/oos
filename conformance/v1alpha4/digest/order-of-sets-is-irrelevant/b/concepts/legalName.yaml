@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: legalName, namespace: acme }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  requiresGovernance: [constraint, authorization]

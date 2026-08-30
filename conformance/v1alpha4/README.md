@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 19/19.** Certifica el régimen de significado de
+**Borrador — 20/20.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -37,9 +37,10 @@ Cuatro árboles, cuatro marcadores.
 | `invalid/subsumption-does-not-run-upward` | `OOS8002` | y al revés no: la inclusión de conjuntos no es simétrica |
 | `invalid/unknown-governance-nature` | `OOS1004` | una naturaleza mal escrita **no exigía nada, en silencio** |
 | `diff/concept-drops-its-demand` | `OOS5024` | un concepto publicado retira una obligación |
+| `digest/order-of-sets-is-irrelevant` | — | **G1**: los tres campos nuevos son conjuntos, y ahora lo son de verdad |
 
-Diecinueve casos y **tres códigos nuevos**. La proporción es la señal: dieciséis de los
-diecinueve se certifican con maquinaria que ya existía — y los seis últimos, todos.
+Veinte casos y **tres códigos nuevos**. La proporción es la señal: diecisiete de los veinte
+se certifican con maquinaria que ya existía.
 
 Los seis últimos son las dos decisiones que quedaban abiertas, ya construidas: **la exigencia
 categórica de un concepto** y **la subsunción entre formas**. Ninguna de las dos añadió un

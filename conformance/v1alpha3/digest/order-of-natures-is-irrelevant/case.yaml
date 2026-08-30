@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/01-gobierno.md#6.1
+level: L0
+expects: same
+summary: >
+  Las naturalezas que exige un nivel son un conjunto. Lo destapo anadir el mismo campo
+  a un concepto en v1alpha4: el mismo nombre se comportaba distinto en dos documentos.

@@ -10,10 +10,10 @@
 | [`02-property`](02-property.md) | el concepto — su superficie normativa |
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Estado: siete de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
+**Estado: ocho de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
 la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
-atraviesan siete de las doce estaciones de la cadena. No entran en la forma canónica, `diff`
-no los ve y al emitir pierden lo que heredan. La definición de listo, la medición y las
+atraviesan siete de las doce estaciones de la cadena. `diff` no los ve y al emitir pierden lo que
+heredan — la estación 8, la forma canónica, **cayó en la fase 1**. La definición de listo, la medición y las
 cuatro fases están en **§8**.
 
 Los esquemas, la suite y el motor se escribieron **antes** que `02` y `03`, y a propósito: §7
@@ -393,8 +393,8 @@ compila, falla cuando debe y tiene casos en verde.
 | Estación | | |
 |---|---|---|
 | 1 – 7 | ✅ | 19 casos, tres códigos nuevos, la herencia llega a la propagación y a la cobertura |
-| **8 · forma canónica** | ❌ | `requires`, `implements` y el `requiresGovernance` del concepto **no están en `CONJUNTOS`** |
-| 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio — pero **inestable mientras la 8 falle** |
+| 8 · forma canónica | ✅ | **fase 1, hecha.** Los tres campos entran en `CONJUNTOS`, y el retículo de v1alpha3 con ellos — §8.5 |
+| 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio, y ya **estable** |
 | **10 · compatibilidad** | ❌ | `Shape` no tiene conceptos ni interfaces |
 | **11 · emisión** | ❌ | una propiedad con `is` sale a ODCS **sin tipo y sin clasificación** |
 | **12 · dependencia** | ❓ | sin caso: el mecanismo es el de siempre y **no está probado** |
@@ -402,10 +402,6 @@ compila, falla cuando debe y tiene casos en verde.
 Las tres que fallan se miden, no se opinan:
 
 ```
-mismo paquete, `requires` en otro orden
-  a  bundle: sha256:98a64775…
-  b  bundle: sha256:64cc5462…          ← G1 roto
-
 un concepto cambia de `type`, BAJA su clasificación de `high` a `low`,
 y otro concepto DESAPARECE
   { "requiredBump": "patch", "CONSUMER": "compatible" }
@@ -456,7 +452,7 @@ condiciones que ya se cumplen y conviene dejar contadas:
 |---|---|---|
 | **a** | ninguna decisión abierta | ✅ §6 |
 | **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
-| **c** | las doce estaciones, con caso cada una | ❌ **siete de doce** |
+| **c** | las doce estaciones, con caso cada una | ❌ **ocho de doce** |
 
 La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
 que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones
@@ -475,11 +471,27 @@ completa, no un trozo.
 una lista de nombres de campo, y lo caro no es escribirla: es no haberlo hecho.
 
 *Se da por terminada cuando:* un caso de `digest/` toma dos paquetes idénticos con esos tres
-campos en distinto orden y exige **el mismo digest**. Hoy da dos distintos.
+campos en distinto orden y exige **el mismo digest**.
 
 *Va primera porque* es la única cuyo fallo es **silencioso y contagioso**: todo lo que viene
 después —el sellado, el diff, el lock— se computa encima del digest. Un digest inestable no
 rompe nada hoy y lo rompe todo mañana.
+
+**Hecha**, y encontró una cuarta rotura que la lista no preveía. `CONJUNTOS` mira **la clave
+bajo la que cuelga una secuencia**, y en `Lattice.requiresGovernance` las listas cuelgan del
+nombre de un nivel —`high`, `critical`—, que es arbitrario y no puede estar en ninguna lista
+fija. Añadir el campo habría arreglado el concepto de v1alpha4 y **no el retículo de
+v1alpha3**, dejando el mismo nombre con dos comportamientos en dos documentos.
+
+De ahí sale `MAPAS_DE_CONJUNTOS`: **el que sabe que sus valores son conjuntos no es la
+secuencia, es el mapa que la contiene.** Casos
+`v1alpha4/digest/order-of-sets-is-irrelevant` y
+`v1alpha3/digest/order-of-natures-is-irrelevant`.
+
+Y deja una observación que vale para la estación entera: *«esta lista no creció con v1alpha2,
+no creció con v1alpha3 y no creció con v1alpha4»*. **Una lista que hay que acordarse de
+actualizar es una lista de la que nadie se acuerda** — y las tres veces se descubrió
+comparando dos digests a mano, nunca leyendo.
 
 ---
 

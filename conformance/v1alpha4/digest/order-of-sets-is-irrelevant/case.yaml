@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/03-interface.md#3.2
+level: L0
+expects: same
+summary: >
+  `requires`, `implements` y `requiresGovernance` son conjuntos. Escribirlos en otro
+  orden no cambia el digest, y la especificacion lo afirmaba antes de ser cierto.
