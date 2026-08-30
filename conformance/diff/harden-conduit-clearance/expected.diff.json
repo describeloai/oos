@@ -1,0 +1,8 @@
+{
+  "changes": [
+    { "code": "OOS5026", "axis": "CONSUMER", "conduit": "materialization.index",
+      "from": "gdpr.sensitivity:critical", "to": "gdpr.sensitivity:low" }
+  ],
+  "verdicts": { "CONSUMER": "breaking", "POLICY": "compatible" },
+  "requiredBump": "major"
+}

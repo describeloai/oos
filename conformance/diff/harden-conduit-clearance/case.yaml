@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5026
+summary: >
+  Rebajar la autorizacion de un conducto retira lo que antes pasaba. Es el espejo
+  de OOS5012, y estuvo clasificado como compatible hasta que un conducto tuvo
+  consumidor.

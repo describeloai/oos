@@ -119,6 +119,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | rebajar `oos.maturity` de una entidad `STABLE` | `OOS5008` |
 | **elevar** la etiqueta de una propiedad | `OOS5009` |
 | cambiar la unidad o la precisión de un tipo paramétrico | `OOS5010` |
+| **rebajar** la autorización de un conducto | `OOS5026` |
 
 ### 5.2 · Rompedor en `POLICY` — la dirección invertida
 
@@ -146,8 +147,15 @@ implementación **DEBE** señalar que el índice requiere reconstrucción.
 ### 5.4 · Compatible
 
 Añadir una propiedad opcional · añadir una entidad, relación o retículo · añadir un
-`forbid` · endurecer un conducto · declarar `moved` o `reserved` · elevar `oos.maturity` ·
-cualquier cambio sobre entidades en `DRAFT`.
+`forbid` · declarar `moved` o `reserved` · elevar `oos.maturity` · cualquier cambio sobre
+entidades en `DRAFT`.
+
+> **«Endurecer un conducto» estuvo en esta lista y no debía.** Contradecía al §4 de este mismo
+> documento —*restringir rompe al CONSUMIDOR*— y nadie lo notó porque, mientras ningún
+> conducto tuvo consumidor, endurecerlo solo restringía materialización, exportación y log:
+> operaciones internas, sin nadie al otro lado. La cuarta superficie de emisión le dio un
+> consumidor a `contextSurface` y el error se volvió visible. Es `OOS5026`, y es el espejo de
+> `OOS5012`: cada dirección de un conducto tiene ahora su código.
 
 > Que **todo cambio sobre `DRAFT` sea compatible** es lo que permite tener miles de
 > entidades en curso sin frenar a nadie. El compromiso empieza en `STABLE`, y empieza

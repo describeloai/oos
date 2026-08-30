@@ -149,6 +149,7 @@ contra los cuatro por separado, y **puede ser compatible en uno y rompedor en ot
 | `OOS5008` | rebajar `oos.maturity` de una entidad `STABLE` |
 | `OOS5009` | **elevar** la etiqueta de una propiedad |
 | `OOS5010` | cambiar la unidad o la precisión de un tipo paramétrico |
+| `OOS5026` | **rebajar** la autorización de un conducto |
 
 ### Eje `POLICY` — relajar
 
