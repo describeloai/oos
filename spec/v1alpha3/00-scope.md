@@ -7,7 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha3, qué no, y qué queda abierto |
 | [`01-gobierno`](01-gobierno.md) | el núcleo — el régimen de gobierno, del que se deriva todo lo demás |
-| `02-ruleset` | el documento — **pendiente** |
+| [`02-ruleset`](02-ruleset.md) | el documento — el objetivo, las aserciones, las máscaras y los deberes |
 
 ---
 
@@ -97,13 +97,13 @@ metadata: { name: gdpr-minimization, namespace: eu }
 spec:
   owner: team:compliance
   targets:
-    - labelled: "gdpr.sensitivity >= high"
+    - atLeast: { gdpr.sensitivity: high }
   assertions:
-    - { metric: nullValues, mustBe: 0, dimension: completeness }
+    - { id: no-nulls, metric: nullValues, mustBe: 0, dimension: completeness }
   masks:
-    - { declassifier: tokenize }
+    - { declassifier: tokenize, to: { gdpr.sensitivity: low } }
   duties:
-    - { when: "gdpr.sensitivity >= critical", call: compliance.NotifyDPO }
+    - { call: compliance.NotifyDPO }
 ```
 
 **Sobre el nombre.** `docs/vision/` tenía un `RuleSet` y v1alpha2 lo retiró
@@ -112,8 +112,11 @@ conviene decir por qué: aquello era **una bolsa de expresiones sin objetivo**, 
 precisamente lo que lo hacía indefendible. Lo que se retiró no fue el nombre — fue la
 ausencia de la pieza que lo justifica.
 
-Queda por escribir en `02-ruleset`: esquema, casos de conformidad y la forma exacta de un
-objetivo.
+La forma exacta del objetivo está en [`02-ruleset`](02-ruleset.md) §2, y es **estructura, no
+texto**: una cadena rompería la forma canónica y dejaría a `OOS5xxx` sin poder distinguir
+*«el objetivo subió de `high` a `critical`»* de *«alguien tocó un espacio en blanco»*.
+
+Quedan el esquema JSON y los casos de conformidad.
 
 ### 4.2 · Dos campos en documentos que ya existen
 
@@ -124,10 +127,13 @@ objetivo.
 
 ### 4.3 · La familia `OOS8xxx`
 
-Cinco códigos, y tres familias reutilizadas — el detalle está en
-[`01-gobierno`](01-gobierno.md) §8. `OOS8001`, la cobertura, es el `OOS4001` de este plano:
-el defecto **no está escrito en ninguna parte**, porque es la ausencia de una línea que
-nadie escribió.
+Seis códigos, y tres familias reutilizadas — el detalle está en
+[`02-ruleset`](02-ruleset.md) §8. `OOS8001`, la cobertura, es el `OOS4001` de este plano: el
+defecto **no está escrito en ninguna parte**, porque es la ausencia de una línea que nadie
+escribió.
+
+`OOS8006` salió de escribir `02-ruleset` y no estaba previsto, como `OOS7008` salió de
+escribir `Function`.
 
 ---
 
@@ -153,18 +159,27 @@ ocupa para la entidad ([`01-gobierno`](01-gobierno.md) §9).
 
 ## 6. Decisiones abiertas
 
-1. **Qué cuenta como cobertura.** Hoy, cualquier regla que apunte. Pero una propiedad con PII
-   probablemente exige una **política**, no una aserción de calidad, y una regla de calidad
-   que la cubra dejaría pasar el caso que importa. Tipar la cobertura por naturaleza es la
-   salida evidente y no está escrita.
+1. **La frontera entre cobertura y utilidad.** [`02-ruleset`](02-ruleset.md) §6 cierra la
+   mitad barata —solo cuenta lo que el compilador puede leer y lo que puede fallar, con lo
+   que un aviso deja de descargar la obligación— y **no cierra la cara**: una política que
+   permite todo cubre igual que una que no permite nada. El siguiente paso es **tipar la
+   cobertura por naturaleza** —que una propiedad con PII exija una regla de *autorización* y
+   no le valga una de calidad—, y eso pide una tabla de qué naturaleza satisface qué
+   exigencia que nadie ha escrito.
 2. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
    puede comprobar sin reimplementar el evaluador de Cedar** — que es justo lo que P6 dice
    que no hagamos.
-3. **Si un objetivo puede seleccionar entidades y no solo propiedades.** v1alpha1 admite
-   `labels` en `metadata` de `Entity`, así que la pregunta existe y la respuesta cambia qué
-   significa cobertura.
-4. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
+3. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
    retículos y cada uno declara su `requiresGovernance`, la interacción no está escrita.
+4. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
+   ([`02-ruleset`](02-ruleset.md) §9).
+
+### Cerradas
+
+**Si un objetivo selecciona entidades o propiedades** — selecciona **propiedades**, y no hizo
+falta decidir nada: `02-entity` §4.1 ya dice que una etiqueta de entidad la heredan todas sus
+propiedades. Era una comprobación, no una decisión
+([`02-ruleset`](02-ruleset.md) §2.4).
 
 ### Heredadas
 

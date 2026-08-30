@@ -80,11 +80,13 @@ No hay motor de consultas, no hay expresiones, no hay dependencia añadida.
 
 **Normativo.**
 
-- Un objetivo **DEBE** escribirse como una relación de orden sobre un retículo declarado:
-  `>=`, `>`, `==` sobre uno de sus niveles. Nada más — un objetivo no es una expresión.
+- Un objetivo **DEBE** escribirse como **estructura, no como texto**: un mapa de retículo a
+  nivel, leído como *«ese nivel o por encima»*. Una cadena como `"gdpr.sensitivity >= high"`
+  parecería más legible y rompe la forma canónica y el diff — [`02-ruleset`](02-ruleset.md)
+  §2.1. Y el operador es **uno solo**, porque el gobierno es monótono (§2.3 allí).
 - El retículo referenciado **DEBE** existir; si no, `OOS4003`, que ya cubre este caso.
-- La selección se evalúa **sobre el paquete y sus dependientes**, no sobre el paquete que
-  la declara (§6.1).
+- La selección se evalúa **sobre el paquete que se compila**, no sobre el paquete que la
+  declara (§6.1).
 - Un objetivo que no casa con nada es un defecto, no un conjunto vacío: `OOS8002`.
 
 Esa última regla merece su motivo escrito. Un objetivo vacío casi nunca significa *«no hay
@@ -139,7 +141,7 @@ metadata: { name: gdpr-minimization, namespace: eu }
 spec:
   owner: team:compliance
   targets:
-    - labelled: "gdpr.sensitivity >= high"
+    - atLeast: { gdpr.sensitivity: high }
   assertions:
     - metric: nullValues
       mustBe: 0
@@ -180,9 +182,10 @@ La segunda es el hueco de §1, y se cierra sin vocabulario nuevo. El caso que lo
 
 ```yaml
   targets:
-    - labelled: "gdpr.sensitivity >= high"
+    - atLeast: { gdpr.sensitivity: high }
   masks:
     - declassifier: tokenize
+      to: { gdpr.sensitivity: low }
 ```
 
 **Normativo.**
@@ -193,9 +196,10 @@ La segunda es el hueco de §1, y se cierra sin vocabulario nuevo. El caso que lo
 - La propiedad enmascarada **DEBE** estar clasificada en el retículo del objetivo. Sin
   etiqueta no hay nada que bajar, y una máscara sobre un dato sin clasificar es una máscara
   que no protege de nada: `OOS8003`.
-- La etiqueta resultante **DEBE** ser **estrictamente menor** que la original. Un
-  desclasificador que no baja no es una salvaguarda: es teatro con coste de cómputo, y el
-  compilador puede demostrarlo porque el desclasificador declara qué produce (`OOS8003`).
+- La máscara **DEBE** declarar el nivel resultante, y ese nivel **DEBE** ser
+  **estrictamente menor** que el `atLeast` del objetivo. Un desclasificador que no baja no
+  es una salvaguarda: es teatro con coste de cómputo, y el compilador lo demuestra
+  comparando dos niveles declarados (`OOS8003`).
 
 Esa última regla es lo que ningún catálogo puede comprobar. Una máscara de Unity Catalog o
 de Snowflake es una función opaca que se evalúa en tiempo de consulta: nadie sabe qué
@@ -226,13 +230,15 @@ al revés.
 
 ```yaml
   duties:
-    - when: "gdpr.sensitivity >= critical"
-      call: compliance.NotifyDPO
+    - call: compliance.NotifyDPO
 ```
 
 **Normativo.**
 
 - `call` **DEBE** resolver a una `Function` existente; si no, `OOS8004`.
+- Un deber **no tiene condición propia**: el objetivo del documento es la condición. Un
+  segundo selector dentro del mismo documento sería un segundo lenguaje de selección
+  ([`02-ruleset`](02-ruleset.md) §5).
 - La función **DEBE** alcanzar la integridad que exija su propio destino. No hace falta regla
   nueva: es `OOS7001`, aplicada donde ya estaba.
 - Lo que **no** es decidible al compilar es que el deber llegue a cumplirse. Un deber es
@@ -287,8 +293,8 @@ Eso invierte la relación que tiene una dependencia normal, y conviene decirlo e
 | Quien manda es | quien importa | **lo importado** |
 
 **Una dependencia que gobierna a quien la importa.** Es exactamente lo que un paquete
-regulatorio tiene que ser, y es la razón de que §3 evalúe el objetivo sobre los
-*dependientes* y no sobre el paquete que lo declara.
+regulatorio tiene que ser, y es la razón de que §3 evalúe el objetivo sobre **el paquete que
+se compila** y no sobre el que lo declara.
 
 ### 6.2 · Qué es decidible al compilar
 
@@ -345,6 +351,7 @@ estructural, `OOS1005`. Un código semántico para algo que el esquema resuelve 
 | `OOS8003` | máscara sobre una propiedad sin clasificar, o cuyo desclasificador no baja la etiqueta (§5.2) |
 | `OOS8004` | deber que no resuelve a una `Function` existente (§5.3) |
 | `OOS8005` | aserción `sql` cuyo objetivo abarca más de una fuente física (§5.1) |
+| `OOS8006` | objetivo o `requiresGovernance` sobre un retículo de eje `integrity` — [`02-ruleset`](02-ruleset.md) §9 |
 
 `OOS8001` es el `OOS4001` de este plano: el error que ningún revisor encuentra, porque el
 defecto **no está escrito en ninguna parte** — es la ausencia de una línea que nadie
@@ -355,9 +362,14 @@ retículo inexistente es `OOS4003`; una función que no alcanza su destino es `O
 `Ruleset` sin dueño es `OOS1005`. **Este plano añade cinco códigos y reutiliza tres
 familias**, que es lo que se espera cuando la partición de §4 es la correcta.
 
-Este registro se moverá al escribir el documento de `Ruleset`. Ya pasó dos veces —`OOS7008`
-apareció al escribir `Function`, `OOS7010` se retiró al escribir el esquema de
-`Resolution`— y es el mecanismo funcionando, no un fallo de planificación.
+**Y se movió al escribir [`02-ruleset`](02-ruleset.md)**, exactamente como estaba previsto:
+`OOS8006` no estaba aquí. Ya había pasado dos veces —`OOS7008` apareció al escribir
+`Function`, `OOS7010` se retiró al escribir el esquema de `Resolution`— y es el mecanismo
+funcionando, no un fallo de planificación.
+
+Lo que aquel documento añade y este no podía anticipar es **qué cuenta** para `OOS8001`:
+solo lo que el compilador puede leer y lo que puede fallar ([`02-ruleset`](02-ruleset.md)
+§6). Sin esa regla, la cobertura se satisface con un aviso que no para nada.
 
 ---
 
