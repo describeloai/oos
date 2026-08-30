@@ -326,6 +326,45 @@ decide con contacto, no con analogía*:
 Si el SDL que sale necesita ser retocado a mano para que Apollo, Strawberry o gqlgen lo
 acepten, el mapeo está mal y es mejor saberlo antes de escribir los casos que después.
 
+### 9.1 · Ejecutada, y qué encontró
+
+Contra **graphql-js 17**, la implementación de referencia de GraphQL, sobre los seis esquemas
+que emiten los casos de este borrador. Se midieron **dos cosas por separado**, y la separación
+es el método:
+
+| | Qué pregunta |
+|---|---|
+| `parse` | ¿es **sintaxis** válida? |
+| `buildSchema` | ¿es un **esquema** válido — los tipos resuelven, las directivas están declaradas, hay raíz? |
+
+**Los seis pasaban la primera y fallaban la segunda**, con el mismo mensaje:
+
+```
+sintaxis: ok        esquema: Unknown directive "@key".
+```
+
+**Un fichero puede tokenizar y no ser servible**, y esa distinción es justo por lo que la
+prueba mira las dos cosas y no una. El peldaño 1 de §6.1 se afirmaba y no se había medido
+nunca; medirlo costó una tarde y devolvió seis rojos.
+
+El defecto no era del mapeo: era **una regla escrita a medias**. §2.2 exigía declarar los
+escalares propios *porque un esquema que referencia lo que no declara no es válido*, y esa
+frase cubre las directivas con la misma fuerza. El emisor declara ahora
+`directive @key(fields: String!) repeatable on OBJECT` cuando hay alguna clave.
+
+Y con eso, la segunda mitad de la prueba —que no estaba escrita y ahora sí, porque construir
+no es servir:
+
+```
+introspeccion: ok
+query:    ["purchaseOrder", "purchaseOrders"]
+mutation: ["approveOrder: ApprovalRequired!"]
+```
+
+**Un cliente descubre por introspección que esa mutación exige una firma humana.** La
+garantía de §2.8.1 deja de ser una afirmación sobre el texto emitido y pasa a ser algo que un
+motor ajeno le cuenta a quien pregunta.
+
 Y tiene una segunda mitad, que sale gratis desde §7.4:
 
 > **Un esquema ajeno tiene que poder entrar y decir qué le falta.**

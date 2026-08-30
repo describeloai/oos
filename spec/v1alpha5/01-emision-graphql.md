@@ -92,8 +92,11 @@ es **nombrarlo y mapear el vocabulario que existe de verdad**, que es el del mot
 | `Money<M,P>` · `Quantity<U,P>` | §3.1 | |
 
 Los escalares personalizados **DEBEN** emitirse con su declaración `scalar` en el mismo SDL.
-Un esquema que referencia un escalar que no declara no es un esquema válido, y §6.1 lo
-detectaría — pero es más barato no cometerlo.
+Un esquema que referencia un escalar que no declara no es un esquema válido.
+
+**Y la regla no era solo de los escalares.** Vale igual para las directivas: un `@key` usado y
+no declarado hace inválido el esquema exactamente por lo mismo. Se escribió mirando una de las
+dos cosas que cubre, y §9.1 cuenta lo que costó.
 
 ### 2.3 · Propiedades y nulabilidad
 

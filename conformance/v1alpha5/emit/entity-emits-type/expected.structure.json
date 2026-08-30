@@ -3,6 +3,12 @@
   "mustContain": [
     {
       "contains": [
+        "directive @key(fields: String!) repeatable on OBJECT"
+      ],
+      "reason": "un esquema que usa una directiva que no declara no es valido: graphql-js rechazaba los seis con «Unknown directive @key» (§9.1)"
+    },
+    {
+      "contains": [
         "type Employee"
       ],
       "reason": "el namespace es el subgrafo; el tipo se nombra por su `name`"
