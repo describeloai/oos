@@ -92,7 +92,7 @@ que estar declarado; lo que se le escape no afloja nada, porque la propagación 
   ser destino de un efecto (`OOS7006`). Nada de eso cambia.
 
 `OOS4015` es de la familia **`OOS4xxx`**, porque lo que está en juego es la solidez de la
-propagación, y no cuenta entre los 52 de v1alpha1: es un código que vive en una familia
+propagación, y no cuenta entre los 53 de v1alpha1: es un código que vive en una familia
 antigua y lo introduce una versión posterior, igual que `OOS2001`.
 
 Y merece verse por lo que es: **una deuda de v1alpha1 que solo se hace visible cuando la

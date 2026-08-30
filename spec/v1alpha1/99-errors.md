@@ -238,10 +238,10 @@ normativo: es una intención.
 | `OOS2xxx` | 12 | `invalid/` | **12 ✓** |
 | `OOS3xxx` | 5 | `invalid/` | **5 ✓** |
 | `OOS4xxx` | 9 | `invalid/` | **9 ✓** |
-| `OOS5xxx` | 20 | `diff/` | **20 ✓** |
+| `OOS5xxx` | 21 | `diff/` | **21 ✓** |
 | `OOS6xxx` | 1 | `invalid/` | **1 ✓** |
-| **Total** | **52** | | **52 ✓** |
+| **Total** | **53** | | **53 ✓** |
 
 Y las reglas que **ningún documento puede violar** se verifican como afirmaciones
 positivas, no con códigos: normalización canónica en `canonical/` (9 casos), reproducibilidad
-del digest en `digest/` (6) e interoperabilidad en `emit/` (5).
+del digest en `digest/` (8) e interoperabilidad en `emit/` (5).
