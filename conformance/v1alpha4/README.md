@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 13/13.** Certifica el régimen de significado de
+**Borrador — 19/19.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -31,9 +31,20 @@ Cuatro árboles, cuatro marcadores.
 | `invalid/unspoken-concept` | `OOS9004` | una palabra que nadie habla |
 | `invalid/redeclares-the-inherited-type` | `OOS1004` | el guardarraíl, **sin código propio** |
 | `invalid/mapping-cannot-lower` | `OOS4012` | rebajar la del concepto, con el código de v1alpha1 **intacto** |
+| `valid/concept-demand-satisfied` | — | la exigencia **categórica** del concepto, descargada por una política |
+| `valid/shape-target-reaches-the-subsumed` | — | una regla sobre `Party` alcanza a quien solo declaró `Employee` |
+| `invalid/concept-demands-governance` | `OOS8001` | el concepto exige y el retículo no: **el nivel no basta** |
+| `invalid/subsumption-does-not-run-upward` | `OOS8002` | y al revés no: la inclusión de conjuntos no es simétrica |
+| `invalid/unknown-governance-nature` | `OOS1004` | una naturaleza mal escrita **no exigía nada, en silencio** |
+| `diff/concept-drops-its-demand` | `OOS5024` | un concepto publicado retira una obligación |
 
-Trece casos y **tres códigos nuevos**. La proporción es la señal: diez de los trece se
-certifican con maquinaria que ya existía.
+Diecinueve casos y **tres códigos nuevos**. La proporción es la señal: dieciséis de los
+diecinueve se certifican con maquinaria que ya existía — y los seis últimos, todos.
+
+Los seis últimos son las dos decisiones que quedaban abiertas, ya construidas: **la exigencia
+categórica de un concepto** y **la subsunción entre formas**. Ninguna de las dos añadió un
+código, y la segunda no añadió tampoco un campo: `I ⊑ J` se computa de la inclusión entre sus
+`requires`, así que no hay nada que declarar ni, por tanto, nada que escribir mal.
 
 ## Los dos casos que hay que leer juntos
 
@@ -60,11 +71,22 @@ escribir los casos y al medir una decisión abierta en vez de razonarla, que es 
 | `entity` y `event` pasan a ser interfaces incorporadas | `requires` nombra conceptos, y `primaryKey` no lo es | `01-significado` §5 |
 | `confidence` es un `number` desde v1alpha1 | un decimal sin comillas no tiene forma canónica: `OOS6003` | `type/basic.schema.json` |
 | `derivedFrom` junto a `is` «habrá que comprobar que no lo enturbie» | **borraba la clasificación del concepto en silencio** | `00-scope` §6 · cerrada |
+| el vocabulario de naturalezas de `requiresGovernance` estaba cerrado **y nadie lo validaba** | una naturaleza mal escrita se descartaba: la exigencia no exigía nada | `02-property` §3.3 |
 
 El tercero llevaba **cuatro versiones** en el árbol y era invisible porque **ningún documento
 referenciaba el campo**. Darle su primer usuario lo destapó en el primer caso que lo usó.
 
-El cuarto es el peor de los cuatro, porque **compilaba**: añadir `derivedFrom` a una propiedad
-mapeada le quitaba la etiqueta que heredaba del concepto, y con ella toda la exigencia de
-gobierno. Sin `derivedFrom` el mismo paquete rompe con `OOS8001`. Lo destapó medir una
-decisión abierta en vez de razonarla — `valid/derived-mapping-keeps-its-floor`.
+El cuarto es el peor, porque **compilaba**: añadir `derivedFrom` a una propiedad mapeada le
+quitaba la etiqueta que heredaba del concepto, y con ella toda la exigencia de gobierno. Sin
+`derivedFrom` el mismo paquete rompe con `OOS8001`. Lo destapó medir una decisión abierta en
+vez de razonarla — `valid/derived-mapping-keeps-its-floor`.
+
+El quinto **no es de v1alpha4**: es de v1alpha3, y lleva ahí desde que existe
+`requiresGovernance`. El cálculo de cobertura filtra las naturalezas contra una lista cerrada,
+así que una que no reconoce se descarta y la exigencia **no exige nada, en silencio**. Nadie
+lo validaba. Lo destapó añadir el mismo campo un nivel más arriba: si solo se hubiera validado
+el nuevo, el viejo habría quedado peor por comparación con algo escrito el mismo día —
+`invalid/unknown-governance-nature`.
+
+Cuarta vez que aparece la misma ley, y ya conviene numerarla: **`OOS8002`, `OOS9004`,
+`OOS9001` y ahora esto. Lo que no gobierna tiene el mismo aspecto que lo que gobierna.**

@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5024", "axis": "POLICY", "concept": "gdpr.healthCondition", "noLongerRequired": ["authorization"] }
+  ],
+  "requiredBump": "major"
+}

@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/03-interface.md#4.2
+level: L0
+expects: OOS8002
+summary: >
+  Al reves no: quien implementa la forma mas laxa no satisface la mas exigente, y un
+  objetivo sobre `Employee` no casa con nadie.

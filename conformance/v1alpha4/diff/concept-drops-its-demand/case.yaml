@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#3.3
+level: L0
+expects: OOS5024
+summary: >
+  Un concepto publicado deja de exigir autorizacion. Es un cambio de una linea que
+  desgobierna, sin tocarlos, a todos los paquetes que lo mapean.

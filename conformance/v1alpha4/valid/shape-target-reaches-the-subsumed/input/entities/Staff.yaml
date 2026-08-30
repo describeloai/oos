@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Staff, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [staffId]
+  implements: [acme.Employee]
+  properties:
+    staffId: { type: String }
+    correo: { is: gdpr.personalEmail }
+    nombreFiscal: { is: acme.legalName }
+    legajo: { is: acme.employeeId }

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Contact, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [contactId]
+  implements: [acme.Party]
+  properties:
+    contactId: { type: String }
+    correo: { is: gdpr.personalEmail }
+    nombreFiscal: { is: acme.legalName }

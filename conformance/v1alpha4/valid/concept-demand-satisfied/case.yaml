@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#3.3
+level: L0
+expects: accept
+summary: >
+  El mismo paquete con la politica que el concepto exige. Una politica de Cedar cuyo
+  ambito alcanza la etiqueta de la propiedad descarga la exigencia.

@@ -1,0 +1,8 @@
+{
+  "code": "OOS8001",
+  "property": "crm.Patient.condition",
+  "requires": [
+    "authorization"
+  ],
+  "because": "gdpr.healthCondition"
+}

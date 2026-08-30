@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: healthCondition, namespace: gdpr }
+spec:
+  type: String
+  requiresGovernance: [authorization]
+  description: >
+    Categoria especial del articulo 9.

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: healthCondition, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: low }
+  requiresGovernance: [authorization]
+  description: >
+    Categoria especial del articulo 9. La obligacion va pegada a QUE ES el dato,
+    no a cuanto pesa: por eso el reticulo de este paquete no exige nada.

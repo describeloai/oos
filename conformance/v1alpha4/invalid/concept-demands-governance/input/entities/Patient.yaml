@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Patient, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [patientId]
+  properties:
+    patientId: { type: String }
+    condition: { is: gdpr.healthCondition }

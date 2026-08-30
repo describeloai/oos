@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha4
+kind: Interface
+metadata: { name: Party, namespace: acme }
+spec:
+  requires: [gdpr.personalEmail, acme.legalName]

@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#3.3
+level: L0
+expects: OOS1004
+summary: >
+  Una naturaleza mal escrita. El vocabulario es cerrado, y sin comprobarlo la
+  exigencia no exigiria nada EN SILENCIO.

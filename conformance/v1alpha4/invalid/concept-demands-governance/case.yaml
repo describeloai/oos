@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#3.3
+level: L0
+expects: OOS8001
+summary: >
+  El concepto exige autorizacion y el reticulo no exige nada. La propiedad esta
+  clasificada `low` y aun asi no compila: la obligacion va pegada a QUE ES el dato.

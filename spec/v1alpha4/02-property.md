@@ -176,6 +176,17 @@ pasar por el juicio de nadie sobre cuánto pesa. **Es la misma frase de arriba, 
 - Un concepto **no puede descargar** nada. Sin `requiresGovernance` no exige; con él, exige
   más. **No hay forma de exigir menos**, que es lo que impide que importar vocabulario laxo
   afloje una obligación local.
+- El vocabulario es **cerrado** —`constraint`, `authorization`, `obligation`,
+  `transformation`— y una naturaleza que no pertenezca a él es `OOS1004`.
+
+Esa última regla es nueva **y no lo era**: el vocabulario estaba cerrado desde v1alpha3 y
+**nadie lo comprobaba**. El cálculo de cobertura filtra contra la lista, así que una
+naturaleza mal escrita se descartaba y la exigencia **no exigía nada, en silencio** — ni en
+un concepto, que es nuevo, ni en un retículo, que lleva una versión entera. Se arregló en los
+dos sitios a la vez, y añadir el campo aquí es lo que obligó a mirar allí.
+
+Es `OOS8002` un piso más arriba, por cuarta vez: *una exigencia que no exige nada tiene el
+mismo aspecto que una que sí*.
 
 La composición no necesita teoría nueva: la unión de conjuntos de naturalezas es asociativa,
 conmutativa e idempotente, así que **el orden en que se componen los tres orígenes —retículos,
@@ -343,7 +354,7 @@ ser cierto, y es una decisión que alguien firma.
 
 | Código | Condición | De dónde sale |
 |---|---|---|
-| `OOS1004` | sin `type`; o una propiedad con `is` que redeclara `type`; o `confidence` sin `is` | el esquema lo expresa entero |
+| `OOS1004` | sin `type`; una propiedad con `is` que redeclara `type`; `confidence` sin `is`; una **naturaleza** fuera del vocabulario cerrado | el esquema lo expresa entero |
 | `OOS2001` | un `is` que apunta a un concepto inexistente | reservado en v1alpha1 |
 | `OOS3001` | `type` fuera del conjunto | v1alpha1, sin cambios |
 | `OOS4012` | una propiedad **rebaja** la clasificación del concepto | v1alpha1, **sin cambios** |
