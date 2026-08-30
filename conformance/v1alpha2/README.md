@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha2
 
-**Borrador — 14/14.** Certifica el régimen de efectos de
+**Borrador — 19/19.** Certifica el régimen de efectos y los dos campos de
 [`spec/v1alpha2/`](../../spec/v1alpha2/), cuyo **alcance está cerrado** y que **no es
 normativo todavía**.
 
@@ -44,6 +44,20 @@ suite distinga mal:
 una estrategia determinista, y al desaparecer el campo del vocabulario el fallo pasó a ser
 una clave desconocida, que ya tiene código. Un código semántico para algo que el esquema
 resuelve estructuralmente es peso muerto.
+
+### Y los cinco de los dos campos
+
+| Caso | Código | Qué certifica |
+|---|---|---|
+| `valid/expression-declares-what-it-reads` | — | la expresión declara lo que lee |
+| `invalid/expression-reads-undeclared` | `OOS4015` | lee algo que `derivedFrom` no declara |
+| `invalid/expression-without-derived-from` | `OOS1004` | computación sin procedencia |
+| `valid/quality-on-property` | — | el caso **enumerado**, la otra mitad de un `Ruleset` |
+| `invalid/sql-quality-in-entity` | `OOS1004` | `sql` en el plano equivocado |
+
+[`expression-reads-undeclared`](invalid/expression-reads-undeclared/) es el que hay que leer:
+es el fallo de `OOS4001` **con la etiqueta escrita en la línea de al lado**, y llevaba tres
+versiones sin poder detectarse porque `expression` era prosa.
 
 Dos pares, y los dos por la misma razón. `OOS7002` tiene dos casos porque tiene dos causas que se confunden con facilidad: **no
 tener endoso** y **tener uno que no cuenta**. Una implementación puede acertar la primera y
