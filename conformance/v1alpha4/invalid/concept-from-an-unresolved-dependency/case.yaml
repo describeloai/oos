@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#7
+level: L0
+expects: OOS2001
+summary: >
+  La dependencia esta declarada y fijada en el lock, y el concepto no esta. Declarar
+  una dependencia no conjura lo que publica.

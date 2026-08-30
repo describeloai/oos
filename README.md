@@ -254,8 +254,8 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 | [`01-significado`](spec/v1alpha4/01-significado.md) · el régimen: el concepto, el mapeo, la forma | ✅ |
 | [`02-property`](spec/v1alpha4/02-property.md) · el concepto: qué cabe en él y qué hereda quien lo referencia | ✅ |
 | [`03-interface`](spec/v1alpha4/03-interface.md) · la forma: qué es satisfacerla y qué alcanza una regla | ✅ |
-| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **26/26** |
-| **listo para v1** | ◐ **10 de 12 estaciones** — [`00-scope`](spec/v1alpha4/00-scope.md) §8 |
+| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **28/28** |
+| **listo para v1** | ✅ **12 de 12 estaciones** — [`00-scope`](spec/v1alpha4/00-scope.md) §8 |
 
 **v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
 debajo**. Toda la maquinaria de v1alpha1 y v1alpha3 opera sobre etiquetas y nada comprobaba
@@ -270,10 +270,12 @@ Encontró tres defectos, uno de ellos **con cuatro versiones de antigüedad**
 ([`00-scope`](spec/v1alpha4/00-scope.md) §7.1). Los dos documentos se redactaron después, con
 la implementación delante.
 
-**Y 26/26 no quiere decir terminado.** Un `kind` atraviesa doce estaciones —despacho, forma,
-referencias, tipos, flujo, gobierno, significado, forma canónica, sellado, compatibilidad,
-emisión y dependencia— y `Property` e `Interface` pasan **diez**: lo único que queda es que importar
-un concepto de otro paquete no tiene caso.
+**Y ahora sí quiere decir terminado, en el sentido que el propio alcance define.** Un `kind`
+atraviesa doce estaciones —despacho, forma, referencias, tipos, flujo, gobierno, significado,
+forma canónica, sellado, compatibilidad, emisión y dependencia— y `Property` e `Interface`
+**las atraviesan las doce**, con un caso por tránsito. Ese criterio no existía: se escribió
+midiendo, y midiendo salió que **v1alpha1 llegó al final y cada borrador posterior se quedó
+antes sin decirlo**.
 
 La fase 1 cerró la forma canónica —y destapó que `Lattice.requiresGovernance` llevaba **una
 versión entera** siendo sensible al orden—. La fase 2 cerró la compatibilidad **con un solo

@@ -1,0 +1,17 @@
+lockfileVersion: 1
+generatedFor: acme@0.1.0
+profiles:
+  oos:
+    version: v1alpha4
+    digest: sha256:4b1d7c9a2e5f80b36d4a1c8e07f92b5d3a6c0e18f4b7d92a5c3e60f18b4d7a2c
+packages:
+  - name: oos.dev/regulatory/gdpr
+    version: 1.0.0
+    range: "^1.0"
+    resolved: https://registry.oos.dev/regulatory/gdpr/-/gdpr-1.0.0.oob
+    digest: sha256:1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809
+    requestedBy: root
+resolution:
+  digest: sha256:0011223344556677889900112233445566778899001122334455667788990011
+  packageCount: 1
+  conflicts: []

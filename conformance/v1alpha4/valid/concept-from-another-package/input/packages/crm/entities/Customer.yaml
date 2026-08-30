@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Customer, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [id]
+  properties:
+    id: { type: String }
+    email: { is: gdpr.personalEmail }

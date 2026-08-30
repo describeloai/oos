@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha4
 
-**Borrador — 26/26.** Certifica el régimen de significado de
+**Borrador — 28/28.** Certifica el régimen de significado de
 [`spec/v1alpha4/`](../../spec/v1alpha4/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -44,11 +44,17 @@ Cuatro árboles, cuatro marcadores.
 | `diff/shape-requires-less-is-safe` | — | y encogerla **no rompe**: la asimetría es un teorema |
 | `emit/mapped-property-emits-what-it-means` | — | lo que hereda **llega al contrato**: tipo, clasificación y `enum` |
 | `emit/mapped-property-roundtrip` | — | y la vuelta es la identidad, que es **por lo que se emite `x-oos-is`** |
+| `valid/concept-from-another-package` | — | tipo, clasificación **y exigencia** cruzan la frontera del paquete |
+| `invalid/concept-from-an-unresolved-dependency` | `OOS2001` | declarar una dependencia **no conjura lo que publica** |
 
-Veintiséis casos y **cuatro códigos nuevos**. La proporción es la señal: veintidós de los
-veintiséis se certifican con maquinaria que ya existía — y de los cuatro cambios que la fase
-2 mete en el `diff`, **tres reutilizan códigos de v1alpha1 sin tocarlos**, porque un concepto
+Veintiocho casos y **cuatro códigos nuevos**. La proporción es la señal: veinticuatro de los
+veintiocho se certifican con maquinaria que ya existía — y de los cinco cambios que la fase 2
+mete en el `diff`, **cuatro reutilizan códigos de v1alpha1 sin tocarlos**, porque un concepto
 declara lo mismo que una propiedad y sus cambios son los mismos cambios.
+
+Con estos dos últimos, `Property` e `Interface` **atraviesan las doce estaciones de la
+cadena**: cada tránsito tiene un caso. Qué significa eso y qué sigue sin cubrir está en
+[`00-scope`](../../spec/v1alpha4/00-scope.md) §8.
 
 Los seis últimos son las dos decisiones que quedaban abiertas, ya construidas: **la exigencia
 categórica de un concepto** y **la subsunción entre formas**. Ninguna de las dos añadió un
@@ -83,6 +89,7 @@ escribir los casos y al medir una decisión abierta en vez de razonarla, que es 
 | el vocabulario de naturalezas de `requiresGovernance` estaba cerrado **y nadie lo validaba** | una naturaleza mal escrita se descartaba: la exigencia no exigía nada | `02-property` §3.3 |
 | `CONJUNTOS` mira la clave inmediata, y en un retículo las naturalezas cuelgan del nivel | el mismo campo, **ordenado en un concepto y sin ordenar en un retículo** | `00-scope` §8.5 |
 | el importador de ODCS sellaba **siempre** `v1alpha1` | la vuelta producía un documento que declara una versión **donde `is` no existe** | `00-scope` §8.5 |
+| una referencia entre paquetes no se comprueba contra las dependencias declaradas | dos paquetes con un `is` que los cruza validan **sin declarar nada** — y con un retículo de v1alpha1, igual | `00-scope` §8.6 |
 
 El tercero llevaba **cuatro versiones** en el árbol y era invisible porque **ningún documento
 referenciaba el campo**. Darle su primer usuario lo destapó en el primer caso que lo usó.

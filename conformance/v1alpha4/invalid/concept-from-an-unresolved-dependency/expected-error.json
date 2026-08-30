@@ -1,0 +1,6 @@
+{
+  "code": "OOS2001",
+  "property": "crm.Customer.email",
+  "reference": "gdpr.personalEmail",
+  "declaredDependency": "oos.dev/regulatory/gdpr"
+}

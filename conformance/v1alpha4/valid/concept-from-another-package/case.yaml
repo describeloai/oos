@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/02-property.md#7
+level: L0
+expects: accept
+summary: >
+  El concepto vive en un paquete y la entidad en otro. El tipo, la clasificacion y la
+  exigencia de gobierno cruzan la frontera sin que haga falta nada nuevo.

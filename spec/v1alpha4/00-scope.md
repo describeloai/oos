@@ -10,11 +10,11 @@
 | [`02-property`](02-property.md) | el concepto — su superficie normativa |
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
-**Estado: diez de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
+**Estado: doce de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
 la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
-atraviesan siete de las doce estaciones de la cadena. lo único que falta es la **dependencia**: que
-un concepto importado de otro paquete tenga caso. Las estaciones 8, 10 y 11 cayeron en las
-fases 1, 2 y 3. La definición de listo, la medición y las
+atraviesan siete de las doce estaciones de la cadena. y desde la fase 4 **atraviesan las doce**, con
+28 casos que las certifican. Lo que las cuatro fases encontraron —y una de esas cosas no es
+de esta versión ni de ninguna— está en §8.5 y §8.6. La definición de listo, la medición y las
 cuatro fases están en **§8**.
 
 Los esquemas, la suite y el motor se escribieron **antes** que `02` y `03`, y a propósito: §7
@@ -393,12 +393,12 @@ compila, falla cuando debe y tiene casos en verde.
 
 | Estación | | |
 |---|---|---|
-| 1 – 7 | ✅ | 19 casos, tres códigos nuevos, la herencia llega a la propagación y a la cobertura |
+| 1 – 7 | ✅ | la herencia llega a la propagación y a la cobertura |
 | 8 · forma canónica | ✅ | **fase 1, hecha.** Los tres campos entran en `CONJUNTOS`, y el retículo de v1alpha3 con ellos — §8.5 |
 | 9 · sellado | ✅ | `Property:…` e `Interface:…` aparecen en el bundle con digest propio, y ya **estable** |
 | 10 · compatibilidad | ✅ | **fase 2, hecha.** `Shape` gana conceptos y formas, con **un solo código nuevo** — §8.5 |
 | 11 · emisión | ✅ | **fase 3, hecha.** El emisor resuelve `is` contra los conceptos **del propio bundle** — §8.5 |
-| **12 · dependencia** | ❓ | sin caso: el mecanismo es el de siempre y **no está probado** |
+| 12 · dependencia | ✅ | **fase 4, hecha.** El concepto cruza la frontera del paquete con su tipo, su clasificación **y su exigencia** — §8.5 |
 
 Las tres que fallan se miden, no se opinan:
 
@@ -452,7 +452,7 @@ condiciones que ya se cumplen y conviene dejar contadas:
 |---|---|---|
 | **a** | ninguna decisión abierta | ✅ §6 |
 | **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
-| **c** | las doce estaciones, con caso cada una | ❌ **diez de doce** |
+| **c** | las doce estaciones, con caso cada una | ✅ **doce de doce**, 28 casos |
 
 La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
 que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones
@@ -578,8 +578,27 @@ en el lock. No hace falta nada nuevo —un `Property` se importa como cualquier 
 justamente por eso hay que probarlo: *«GDPR como dependencia»* es el argumento central de
 [`02-property`](02-property.md) §7 y hoy **es una afirmación sin caso**.
 
-*Se da por terminada cuando:* el caso existe y pasa, y su gemelo negativo también — un `is` a
-un concepto de un paquete **no declarado como dependencia** tiene que fallar.
+*Se da por terminada cuando:* el caso existe y pasa, y su gemelo negativo también.
+
+**Hecha, y el gemelo negativo no es el que esta línea decía.** El previsto —un `is` a un
+concepto de un paquete no declarado como dependencia— **no falla**, y no por un descuido de
+la fase: **ORE no puede saber que la referencia cruza una frontera**. Un paquete cargado es
+una bolsa plana de documentos, sin noción de a qué `package.yaml` pertenece cada fichero.
+
+Y no es de v1alpha4. Se midió también con vocabulario de v1alpha1 —una etiqueta de un
+retículo ajeno, sin declarar la dependencia— y pasa igual. §8.6.
+
+El gemelo que sí certifica algo, y que es el que está escrito, dice lo contrario y es más
+útil: **declarar una dependencia no conjura lo que publica.** Con la dependencia en el
+`ontology.config.yaml` y fijada en el lock, si el concepto no está en el árbol, `OOS2001`. La
+resolución es **por presencia, no por declaración**, y esa es la dirección reversible: heredar
+un tipo y una clasificación imaginarios porque alguien escribió una línea de configuración
+haría correr toda la maquinaria de flujo encima de ellos.
+
+Lo que el caso positivo sí demuestra es lo que §8.6 pedía: **las tres cosas cruzan la
+frontera** —`type`, `labels` y `requiresGovernance`—, y la tercera obliga al paquete que
+importa a poner una política de Cedar para compilar. Eso es *«GDPR como dependencia»* dejando
+de ser una metáfora.
 
 ---
 
@@ -588,8 +607,26 @@ un concepto de un paquete **no declarado como dependencia** tiene que fallar.
 **El resolutor de dependencias.** ORE valida el `ontology.lock` y no descarga nada: los
 documentos de un paquete importado funcionan si sus ficheros están en el árbol. Eso **no es
 un hueco de v1alpha4** —afecta igual a todas las versiones y a todos los `kind`— y es del
-motor, no del molde. Lo que v1alpha4 debe demostrar es que un concepto **se comporta igual
-viniendo de otro paquete**, y eso es la fase 4.
+motor, no del molde. Lo que v1alpha4 debía demostrar es que un concepto **se comporta igual
+viniendo de otro paquete**, y eso lo hizo la fase 4.
+
+**Y el alcance de las referencias entre paquetes**, que la fase 4 midió y que **no es lo
+mismo que el resolutor**. Comprobar que una referencia cruza una dependencia declarada es una
+comprobación de compilación —L0, decidible, sin red— y hoy no existe: dos paquetes en el
+mismo árbol con un `is` que los cruza, o con una etiqueta de un retículo ajeno, validan **sin
+una sola línea de `dependencies`**.
+
+No entra en v1alpha4 porque **no se puede decidir aquí**. Exige contestar antes una pregunta
+del modelo de empaquetado, que es de v1alpha1:
+
+> ¿Qué determina a qué paquete pertenece un documento — su ubicación bajo un `package.yaml`,
+> o su `namespace`? Y ¿cómo se relaciona la identidad de un `Package` local con la coordenada
+> de una dependencia (`oos.dev/regulatory/gdpr`)?
+
+Hoy las dos cosas son independientes: `examples/acme-retail` tiene un paquete llamado `hr` con
+documentos en el espacio de nombres `gdpr`. Hasta que eso esté decidido, cualquier
+comprobación de alcance sería una convención inventada por el motor, que es exactamente lo que
+la frontera OOS/ORE prohíbe.
 
 **Que la versión sea normativa.** «Listo para v1» quiere decir *la primera versión completa
 del borrador*, en el mismo sentido en que se cerró la de v1alpha2. Sigue siendo **alpha**:

@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: acme, version: 0.1.0 }
+dependencies:
+  - { package: oos.dev/regulatory/gdpr, version: "^1.0" }
+datasources:
+  - { name: pg, type: postgres, connectionEnv: URL }

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  requiresGovernance: [authorization]
+  description: >
+    Publicado por el paquete regulatorio, con su clasificacion y su exigencia
+    ya decididas. Quien lo importa hereda las tres cosas.
