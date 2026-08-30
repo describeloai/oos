@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oos.dev/schemas/v1alpha2/entity.schema.json",
   "title": "Entity",
-  "description": "La entidad, con lo que v1alpha2 le añade. Frente a v1alpha1: `quality` —a nivel de entidad y de propiedad— y `expression` PROMOVIDA.\n\n`expression` no es un campo nuevo. Existe en v1alpha1 como prosa documental que no se interpreta; aquí pasa a ser CEL y a comprobarse. Añadir un `expr` al lado habrían sido DOS NOMBRES PARA UN CONCEPTO separados por tres letras, que es el error que este proyecto ya corrigió cuatro veces.\n\nUn concepto de negocio: qué existe, qué significa, qué tan delicado es y cómo se relaciona.\n\nPrincipio que gobierna todo el documento:\n\n  Una propiedad declara exactamente lo que alguien necesita saber para usarla con seguridad, y nada sobre dónde vive.\n\nEl tipo, la etiqueta, la procedencia y la temporalidad dicen CÓMO USAR esto sin equivocarse. La columna física, la expresión SQL y la tabla de origen dicen DÓNDE ESTÁ, y pertenecen al Binding. Una entidad que supiera de columnas dejaría de ser estable en cuanto la empresa migrase de almacén.\n\nGramática propia: no perfila Apache Ossie. Entity + Binding COMPILAN a Ossie (02-entity.md §9).\n\nNormativo: spec/v1alpha1/02-entity.md",
+  "description": "La entidad, con lo único que v1alpha2 le cambia: `expression` PROMOVIDA.\n\nNo es un campo nuevo. Existe en v1alpha1 como prosa documental que no se interpreta; aquí pasa a ser CEL y a comprobarse. Añadir un `expr` al lado habrían sido DOS NOMBRES PARA UN CONCEPTO separados por tres letras.\n\n`quality` NO cuelga de la propiedad, y su ausencia es deliberada: el cuerpo de una aserción es `quality` de ODCS y su destino de emisión también, pero escribirla aquí sería una segunda superficie de autoría sin dueño propio. Vive en un `Ruleset` de v1alpha3, que admite objetivos por nombre además de por predicado.\n\nUn concepto de negocio: qué existe, qué significa, qué tan delicado es y cómo se relaciona.\n\nPrincipio que gobierna todo el documento:\n\n  Una propiedad declara exactamente lo que alguien necesita saber para usarla con seguridad, y nada sobre dónde vive.\n\nEl tipo, la etiqueta, la procedencia y la temporalidad dicen CÓMO USAR esto sin equivocarse. La columna física, la expresión SQL y la tabla de origen dicen DÓNDE ESTÁ, y pertenecen al Binding. Una entidad que supiera de columnas dejaría de ser estable en cuanto la empresa migrase de almacén.\n\nGramática propia: no perfila Apache Ossie. Entity + Binding COMPILAN a Ossie (02-entity.md §9).\n\nNormativo: spec/v1alpha1/02-entity.md",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -220,14 +220,6 @@
               }
             }
           }
-        },
-        "quality": {
-          "description": "Aserciones sobre la entidad entera —`rowCount`, unicidad compuesta—, no sobre una propiedad. ODCS admite los dos niveles y se perfilan los dos.",
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/$defs/quality"
-          }
         }
       }
     }
@@ -345,14 +337,6 @@
         },
         "aiContext": {
           "$ref": "#/$defs/aiContext"
-        },
-        "quality": {
-          "description": "Aserciones de calidad sobre ESTA propiedad. El caso enumerado: una regla sobre UNA propiedad se escribe donde está la propiedad. Una regla sobre una CLASE de propiedades se escribe donde está la clase, y eso es un `Ruleset` de v1alpha3.",
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/$defs/quality"
-          }
         }
       }
     },
@@ -392,165 +376,6 @@
           "$ref": "#/$defs/aiContext"
         }
       }
-    },
-    "quality": {
-      "description": "Perfil de `quality` de ODCS v3.1. El cuerpo no se inventa: se adopta, y con él la biblioteca de métricas, los operadores y el vocabulario de dimensiones.\n\n`schedule` y `scheduler` de ODCS NO se perfilan, por la misma frontera que 01-efectos §6 fija para las funciones: ningún planificador. Un documento declara qué debe sostenerse; cuándo se comprueba es del motor que lo ejecute, y ODCS mismo dice que ese motor es Soda, Great Expectations o dbt.\n\nNormativo: spec/v1alpha2/04-campos.md §3\n\nUna entidad admite `library`, `text` y `custom`; NO admite `sql`. La partición es por PLANO: una regla `library` afirma algo sobre el SIGNIFICADO —esta propiedad no es nula nunca— y no tiene dialecto; una `sql` está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente. Escribir `sql` aquí es un valor fuera del conjunto, y por tanto un fallo estructural que no necesita código propio.",
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "id": {
-          "description": "Obligatorio: es lo que permite que un error apunte a la aserción concreta dentro de una entidad que puede tener veinte.",
-          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
-        },
-        "type": {
-          "description": "Una entidad admite `library`, `text` y `custom`; NO admite `sql`. La partición es por PLANO: una regla `library` afirma algo sobre el SIGNIFICADO —esta propiedad no es nula nunca— y no tiene dialecto; una `sql` está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente. Escribir `sql` aquí es un valor fuera del conjunto, y por tanto un fallo estructural que no necesita código propio.",
-          "enum": [
-            "library",
-            "text",
-            "custom"
-          ],
-          "default": "library"
-        },
-        "metric": {
-          "description": "Biblioteca cerrada de ODCS v3.1.",
-          "enum": [
-            "nullValues",
-            "missingValues",
-            "invalidValues",
-            "duplicateValues",
-            "rowCount"
-          ]
-        },
-        "mustBe": {
-          "type": [
-            "number",
-            "string",
-            "boolean"
-          ]
-        },
-        "mustNotBe": {
-          "type": [
-            "number",
-            "string",
-            "boolean"
-          ]
-        },
-        "mustBeGreaterThan": {
-          "type": "number"
-        },
-        "mustBeGreaterOrEqualTo": {
-          "type": "number"
-        },
-        "mustBeLessThan": {
-          "type": "number"
-        },
-        "mustBeLessOrEqualTo": {
-          "type": "number"
-        },
-        "mustBeBetween": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": {
-            "type": "number"
-          }
-        },
-        "mustNotBeBetween": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": {
-            "type": "number"
-          }
-        },
-        "unit": {
-          "enum": [
-            "rows",
-            "percent"
-          ]
-        },
-        "dimension": {
-          "description": "Vocabulario cerrado de ODCS. Se toman los nombres largos y no los sinónimos de dos letras: dos formas de escribir lo mismo darían dos formas canónicas.",
-          "enum": [
-            "accuracy",
-            "completeness",
-            "conformity",
-            "consistency",
-            "coverage",
-            "timeliness",
-            "uniqueness"
-          ]
-        },
-        "severity": {
-          "description": "Solo `error` cuenta para la cobertura de v1alpha3 (OOS8001). Un aviso es, por definición, «lo vimos y no paramos nada».",
-          "enum": [
-            "error",
-            "warning"
-          ],
-          "default": "error"
-        },
-        "query": {
-          "description": "Solo para `type: sql`. Marcador `{object}` de ODCS para la tabla. `{property}` NO está disponible: una aserción de binding es de nivel de esquema, y las que motivaron este campo —comparar entre registros— lo son por naturaleza.",
-          "type": "string",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string",
-          "maxLength": 4096
-        },
-        "businessImpact": {
-          "type": "string",
-          "maxLength": 4096
-        },
-        "customProperties": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "authoritativeDefinitions": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "sql"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "required": [
-              "query"
-            ]
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "library"
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "metric"
-            ]
-          }
-        }
-      ]
     }
   }
 }

@@ -1,6 +1,6 @@
 # v1alpha2 / valid / expression-declares-what-it-reads
 
-**Regla:** [`04-campos.md` §2](../../../../spec/v1alpha2/04-campos.md#2) · **Código:** `—` · **Nivel:** L0
+**Regla:** [`04-expression.md` §2](../../../../spec/v1alpha2/04-expression.md#2) · **Código:** `—` · **Nivel:** L0
 
 ---
 

@@ -1,0 +1,7 @@
+rule: spec/v1alpha3/02-ruleset.md#2
+level: L0
+expects: accept
+summary: >
+  Objetivo por nombre. El caso enumerado vive dentro de un Ruleset, con dueno propio, en vez
+  de colgando de la propiedad: enumerar es seguro porque OOS8001 impide el silencio, que era
+  lo que hacia dano.

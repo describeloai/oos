@@ -1,4 +1,4 @@
-rule: spec/v1alpha2/04-campos.md#2
+rule: spec/v1alpha2/04-expression.md#2
 level: L0
 expects: OOS1004
 summary: >

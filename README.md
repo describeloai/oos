@@ -218,12 +218,14 @@ políticas son **Cedar**, no un documento OOS.
 | [`01-efectos`](spec/v1alpha2/01-efectos.md) · el régimen: eje de integridad, endosante, la regla | ✅ |
 | [`02-function`](spec/v1alpha2/02-function.md) · la superficie de escritura gobernada | ✅ |
 | [`03-resolution`](spec/v1alpha2/03-resolution.md) · el efecto sobre la identidad | ✅ |
-| [`04-campos`](spec/v1alpha2/04-campos.md) · `expression` promovida y `quality` | ✅ |
-| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **19/19** |
+| [`04-expression`](spec/v1alpha2/04-expression.md) · la promoción de `expression` | ✅ |
+| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **17/17** |
 
 **v1alpha1 gobierna lo que se puede saber; v1alpha2, lo que se puede causar.** Añade los dos
-verbos —`Function` y `Resolution`—, **un campo y una promoción** —`quality`, y `expression`
-que pasa de prosa documental a CEL comprobada— y la resolución de dependencias. `Rule` se retiró como documento
+verbos —`Function` y `Resolution`—, **una promoción** —`expression`, que pasa de prosa
+documental a CEL comprobada— y la resolución de dependencias. `quality` de ODCS es el
+**cuerpo** de una aserción y su **destino de emisión**, y no se escribe colgando de la
+propiedad: eso sería una segunda superficie de autoría sin dueño propio. `Rule` se retiró como documento
 ([`00-scope`](spec/v1alpha2/00-scope.md) §3.1). Su suite vive en un árbol aparte y se cuenta
 por separado, para que **73/73 siga queriendo decir lo mismo** cuando este directorio tenga
 cincuenta casos.
@@ -231,7 +233,7 @@ cincuenta casos.
 `Test` y lo temporal siguen aplazados.
 
 **v1alpha3 abre la capa de gobierno** —[`spec/v1alpha3/`](spec/v1alpha3/00-scope.md), con
-esquema y [nueve casos](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
+esquema y [10 casos](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
 plano: lo termina. v1alpha1 ya declaraba el vocabulario cerrado de obligaciones
 y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, y sale gratis:
 *una etiqueta ya es un conjunto*. El retículo que v1alpha1 usa para comparar dos elementos

@@ -29,8 +29,9 @@ directorio tenga cincuenta casos.
 | `invalid/duty-without-function` | `OOS2001` | deber que nombra una `Function` inexistente |
 | `invalid/sql-assertion-across-datasources` | `OOS8005` | regla atada a un dialecto sobre dos fuentes |
 | `invalid/target-on-integrity-lattice` | `OOS8006` | gobierno sobre el eje cuya monotonía corre al revés |
+| `valid/target-by-name` | — | el **caso enumerado**, dentro de un `Ruleset` y con dueño |
 
-**Nueve casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
+**Diez casos.** `OOS8004` no aparece porque **está retirado**: existía para el deber sin
 función, y `OOS2001` lleva reservado desde v1alpha1 para *«tipos de referencia nuevos»* que
 `Function`, `Resolution` y `Test` iban a introducir. Activar una reserva es mejor que inflar
 una familia.

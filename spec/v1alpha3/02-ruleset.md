@@ -61,12 +61,16 @@ familia de códigos que ya existe.**
 targets:
   - atLeast: { gdpr.sensitivity: high }
   - atLeast: { acme.residency: eu_only, gdpr.sensitivity: medium }
+  - named:   [hr.Employee.baseSalary]
 ```
 
 | | Semántica |
 |---|---|
-| dentro del mapa | **Y** — la propiedad debe satisfacer todas las entradas |
+| dentro de un `atLeast` | **Y** — la propiedad debe satisfacer todas las entradas |
 | entre elementos de la lista | **O** — la unión de las selecciones |
+
+Dos formas de nombrar el dominio, y **un solo sitio donde escribirlo**: `atLeast` lo
+**computa**, `named` lo **escribe**. Un elemento declara una u otra, nunca las dos.
 
 Es deliberadamente la semántica de `matchLabels` de Kubernetes, cuyo comportamiento está
 documentado y es conocido: *«todos los requisitos se combinan con Y — deben satisfacerse
@@ -75,8 +79,10 @@ existe para etiquetas sin orden, y las nuestras lo tienen.
 
 **Normativo.**
 
-- `targets` es una **lista no vacía**. Cada elemento **DEBE** tener `atLeast` con al menos
-  una entrada.
+- `targets` es una **lista no vacía**. Cada elemento **DEBE** declarar `atLeast` con al
+  menos una entrada **o** `named` con al menos un nombre — exactamente uno de los dos.
+- Cada nombre de `named` **DEBE** ser el nombre cualificado de una propiedad existente; si
+  no, `OOS2005`, que ya cubre este caso.
 - Cada clave de `atLeast` **DEBE** ser el nombre cualificado de un `Lattice` declarado; si
   no, `OOS4003`, que ya cubre este caso.
 - Cada valor **DEBE** ser uno de los niveles de ese retículo; si no, `OOS4003`.
@@ -84,7 +90,31 @@ existe para etiquetas sin orden, y las nuestras lo tienen.
   conmutativa — y eso lo separa de `Resolution.strategies`, que **sí** es una secuencia
   porque reordenarla cambia qué se fusiona.
 
-### 2.3 · Un solo operador, y por qué
+### 2.2-bis · Por qué `named` es admisible, y por qué antes no lo era
+
+La primera redacción **prohibía** los objetivos por nombre —*«dos formas de escribir lo mismo
+acaban con dos semánticas»*— y con ello obligaba a que el caso enumerado viviera en otro
+sitio: `quality` colgando de la propiedad. **La prohibición era autodestructiva**: movía el
+problema en vez de resolverlo, y producía exactamente las dos formas que quería evitar.
+
+Lo que la desmonta es una pieza que se escribió después:
+
+> **`OOS8001` vuelve segura la enumeración.**
+
+Enumerar se pudre porque una propiedad nueva se escapa **en silencio**. Con la regla de
+cobertura, una propiedad clasificada que ningún objetivo alcanza **rompe la compilación**. La
+enumeración deja de ser peligrosa porque el silencio deja de ser posible — y era el silencio,
+no la enumeración, lo que hacía daño.
+
+Y lo que se gana al admitirla es lo que se perdía sin ella: **un solo sitio, un solo modelo
+de dueño**. Una regla sobre una propiedad y una regla sobre cuatrocientas se escriben en el
+mismo tipo de documento, con `owner`, versión y digest propios, y el equipo que clasifica un
+dato no puede descargarse a sí mismo la exigencia que le impuso un paquete importado.
+
+> Lo que la propiedad **es** va en la propiedad. Lo que alguien **exige** de ella va donde
+> está quien lo exige.
+
+### 2.3 · Un solo operador de orden, y por qué
 
 `atLeast` es el único, y no es una limitación de la primera versión: es una consecuencia.
 

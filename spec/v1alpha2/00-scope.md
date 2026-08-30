@@ -1,7 +1,7 @@
 # OOS v1alpha2 — alcance
 
 **Estado:** **alcance cerrado — primera versión.** Los cuatro documentos están escritos y su
-borrador de conformidad va 19/19. Lo que aquí se cierra es el **diseño**, no la ratificación:
+borrador de conformidad va 17/17. Lo que aquí se cierra es el **diseño**, no la ratificación:
 `spec/v1alpha1/` sigue siendo la versión normativa.
 
 | | |
@@ -10,7 +10,7 @@ borrador de conformidad va 19/19. Lo que aquí se cierra es el **diseño**, no l
 | [`01-efectos`](01-efectos.md) | el núcleo — el régimen de efectos, del que se deriva todo lo demás |
 | [`02-function`](02-function.md) | la superficie de efecto — el primer documento que aplica el régimen |
 | [`03-resolution`](03-resolution.md) | el efecto sobre la identidad — el más peligroso de los tres |
-| [`04-campos`](04-campos.md) | los dos campos: `expression` promovida y `quality` |
+| [`04-expression`](04-expression.md) | la promoción de `expression`, y por qué `quality` no cuelga de la propiedad |
 
 ---
 
@@ -91,17 +91,14 @@ Y no es SHACL, aunque SHACL fuera el candidato obvio. Tres razones, en orden de 
 La tercera fila es la decisiva: **ya perfilamos ODCS** en `Package` y `Binding`. Elegir SHACL
 sería adoptar un segundo estándar, de otra familia, para algo que el primero ya cubre.
 
-Y hay una partición que cae sola de la separación de planos que ya tenemos:
+Lo que esta redacción daba por hecho —que `quality` **cuelga de la propiedad**, porque es
+donde ODCS lo pone— **es el error que [`04-expression`](04-expression.md) §3 retira**. Se
+adoptó la topología del estándar junto con su vocabulario, sin argumento, y este proyecto ya
+tenía la regla para eso: *objetivo de emisión, no anfitrión*. El cuerpo sigue siendo `quality`
+de ODCS; lo que se retira es que se **escriba** ahí.
 
-| Tipo de regla | Dónde vive | Por qué |
-|---|---|---|
-| `library` — `nullValues mustBe 0` | **`Entity`** | es una afirmación sobre el **significado**: esta propiedad no es nula nunca. Sin dialecto |
-| `sql` — una comparación entre registros | **`Binding`** | está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente |
-
-Las dos restricciones del borrador —`salary-within-band` y `no-overlapping-comp-periods`—
-son de la segunda clase: comparan entre registros, y en ODCS eso es `type: sql`. Lo que se
-hereda con ello es la limitación de ODCS, no una nuestra: **una regla `sql` no es portable
-entre fuentes**, y conviene decirlo en vez de fingir que sí.
+Lo que sí se hereda de ODCS y conviene decir en vez de fingir que no: **una regla `sql` no es
+portable entre fuentes.**
 
 > **P3 no aplica aquí, y conviene justificarlo.** P3 exige datos inertes en los documentos
 > que **gobiernan** — `Policy`, la clasificación, el bloque `materialization`. Una regla de
@@ -116,7 +113,7 @@ una regla de inferencia añade es **la expresión**, y una expresión es un camp
 documento.
 
 Esta redacción decía que `Entity.properties.<nombre>` ganaba un campo `expr`. **Escribir
-[`04-campos`](04-campos.md) lo desmintió:** `expression` ya existe en v1alpha1 —prosa,
+[`04-expression`](04-expression.md) lo desmintió:** `expression` ya existe en v1alpha1 —prosa,
 documental, no interpretada— y un `expr` al lado serían dos nombres para un concepto,
 separados por tres letras. v1alpha2 no añade un campo: **promueve** el que hay, de prosa a
 CEL y de documental a comprobado, y el `apiVersion` es el discriminante.
@@ -157,9 +154,10 @@ retículo**— que toca el retículo, Cedar y la regla de flujo a la vez. No cab
 reescribir la proyección Cedar antes de haber ejecutado nunca una `Function` contra una base
 de datos real. **Es el núcleo de v1alpha3** (§7).
 
-v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, **un campo añadido
-y otro promovido** —`quality` y `expression`, [`04-campos`](04-campos.md)—, y la resolución
-de dependencias.
+v1alpha2 queda en **dos documentos nuevos** —`Function` y `Resolution`—, **una promoción**
+—`expression`, [`04-expression`](04-expression.md)— y la resolución de dependencias. De los
+«dos campos» que esta sección anunció, uno no debía existir y el otro no era un campo nuevo:
+**examinarlos era lo que faltaba para cerrar la versión.**
 
 ### 3.2 · `Function`
 

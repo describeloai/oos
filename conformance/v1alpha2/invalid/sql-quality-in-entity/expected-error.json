@@ -1,6 +1,0 @@
-{
-  "code": "OOS1004",
-  "entity": "hr.Employee",
-  "assertion": "sin-solapes",
-  "type": "sql"
-}

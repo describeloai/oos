@@ -202,9 +202,7 @@
         "description": { "type": "string", "maxLength": 4096 },
 
         "required": {
-          "description": "Si la propiedad EXIGE valor. `required: false` admite la ausencia; endurecerla a `true` es un cambio rompedor (OOS5003).
-
-No existe `nullable`: sería un segundo nombre para lo mismo con el signo cambiado.",
+          "description": "Si la propiedad EXIGE valor. `required: false` admite la ausencia; endurecerla a `true` es un cambio rompedor (OOS5003).\n\nNo existe `nullable`: sería un segundo nombre para lo mismo con el signo cambiado.",
           "type": "boolean"
         },
 

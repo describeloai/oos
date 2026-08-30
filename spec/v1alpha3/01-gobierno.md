@@ -116,15 +116,25 @@ No es una taxonomía impuesta: es la que ya seguía el árbol sin decirlo. Y exp
 de §1 sin añadir nada — desclasificar al materializar **no tiene sujeto**, el único
 mecanismo disponible exigía uno, y por eso el hueco se registró en lugar de cerrarse.
 
-Un corolario que evita la duplicación más probable de esta versión:
+Un corolario que evita la duplicación más probable de esta versión, y que la primera
+redacción tenía **al revés**:
 
-> Una regla sobre **una** propiedad se escribe donde está la propiedad. Una regla sobre
-> **una clase** de propiedades se escribe donde está la clase.
+> Lo que la propiedad **es** va en la propiedad. Lo que alguien **exige** de ella va donde
+> está quien lo exige.
 
-El caso enumerado ya tiene sitio —`quality` de ODCS colgando de la propiedad, decidido en
-v1alpha2— y por eso `Ruleset` **NO DEBE** admitir objetivos por enumeración. Dos formas de
-escribir lo mismo acaban con dos semánticas, que es la lección que este proyecto ya aprendió
-tres veces.
+Aquella decía *«una regla sobre una propiedad se escribe donde está la propiedad»*, y de ahí
+salía que `Ruleset` no admitiera objetivos por enumeración y que el caso enumerado viviera
+inline. **Movía el problema**: producía dos superficies de autoría para el mismo cuerpo, una
+de ellas sin dueño propio.
+
+`Ruleset` admite objetivos **por nombre** y **por predicado**
+([`02-ruleset`](02-ruleset.md) §2.2-bis), y el caso enumerado es seguro porque `OOS8001` lo
+protege: lo que hacía daño no era enumerar, era que una propiedad nueva se escapara en
+silencio, y eso ya rompe la compilación.
+
+`type`, `labels`, `derivedFrom` y `expression` siguen colgando de la propiedad, porque son
+**lo que la propiedad es**. Una aserción de calidad no lo es: es lo que alguien le exige, y
+ese alguien tiene nombre, versión y cadencia propios.
 
 ---
 

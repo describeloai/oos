@@ -7,7 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra en v1alpha3, qué no, y qué queda abierto |
 | [`schemas/v1alpha3/`](../../schemas/v1alpha3/) | `ruleset` y `lattice` — el segundo cierra además un hueco de v1alpha2 |
-| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | nueve casos, árbol y marcador propios |
+| [`conformance/v1alpha3/`](../../conformance/v1alpha3/README.md) | 10 casos, árbol y marcador propios |
 | [`01-gobierno`](01-gobierno.md) | el núcleo — el régimen de gobierno, del que se deriva todo lo demás |
 | [`02-ruleset`](02-ruleset.md) | el documento — el objetivo, las aserciones, las máscaras y los deberes |
 
@@ -149,8 +149,10 @@ frontera que `01-efectos` §6 puso para las funciones, y por el mismo motivo.
 necesita temporalidad, que sigue aplazada. Un deber es **decible ya** y **exigible después**,
 y conviene no confundir las dos cosas al describirlo.
 
-**Objetivos por enumeración.** Una regla sobre una sola propiedad ya tiene sitio —`quality`
-colgando de la propiedad— y dos formas de escribir lo mismo acaban con dos semánticas.
+**Una segunda superficie de autoría.** El cuerpo de una aserción es `quality` de ODCS y su
+destino de emisión también, pero **no se escribe colgando de la propiedad**: un `Ruleset`
+admite objetivos por nombre y por predicado, así que el caso enumerado no necesita otro sitio
+([`v1alpha2/04-expression`](../v1alpha2/04-expression.md) §3).
 
 **ODRL como modelo interno.** Es Recomendación del W3C y el único estándar con deberes, pero
 es RDF, modela licencias entre partes, y sus deberes no tienen semántica de ejecución — el
@@ -168,24 +170,26 @@ ocupa para la entidad ([`01-gobierno`](01-gobierno.md) §9).
    cobertura por naturaleza** —que una propiedad con PII exija una regla de *autorización* y
    no le valga una de calidad—, y eso pide una tabla de qué naturaleza satisface qué
    exigencia que nadie ha escrito.
-2. **¿Una regla inline descarga una exigencia importada?** Es la decisión 1 vista desde el
-   otro lado, y se vuelve real ahora que [`v1alpha2/04-campos`](../v1alpha2/04-campos.md)
-   construye `quality` colgando de la propiedad. Por la letra de
-   [`02-ruleset`](02-ruleset.md) §6 —*«solo cuenta lo que el compilador puede leer y lo que
-   puede fallar»*— una aserción inline con `severity: error` **contaría**. Pero entonces el
-   equipo que clasifica una propiedad puede **descargarse a sí mismo** la exigencia que le
-   impuso un paquete de cumplimiento importado, y `requiresGovernance` deja de exigir nada.
-   La implementación de referencia ya decidió —solo cuentan los `Ruleset`— y **el texto no lo
-   dice**: hasta que se escriba, hay una divergencia declarada entre spec e implementación.
-3. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
+2. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
    puede comprobar sin reimplementar el evaluador de Cedar** — que es justo lo que P6 dice
    que no hagamos.
+3. **La proyección de las aserciones a ODCS.** El cuerpo se emite colgando de la propiedad,
+   que es donde ODCS lo espera y donde Soda, Great Expectations y dbt saben leerlo, y **no
+   está construida**: el emisor trabaja sobre la forma canónica y proyectarlo exige atravesar
+   la selección de cada `Ruleset`
+   ([`v1alpha2/04-expression`](../v1alpha2/04-expression.md) §3.4).
 4. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
    retículos y cada uno declara su `requiresGovernance`, la interacción no está escrita.
 5. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
    ([`02-ruleset`](02-ruleset.md) §9).
 
 ### Cerradas
+
+**¿Una regla inline descarga una exigencia importada?** — **por construcción ya no hay reglas
+inline.** `quality` se retiró como superficie de autoría
+([`v1alpha2/04-expression`](../v1alpha2/04-expression.md) §3) y el caso enumerado pasó a ser
+un objetivo `named` dentro de un `Ruleset`, que tiene dueño propio. La pregunta deja de
+existir en vez de contestarse, que es la mejor forma de cerrar una.
 
 **Si un objetivo selecciona entidades o propiedades** — selecciona **propiedades**, y no hizo
 falta decidir nada: `02-entity` §4.1 ya dice que una etiqueta de entidad la heredan todas sus

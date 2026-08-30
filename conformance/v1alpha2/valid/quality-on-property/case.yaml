@@ -1,6 +1,0 @@
-rule: spec/v1alpha2/04-campos.md#3
-level: L0
-expects: accept
-summary: >
-  Aserciones de calidad colgando de la propiedad y de la entidad. Es el caso enumerado, la
-  otra mitad de la frase que separa esto de un Ruleset.

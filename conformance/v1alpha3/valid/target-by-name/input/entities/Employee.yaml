@@ -1,13 +1,11 @@
-apiVersion: oos.dev/v1alpha2
+apiVersion: oos.dev/v1alpha1
 kind: Entity
 metadata: { name: Employee, namespace: hr }
 spec:
   nature: entity
   primaryKey: [employeeId]
-  quality:
-    - id: sin-solapes
-      type: sql
-      query: "SELECT COUNT(*) FROM {object}"
-      mustBe: 0
   properties:
     employeeId: { type: String }
+    taxId:
+      type: String
+      labels: { gdpr.sensitivity: high }
