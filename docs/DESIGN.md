@@ -394,6 +394,75 @@ en el catálogo de un motor—, que la aplicación sea decidible al compilar, y 
 **declare qué clasificación produce**: la de un catálogo es opaca al gobierno, se evalúa en
 tiempo de consulta y nadie sabe qué etiqueta sale por el otro lado.
 
+### 5.3-bis · El plano de política: quién exige, y cuándo
+
+La comparación que decide si v1alpha3 aporta algo no es de funcionalidades. Es una sola
+pregunta hecha a los cuatro: **¿cómo sabes que este dato está gobernado?**
+
+| | Cómo se sabe | Cuándo se sabe | Qué pasa si no lo está |
+|---|---|---|---|
+| **Microsoft Purview** | un **porcentaje** — *«% de activos clasificados»* en *Data Estate Insights* | en el comité mensual de gobierno | una fila roja en un informe |
+| **Databricks UC** | clasificación automática por IA + *governed tags*, y ABAC encima | continuo, después de crear el dato | la política lo coge **si la IA lo etiquetó** |
+| **AWS Lake Formation** | LF-Tags heredados por el catálogo | al conceder permisos | nada: sin etiqueta no hay política |
+| **Palantir Foundry** | *mandatory controls* **heredados de las fuentes** | al materializar | lo más restrictivo gana — **falla cerrado** |
+| **OOS** | una **diferencia de conjuntos** | **al compilar, antes del merge** | **no compila** |
+
+Tres lecturas, y la tercera es la que importa.
+
+**Solo Foundry y OOS paran algo.** Purview mide, AWS habilita, Databricks automatiza la
+entrada. Foundry es el único competidor que **falla cerrado**, y conviene decirlo sin
+adornos: su propagación de *markings* por las fuentes es, en fondo, nuestro `join`. Lo que
+`00-overview` §7.1 reclama —*«ningún estándar computa que una propiedad derivada hereda la
+clasificación de sus orígenes»*— sigue siendo cierto **de los estándares** y no de Foundry.
+La diferencia con ellos no es que propaguemos: es **dónde vive el artefacto y cuándo falla**.
+
+**Todos contestan una pregunta distinta de la nuestra.** La suya es *«¿está etiquetado?»*; la
+nuestra es *«¿está gobernado?»*. Y son preguntas diferentes: una columna puede estar
+perfectamente clasificada y no tener una sola regla encima. Databricks nombra el hueco con
+precisión —*«la aplicación que depende de coordinarse con los dueños de los objetos deja
+huecos»*— y lo cierra por el lado de la **entrada**, automatizando la clasificación con IA.
+Es una buena respuesta a *su* pregunta, y deja la nuestra intacta.
+
+> **Nosotros no clasificamos: hacemos que clasificar tenga consecuencias.**
+
+Eso ordena el ecosistema en vez de disputarlo. Un clasificador automático —AWS COA, la
+clasificación de Unity Catalog— es **una entrada** nuestra, no un competidor: produce
+etiquetas, y `OOS8001` convierte cada etiqueta en una obligación que rompe la compilación si
+nadie la asume.
+
+**Y el porcentaje es el antipatrón, no el listón.** Un cuadro de mando que dice *«87 %
+clasificado»* se mira una vez al mes y nunca ha impedido un despliegue. La cobertura como
+métrica informa; **como error de compilación, obliga**. Es la misma distancia que hay entre
+un linter y un compilador, y es toda la tesis del proyecto aplicada al plano de gobierno.
+
+Lo que **no** tenemos y ellos sí, para que no se lea como una lista de victorias: no
+escaneamos, no clasificamos, no evaluamos en tiempo de consulta y no tenemos plano de
+control. Cuatro cosas de producto que no son de la especificación, y una que sí lo es —
+**decidir si una regla es la adecuada** (§5.3-ter).
+
+### 5.3-ter · Cobertura y adecuación no son la misma pregunta
+
+`OOS8001` demuestra que **existe** una regla. No demuestra que sea **la adecuada**: una
+política que permite todo cubre igual que una que no permite nada.
+
+Conviene separar las dos, porque una es decidible y la otra no lo será nunca:
+
+| | Pregunta | ¿Decidible al compilar? |
+|---|---|---|
+| **cobertura** | ¿hay una regla, y de la clase que esta clasificación exige? | **sí** — es una diferencia de conjuntos |
+| **adecuación** | ¿es la regla correcta? | **no**, y fingir que sí sería el peor error del proyecto |
+
+Lo que se puede hacer con la segunda es lo que este proyecto hace con todo lo indecidible:
+**no computarla, sino exigir que alguien responda por ella**. Un `Ruleset` tiene `owner`; y
+si hace falta más que un nombre, tiene el mecanismo que v1alpha2 ya inventó para esto —
+`endorsements`, que es cómo se declara *me hago responsable* de forma verificable en el
+repositorio.
+
+> El compilador decide la **cobertura**. El endoso registra la **adecuación**.
+
+Ninguno de los cuatro jugadores separa las dos, y por eso ninguno puede decir cuál de sus
+reglas ha revisado un humano y cuál lleva tres años ahí porque alguien tenía prisa.
+
 ### 5.4 · Cuellos de botella donde esto paga
 
 El patrón común: **una empresa no puede responder mecánicamente preguntas sobre su propia

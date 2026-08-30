@@ -251,8 +251,9 @@ tanto L2/L3: no es certificable por una suite de ficheros. Va después.
 2. **La superficie de CEL.** Qué funciones de grafo y temporales se exponen, sabiendo que
    cada una es una lectura sujeta a la regla de flujo. Ahora incluye también las que
    `Entity.expr` necesite (§3.1).
-3. **`maxDepth` en Cedar** — materializar la profundidad, o aceptar el cierre transitivo.
-   Es una pregunta de la capa de política: se decide con v1alpha3 (§7).
+3. ~~**`maxDepth` en Cedar**~~ — **cerrada** en v1alpha3: no se admite implícitamente, y
+   quien necesite profundidad acotada la materializa como propiedad
+   ([`v1alpha3/00-scope`](../v1alpha3/00-scope.md) §6).
 
 ### Cerradas
 

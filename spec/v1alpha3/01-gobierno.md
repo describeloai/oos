@@ -285,10 +285,40 @@ kind: Lattice
 metadata: { name: sensitivity, namespace: gdpr }
 spec:
   levels: [none, low, medium, high, critical]
-  requiresGovernance: high      # ← desde aquí arriba, nada sin cubrir
+  requiresGovernance:
+    high:     [authorization]                    # desde high: quién puede verlo
+    critical: [authorization, transformation]    # desde critical: además, enmascarado
 ```
 
-Un campo, en el documento que ya declara los niveles. Y la consecuencia es la que convierte
+Un campo, en el documento que ya declara los niveles. Y **nombra clases de regla, no solo un
+nivel**: la taxonomía de [`00-scope`](00-scope.md) §2 deja de ser descriptiva y pasa a ser
+normativa.
+
+Que exija clases es lo que separa la cobertura de una casilla marcada. Sin ello, una
+comprobación de nulos —que es una `constraint`— descargaría la exigencia que un paquete de
+protección de datos puso sobre una columna con PII, y lo que ese paquete quería es **una
+política**. El fallo no sería que faltara una regla: sería que sobra la equivocada, y es el
+error de categoría que más se comete.
+
+**Normativo.**
+
+- Las claves de `requiresGovernance` **DEBEN** ser niveles del propio retículo.
+- Los valores **DEBEN** salir del vocabulario cerrado de naturalezas —`constraint`,
+  `authorization`, `obligation`, `transformation`—. `derivation` **NO** es admisible: produce
+  contenido, no lo gobierna.
+- Una propiedad **DEBE** satisfacer **todas** las entradas cuyo nivel alcanza. Una propiedad
+  `critical` satisface también lo que el retículo exige desde `high`, porque `critical ⊒ high`
+  — la conjunción es lo único que respeta la monotonía de §2.
+
+Y esa misma conjunción contesta el caso de dos clasificaciones importadas:
+
+> Si una propiedad lleva etiquetas de **dos** retículos y los dos exigen gobierno, **DEBE**
+> satisfacer los dos. Las exigencias se combinan por **conjunción, nunca por elección.**
+
+No es una preferencia: es lo único que no se puede atacar. Si bastara con satisfacer una,
+**importar un paquete laxo sería la forma de escapar de uno estricto** — y como los paquetes
+de clasificación se importan, eso convertiría el mecanismo en su contrario. Es el mismo
+razonamiento que hace que `join = max` no admita rebajas. Y la consecuencia es la que convierte
 una frase de marketing en un mecanismo:
 
 > **«GDPR como dependencia» deja de ser una metáfora.**
@@ -308,7 +338,32 @@ Eso invierte la relación que tiene una dependencia normal, y conviene decirlo e
 regulatorio tiene que ser, y es la razón de que §3 evalúe el objetivo sobre **el paquete que
 se compila** y no sobre el que lo declara.
 
-### 6.2 · Qué es decidible al compilar
+### 6.2 · La cobertura es decidible; la adecuación no
+
+Aquí está el límite del plano, y decirlo con precisión vale más que cualquier funcionalidad
+que se pudiera añadir para disimularlo.
+
+| | Pregunta | ¿Decidible al compilar? |
+|---|---|---|
+| **cobertura** | ¿hay una regla, **y de la clase que esta clasificación exige**? | **sí** — es una diferencia de conjuntos |
+| **adecuación** | ¿es **la regla correcta**? | **no**, y no lo será nunca |
+
+Una política que permite todo cubre igual que una que no permite nada. Ningún análisis
+estático distingue esas dos, porque la diferencia no está en el documento: está en lo que la
+organización quería.
+
+Lo que sí se puede hacer con lo indecidible es lo que este proyecto hace siempre: **no
+computarlo, y exigir que alguien responda por ello.** Un `Ruleset` declara `owner`, y cuando
+un nombre no basta tiene el mecanismo que v1alpha2 ya inventó para exactamente esto —
+`endorsements`, que es cómo se dice *me hago responsable* dejando rastro en el repositorio.
+
+> **El compilador decide la cobertura. El endoso registra la adecuación.**
+
+Es la tercera vez que el endosante sirve, y que sirva sin cambios es la señal de que estaba
+bien definido: en `Function` paga integridad, en `Resolution` levanta un techo, y aquí
+convierte *«alguien escribió esta regla»* en *«alguien responde de que sea la correcta»*.
+
+### 6.3 · Qué es decidible al compilar
 
 Todo lo de esta regla, y es lo que la hace útil:
 

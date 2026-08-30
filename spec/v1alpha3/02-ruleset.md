@@ -283,6 +283,42 @@ evaluada en tiempo de consulta: nadie sabe qué clasificación sale por el otro 
 tanto nadie puede decir si lo que sale puede ir a donde va. Un desclasificador que no baja no
 es una salvaguarda —es teatro con coste de cómputo—, y aquí el compilador lo demuestra.
 
+### 4.1 · La máscara con sujeto: la anotación de Cedar
+
+La otra mitad, y la que cierra la afirmación de `00-overview` §7.1. `00-overview` §5 ya decía
+que las obligaciones son **anotaciones de política**; faltaba decir cuál y qué se comprueba.
+
+```cedar
+@oosMask("eu.gdpr-minimization#ssn-last4")
+permit(principal in Role::"analyst", action, resource in Label::"gdpr.sensitivity:high");
+```
+
+La anotación **no declara una máscara: nombra una**. Es la diferencia que evita la trampa de
+siempre — con un desclasificador escrito ahí dentro habría dos sitios donde declarar una
+máscara, y el `to` no estaría en ninguno de los dos de forma comprobable. Nombrando una del
+`Ruleset`, la definición sigue estando en un único sitio, con dueño, versión y descenso
+verificado.
+
+Por eso una máscara gana `id`, y por la misma razón que una aserción lo tiene: para que algo
+pueda apuntar a ella.
+
+**Normativo.**
+
+- La anotación **DEBE** ser `@oosMask` y su valor `<ruleset cualificado>#<id de máscara>`.
+- **DEBE** resolver a una máscara declarada; si no, `OOS2001` — la misma reserva de v1alpha1
+  que ya activa el `call` de un deber.
+- La etiqueta del ámbito de la política **DEBE** ser alcanzada por el objetivo de ese
+  `Ruleset`. Enmascarar con una regla que no gobierna esa propiedad es una máscara que no se
+  aplica, y eso ya tiene código: `OOS8003`.
+
+**Y lo que NO se comprueba, que es la mitad importante de la respuesta.** La cláusula `when`
+de la política no se evalúa ni se interpreta: hacerlo sería reimplementar el evaluador de
+Cedar, que es exactamente lo que **P6** existe para impedir. Lo que se comprueba es
+**estructural** —la anotación resuelve, el ámbito y el objetivo se solapan, el descenso es
+estricto— y eso basta para el fallo que importa: **una máscara que se nombra y no existe, o
+que no baja.** Que la política se dispare para el principal correcto lo decide Cedar, en
+ejecución, y es L3.
+
 ---
 
 ## 5. Los deberes
@@ -349,14 +385,33 @@ Una regla, tres consecuencias, y las tres cierran un agujero antes de que exista
 | aserción con `severity: warning` | **no** | un aviso es, por definición, *«lo vimos y no paramos nada»*. No descarga la obligación de gobernar |
 | aserción `type: text` o `type: custom` | **no** | se transporta sin interpretar. El compilador no sabe qué afirma |
 | **máscara** | **sí** | el compilador la lee, `OOS8003` la puede rechazar, y una propiedad enmascarada está gobernada |
-| **deber** | **no** | no puede fallar al compilar: su incumplimiento es un hecho temporal |
+| **deber** | **solo si se pide** | no puede fallar al compilar, así que no descarga una exigencia genérica. Pero un retículo **puede exigir `obligation`**, y entonces lo que se comprueba es que el deber exista y nombre una `Function` — que sí es decidible |
 
 Sin esta regla, `OOS8001` se satisface con una aserción `severity: warning` que no para nada,
 y **la cobertura pasa a medir que alguien escribió un fichero**. Es el modo de fallo más
 probable de todo v1alpha3, porque es el que aparece cuando alguien tiene prisa por hacer
 verde una compilación.
 
-Y aun con la regla, el límite se mantiene y no se disimula: ver §9.
+### 6.1 · Y de la clase que se exige
+
+Lo legible que puede fallar es la mitad de la respuesta. La otra la pone
+[`01-gobierno`](01-gobierno.md) §6.1: `requiresGovernance` nombra **qué clases de regla**
+descargan la exigencia, y una propiedad tiene que satisfacerlas todas.
+
+| El retículo exige | Lo descarga |
+|---|---|
+| `constraint` | una aserción legible con `severity: error` |
+| `authorization` | una política de Cedar cuyo ámbito alcance esa etiqueta |
+| `transformation` | una máscara |
+| `obligation` | un deber que resuelva a una `Function` |
+
+Es lo que impide el error de categoría, que es el frecuente: una comprobación de nulos **no**
+descarga la exigencia que un paquete de protección de datos puso sobre una columna con PII,
+porque lo que ese paquete pedía era una política. El fallo no era que faltara una regla —era
+que sobraba la equivocada.
+
+Y el límite se mantiene, escrito y no disimulado: **el compilador decide la cobertura, el
+endoso registra la adecuación** ([`01-gobierno`](01-gobierno.md) §6.2).
 
 ---
 
@@ -420,19 +475,20 @@ bien hecha: casi nada hubo que inventarlo.
 
 ## 9. Aplazado
 
-- **`atMost`, y con él el gobierno sobre el eje de integridad.** La monotonía de §2.3 corre
-  en dirección contraria en ese eje: en confidencialidad se gobierna *hacia arriba* —más
-  sensible, más gobierno—, y en integridad se gobernaría *hacia abajo* —menos fiable, más
-  gobierno—. Hasta que eso esté escrito, un objetivo o un `requiresGovernance` sobre un
-  retículo `integrity` es `OOS8006`, no un comportamiento sin definir. Y hay una sospecha
-  que conviene dejar anotada: el remedio natural de la baja integridad es **un endoso**, que
-  es asunto de `Function` y no de un `Ruleset`.
+- **`atMost` — descartado, no aplazado.** La sospecha que quedó anotada resultó ser la
+  respuesta: **el eje de integridad ya está gobernado, y en otro documento.** Su regla de
+  cobertura es `I(f) ⊒ I(destino)` de v1alpha2 —escrita, implementada y certificada—, y el
+  remedio de la baja integridad es un endoso, que es asunto de `Function`. Un `Ruleset`
+  apuntando a un retículo `integrity` sería un **segundo mecanismo, más débil**, para algo
+  que ya falla cerrado. Por eso `OOS8006` deja de ser un aplazamiento y pasa a ser una
+  frontera: no está sin escribir — está escrito en otro sitio. El caso enumerado sobre datos
+  poco fiables se escribe con un objetivo `named`, que no necesita operador de orden.
 - **La exigibilidad de un deber.** Necesita el operador temporal. Va con `Test` y con lo
   temporal, después de L2.
-- **La frontera entre cobertura y utilidad.** §6 elimina los tres huecos baratos —lo
-  ilegible, lo que no falla, lo que no puede fallar al compilar— y no elimina el caro:
-  **una política que permite todo cubre igual que una que no permite nada.** Lo que se sabe
-  hoy es que el siguiente paso es **tipar la cobertura por naturaleza** —que una propiedad
-  con PII exija una regla de *autorización* y no le valga una de calidad—, y eso exige
-  decidir qué naturaleza satisface qué exigencia, que es una tabla que nadie ha escrito.
-  Queda anotado, no improvisado.
+- **La adecuación de una regla — y no está aplazada: es indecidible.** §6.1 tipa la
+  cobertura por naturaleza y con eso elimina el error de categoría, que es el frecuente. Lo
+  que no elimina, y ningún análisis estático eliminará, es que **una política que permite todo
+  cubre igual que una que no permite nada**: la diferencia no está en el documento, está en
+  lo que la organización quería. Se responde con un dueño y, cuando hace falta más, con un
+  endoso ([`01-gobierno`](01-gobierno.md) §6.2). **Escribirlo como límite y no como pendiente
+  es la diferencia entre una especificación honesta y un cuadro de mando con un porcentaje.**

@@ -188,9 +188,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "id",
         "declassifier"
       ],
       "properties": {
+        "id": {
+          "description": "Para que una política de Cedar pueda NOMBRARLA: `@oosMask(\"<ruleset cualificado>#<id>\")`. La anotación no declara una máscara, la nombra — así la definición sigue en un solo sitio, con dueño, versión y descenso verificado (02-ruleset §4.1).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
         "declassifier": {
           "description": "Subconjunto del vocabulario cerrado de 04-flow §5. `promote` NO está admitido aquí, y excluirlo no es retirarlo: `promote` sube por un retículo de ciclo de vida y una máscara tiene que BAJAR. Sigue siendo un desclasificador para su propio uso.",
           "enum": [

@@ -163,22 +163,37 @@ ocupa para la entidad ([`01-gobierno`](01-gobierno.md) §9).
 
 ## 6. Decisiones abiertas
 
-1. **La frontera entre cobertura y utilidad.** [`02-ruleset`](02-ruleset.md) §6 cierra la
-   mitad barata —solo cuenta lo que el compilador puede leer y lo que puede fallar, con lo
-   que un aviso deja de descargar la obligación— y **no cierra la cara**: una política que
-   permite todo cubre igual que una que no permite nada. El siguiente paso es **tipar la
-   cobertura por naturaleza** —que una propiedad con PII exija una regla de *autorización* y
-   no le valga una de calidad—, y eso pide una tabla de qué naturaleza satisface qué
-   exigencia que nadie ha escrito.
-2. **La anotación de Cedar para la máscara de política.** Qué anotación, y **hasta dónde se
-   puede comprobar sin reimplementar el evaluador de Cedar** — que es justo lo que P6 dice
-   que no hagamos.
-3. **Dos clasificaciones importadas con exigencias distintas.** Si un paquete depende de dos
-   retículos y cada uno declara su `requiresGovernance`, la interacción no está escrita.
-4. **El eje de integridad.** Su monotonía corre al revés y hoy es `OOS8006`
-   ([`02-ruleset`](02-ruleset.md) §9).
+**Ninguna del plano.** Las cuatro que quedaban se cerraron a la vez, y merece verse por qué
+en conjunto: tres de ellas se contestaban con algo que ya estaba escrito, y la cuarta se
+contestó **dejando de tratarla como una pregunta**.
 
-### Cerradas
+| | Cómo cierra |
+|---|---|
+| **la frontera entre cobertura y utilidad** | **la adecuación es indecidible**, y decirlo es la respuesta. El compilador decide la cobertura —ahora **tipada por naturaleza**, lo que elimina el error de categoría—; el endoso registra la adecuación. [`01-gobierno`](01-gobierno.md) §6.2 |
+| **la anotación de Cedar para la máscara con sujeto** | `@oosMask("<ruleset>#<id>")`, que **nombra** una máscara en vez de declararla: la definición sigue en un solo sitio. Se comprueba lo estructural y **no** la cláusula `when` — evaluarla sería reimplementar Cedar, que es lo que P6 prohíbe. [`02-ruleset`](02-ruleset.md) §4.1 |
+| **dos clasificaciones importadas con exigencias distintas** | **conjunción, nunca elección.** Si bastara una, importar un paquete laxo sería la forma de escapar de uno estricto. [`01-gobierno`](01-gobierno.md) §6.1 |
+| **el eje de integridad** | **ya está gobernado, y en otro documento**: su regla de cobertura es `I(f) ⊒ I(destino)` de v1alpha2. `OOS8006` deja de ser un aplazamiento y pasa a ser una frontera. [`02-ruleset`](02-ruleset.md) §9 |
+
+Lo que sigue abierto **no es del plano de gobierno**: la exigibilidad de un deber necesita el
+operador temporal, que lleva aplazado desde v1alpha1 y va con `Test`, después de L2.
+
+### Divergencia declarada con la implementación
+
+Cerrar las decisiones movió dos formas, y **la implementación de referencia todavía trae las
+viejas**. Se escribe aquí en vez de dejar que se descubra:
+
+| | Especificación | ORE hoy |
+|---|---|---|
+| `requiresGovernance` | mapa `nivel → [naturalezas]` | una cadena: solo el nivel |
+| máscara | lleva `id`, para poder nombrarla desde Cedar | sin `id` |
+| `@oosMask` | especificada | no se lee |
+
+Sus casos de conformidad siguen en verde **sobre la forma vieja**, y por eso conviene decir
+qué significa ese verde: que lo implementado no ha dejado de funcionar, no que la
+especificación esté cubierta. **Declarar v1 exige que esta tabla esté vacía** — es
+exactamente la comprobación que hace falta antes de reclamar la versión.
+
+### Cerradas antes
 
 **La proyección de las aserciones a ODCS** — construida. Salen colgando de la propiedad, que
 es donde ODCS las espera, y con `x-oos-ruleset` diciendo **quién las exige**. La selección no
@@ -198,6 +213,14 @@ propiedades. Era una comprobación, no una decisión
 
 ### Heredadas
 
-**La superficie de CEL** y **`maxDepth` en Cedar** siguen abiertas de v1alpha2
-([`v1alpha2/00-scope`](../v1alpha2/00-scope.md) §6). La segunda es una pregunta de este
-plano y se decide aquí.
+**`maxDepth` en Cedar** era de este plano y se decide aquí: **no se admite implícitamente.**
+El operador `in` de Cedar es el cierre transitivo completo, y dar por bueno un `maxDepth`
+escrito en otra sintaxis significaría conceder **más** alcance del que su autor pidió — la
+dirección insegura. Quien necesite una profundidad acotada **materializa la profundidad como
+propiedad** y la compara en un `when` normal. Lo que el compilador no puede hacer es
+adivinar cuál de las dos se quiso: `resource in principal` es una política legítima, y por
+eso esto es una regla de escritura y no un código.
+
+**La superficie de CEL** sigue abierta de v1alpha2
+([`v1alpha2/00-scope`](../v1alpha2/00-scope.md) §6), y no es de este plano: un objetivo no
+lleva expresiones — es el orden del retículo leído al revés.
