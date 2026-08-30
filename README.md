@@ -195,6 +195,7 @@ sus tres condiciones, con su estado medido, están en §6.1 del mismo documento.
 spec/v1alpha1/     documentos normativos — y alpha: sin garantías
 spec/v1alpha2/     alcance cerrado — los efectos y la derivación
 spec/v1alpha3/     alcance cerrado — la capa de gobierno
+spec/v1alpha4/     borrador de alcance — el significado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA

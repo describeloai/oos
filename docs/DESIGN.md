@@ -70,6 +70,7 @@ Mapa de cuándo se completa:
 | **ORE fases 0–3** | queda **demostrado una vez** por la implementación de referencia |
 | **v1alpha2** | `Function`, `Resolution` y la resolución de dependencias → «ejecutable» cubre L2 y L3, y «autosuficiente» se cierra |
 | **v1alpha3** | [la capa de gobierno](../spec/v1alpha3/00-scope.md): el objetivo por clasificación, el `Ruleset`, la máscara y el deber → la cobertura es comprobable al compilar |
+| **v1alpha4** | [el significado](../spec/v1alpha4/00-scope.md): `Property` como concepto compartido e `Interface` como forma → la clasificación deja de ser arbitraria, y `discover` escribe mapeos en vez de conjeturas |
 | **v1beta1** | compatibilidad de la propia spec, suite extraída del texto, arnés de runtime para L1 |
 | **segunda implementación** | el claim deja de ser intención y pasa a ser hecho |
 

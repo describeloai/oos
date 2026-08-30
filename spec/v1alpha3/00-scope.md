@@ -34,6 +34,10 @@ tres necesitan lo mismo.
 > **La autorización apunta por clasificación y todo lo demás enumera.** Esa asimetría es lo
 > que esta versión corrige.
 
+Y deja una dependencia que v1alpha4 recoge: **todo este plano descansa sobre que las
+etiquetas estén bien puestas**, y nada hacía consistente la clasificación hasta que existió
+el concepto compartido ([`v1alpha4/00-scope`](../v1alpha4/00-scope.md) §1).
+
 ---
 
 ## 2. Las cinco naturalezas de una regla
