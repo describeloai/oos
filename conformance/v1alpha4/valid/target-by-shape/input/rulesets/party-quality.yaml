@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha3
+kind: Ruleset
+metadata: { name: party-quality, namespace: eu }
+spec:
+  owner: team:compliance
+  targets:
+    - implements: [acme.Party]
+  assertions:
+    - id: sin-nulos
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error

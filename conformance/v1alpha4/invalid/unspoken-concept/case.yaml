@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#7
+level: L0
+expects: OOS9004
+summary: >
+  Un concepto declarado en el paquete al que no referencia nada. Es OOS8002 un piso
+  mas arriba: una palabra que nadie habla se parece a una que si.

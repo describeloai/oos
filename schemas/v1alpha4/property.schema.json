@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha4/property.schema.json",
+  "title": "Property",
+  "description": "El concepto. Qué ES un dato, no dónde vive ni cómo se llama.\n\nEs el mismo movimiento que Binding, en la otra dirección: un Binding declara una identidad hacia abajo —esta propiedad del modelo es esa columna física—; un `is` la declara hacia arriba —esta propiedad del modelo es ese concepto—. Ninguno de los dos duplica la entidad: relacionan.\n\nLa línea que decide qué cabe aquí y qué no: EL CONCEPTO DECLARA LO QUE ES CIERTO DE ÉL EN TODAS PARTES; LA PROPIEDAD DECLARA LO QUE ES CIERTO DE ESA COLUMNA. Un correo personal es sensible siempre, y sus sinónimos son los mismos en los quince sistemas donde aparece; que sea obligatorio, único o historizado depende de la tabla.\n\nTiene `namespace`, luego dueño, versión y digest: se publica, se importa y se fija en el lock como cualquier otro documento. Un paquete regulatorio puede traer sesenta conceptos con su clasificación ya decidida, y eso convierte «GDPR como dependencia» en algo que además CLASIFICA, no solo exige.\n\nNormativo: spec/v1alpha4/01-significado.md §4.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "$defs": {
+    "labelMap": {
+      "description": "Etiquetas de retículo que el concepto declara. La clave es el nombre cualificado del retículo (`gdpr.sensitivity`); el valor, uno de sus niveles (`high`).\n\nUna propiedad que referencia este concepto las HEREDA, y puede elevarlas pero no rebajarlas: OOS4012, sin cambios, un nivel más arriba.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+      },
+      "additionalProperties": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha4"
+    },
+    "kind": {
+      "const": "Property"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "labels": {
+          "description": "Clasificación de ESTE DOCUMENTO — en la práctica, su madurez.\n\nEs el único documento con `labels` en los dos sitios, y no son dos superficies para lo mismo porque EL SUJETO ES DISTINTO: aquí se clasifica el documento; en `spec.labels`, el dato que lleve el concepto. La misma distinción que en Entity, que lleva `labels` en `metadata` y otras dentro de cada propiedad.\n\nSin esto, `spec.confidence` sería inusable: un concepto acuñado por inferencia tiene que poder declararse DRAFT, y la madurez se declara donde se declara siempre.",
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+        },
+        "labels": {
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "enum": {
+          "description": "Valores admitidos, cuando son del concepto y no de la columna. Un código de moneda es ISO 4217 en los quince sistemas; un estado de pedido no.\n\nEs una SECUENCIA: retirar un valor o reordenarlos es un cambio observable.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "aiContext": {
+          "description": "Qué otras palabras usa el negocio para esto.\n\nEs el campo que más gana al subir de nivel, y merece decirse: los sinónimos de un concepto son los mismos en todos los sistemas donde aparece. Declararlos una vez, junto al concepto, es lo que evita que cada columna los vuelva a adivinar — y es exactamente el ancla contra la que un inductor propone.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "synonyms": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "notes": {
+              "type": "string",
+              "maxLength": 4096
+            }
+          }
+        },
+        "confidence": {
+          "description": "Acuñar un concepto es una inferencia, igual que mapear una columna a uno: «estas catorce columnas comparten un concepto; llámalo así». El mecanismo no distingue las dos, y no debe — son la misma clase de acto, y lo que las separa es la consecuencia, no la naturaleza.\n\nSujeto a la misma regla: un documento cuya madurez EFECTIVA no es DRAFT no puede llevarlo (OOS9003). Que la madurez sea efectiva y no declarada es por lo que esa comprobación es del compilador y no de este esquema.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/confidence"
+        }
+      }
+    }
+  }
+}

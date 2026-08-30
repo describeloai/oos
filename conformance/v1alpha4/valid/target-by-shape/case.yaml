@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.3
+level: L0
+expects: accept
+summary: >
+  El tercer eje de objetivo de un Ruleset. Una regla apunta a la forma y alcanza las
+  propiedades que la satisfacen en las dos entidades que la implementan.

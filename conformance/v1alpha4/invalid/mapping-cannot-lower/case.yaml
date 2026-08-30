@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#3
+level: L0
+expects: OOS4012
+summary: >
+  La propiedad rebaja la clasificacion que hereda del concepto. Es OOS4012 sin
+  cambios, un nivel mas arriba: se puede elevar, no rebajar.

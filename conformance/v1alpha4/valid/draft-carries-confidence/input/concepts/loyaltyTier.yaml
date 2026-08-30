@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata:
+  name: loyaltyTier
+  namespace: gdpr
+  labels: { oos.maturity: DRAFT }
+spec:
+  type: String
+  confidence: "0.62"
+  description: >
+    Acunado por induccion: catorce columnas de cuatro sistemas parecian compartir
+    este concepto. Nadie lo ha confirmado todavia.

@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: faxNumber, namespace: gdpr }
+spec:
+  type: String
+  description: Sobrevivio a la migracion de 2018 y a las tres siguientes.

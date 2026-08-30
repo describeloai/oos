@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Interface
+metadata: { name: Party, namespace: acme }
+spec:
+  requires: [gdpr.personalEmail, acme.legalName]
+  description: >
+    Cualquiera con quien la empresa mantiene una relacion contractual, venga del
+    CRM, del ERP o de una hoja de calculo que alguien subio en 2019.

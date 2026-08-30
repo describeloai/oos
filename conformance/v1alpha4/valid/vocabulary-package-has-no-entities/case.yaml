@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.1
+level: L0
+expects: accept
+summary: >
+  Un paquete que solo publica conceptos. Ninguno lo referencia nada, y eso no es un
+  fallo: es exactamente la forma de publicar vocabulario para que otros lo importen.

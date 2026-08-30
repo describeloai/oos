@@ -70,10 +70,9 @@
     },
 
     "confidence": {
-      "description": "Confianza de una inferencia automática. Presente solo en documentos en DRAFT; ore promote la elimina.",
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1
+      "description": "Confianza de una inferencia automática. Presente solo en documentos en DRAFT; ore promote la elimina.\n\nCADENA, NO NÚMERO: es un decimal, y un decimal sin comillas no tiene forma canónica (OOS6003). Se declaró como `number` en v1alpha1 y estuvo cuatro versiones contradiciendo esa regla sin que nadie pudiera verlo, porque NINGÚN DOCUMENTO LO REFERENCIABA. Se corrigió al darle su primer usuario en v1alpha4, y la corrección es segura por lo mismo que el defecto era invisible: no hay documento en el mundo que lo use.\n\nEs la misma decisión, con las mismas palabras, que `Resolution.threshold` de v1alpha2 — que llegó antes al problema por el camino contrario: tenía usuario desde el primer día.",
+      "type": "string",
+      "pattern": "^0\\.[0-9]+$|^1\\.0+$|^[01]$"
     },
 
     "reference": {

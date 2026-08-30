@@ -196,6 +196,7 @@ spec/v1alpha1/     documentos normativos — y alpha: sin garantías
 spec/v1alpha2/     alcance cerrado — los efectos y la derivación
 spec/v1alpha3/     alcance cerrado — la capa de gobierno
 spec/v1alpha4/     borrador de alcance — el significado
+schemas/v1alpha4/  property, interface, entity y ruleset
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha1/  JSON Schema publicado — generado
 conformance/       suite de conformidad — NORMATIVA
@@ -246,6 +247,25 @@ plano: lo termina. v1alpha1 ya declaraba el vocabulario cerrado de obligaciones
 y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, y sale gratis:
 *una etiqueta ya es un conjunto*. El retículo que v1alpha1 usa para comparar dos elementos
 —`L ⊑ C`— nombra, leído al revés, el conjunto entero.
+
+| | v1alpha4 · borrador de alcance, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha4/00-scope.md) · alcance, la prueba de fuego y lo que encontró | ✅ |
+| [`01-significado`](spec/v1alpha4/01-significado.md) · el régimen: el concepto, el mapeo, la forma | ✅ |
+| `02-property` · `03-interface` | ⬜ **siguientes** |
+| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **12/12** |
+
+**v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
+debajo**. Toda la maquinaria de v1alpha1 y v1alpha3 opera sobre etiquetas y nada comprobaba
+que la clasificación fuera consistente, porque no había forma de decir que dos propiedades
+son la misma — *v1alpha3 gobierna lo que alguien acertó a etiquetar*. Un `Property` es el
+concepto, un `Interface` es la forma, y `is` hace hacia arriba lo que un `Binding` hace hacia
+abajo. La herencia no se inventó: `OOS4012` sube un nivel **sin cambiar una letra**.
+
+Los esquemas y la suite van **por delante** de `02-property` y `03-interface`, y a propósito:
+el alcance exige enfrentar el vocabulario a algo que lo use antes de escribirlo del todo.
+Encontró tres defectos, uno de ellos **con cuatro versiones de antigüedad**
+([`00-scope`](spec/v1alpha4/00-scope.md) §7.1).
 
 ---
 

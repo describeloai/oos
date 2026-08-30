@@ -152,14 +152,25 @@ spec:
 
 > Una propiedad **declara localmente o referencia un concepto, nunca las dos cosas.**
 
-Una propiedad con `is` **NO DEBE** declarar `type` ni `labels`: los hereda. Declarar lo
-heredado es exactamente `OOS4008` —*una propiedad derivada no declara su etiqueta, se
-computa*— un nivel más arriba, y por el mismo motivo: **dos sitios donde decir lo mismo
-acaban con dos semánticas.** Es la lección de `quality` inline, aplicada antes de cometer el
-error en vez de después.
+Una propiedad con `is` **NO DEBE** declarar `type`: lo hereda. Es la lección de `quality`
+inline aplicada antes de cometer el error en vez de después — **dos sitios donde decir lo
+mismo acaban con dos semánticas.**
 
-Lo que sí **PUEDE** hacer es **elevar** la clasificación —el correo de un menor puede ser
-`critical` donde el concepto dice `high`— y **NO DEBE** rebajarla. `OOS4012`, sin cambios.
+**Y el guardarraíl alcanza a `type` y no a `labels`.** La primera redacción de esta sección
+prohibió las dos y **se contradecía con el párrafo siguiente**, que permite elevar la
+clasificación heredada: elevarla exige escribirla. Lo destapó escribir los casos, y la
+asimetría que resuelve la contradicción no es un parche, porque los dos campos no son la
+misma clase de cosa:
+
+| | Qué es | Qué pasa al redeclararlo |
+|---|---|---|
+| `type` | una **igualdad** | coincide o contradice, y **no hay nada a lo que apelar** para decidir quién gana |
+| `labels` | un **orden** | tiene un significado definido —*elevar*— y un error definido —*rebajar*— |
+
+Así que lo que sí **PUEDE** hacer es **elevar** la clasificación —el correo de un menor puede
+ser `critical` donde el concepto dice `high`— y **NO DEBE** rebajarla. `OOS4012`, sin
+cambios, y ahora la frase de §3 es literal: *sube un nivel sin cambiar una letra* — porque
+aquí no hizo falta ninguna.
 
 Y el nombre no importa: `Customer.email`, `Supplier.contactEmail` y `Employee.workEmail`
 pueden ser el mismo concepto sin renombrarse. **Eso es lo que hace modelable un patrimonio
@@ -298,23 +309,42 @@ comporta igual — si `Customer implements Party`, una regla sobre `Party` lo al
 
 ---
 
-## 5. `nature` se disuelve
+## 5. `nature` **no** se disuelve — y el intento es lo informativo
 
-`Entity.nature` admite `entity` y `event`, y `OOS2010` dice: *«`nature: entity` sin
-`primaryKey`, o `event` sin `timeKey`»*.
+Este apartado decía lo contrario, y la implementación lo refutó. Se deja el error escrito
+porque lo que enseña vale más que el ahorro que prometía.
 
-Eso **ya es una interfaz**: un nombre, una forma, y miembros obligatorios. Con un vocabulario
-cerrado de dos.
+**La tesis era buena a primera vista.** `Entity.nature` admite `entity` y `event`, y
+`OOS2010` dice *«`nature: entity` sin `primaryKey`, o `event` sin `timeKey`»*: un nombre, una
+forma y miembros obligatorios — **eso ya parece una interfaz**, con un vocabulario cerrado de
+dos. Absorberlo habría hecho encoger el registro, que es el resultado que P7 premia.
 
-Así que v1alpha4 no le añade nada a `Entity` en este punto — **le quita un caso especial**:
+No se sostiene, y basta intentar escribirlo:
 
-| | v1alpha1 | v1alpha4 |
+```yaml
+kind: Interface
+metadata: { name: Entity, namespace: oos }
+spec:
+  requires: [???]        # `primaryKey` no es un concepto
+```
+
+`requires` nombra **conceptos**. `primaryKey` no lo es: es una declaración **estructural**
+sobre qué propiedades identifican un registro, y no dice qué significa ninguna de ellas.
+Para absorber `OOS2010` habría que admitir en `requires` dos clases de exigencia —una de
+significado y otra de estructura—, y entonces un `Interface` diría dos cosas distintas con la
+misma palabra. Es el error contra el que va todo este documento, cometido en el sitio donde
+menos se ve.
+
+| Plano | Pregunta | Quién la gobierna |
 |---|---|---|
-| `entity` · `event` | vocabulario cerrado en el esquema | **dos interfaces incorporadas** |
-| `OOS2010` | regla propia para dos formas | el caso general: *no satisface lo que declara implementar* |
+| **estructural** | ¿esta entidad tiene con qué identificarse? | `nature` · `OOS2010`, sin cambios |
+| **de significado** | ¿esta entidad tiene lo que `Party` exige? | `implements` · `OOS9001` |
 
-Un mecanismo sustituyendo a un par grabado a fuego, y **el registro de errores encoge en vez
-de crecer**. Es el resultado que P7 existe para producir.
+> **Un `Interface` nombra una forma en significado, no en estructura.** Que las dos se
+> parezcan desde lejos es lo que hacía atractiva la absorción.
+
+Así que `OOS2010` se queda donde estaba y v1alpha4 no le quita nada a `Entity`. El registro
+encoge igualmente, pero por otro sitio y por un motivo mejor: §7.
 
 ---
 
@@ -360,9 +390,14 @@ decidible, lo omitido no lo es nunca.**
 | Código | Condición |
 |---|---|
 | `OOS9001` | una entidad declara implementar una interfaz y no la satisface |
-| `OOS9002` | una propiedad con `is` redeclara lo que hereda —`type` o `labels`— |
 | `OOS9003` | `confidence` en un documento cuya madurez efectiva no es `DRAFT` |
 | `OOS9004` | un concepto declarado localmente al que **nada referencia** |
+
+`OOS9002` estaba aquí —*una propiedad con `is` redeclara lo que hereda*— y **se retiró al
+escribir el esquema**. La exclusión se expresa entera con un `oneOf`, luego su incumplimiento
+ya tiene código y es `OOS1004`: el mismo trato que la tabla de abajo le da a `confidence` sin
+`is`, una fila más arriba. Inflar una familia por simetría con una tabla es lo contrario de
+lo que P7 pide.
 
 Y los que **no** hacen falta, que es lo informativo:
 
@@ -372,15 +407,25 @@ Y los que **no** hacen falta, que es lo informativo:
 | `is` o `requires` apuntan a algo inexistente | `OOS2001` | reservado en v1alpha1 |
 | `confidence` sin `is` | `OOS1004` | el esquema lo expresa entero |
 | tipo fuera del conjunto en un concepto | `OOS3001` | v1alpha1 |
-| `nature` incoherente con su forma | `OOS9001` | **absorbe `OOS2010`** |
+| `nature` incoherente con su forma | `OOS2010` | v1alpha1, **sin cambios** — §5 |
+| una propiedad con `is` redeclara `type` | `OOS1004` | el esquema lo expresa entero |
 
 `OOS9004` es `OOS8002` un piso más arriba —*un objetivo que no casa con nada*— y por el mismo
 motivo: **una regla que no gobierna nada y un concepto que nadie habla tienen exactamente el
 mismo aspecto que los que funcionan.** No se aplica a un paquete sin entidades, que es como se
 publica un vocabulario.
 
-**Cuatro códigos nuevos y uno retirado.** Este registro se moverá al escribir los esquemas y
-los casos —pasó las tres veces anteriores— y la dirección esperable es que encoja.
+**Tres códigos nuevos y ninguno retirado**, medido con la implementación y los casos
+delante. El borrador anunciaba cuatro y una absorción; se movió en las dos direcciones, y
+las dos veces por el mismo método:
+
+| Anunciado | Real | Qué lo decidió |
+|---|---|---|
+| `OOS9002`, código propio | **`OOS1004`** | escribir el esquema: la exclusión cabía en un `oneOf` |
+| `OOS9001` absorbe `OOS2010` | **`OOS2010` se queda** | intentar escribir la interfaz incorporada — §5 |
+
+Neto: el registro crece en tres en vez de en cuatro, y no encoge por ningún lado. Es menos
+elegante de lo que prometía el borrador y es lo que hay.
 
 `OOS9003` es del compilador y no del esquema por una razón concreta: la madurez es
 **efectiva**, y una etiqueta heredada de la entidad o del `datasource` no está escrita en el

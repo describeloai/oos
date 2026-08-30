@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2.1
+level: L0
+expects: OOS9003
+summary: >
+  Una conjetura en un documento que ya no es un borrador. Promover exige haber
+  resuelto cada propuesta, una a una.

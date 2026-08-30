@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata:
+  name: Customer
+  namespace: crm
+  labels: { oos.maturity: DRAFT }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    customerId: { type: String }
+    email: { is: gdpr.personalEmail, confidence: "0.91" }
+    tier: { is: gdpr.loyaltyTier, confidence: "0.58" }

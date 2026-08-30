@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Customer, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  implements: [acme.Party]
+  properties:
+    customerId: { type: String }
+    email: { is: gdpr.personalEmail }
+    name: { is: acme.legalName }
+    internalNote:
+      type: String
+      labels: { gdpr.sensitivity: high }

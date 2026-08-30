@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: Supplier, namespace: erp }
+spec:
+  nature: entity
+  primaryKey: [lifnr]
+  implements: [acme.Party]
+  properties:
+    lifnr: { type: String }
+    contactEmail: { is: gdpr.personalEmail }
+    razonSocial: { is: acme.legalName }

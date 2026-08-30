@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha4/interface.schema.json",
+  "title": "Interface",
+  "description": "La forma. Nombra un conjunto de entidades por lo que tienen, no por cómo se llaman.\n\nQue se exija EL CONCEPTO Y NO EL NOMBRE es toda la diferencia, y es lo que hace modelable un patrimonio sucio: quince casi-duplicados salidos de quince sistemas pueden implementar `Party` conservando cada uno su vocabulario, y el gobierno apunta a `Party`. Sin esto hay que limpiar antes de gobernar, que es el orden imposible.\n\nDa además el tercer eje de objetivo de un Ruleset —`implements` junto a `atLeast` y `named`—, y no son tres formas de decir lo mismo: `atLeast` nombra un conjunto por CLASIFICACIÓN, `named` por IDENTIDAD, `implements` por FORMA.\n\nNO lleva acciones, y la ausencia es deliberada: en Foundry una interfaz carga con propiedades, enlaces y actions; aquí una acción es una Function, y que una Function pueda apuntar a una interfaz es una pregunta de v1alpha2 que sigue abierta.\n\n`oos.Entity` y `oos.Event` son INCORPORADAS: no se declaran con este documento, existen en el compilador, y son lo que `nature` significaba cuando era un vocabulario cerrado de dos.\n\nNormativo: spec/v1alpha4/01-significado.md §4.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha4"
+    },
+    "kind": {
+      "const": "Interface"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requires"
+      ],
+      "properties": {
+        "requires": {
+          "description": "Los conceptos que una entidad tiene que mapear para satisfacer esta forma. Nombres cualificados de Property, NUNCA de otra Interface: la herencia entre interfaces es plausible, no está escrita, y sin caso de uso medido no entra (P7).\n\nEs un CONJUNTO: el orden no significa nada y la forma canónica lo ordena.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    }
+  }
+}

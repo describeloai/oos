@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2
+level: L0
+expects: accept
+summary: >
+  El correo de un menor es critical donde el concepto dice high. Elevar la
+  clasificacion heredada es legitimo, y para eso hace falta poder escribirla.

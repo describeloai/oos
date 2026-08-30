@@ -1,0 +1,8 @@
+{
+  "code": "OOS9001",
+  "entity": "erp.Supplier",
+  "interface": "acme.Party",
+  "missing": [
+    "gdpr.personalEmail"
+  ]
+}

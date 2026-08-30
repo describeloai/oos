@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#6
+level: L0
+expects: OOS9001
+summary: >
+  La entidad declara implementar una forma y le falta uno de los conceptos que exige.
+  Es la regla de la version, y solo alcanza a lo que alguien declaro.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2.1
+level: L0
+expects: accept
+summary: >
+  Un mapeo propuesto por una maquina, en un documento DRAFT. Es lo que un inductor
+  escribe, y tiene que compilar: si no, no hay nada que revisar.

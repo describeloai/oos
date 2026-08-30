@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Entity
+metadata: { name: MinorContact, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [contactId]
+  properties:
+    contactId: { type: String }
+    email:
+      is: gdpr.personalEmail
+      labels: { gdpr.sensitivity: critical }

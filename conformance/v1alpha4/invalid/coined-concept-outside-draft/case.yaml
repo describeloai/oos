@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2.1
+level: L0
+expects: OOS9003
+summary: >
+  Acunar es una inferencia igual que mapear, y cae bajo la misma regla. El mecanismo
+  no distingue las dos, y no debe: son la misma clase de acto.

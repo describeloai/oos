@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2
+level: L0
+expects: accept
+summary: >
+  La propiedad no declara etiqueta ninguna y aun asi queda cubierta: la hereda del
+  concepto, y la regla de cobertura la ve. Es el caso que decide si `is` significa algo.

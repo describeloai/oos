@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.2
+level: L0
+expects: OOS1004
+summary: >
+  Una propiedad que referencia un concepto y ademas declara su tipo. El esquema lo
+  expresa entero con un oneOf, asi que no necesita codigo propio.

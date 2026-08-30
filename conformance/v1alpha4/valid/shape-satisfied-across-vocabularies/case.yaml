@@ -1,0 +1,6 @@
+rule: spec/v1alpha4/01-significado.md#4.3
+level: L0
+expects: accept
+summary: >
+  Dos entidades de dos sistemas, sin una sola propiedad que se llame igual, satisfacen
+  la misma forma. Ninguna se renombro: la interfaz exige conceptos.

@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: nationalId, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  description: El identificador que un estado asigna a una persona fisica.
+  aiContext:
+    synonyms: [dni, nif, ssn, national_id, tax_id]

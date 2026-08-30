@@ -9,6 +9,11 @@
 | [`01-significado`](01-significado.md) | el núcleo — el régimen de significado, del que se deriva todo lo demás |
 | `02-property` · `03-interface` | los documentos — **pendientes** |
 
+**Estado de la implementación.** Los esquemas, la suite y el motor van por delante de esos
+dos documentos, y a propósito: §7 de este alcance exige enfrentar el vocabulario a algo que
+lo use *«antes de escribir los esquemas»*, y escribirlos fue esa prueba. Doce casos en verde
+y **tres correcciones que solo aparecen al usarlo** — §4.2, §5 y §7 — están medidas abajo.
+
 ---
 
 ## 1. La tesis
@@ -112,9 +117,10 @@ properties:
   email: { is: gdpr.personalEmail }
 ```
 
-Con el guardarraíl escrito antes de cometer el error, no después: **una propiedad declara
-localmente o referencia un concepto, nunca las dos.** Una con `is` **NO DEBE** redeclarar
-`type` ni `labels` — es `OOS4008` un nivel más arriba.
+Con el guardarraíl escrito antes de cometer el error, no después: una con `is` **NO DEBE**
+redeclarar `type`. Sí **PUEDE** escribir `labels`, y solo para **elevar** — `type` es una
+igualdad y `labels` un orden, y esa asimetría es lo que hace que `OOS4012` valga aquí sin
+cambiar una letra.
 
 Y el mapeo es donde **`confidence` encuentra por fin su usuario**. Está en
 `basic.schema.json` desde v1alpha1 —*«confianza de una inferencia automática, presente solo
@@ -146,11 +152,15 @@ Que exija el concepto es lo que permite que quince casi-duplicados de quince sis
 implementen `Party` **conservando cada uno su vocabulario**. Sin eso hay que limpiar antes de
 gobernar, que es el orden imposible.
 
-### 4.3 · Y `nature` se disuelve
+### 4.3 · Y `nature` **no** se disuelve
 
-`entity` y `event` pasan a ser **dos interfaces incorporadas**, y `OOS2010` deja de ser una
-regla propia para convertirse en el caso general. **El registro encoge**:
-[`01-significado`](01-significado.md) §4.
+Este alcance decía que `entity` y `event` pasarían a ser dos interfaces incorporadas y que
+`OOS2010` se absorbería. **La implementación lo refutó**: `requires` nombra conceptos y
+`primaryKey` no lo es. Una interfaz nombra una forma **en significado**, no en estructura, y
+mezclar las dos habría hecho que un solo documento dijera dos cosas con la misma palabra —
+el error contra el que va toda la versión.
+
+`OOS2010` se queda: [`01-significado`](01-significado.md) §5.
 
 ---
 
@@ -229,3 +239,25 @@ inductor, incluida una importación desde una herramienta ajena.
 
 Es el mismo método que destapó los tres defectos de la ronda anterior: **el diseño se decide
 con contacto, no con analogía.**
+
+### 7.1 · Ejecutada, y qué encontró
+
+Se ejecutó en la forma que no necesita base de datos: **escribir a mano el paquete que un
+inductor emitiría** y exigir que compile —`valid/draft-carries-confidence`—, junto con los
+once casos que rodean esa forma. El vocabulario sobrevive: un concepto basta para expresar lo
+que la introspección encuentra, y el mapeo no pide nada que en ese momento no se tenga.
+
+Y encontró tres defectos, ninguno visible leyendo:
+
+| | Qué | Consecuencia |
+|---|---|---|
+| **1** | §4.2 prohibía `labels` junto a `is` **y** permitía elevar la clasificación. Elevar exige escribirla | la spec se contradecía; se resolvió con la asimetría `type`/`labels` |
+| **2** | §5 disolvía `nature` en interfaces incorporadas. `requires` nombra conceptos y `primaryKey` no lo es | `OOS2010` se queda; el registro crece en tres y no en cuatro |
+| **3** | `confidence` era un `number` en `basic.schema.json` **desde v1alpha1** — y un decimal sin comillas no tiene forma canónica | `OOS6003` contra el primer caso que lo usó |
+
+El tercero merece leerse dos veces: **llevaba cuatro versiones contradiciendo una regla del
+propio proyecto**, y era invisible porque ningún documento referenciaba el campo. La misma
+decisión, con las mismas palabras, ya estaba escrita en `Resolution.threshold` de v1alpha2 —
+que llegó antes al problema por el camino contrario: tenía usuario desde el primer día.
+
+> Un `$def` sin usuario no está esperando: **está sin comprobar.**

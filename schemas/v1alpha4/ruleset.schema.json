@@ -1,0 +1,453 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha4/ruleset.schema.json",
+  "title": "Ruleset",
+  "description": "La regla que apunta, con el tercer eje que le faltaba: `implements`.\n\n`atLeast` nombra un conjunto por CLASIFICACIÓN, `named` por IDENTIDAD, `implements` por FORMA. No son tres maneras de decir lo mismo: son tres criterios distintos, y el tercero es el que permite gobernar quince casi-duplicados de quince sistemas con una sola regla, sin renombrar ninguno.\n\nLa regla que sigue debajo, sin cambios: La regla que apunta. Reúne las reglas SIN SUJETO —aserciones, máscaras de materialización y deberes— sobre un objetivo común, con un dueño.\n\nLa partición que decide qué entra aquí es una sola pregunta: si hay sujeto, es Cedar; si no lo hay, es un Ruleset. Por eso no hay `principal` en ningún sitio de este documento, y por eso cabe aquí el desclasificador en tiempo de materialización —el hueco que 99-errors registró para v1alpha2 y v1alpha2 no cerró: el índice se construye sin sujeto y Cedar exige uno.\n\nSin `labels` en `metadata`, y por una razón distinta que en Function: un Ruleset no porta datos, luego no tiene clasificación. Un campo del que nada se computa acaba adquiriendo un significado que nadie escribió.\n\nNormativo: spec/v1alpha3/02-ruleset.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "$defs": {
+    "labelFloor": {
+      "description": "Mapa de retículo cualificado a nivel, leído como «ese nivel o por encima».\n\nMisma forma que `metadata.labels` a propósito, y es un mapa y no una lista de `labelRef` por una razón que el mapa hace gratis: una lista podría contener `gdpr.sensitivity:high` y `gdpr.sensitivity:critical` a la vez, que son dos suelos para el mismo retículo y no significa nada. El mapa lo hace irrepresentable.\n\nQue el nivel exista en ese retículo es una relación entre documentos: el esquema comprueba la forma, el compilador emite OOS4003.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+      },
+      "additionalProperties": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    },
+    "assertion": {
+      "description": "Perfil de `quality` de ODCS v3.1. El cuerpo no se inventa: se adopta, y con él la biblioteca de métricas, los operadores y el vocabulario de dimensiones.\n\n`schedule` y `scheduler` de ODCS NO se perfilan, y su ausencia es la frontera de 00-scope §5: ningún planificador. Un Ruleset declara qué debe sostenerse; cuándo se comprueba es del motor que lo ejecute, y ODCS mismo dice que ese motor es Soda, Great Expectations o dbt.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "description": "Obligatorio, y no por convención de ODCS: es lo que permite que un error apunte a la aserción concreta dentro de un documento que puede tener veinte.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "type": {
+          "description": "`library` es independiente del dialecto y su objetivo puede abarcar cualquier número de fuentes. `sql` está atada a un dialecto, y el dialecto solo se conoce donde se declara la fuente: su objetivo NO DEBE seleccionar propiedades de más de una fuente física (OOS8005). `text` y `custom` se transportan sin interpretar, y por eso no cuentan para la cobertura (02-ruleset §6).",
+          "enum": [
+            "library",
+            "sql",
+            "text",
+            "custom"
+          ],
+          "default": "library"
+        },
+        "metric": {
+          "description": "Biblioteca cerrada de ODCS v3.1.",
+          "enum": [
+            "nullValues",
+            "missingValues",
+            "invalidValues",
+            "duplicateValues",
+            "rowCount"
+          ]
+        },
+        "mustBe": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        "mustNotBe": {
+          "type": [
+            "number",
+            "string",
+            "boolean"
+          ]
+        },
+        "mustBeGreaterThan": {
+          "type": "number"
+        },
+        "mustBeGreaterOrEqualTo": {
+          "type": "number"
+        },
+        "mustBeLessThan": {
+          "type": "number"
+        },
+        "mustBeLessOrEqualTo": {
+          "type": "number"
+        },
+        "mustBeBetween": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "mustNotBeBetween": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "unit": {
+          "enum": [
+            "rows",
+            "percent"
+          ]
+        },
+        "dimension": {
+          "description": "Vocabulario cerrado de ODCS. Se toman los nombres largos y no los sinónimos de dos letras: dos formas de escribir lo mismo darían dos formas canónicas.",
+          "enum": [
+            "accuracy",
+            "completeness",
+            "conformity",
+            "consistency",
+            "coverage",
+            "timeliness",
+            "uniqueness"
+          ]
+        },
+        "severity": {
+          "description": "SOLO `error` cuenta para la cobertura (OOS8001). Un aviso es, por definición, «lo vimos y no paramos nada»: no descarga la obligación de gobernar.\n\nSin esta distinción, OOS8001 se satisface con una aserción que no para nada y la cobertura pasa a medir que alguien escribió un fichero — que es el modo de fallo que aparece en cuanto alguien tiene prisa por poner verde una compilación.",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "default": "error"
+        },
+        "query": {
+          "description": "Solo para `type: sql`. Marcadores `{object}` y `{property}` de ODCS.",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "businessImpact": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "customProperties": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "authoritativeDefinitions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "sql"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "query"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "library"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "metric"
+            ]
+          }
+        }
+      ]
+    },
+    "mask": {
+      "description": "El desclasificador aplicado por objetivo y SIN SUJETO: al construir el índice, no por consulta. Es el hueco que 99-errors registró —«cachear correos tokenizados para unir por ellos»— y que no se pudo cerrar antes porque el único mecanismo disponible, una política de Cedar, exige un principal.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "declassifier"
+      ],
+      "properties": {
+        "id": {
+          "description": "Para que una política de Cedar pueda NOMBRARLA: `@oosMask(\"<ruleset cualificado>#<id>\")`. La anotación no declara una máscara, la nombra — así la definición sigue en un solo sitio, con dueño, versión y descenso verificado (02-ruleset §4.1).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "declassifier": {
+          "description": "Subconjunto del vocabulario cerrado de 04-flow §5. `promote` NO está admitido aquí, y excluirlo no es retirarlo: `promote` sube por un retículo de ciclo de vida y una máscara tiene que BAJAR. Sigue siendo un desclasificador para su propio uso.",
+          "enum": [
+            "mask",
+            "tokenize",
+            "redact",
+            "aggregate"
+          ]
+        },
+        "to": {
+          "description": "El nivel resultante, que DEBE ser estrictamente menor que el `atLeast` de cada objetivo del documento (OOS8003).\n\nDeclararlo es lo que hace comprobable el descenso: la comparación es local al documento —dos niveles declarados— y no hace falta recorrer las propiedades seleccionadas, porque ninguna puede estar por debajo del `atLeast` que la seleccionó. Es también lo que ningún catálogo puede hacer: una máscara de Unity Catalog o de Snowflake es una función opaca evaluada en tiempo de consulta, y nadie sabe qué clasificación sale por el otro lado.",
+          "$ref": "#/$defs/labelFloor"
+        },
+        "argument": {
+          "description": "Solo para `mask`. Vocabulario de 04-flow §5.",
+          "enum": [
+            "FULL",
+            "LAST4",
+            "HASH"
+          ]
+        },
+        "minGroupSize": {
+          "description": "Solo para `aggregate`. El k del k-anonimato: un agregado de al menos n sujetos no identifica a ninguno.",
+          "type": "integer",
+          "minimum": 2
+        }
+      },
+      "allOf": [
+        {
+          "comment": "`redact` hace desaparecer el valor, luego su salida es SIEMPRE el ínfimo del retículo. Declararlo es un campo derivable, y P2 lo prohíbe. Al escribir este esquema quedó claro que el caso es estructural y no semántico, así que 02-ruleset §4 lo mueve aquí y OOS8003 se queda con una sola causa.",
+          "if": {
+            "properties": {
+              "declassifier": {
+                "const": "redact"
+              }
+            },
+            "required": [
+              "declassifier"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "to"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "to"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "declassifier": {
+                "const": "mask"
+              }
+            },
+            "required": [
+              "declassifier"
+            ]
+          },
+          "then": {
+            "required": [
+              "argument"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "argument"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "declassifier": {
+                "const": "aggregate"
+              }
+            },
+            "required": [
+              "declassifier"
+            ]
+          },
+          "then": {
+            "required": [
+              "minGroupSize"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "minGroupSize"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "duty": {
+      "description": "Qué función responde por el conjunto seleccionado.\n\nSIN condición propia: el objetivo del documento es la condición. Un `when:` aquí sería un segundo lenguaje de selección dentro del mismo documento, y un documento con dos alcances es más difícil de auditar que dos documentos con uno cada uno.\n\nY sin operador temporal: hoy un deber declara QUÉ responde, no CUÁNDO tiene que correr. Se escribe ya para fijar el vocabulario antes de que llegue la temporalidad — la lección del endosante, que apareció inventado tres veces con tres nombres.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "call"
+      ],
+      "properties": {
+        "call": {
+          "description": "DEBE resolver a una `Function` declarada. Es la única restricción que hace falta desde el primer día, y es la que XACML no tuvo: sus obligaciones nombraban deberes que ningún runtime sabía ejecutar. Una referencia a una función trae su integridad computada, sus precondiciones, su endoso y su destino comprobado.\n\nUna referencia colgante es OOS2001, que v1alpha1 reservó exactamente para esto: «se reserva porque Function, Resolution y Test introducen tipos de referencia nuevos».",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        }
+      }
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha3"
+    },
+    "kind": {
+      "const": "Ruleset"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "targets"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "assertions"
+          ]
+        },
+        {
+          "required": [
+            "masks"
+          ]
+        },
+        {
+          "required": [
+            "duties"
+          ]
+        }
+      ],
+      "properties": {
+        "owner": {
+          "description": "Y es independiente del dueño de los paquetes a los que apunta. Ahí está la razón de que esto sea un documento y no un bloque dentro de Entity: en un entorno regulado el responsable de cumplimiento tiene que poder RESTRINGIR la ontología sin poder EDITARLA, y con reglas locales eso es estructuralmente imposible porque son el mismo fichero, el mismo CODEOWNERS y el mismo permiso de escritura.\n\nUn Ruleset sin dueño es OOS1004 —forma— y no un código propio: es una clave obligatoria y el esquema ya lo resuelve. Un código semántico para algo estructural es peso muerto —la lección de OOS7010.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "targets": {
+          "description": "CONJUNTO, no secuencia: N4 lo ordena. La unión es conmutativa, así que el orden no significa nada — y eso lo separa de `Resolution.strategies`, que sí es secuencia porque reordenarla cambia qué se fusiona.\n\nDentro de un `atLeast`, las entradas se combinan con Y. Entre elementos de la lista, con O. Es deliberadamente la semántica de `matchLabels` de Kubernetes, cuyo comportamiento está documentado y es conocido.\n\nUn elemento declara `atLeast` —que COMPUTA el dominio por clasificación—, `named` —que lo ESCRIBE— o `implements` —que lo computa por forma—, nunca más de uno. Que `named` sea admisible es consecuencia de OOS8001: enumerar se pudre porque una propiedad nueva se escapa EN SILENCIO, y con la regla de cobertura eso rompe la compilación. Era el silencio, no la enumeración, lo que hacía daño.\n\nY al revés que en Kubernetes: no hay forma de escribir «todo». Un objetivo que no casa con nada es OOS8002, porque casi nunca significa «no hay nada así» —significa que alguien escribió mal un nivel, o que el retículo cambió— y una regla que no gobierna nada tiene exactamente el mismo aspecto que una que funciona.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [],
+            "properties": {
+              "atLeast": {
+                "description": "El único operador, y no por minimalismo: EL GOBIERNO ES MONÓTONO. Si una regla se aplica a `high`, tiene que aplicarse a `critical`; una que deja de aplicarse cuando el dato es más sensible es un defecto. Eso descarta `exactly` y `atMost`, que solo sirven para equivocarse.\n\nSe nombra la relación en lugar de dejar el mapa desnudo porque `{retículo: nivel}` ya significa dos cosas en el árbol: una asignación en `metadata.labels` y un TECHO en `ConduitPolicy`. Un suelo con la misma forma, distinguido solo por en qué documento estás, sería una trampa.\n\nSe corresponde con `odrl:gteq`, que es lo que se emitirá hacia los espacios de datos.",
+                "$ref": "#/$defs/labelFloor"
+              },
+              "implements": {
+                "description": "El dominio por FORMA: las propiedades que mapean a los conceptos que estas interfaces exigen, en toda entidad que declare implementarlas.\n\nNo alcanza a TODA propiedad de esas entidades, y la diferencia importa: una regla sobre `Party` habla de nombres legales y correos personales, no de lo que `Customer` tenga además. Acreditar cobertura sobre lo que la interfaz no nombra sería acreditar lo que nadie exigió — el mismo error, en el sentido inseguro, que la cobertura por orden de retículo.\n\nLa monotonía se comporta igual que en `atLeast`: si `Customer implements Party`, una regla sobre `Party` lo alcanza. Un nombre que no resuelve es OOS2001; una interfaz que no casa con ninguna entidad es OOS8002, como cualquier otro objetivo vacío.",
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+                }
+              },
+              "named": {
+                "description": "El dominio escrito, por nombre cualificado de propiedad. Es el caso enumerado, y vive aquí y no colgando de la propiedad porque un `Ruleset` tiene `owner`, versión y digest propios: lo que la propiedad ES va en la propiedad, lo que alguien EXIGE de ella va donde está quien lo exige.\n\nUn nombre que no resuelve es OOS2005, que ya cubre este caso.",
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+                }
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "atLeast"
+                ]
+              },
+              {
+                "required": [
+                  "named"
+                ]
+              },
+              {
+                "required": [
+                  "implements"
+                ]
+              }
+            ]
+          }
+        },
+        "assertions": {
+          "description": "CONJUNTO: N4 lo ordena. Todas deben sostenerse, así que no hay nada que desempatar. Es la otra mitad de N4 —conjuntos ordenados, secuencias preservadas— y la comparación con `Resolution.strategies` deja de ser arbitraria: allí el orden decide qué gana, aquí no hay nada que ganar.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/assertion"
+          }
+        },
+        "masks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/mask"
+          },
+          "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
+        },
+        "duties": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/duty"
+          },
+          "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
+        }
+      }
+    }
+  }
+}

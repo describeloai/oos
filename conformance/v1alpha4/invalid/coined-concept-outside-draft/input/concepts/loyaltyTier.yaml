@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: loyaltyTier, namespace: gdpr }
+spec:
+  type: String
+  confidence: "0.62"
+  description: Acunado por induccion, y ya nadie recuerda quien lo confirmo.

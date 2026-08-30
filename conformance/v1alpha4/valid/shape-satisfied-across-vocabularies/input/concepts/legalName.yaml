@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: legalName, namespace: acme }
+spec:
+  type: String
+  description: La denominacion con la que una parte figura en un contrato.
+  aiContext:
+    synonyms: [razon_social, nombre_fiscal, legal_name, denominacion]

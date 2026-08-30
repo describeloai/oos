@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: low }
+  aiContext:
+    synonyms: [email, correo, e_mail, mail]

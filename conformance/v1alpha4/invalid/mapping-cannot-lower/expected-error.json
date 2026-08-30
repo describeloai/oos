@@ -1,0 +1,6 @@
+{
+  "code": "OOS4012",
+  "property": "crm.Customer.email",
+  "inherited": "gdpr.sensitivity:high",
+  "declared": "gdpr.sensitivity:low"
+}
