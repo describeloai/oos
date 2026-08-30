@@ -1,0 +1,23 @@
+# Política de fin de línea, fijada en el proyecto y no en cada máquina.
+#
+# Windows trae `core.autocrlf = true` en el gitconfig del sistema, que convierte
+# a CRLF al extraer. Con dos copias de trabajo del repositorio eso produce dos
+# árboles que difieren byte a byte en el mismo commit, y **git los declara
+# limpios a los dos**, porque compara `stat` y no contenido. Ya costó una vez:
+# un `git add -A` reescribió 1.200 líneas como cambios de fin de línea.
+#
+# Aquí importa más que en otros proyectos, y por una razón de la especificación:
+# el digest de un paquete se computa sobre su contenido, y **un fin de línea es
+# contenido**. Dejar esa decisión en la configuración de cada portátil es dejar
+# la identidad del artefacto en manos del entorno.
+* text=auto eol=lf
+
+# EXCEPCIÓN, y es normativa: la suite de conformidad no es código fuente, son
+# VECTORES DE PRUEBA. Varios casos codifican a propósito diferencias de bytes
+# cuya irrelevancia es exactamente lo que afirman —`digest/formatting-irrelevant`
+# tiene CRLF en un lado y LF en el otro, y ahí está todo su valor—. Normalizarlos
+# no rompería la suite: la dejaría en verde demostrando menos, que es peor.
+#
+# `-text` impide la conversión; `diff` conserva la comparación textual, para que
+# un cambio en un caso siga siendo revisable en un PR y no salga como binario.
+conformance/** -text diff
