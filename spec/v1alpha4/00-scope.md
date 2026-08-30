@@ -31,6 +31,16 @@ cosa**.
 
 Ese es el hueco, y esta versión existe para cerrarlo.
 
+Y es la primera en la que **una parte del vocabulario existe para que otro la escriba**, así
+que conviene fijar qué clase de documento es esto antes de las piezas:
+
+> **El molde no dice lo que una herramienta debe hacer. Dice lo que tiene que ser cierto — y
+> entonces la herramienta no tiene elección.**
+
+Define **qué se puede decir, qué obliga decirlo y qué tiene que cumplir lo dicho**. No define
+qué se introspecciona, si hay un modelo de por medio ni cómo se pregunta
+([`01-significado`](01-significado.md) §2).
+
 ---
 
 ## 2. Por qué ahora, y no antes
@@ -106,6 +116,21 @@ Con el guardarraíl escrito antes de cometer el error, no después: **una propie
 localmente o referencia un concepto, nunca las dos.** Una con `is` **NO DEBE** redeclarar
 `type` ni `labels` — es `OOS4008` un nivel más arriba.
 
+Y el mapeo es donde **`confidence` encuentra por fin su usuario**. Está en
+`basic.schema.json` desde v1alpha1 —*«confianza de una inferencia automática, presente solo
+en `DRAFT`»*— y llevaba cuatro versiones sin que ningún documento lo referenciara:
+
+```yaml
+properties:
+  email: { is: gdpr.personalEmail, confidence: 0.87 }
+```
+
+De ahí sale la regla que convierte la revisión humana en una condición de compilación:
+**un documento que no está en `DRAFT` no puede contener una sola conjetura** (`OOS9003`).
+Promover exige haber resuelto cada propuesta, y eso vale igual para un inductor ajeno que
+para el nuestro — que es exactamente lo que el molde tiene que conseguir
+([`01-significado`](01-significado.md) §4.2.1).
+
 ### 4.2 · `Interface` — la forma
 
 Un conjunto de entidades nombrado por su forma, expresada **en conceptos y no en nombres**:
@@ -167,6 +192,12 @@ las hace iguales. Fusionar registros es `Resolution`, y es otra fila de la misma
 4. **Qué pasa con `expression` y `derivedFrom`** cuando la propiedad mapea a un concepto:
    siguen siendo de la propiedad concreta, pero `OOS4015` compara lecturas contra
    `derivedFrom` y habrá que comprobar que el mapeo no lo enturbie.
+5. **Acuñar frente a mapear.** Un inductor puede mapear a conceptos existentes o **proponer
+   conceptos nuevos**, y el segundo modo tiene un modo de fallo propio: si acuñar es barato
+   salen cuatro mil conceptos, uno por columna, **que es igual que no tener vocabulario**. La
+   intuición es que acuñar tiene que costar más que mapear —revisión aparte, dueño explícito—
+   pero el molde todavía no dice cómo se expresa esa diferencia. Es el `severity: warning`
+   de esta versión: una escapatoria gratis vacía el mecanismo.
 
 ---
 

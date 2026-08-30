@@ -32,7 +32,35 @@ Esa frase es el motivo de esta versión.
 
 ---
 
-## 2. El movimiento es el de `Binding`, en la otra dirección
+## 2. Esto es un molde, no un procedimiento
+
+Conviene decirlo antes de las piezas, porque es lo que decide qué entra y qué no.
+
+Una ontología de un patrimonio real **se induce**, y una parte de lo que aquí se define
+existe para que algo la induzca. Pero esta especificación **no describe cómo se induce**:
+
+| | |
+|---|---|
+| **el molde define** | qué se puede decir, qué obliga decirlo, y qué tiene que cumplir lo dicho |
+| **el molde no define** | qué se introspecciona, si hay un modelo de por medio, cómo se pregunta |
+
+Es la frontera de `docs/DESIGN.md` §3 —*«OOS define el artefacto; ORE define la ergonomía y
+la ejecución»*— y aquí importa más que en ninguna versión anterior, porque es la primera vez
+que una parte del vocabulario existe **para que otro la escriba**.
+
+De ahí sale la forma que tienen todas las reglas de este documento, y §3.2.1 es su mejor
+ilustración:
+
+> **El molde no dice lo que una herramienta debe hacer. Dice lo que tiene que ser cierto — y
+> entonces la herramienta no tiene elección.**
+
+Eso es lo que permite que un inductor ajeno —otro motor, una importación desde una
+herramienta de terceros— produzca algo conforme sin haber leído una línea sobre nuestra
+ergonomía.
+
+---
+
+## 3. El movimiento es el de `Binding`, en la otra dirección
 
 Aquí está lo que hace que la pieza que falta sea casi gratis, y es el mismo hallazgo que en
 las dos versiones anteriores: **ya existe, aplicada a otro nivel.**
@@ -62,9 +90,9 @@ dice que una propiedad **PUEDE** elevar la etiqueta que hereda y **NO DEBE** reb
 
 ---
 
-## 3. Las tres piezas
+## 4. Las tres piezas
 
-### 3.1 · El concepto
+### 4.1 · El concepto
 
 Un `Property` no dice dónde vive un dato ni cómo se llama. Dice **qué es**.
 
@@ -102,7 +130,7 @@ almacena clases y propiedades por separado, y llama a lo segundo *ontologías in
   propiedad concreta, no del concepto. Un correo personal significa lo mismo se calcule como
   se calcule.
 
-### 3.2 · El mapeo
+### 4.2 · El mapeo
 
 La entidad conserva su nombre y declara qué concepto es:
 
@@ -132,7 +160,60 @@ Y el nombre no importa: `Customer.email`, `Supplier.contactEmail` y `Employee.wo
 pueden ser el mismo concepto sin renombrarse. **Eso es lo que hace modelable un patrimonio
 sucio**: no se limpia para gobernar, se mapea.
 
-### 3.3 · La forma
+### 4.2.1 · `confidence` encuentra su usuario, cuatro versiones después
+
+`basic.schema.json` declara este tipo **desde v1alpha1**:
+
+> *«Confianza de una inferencia automática. Presente solo en documentos en `DRAFT`;
+> `ore promote` la elimina.»*
+
+Y hasta hoy **ningún documento lo referenciaba**: un `$def` sin usuario, esperando a que
+existiera algo que infiriera. El mapeo es ese algo.
+
+```yaml
+properties:
+  email:
+    is: gdpr.personalEmail
+    confidence: 0.87          # esto lo propuso una máquina
+```
+
+**El mapeo es el único sitio donde `confidence` significa algo**, y la razón es exacta: es la
+confianza de **una inferencia**, y un mapeo escrito a mano no es una inferencia — es una
+decisión. Nadie declara cuánta confianza tiene en algo que acaba de decidir.
+
+**Normativo.**
+
+- `confidence` **NO DEBE** aparecer sin `is`. Sin inferencia no hay nada de lo que dudar, y
+  el esquema lo expresa entero: es `OOS1004`.
+- Una propiedad con `confidence` **DEBE** estar en un documento cuya madurez **efectiva** sea
+  `DRAFT`. Si no, `OOS9003`.
+
+Y la segunda es la que hace trabajo de verdad, porque **es la misma frase leída al revés**:
+
+> Un documento que no está en `DRAFT` **no puede contener una sola conjetura**.
+
+`ore promote` es un desclasificador del vocabulario cerrado de `04-flow` §5: baja por el
+retículo `oos.maturity`, de `DRAFT` a `REVIEWED` a `STABLE`. Con esta regla, promover un
+documento que aún lleva `confidence` **no compila** — así que promover exige haber resuelto
+cada propuesta, una a una.
+
+**Y aquí es donde se ve qué clase de documento es este.** No dice lo que `promote` tiene que
+hacer; dice lo que tiene que ser cierto. La herramienta no tiene elección, y **una
+herramienta ajena tampoco**: una importación desde un inductor de terceros que traiga
+mapeos sin revisar entra como `DRAFT` o no entra.
+
+> La revisión humana deja de ser una buena práctica y pasa a ser **una condición de
+> compilación.**
+
+Es la diferencia con el modelo de un acelerador que aprueba elemento a elemento en una
+interfaz: allí la aprobación es un acto que ocurrió y hay que creerse; aquí es **un commit,
+con autor y diff, y un digest que cambia**.
+
+Y la madurez es **efectiva**, no declarada: se hereda como cualquier otra etiqueta —de la
+entidad, del `datasource`— y por eso la comprobación es del compilador y no del esquema.
+Nadie promueve una entidad dejando una propiedad atrás.
+
+### 4.3 · La forma
 
 Un `Interface` nombra un conjunto de entidades **por su forma**, y la forma se expresa en
 conceptos, no en nombres:
@@ -172,7 +253,7 @@ comporta igual — si `Customer implements Party`, una regla sobre `Party` lo al
 
 ---
 
-## 4. `nature` se disuelve
+## 5. `nature` se disuelve
 
 `Entity.nature` admite `entity` y `event`, y `OOS2010` dice: *«`nature: entity` sin
 `primaryKey`, o `event` sin `timeKey`»*.
@@ -192,7 +273,7 @@ de crecer**. Es el resultado que P7 existe para producir.
 
 ---
 
-## 5. La regla
+## 6. La regla
 
 Cada versión aporta una, y esta es la cuarta:
 
@@ -206,7 +287,7 @@ Cada versión aporta una, y esta es la cuarta:
 Y es decidible al compilar por lo de siempre: los dos lados se computan del paquete, sin
 tocar un dato.
 
-### 5.1 · Lo que hace útil a la regla, y lo que la limita
+### 6.1 · Lo que hace útil a la regla, y lo que la limita
 
 Una entidad que **declara** implementar y no cumple es un fallo visible: está escrito en el
 documento y una revisión lo encuentra.
@@ -229,12 +310,13 @@ decidible, lo omitido no lo es nunca.**
 
 ---
 
-## 6. La familia `OOS9xxx`
+## 7. La familia `OOS9xxx`
 
 | Código | Condición |
 |---|---|
 | `OOS9001` | una entidad declara implementar una interfaz y no la satisface |
 | `OOS9002` | una propiedad con `is` redeclara lo que hereda —`type` o `labels`— |
+| `OOS9003` | `confidence` en un documento cuya madurez efectiva no es `DRAFT` |
 
 Y los que **no** hacen falta, que es lo informativo:
 
@@ -242,22 +324,33 @@ Y los que **no** hacen falta, que es lo informativo:
 |---|---|---|
 | una propiedad rebaja la clasificación de su concepto | `OOS4012` | v1alpha1, **sin cambios** |
 | `is` o `requires` apuntan a algo inexistente | `OOS2001` | reservado en v1alpha1 |
+| `confidence` sin `is` | `OOS1004` | el esquema lo expresa entero |
 | tipo fuera del conjunto en un concepto | `OOS3001` | v1alpha1 |
 | `nature` incoherente con su forma | `OOS9001` | **absorbe `OOS2010`** |
 
-**Dos códigos nuevos y uno retirado.** Este registro se moverá al escribir los esquemas y los
-casos —pasó las tres veces anteriores— y la dirección esperable es que encoja.
+**Tres códigos nuevos y uno retirado.** Este registro se moverá al escribir los esquemas y
+los casos —pasó las tres veces anteriores— y la dirección esperable es que encoja.
+
+`OOS9003` es del compilador y no del esquema por una razón concreta: la madurez es
+**efectiva**, y una etiqueta heredada de la entidad o del `datasource` no está escrita en el
+documento donde vive el `confidence`.
 
 ---
 
-## 7. El ecosistema
+## 8. El ecosistema
 
 | | Qué aporta | Por qué no se inventa |
 |---|---|---|
 | **`Binding`** de v1alpha1 | **el patrón del mapeo** | ya está: el modelo conserva el nombre, el mapeo declara la identidad |
 | **`OOS4012`** | la dirección de la herencia | se puede elevar, no rebajar. Sube un nivel sin cambiar |
+| **`confidence`** | la marca de lo inferido | **está en `basic.schema.json` desde v1alpha1** y llevaba cuatro versiones sin usuario |
+| **`oos.maturity`** y `promote` | la frontera entre propuesta y verdad | retículo estándar y desclasificador del vocabulario cerrado. Sin añadir nada |
 | **el retículo** | la clasificación que el concepto declara | sin cambios |
 | **`Ruleset`** de v1alpha3 | el consumidor: gana un tercer eje de objetivo | `implements` junto a `atLeast` y `named` |
+
+Las filas tercera y cuarta merecen leerse juntas, porque **el mecanismo de la propuesta ya
+estaba entero** —el campo, el retículo y el desclasificador— y llevaba desde v1alpha1
+esperando a que existiera algo que infiriera. Esta versión no lo construye: **lo conecta.**
 
 **Y `Ossie` no aporta nada aquí, que es lo que hay que decir en voz alta.** El estándar con el
 que componemos modela *datasets, métricas, dimensiones, relaciones y contextos* — vocabulario
@@ -277,13 +370,17 @@ alcance como decisión abierta — no se resuelve metiéndola aquí.
 
 ---
 
-## 8. Lo que este régimen no promete
+## 9. Lo que este régimen no promete
 
-- **Que se hayan declarado las formas correctas.** §5.1. Es la misma frontera que
+- **Que se hayan declarado las formas correctas.** §6.1. Es la misma frontera que
   cobertura/adecuación, por tercera vez.
 - **Descubrir sameness no declarada.** Dos propiedades que son el mismo concepto y no lo
   dicen son indistinguibles de dos que no lo son. Adivinarlo desde el nombre sería basar la
   solidez en parsear cadenas, y eso está decidido que no.
+- **Que un `confidence` alto signifique que el mapeo es correcto.** El número es una
+  afirmación de quien lo escribió, y el compilador no lo interpreta: **no hay umbral**.
+  Lo único que hace con él es impedir que sobreviva a la promoción — que es la diferencia
+  entre exigir revisión y aparentar rigor con un decimal.
 - **Que el concepto esté bien clasificado.** Que `gdpr.personalEmail` sea `high` es una
   afirmación de quien publica el paquete. El compilador comprueba que se respete, no que sea
   verdad — la misma honestidad que `01-efectos` §7 sobre la integridad de una fuente externa.
