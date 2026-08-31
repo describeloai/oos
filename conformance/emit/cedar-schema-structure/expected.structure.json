@@ -1,19 +1,76 @@
 {
   "description": "Propiedades estructurales que el esquema Cedar emitido DEBE satisfacer. No se afirma texto: dos implementaciones pueden formatear distinto y ser ambas correctas.",
   "mustContain": [
-    { "entity": "Label",
-      "reason": "cada nivel de cada retículo se proyecta como miembro de Label" },
-    { "members": ["gdpr.sensitivity:none", "gdpr.sensitivity:low", "gdpr.sensitivity:high",
-                  "oos.maturity:DRAFT", "oos.maturity:REVIEWED",
-                  "oos.maturity:STABLE", "oos.maturity:DEPRECATED"] },
-    { "entity": "Property", "in": ["Label", "EntityType"],
-      "reason": "una propiedad pertenece a la vez a su entidad y a todas sus etiquetas; es lo que hace que `resource in Label::\"...\"` funcione sin enumerar propiedades" },
-    { "entity": "Employee", "in": ["Employee"],
-      "reason": "la autorreferencia hr.Employee.manager se proyecta como jerarquía: ReBAC sin un segundo sistema" },
-    { "actions": ["read", "aggregate", "export", "invoke"] }
+    {
+      "entity": "Label",
+      "reason": "cada nivel de cada retículo se proyecta como miembro de Label"
+    },
+    {
+      "members": [
+        "gdpr.sensitivity:none",
+        "gdpr.sensitivity:low",
+        "gdpr.sensitivity:high",
+        "oos.maturity:DRAFT",
+        "oos.maturity:REVIEWED",
+        "oos.maturity:STABLE",
+        "oos.maturity:DEPRECATED"
+      ]
+    },
+    {
+      "entity": "Property",
+      "in": [
+        "Label",
+        "EntityType"
+      ],
+      "reason": "una propiedad pertenece a la vez a su entidad y a todas sus etiquetas; es lo que hace que `resource in Label::\"...\"` funcione sin enumerar propiedades"
+    },
+    {
+      "entity": "Employee",
+      "in": [
+        "Employee"
+      ],
+      "reason": "la autorreferencia hr.Employee.manager se proyecta como jerarquía: ReBAC sin un segundo sistema"
+    },
+    {
+      "actions": [
+        "read",
+        "aggregate",
+        "export",
+        "invoke"
+      ]
+    },
+    {
+      "entity": "Employee",
+      "principalOf": [
+        "read",
+        "aggregate",
+        "export",
+        "invoke"
+      ],
+      "attributes": [
+        "employeeId",
+        "managerId"
+      ],
+      "reason": "una entidad `principal: true` es sujeto de peticion y sus propiedades son la forma que la capa de identidad rellena; sin ella el principal era `Role`, sin atributos, y `resource in principal` era un error de tipos"
+    },
+    {
+      "context": [
+        "purpose"
+      ],
+      "reason": "se leia para OOS5015 y no se declaraba en ninguna parte: una politica que la usara no validaba contra nuestro propio esquema"
+    }
   ],
   "mustNotContain": [
-    { "entity": "Contractor",
-      "reason": "solo se proyecta lo declarado en el paquete" }
+    {
+      "entity": "Contractor",
+      "reason": "solo se proyecta lo declarado en el paquete"
+    },
+    {
+      "attributesOn": [
+        "Property",
+        "Role"
+      ],
+      "reason": "el recurso se posiciona por PERTENENCIA, no por atributos: describirlo obligaria al motor a leerlo para autorizarlo"
+    }
   ]
 }

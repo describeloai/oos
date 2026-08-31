@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#2.2
+level: L0
+expects: OOS1004
+summary: >
+  Un `nature: event` declarado principal. No tiene identidad estable por registro, así que no hay sujeto que nombrar.

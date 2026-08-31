@@ -174,6 +174,22 @@ política, y §4 se convierte en una convención que el consumidor puede olvidar
 el camino no obliga a ser una caja fuerte de secretos largos**, y este apartado fija la
 postura.
 
+### 6.1 · Los atributos del principal no se leen: llegan
+
+**Normativo.** Los atributos que la política evalúa sobre el principal **DEBEN** llegar con la
+petición, firmados por la capa de identidad. Una implementación L2 **NO DEBE** resolverlos
+contra un binding, y **DEBE** rechazar una petición que no los traiga.
+
+> **Lo que decide el acceso no puede estar sujeto al acceso que decide.**
+
+La jerarquía es el otro caso, y se resuelve sin leer datos tampoco: `resource in principal`
+—la cadena de mando— se responde con el **índice de topología**, que es donde ya viven las
+aristas y que se gobernó al construirse. Ninguna de las dos cosas que Cedar necesita para
+autorizar exige una lectura gobernada en el camino de autorización, y eso no es casualidad:
+es lo que hace que el orden de las fases de §3 se pueda cumplir.
+
+### 6.2 · Credenciales de la fuente
+
 **Normativo.** Una implementación L2 **DEBE** preferir, en este orden, la primera forma que la
 fuente admita:
 

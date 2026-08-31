@@ -3,6 +3,9 @@ kind: Entity
 metadata: { name: Employee, namespace: hr }
 spec:
   nature: entity
+  # Quien pregunta ES una entidad del modelo: sin esto el principal seria
+  # `Role`, una bolsa opaca, y la jerarquia emitida no la podria usar nadie.
+  principal: true
   primaryKey: [employeeId]
   properties:
     employeeId: { type: String }

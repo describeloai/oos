@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Clic, namespace: app }
+spec:
+  nature: event
+  timeKey: ocurrioEn
+  # Un evento no identifica a nadie: sitúa un hecho en el tiempo.
+  principal: true
+  properties:
+    ocurrioEn: { type: DateTimeTz }
+    url:       { type: String }

@@ -55,6 +55,11 @@
 
       "properties": {
 
+        "principal": {
+          "description": "Esta entidad puede ser el SUJETO de una peticion. Sus propiedades son la forma que la capa de identidad tiene que rellenar.\n\nSin esto el principal de una politica era `Role`, una bolsa sin atributos, y `principal.department` no era expresable: lo que se emitia era RBAC, no ABAC. Y la proyeccion de la autorreferencia a jerarquia —`Employee in [Employee]`— no la podia usar nadie, porque `resource in principal` era un error de tipos.\n\nNORMATIVO: los VALORES de esos atributos llegan CON LA PETICION. Un motor NO DEBE resolverlos contra un binding — lo que decide el acceso no puede estar sujeto al acceso que decide. Aqui se declara la forma; la capa de identidad la rellena.\n\nLos atributos se proyectan SOLO en un principal. El recurso se posiciona por PERTENENCIA —`resource in Label::\"...\"`, `resource in principal`— y no por atributos: describirlo con atributos obligaria al motor a leer el recurso para autorizarlo.\n\nUn `nature: event` NO puede ser principal: no tiene identidad estable, asi que no hay sujeto que nombrar.\n\nNormativo: spec/v1alpha1/02-entity.md §2.2",
+          "type": "boolean"
+        },
+
         "nature": {
           "description": "`entity` tiene identidad estable y estado actual, y EXIGE `primaryKey`.\n`event` es append-only y ordenado en el tiempo, sin identidad estable por registro: EXIGE `timeKey` y la clave primaria es opcional.\n\nUn tema de Kafka o un log de clics no tienen clave estable, y exigírsela los excluiría del modelo. Toda la maquinaria de gobernanza es idéntica para ambos: solo cambia el requisito de identidad, y eso no justifica un tipo de documento aparte.",
           "enum": ["entity", "event"]

@@ -162,7 +162,18 @@ Lo que OOS sí define sobre Cedar:
 
 1. El **vocabulario cerrado de desclasificadores** que una anotación puede invocar
    ([04 · §5](04-flow.md)).
-2. El **mapeo determinista** de un paquete OOS a un esquema Cedar.
+2. El **mapeo determinista** de un paquete OOS a un esquema Cedar. De ese mapeo, tres piezas
+   son las que hacen el trabajo:
+   - `Property in [Label, EntityType]` — una propiedad pertenece a su entidad **y a todas sus
+     etiquetas**, que es lo que permite escribir `resource in Label::"…"` sin enumerar nada, y
+     lo que hace que **una entidad nueva quede gobernada el día que se etiqueta**.
+   - Los **principales** son `Role` —para lo que no es una persona modelada— más las entidades
+     que declaran `principal: true` ([02 · §2.2](02-entity.md)), con **sus propiedades como
+     atributos**. Sin ellas el principal era una bolsa opaca y lo proyectado era RBAC.
+   - **`context` cerrado en `purpose`, y obligatorio.** Se leía para `OOS5015` y no se
+     declaraba en ninguna parte: una política que la usara **no validaba contra nuestro propio
+     esquema**. Obligatorio porque una petición sin finalidad no se puede comprobar contra la
+     limitación de finalidad, y lo que no se declara se deniega (P4).
 
 Una superficie de autoría en YAML que emita Cedar es admisible (principio P1); no es la
 forma canónica.

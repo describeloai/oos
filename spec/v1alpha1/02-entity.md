@@ -89,6 +89,64 @@ resolución determinista de identidad entre fuentes.
 
 ---
 
+### 2.2 · Quién puede preguntar: `principal`
+
+```yaml
+spec:
+  nature: entity
+  principal: true            # esta entidad puede ser el SUJETO de una petición
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    department: { type: String }
+    clearance:  { type: String }
+```
+
+Sin esto, el principal de una política era `Role` — una bolsa sin atributos—, así que
+`principal.department` no era expresable y lo que [`00-overview`](00-overview.md) §4.1
+proyectaba era **RBAC, no ABAC**. Y había algo peor: la proyección de la autorreferencia a
+jerarquía —`Employee in [Employee]`, certificada como *«ReBAC sin un segundo sistema»*— **no
+la podía usar nadie**, porque `resource in principal` era un error de tipos. La jerarquía
+existía y ninguna política podía recorrerla.
+
+**Normativo.**
+
+- Las **propiedades** de una entidad `principal` son la forma de los atributos que la capa de
+  identidad **DEBE** rellenar.
+- Los **valores** de esos atributos **DEBEN** llegar **con la petición**. Un motor **NO DEBE**
+  resolverlos contra un binding.
+- `principal: true` **NO DEBE** declararse sobre `nature: event`: un evento no tiene identidad
+  estable, así que no hay sujeto que nombrar (`OOS1004`).
+
+La segunda regla es la que impide la circularidad, y conviene decirla como principio:
+
+> **Lo que decide el acceso no puede estar sujeto al acceso que decide.**
+
+Si para saber si puedes leer una propiedad hubiera que leer tu departamento, esa lectura
+estaría gobernada por una política que quizá necesita otro atributo, y así indefinidamente.
+Aquí se declara **la forma**; los valores vienen firmados de fuera, o la petición se rechaza.
+
+#### 2.2.1 · Los atributos son del principal; el recurso se posiciona por pertenencia
+
+La asimetría es deliberada y ya estaba en la proyección de §4.1, sin nombrarse:
+
+| | Cómo se identifica en una política |
+|---|---|
+| **principal** | por sus **atributos** — `principal.clearance == "CONFIDENTIAL"` |
+| **recurso** | por su **pertenencia** — `resource in Label::"gdpr.sensitivity:high"`, `resource in principal` |
+
+Describir el recurso con atributos obligaría al motor a **leerlo para autorizarlo**, que es
+exactamente la lectura gobernada que decide su propio acceso. Posicionarlo por pertenencia no:
+la etiqueta la puso el compilador y la jerarquía sale del índice de topología, que ya está
+materializado y gobernado al construirse.
+
+Y de ahí sale que la cadena de mando —*«puedes ver a quien esté por debajo de ti»*— sea
+`resource in principal` y no una función de grafo: **`in` en Cedar ya es alcanzabilidad
+transitiva.** Lo único que no se expresa es el límite de profundidad, y un límite de
+profundidad no es una frontera de seguridad.
+
+---
+
 ## 3. Sistema de tipos
 
 ### 3.1 · Escalares
