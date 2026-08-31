@@ -248,6 +248,10 @@ materialization:
 - Toda respuesta de un L2 **DEBE** poder acompañarse del digest del bundle y de la marca de
   agua de lo materializado que haya intervenido. Son los dos ejes: **qué significaba** y
   **hasta cuándo era cierto**.
+- Si alguna política que intervino en ① **es función del tiempo** —Cedar tiene una extensión
+  `datetime`, y una política puede decir *«antes del 1 de enero»*—, la respuesta **DEBE**
+  poder acompañarse además del **instante contra el que se autorizó**. Sin él, *«la misma
+  pregunta devolvió cosas distintas»* no se distingue de un fallo: tiene el mismo aspecto.
 
 ### 7.1 · Refrescar no es reconstruir
 
