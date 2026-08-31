@@ -56,7 +56,7 @@ publicado exige al menos un caso.**
 
 ---
 
-## 4. Las cuatro operaciones
+## 4. Las familias de casos
 
 ```
 conformance/
@@ -65,7 +65,13 @@ conformance/
 ├── diff/       <caso>/  before/ + after/  + expected.diff.json
 ├── canonical/  <caso>/  a/ + b/           → convergen | NO convergen
 │               <caso>/  input/ + expected.absent.json
-└── emit/       <caso>/  input/ + expected.*
+├── digest/     <caso>/  a/ + b/           → mismo | distinto digest
+├── emit/       <caso>/  input/ + expected.*
+│
+├── v1alpha2/   ── un árbol por borrador, con las mismas familias dentro
+├── v1alpha3/
+├── v1alpha4/
+└── v1alpha5/
 ```
 
 | Directorio | Qué afirma | Entradas |
@@ -74,6 +80,7 @@ conformance/
 | `invalid/` | **rechaza con el código exacto** | 1 |
 | `diff/` | clasificación por eje: `CONSUMER`, `POLICY`, `INDEX`, `PACKAGE` | **2** |
 | `canonical/` | dos entradas **convergen** —o deliberadamente **no** convergen— | **2** |
+| `digest/` | **relaciones** entre digests: mismo, o distinto (§4.1) | **2** |
 | `emit/` | ida y vuelta sin pérdida | 1 |
 
 `diff/` es el que certifica `ore diff --breaking`. Sin él, la afirmación de que el carácter
@@ -108,6 +115,19 @@ códigos pero siguen siendo obligatorios.
 > La mecánica interna de RFC 8785 —ordenación de claves, serialización numérica— **no se
 > reproduce aquí**: es un estándar externo con sus propios vectores de conformidad. Estos
 > casos comprueban **nuestra** normalización (N1–N8), no la suya.
+
+### 4.2 · Un árbol por borrador, y por qué no están mezclados
+
+La raíz es **v1alpha1**. Cada borrador posterior —[`v1alpha2/`](v1alpha2/README.md),
+[`v1alpha3/`](v1alpha3/README.md), [`v1alpha4/`](v1alpha4/README.md),
+[`v1alpha5/`](v1alpha5/README.md)— tiene su propio árbol con las mismas familias dentro, su
+propio `README` y **su propio marcador**, que imprime la cuenta al correr.
+
+No es orden: es que **mezclarlos no daría un número falso, daría un número que ya no se sabe
+qué mide.** Un motor que implemente v1alpha1 y nada más debe poder decir *«paso la suite»* sin
+que un borrador no normativo se lo impida, y un borrador debe poder estar entero en rojo sin
+tocar la cifra de lo que sí es normativo. Un implementador empieza por la raíz; los otros
+cuatro son opcionales y lo dicen.
 
 ---
 
@@ -176,32 +196,49 @@ sobre si la suite «parece suficiente».
 
 ---
 
-## 8. El ejecutor no es normativo
+## 8. El corredor de casos no es normativo
+
+> Este título decía *«el ejecutor»* hasta que [`05-ejecutor`](../spec/v1alpha1/05-ejecutor.md)
+> le dio ese nombre a otra cosa —el nivel L2, que **sí** es normativo—. Aquí se habla del
+> programa que recorre el árbol y compara.
 
 La suite define **la disposición de directorios y la semántica de los ficheros**. Cada
-implementación escribe su propio ejecutor.
+implementación escribe su propio corredor.
 
 Enviar uno como normativo privilegiaría el lenguaje en que esté escrito, que es exactamente
-lo contrario de lo que la suite existe para conseguir. Habrá un ejecutor de referencia por
+lo contrario de lo que la suite existe para conseguir. Habrá un corredor de referencia por
 comodidad, marcado como **no normativo**.
 
-Contrato mínimo:
+Contrato mínimo. Lo que se afirma lo declara `expects` en cada `case.yaml`:
 
 ```
-Para cada caso en valid/:
-    canonicalizar(input) DEBE ser idéntico byte a byte a expected.canonical.json
-    digest(input)        DEBE ser idéntico a expected.digest
+Para cada caso en valid/:          expects: accept
+    validar(input)       DEBE aceptar, y NO DEBE emitir ningún diagnóstico
 
-Para cada caso en invalid/:
-    canonicalizar(input) DEBE fallar con expected-error.json.code
-    NO DEBE fallar antes con un código distinto
+Para cada caso en invalid/:        expects: OOSxxxx[, OOSxxxx]
+    validar(input)       DEBE fallar con ESE código —con todos, si declara varios—
+                         y NO DEBE fallar antes con uno distinto
 
-Para cada caso en diff/:
+Para cada caso en diff/:           expects: OOSxxxx[, ...] | accept
     diff(before, after)  DEBE producir la misma clasificación por eje
+                         —`accept` cuando el cambio no rompe nada
 
-Para cada caso en emit/:
+Para cada caso en canonical/:      expects: converge | diverge | canonical
+    forma(a) vs forma(b) DEBE cumplir la relación declarada
+                         —`canonical` afirma AUSENCIA, contra expected.absent.json
+
+Para cada caso en digest/:         expects: same | different | stable
+    digest(a) vs digest(b) DEBE cumplir la relación declarada
+
+Para cada caso en emit/:           expects: roundtrip | structure | emit-fails
     emit(input, formato) DEBE ser equivalente al esperado según las reglas de ese formato
 ```
+
+Este contrato exigía hasta ahora un `expected.canonical.json` y un `expected.digest` por
+caso. **No existen, y no es un olvido**: §4.1 explica por qué esa forma se descartó —afirmar
+bytes canónicos o un hash produce valores fabricados que nadie comprueba—. Lo que quedó fue
+un contrato que describía una suite que nunca se construyó, escrito **en el documento que
+define qué es cumplirla**.
 
 El campo `path` de un error esperado es informativo; **el `code` es normativo**. Una
 implementación **DEBERÍA** señalar la ubicación correcta, pero solo el código decide la

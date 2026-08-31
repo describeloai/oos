@@ -184,7 +184,7 @@ ningún privilegio** y ejecuta la suite como un consumidor externo más.
 
 ## Estado
 
-**Las tres versiones son `alpha`**, y eso significa exactamente lo que dice
+**Las cinco versiones son `alpha`**, y eso significa exactamente lo que dice
 [`00-overview` §6](spec/v1alpha1/00-overview.md): pueden romper compatibilidad en cualquier
 publicación, sin garantías. El siguiente peldaño es `v1beta1` —la escalera no se salta— y
 sus tres condiciones, con su estado medido, están en §6.1 del mismo documento.
@@ -200,25 +200,42 @@ spec/v1alpha1/     documentos normativos — y alpha: sin garantías
 spec/v1alpha2/     alcance cerrado — los efectos y la derivación
 spec/v1alpha3/     alcance cerrado — la capa de gobierno
 spec/v1alpha4/     borrador de alcance — el significado
-schemas/v1alpha4/  property, interface, entity y ruleset
-schemas/v1alpha3/  ruleset y lattice
+spec/v1alpha5/     borrador de alcance — la emisión a GraphQL
 schemas/v1alpha1/  JSON Schema publicado — generado
+schemas/v1alpha3/  ruleset y lattice
+schemas/v1alpha4/  property, interface, entity y ruleset
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 docs/              diseño y razonamiento — no normativo
 docs/vision/       ontologías escritas contra el lenguaje completo — NO validan
 ```
 
-| | v1alpha1 |
+`schemas/v1alpha5/` no existe, y no falta: esa versión no inventa gramática. **Un directorio
+de esquemas es consecuencia de haber añadido un `kind`, no un requisito de tener versión.**
+
+
+| | v1alpha1 · normativo |
 |---|---|
-| `00-overview` · alcance, conformidad, principios, absorción | ✅ borrador |
-| `04-flow` · retículos, conductos, desclasificadores | ✅ borrador |
-| `90-canonical-form` · normalización, JCS, digest | ✅ borrador |
-| `99-errors` · registro de códigos | ✅ borrador |
-| `01-package` · `02-entity` · `03-binding` (perfiles) | ⬜ **siguiente** |
-| `91-versioning` · `schemas/` | ⬜ |
+| [`00-overview`](spec/v1alpha1/00-overview.md) · alcance, conformidad, principios, absorción | ✅ |
+| [`01-package`](spec/v1alpha1/01-package.md) · el perfil de ODCS: quién responde y desde cuándo | ✅ |
+| [`02-entity`](spec/v1alpha1/02-entity.md) · qué existe, y qué convierte a una entidad en principal | ✅ |
+| [`03-binding`](spec/v1alpha1/03-binding.md) · dónde está el dato y qué se copia | ✅ |
+| [`04-flow`](spec/v1alpha1/04-flow.md) · retículos, conductos, desclasificadores | ✅ |
+| [`05-ejecutor`](spec/v1alpha1/05-ejecutor.md) · qué puede hacer quien **sí** toca el dato | ✅ |
+| [`06-request`](spec/v1alpha1/06-request.md) · qué entra con una petición, y quién responde | ✅ |
+| [`90-canonical-form`](spec/v1alpha1/90-canonical-form.md) · normalización, JCS, digest | ✅ |
+| [`91-versioning`](spec/v1alpha1/91-versioning.md) · los ejes de cambio y la compatibilidad | ✅ |
+| [`99-errors`](spec/v1alpha1/99-errors.md) · registro de códigos | ✅ |
+| [`schemas/v1alpha1/`](schemas/v1alpha1/) · JSON Schema publicado | ✅ generado |
 | [`examples/acme-retail`](examples/acme-retail/README.md) | ✅ completo · en verde |
 | [`docs/vision/acme-global`](docs/vision/acme-global/README.md) | 🔭 visión · no valida, y es correcto |
+
+Esta tabla tenía tres de esos documentos marcados como ⬜ **siguiente** y dos como
+pendientes. Se escribieron —y con ellos el ejecutor y la petición, que ni siquiera
+figuraban— y nadie movió el marcador. La causa no es el descuido: **la casilla que planifica
+y la que informa eran la misma**, y una casilla que hace las dos cosas deja de hacer la
+segunda en cuanto se hace la primera. Lo que viene después de v1alpha1 se planifica en el
+alcance de cada borrador, que es donde tiene dueño.
 
 Alcance cerrado de v1alpha1: **seis documentos**. `Package` y `Binding` son **perfiles**
 sobre ODCS; `Entity`, `Lattice`, `ConduitPolicy` y `RequestPolicy` son **gramática propia**
@@ -301,6 +318,35 @@ en otra parte; un concepto **sí** puede exigir gobierno porque la regulación c
 categoría y no por nivel; y la herencia entre interfaces **se computa**, porque un `Interface`
 es una clase definida y su jerarquía es inferida por construcción
 ([`00-scope`](spec/v1alpha4/00-scope.md) §6). Ninguna añade un código nuevo.
+
+| | v1alpha5 · borrador de alcance, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha5/00-scope.md) · alcance, la tesis, y por qué GraphQL | ✅ |
+| [`01-emision-graphql`](spec/v1alpha5/01-emision-graphql.md) · el mapeo normativo, y qué significa que esto esté listo (§6) | ✅ |
+| [`conformance/v1alpha5/`](conformance/v1alpha5/README.md) · borrador | ✅ **entero en verde** |
+| **listo para v1** | ✅ **los cuatro peldaños** — [`01-emision-graphql`](spec/v1alpha5/01-emision-graphql.md) §6 |
+
+**v1alpha5 gobierna lo que se puede pedir**, y es la versión de menor radio del proyecto: no
+añade ningún `kind`, ningún esquema y ningún código de error. Añade **un objetivo de
+emisión** —GraphQL— y los casos que lo certifican. La emisión es aditiva por construcción:
+nada de lo ya escrito cambia de significado porque exista un destino más. El único código que
+su escritura hizo aparecer, `OOS5026`, **es de v1alpha1**: v1alpha5 no lo añadió — destapó
+que la tabla de compatibilidad no tenía el espejo de `OOS5012` ([`91-versioning`](spec/v1alpha1/91-versioning.md) §158).
+
+Lo que decide su diseño cabe en una frase: **la clasificación no se emite — se ejecuta al
+emitir.** Un campo cuya etiqueta excede el techo de `contextSurface` no sale prohibido:
+**sale ausente**. El consumidor no puede pedir lo que el contrato no declara, así que en el
+momento de la petición no queda nada que aplicar — ya se aplicó al compilar. Es `G2` mirado
+desde el otro lado: donde v1alpha1 dice *«ningún dato clasificado alcanza un conducto no
+autorizado»*, esta versión dice **lo mismo desde la superficie de consumo**.
+
+Y sus cuatro peldaños de *listo* no son fases: son propiedades independientes, cada una
+medible sin las otras. Que un motor ajeno acepte el SDL **sin retocarlo** —lo comprueba
+`graphql-js` en la CI de la implementación de referencia, no una aserción nuestra—; que bajar
+el techo de un conducto borre **exactamente** el conjunto gobernado, ni una propiedad más ni
+una menos; que dos ejecuciones den el mismo byte; y que `ore diff` clasifique un cambio del
+esquema emitido **sin un solo código nuevo**. El cuarto es el que convierte los *schema
+checks* que un registro comercial cobra aparte en algo que **se deriva de un commit**.
 
 ---
 
