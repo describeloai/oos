@@ -577,12 +577,12 @@ medio, y eso se filtra a las decisiones en el año cinco.
 
 | | |
 |---|---|
-| **Motor de consulta federada** | Está el *qué* (cero copia) y no el *cómo*: sin planificador ni política de pushdown, "cero copia" es una intención. En Rust, **Apache DataFusion** es la respuesta evidente |
-| **Frescura del índice** | CDC · sondeo con marca de agua · versionado nativo Iceberg/Delta. Lo más caro del runtime |
+| **Motor de consulta federada** | **El *cómo* ya existe**: hay planificador —las cuatro fases de `05-ejecutor` §3, con el plan como artefacto rechazable— y política de pushdown —`capabilities`, que **autoriza** en vez de describir—. Lo que ④ hace es **ensamblar por clave**, y la ley de §2 lo hace suficiente porque el índice ya decidió qué claves se piden. **DataFusion se decide con la caché de carga útil**, que es donde un optimizador se gana el sueldo: sobre lo materializado |
+| **Frescura del índice** | **La forma está cerrada y el mecanismo no.** `03-binding` obliga a declarar `refresh.strategy` —`cdc`, `poll`, `table_version`— y `05-ejecutor` §7 fija con qué se mide; el artefacto de topología ya lleva su marca de agua y la respuesta sale **degradada y diciéndolo** cuando se supera el `freshnessSLA`. Lo que falta es **el proceso que refresca**, que es lo más caro del runtime y el primero que necesita las dos identidades de §6.2 |
 | **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
 | **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
-| **Enlace contra una clave alternativa** | SQL permite `REFERENCES t (columna_unica)` y los sistemas heredados enlazan justo asi —por NIF, por DUNS, por codigo de articulo—. `via` solo se empareja con la `primaryKey` del destino, y peor: `discover` emitiria una relacion **verde y equivocada** cuando la aridad y los tipos coincidan por casualidad. Forma propuesta: un `toKey` opcional. Reabierto desde **§7.1-bis** |
-| **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
+| **Enlace contra una clave alternativa** | **Cerrado** — `toKey`, que como conjunto tiene que ser exactamente una clave declarada del destino, y `OOS3006` comprueba la aridad y los tipos posicion a posicion. Lo que lo reabrio fue una medicion que desmintio lo que yo habia escrito al cerrarlo la primera vez: Postgres acepta `REFERENCES clientes (nif)` sin ninguna ceremonia |
+| **Atributos ABAC en tiempo de consulta** | **Cerrado** — [`06-request`](../spec/v1alpha1/06-request.md). Ninguna de las tres opciones era la buena: la respuesta es que **faltaba una frontera**. OOS declaraba la entrada de datos y la salida, y la entrada de identidad no estaba en ninguna parte — siendo la única que **decide** en vez de ser gobernada. Un `RequestPolicy` declara emisor, audiencia, reclamaciones y finalidades, y con él vuelve `OOS4005` |
 
 ### 7.1-bis · El enlace compuesto — **cerrado**
 
