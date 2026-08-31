@@ -581,7 +581,6 @@ medio, y eso se filtra a las decisiones en el año cinco.
 | **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
 | **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
 | **Enlace contra una clave alternativa** | SQL permite `REFERENCES t (columna_unica)` y los sistemas heredados enlazan justo asi —por NIF, por DUNS, por codigo de articulo—. `via` solo se empareja con la `primaryKey` del destino, y peor: `discover` emitiria una relacion **verde y equivocada** cuando la aridad y los tipos coincidan por casualidad. Forma propuesta: un `toKey` opcional. Reabierto desde **§7.1-bis** |
-| **Diseno de tabla unica** | DynamoDB pone N entidades en una tabla y las distingue por un prefijo de la clave. Dos `Binding` con el mismo `source` y distinto `targetEntity` **validan limpio**, y nada dice que filas son de quien: falta un predicado en el binding. Solo muerde al ejecutar, asi que se decide con L2 |
 | **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
 
 ### 7.1-bis · El enlace compuesto — **cerrado**
@@ -748,5 +747,6 @@ Open core · lenguaje de autorización (**Cedar** + obligaciones cerradas) · YA
 superficie de autoría · componer con Ossie y ODCS · arranque en frío (`discover` + `review`)
 · deriva de esquema (`drift-detect --auto-pr`) · temporalidad y unidades · declarado vs.
 computado · fijación de perfiles en el lockfile · superficie de servicio (MCP + GraphQL +
-nativo) · caché frente a cero-copia · **enlace compuesto** (§7.1-bis) · nombre (**OOS**,
+nativo) · caché frente a cero-copia · **selector del binding**
+(`03-binding` §3.5) · **enlace compuesto** (§7.1-bis) · nombre (**OOS**,
 decidido).
