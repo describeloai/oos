@@ -609,6 +609,30 @@ bien hecha: casi nada hubo que inventarlo.
   poco fiables se escribe con un objetivo `named`, que no necesita operador de orden.
 - **La exigibilidad de un deber.** Necesita el operador temporal. Va con `Test` y con lo
   temporal, después de L2.
+- **El tercer estado de la cobertura: `pendiente`, con ventana.** §6 dice *«solo cuenta lo
+  que el compilador puede leer y lo que puede fallar»*, y de ahí que una aserción `custom`
+  se transporte sin interpretar y **no cuente**. Es honesto y deja un hueco:
+
+  > **Una comprobación que nadie ejecutó tiene exactamente el mismo aspecto que una que
+  > pasó.**
+
+  Hoy la cobertura es binaria, y por eso *«hay una regla que nadie corrió»* y *«no hay
+  ninguna regla»* se renderizan igual. Son dos situaciones distintas y la segunda es peor.
+
+  La forma que falta la tiene medida el ecosistema de GitLab, cuyos *external controls*
+  son exactamente esta figura: una llamada a un tercero que devuelve `pending`, `pass` o
+  `fail` — y **un `pending` que dura más de seis horas se convierte en `fail`**. Es la
+  tercera opción entre *decidir* y *encogerse de hombros*, y la que este documento no
+  tiene.
+
+  La versión que encaja aquí: **una aserción que el compilador no puede decidir DEBE
+  nombrar quién la decide y en qué ventana, y un veredicto que no llega es un fallo.**
+  Entonces `custom` deja de ser prosa transportada y pasa a contar —como `pendiente`—,
+  que es lo que permite distinguir las dos situaciones de arriba.
+
+  No se escribe todavía porque **necesita el operador temporal**, igual que la fila de
+  arriba: *«en qué ventana»* no es expresable sin él. Las dos esperan a lo mismo, y ahora
+  se sabe que son la misma espera.
 - **La adecuación de una regla — y no está aplazada: es indecidible.** §6.1 tipa la
   cobertura por naturaleza y con eso elimina el error de categoría, que es el frecuente. Lo
   que no elimina, y ningún análisis estático eliminará, es que **una política que permite todo

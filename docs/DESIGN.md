@@ -727,6 +727,7 @@ verdad.**
 | | |
 |---|---|
 | **Almacén de lo materializado** | **Cerrado, y la respuesta es que no hace falta ninguno.** La topología es un artefacto inmutable que se mapea, igual que el plano de contexto; la carga útil es una tabla Iceberg en el lago del cliente, que es lo que hacen Dremio y Trino. ORE no opera ninguna base de datos. `ore/docs/decisions/0006` |
+| **`ore report` — la cobertura, como informe** | El dato ya se computa: `cobertura_efectiva()` está expuesto para el diff y `alcance()` se imprime al validar. Lo que falta es emitirlo como **propiedad × clase exigida × qué regla la descarga**, que es el artefacto que un equipo de cumplimiento pide de verdad — el *compliance status report* de GitLab es fila por (objetivo, control) y existe porque es lo que se pide. **Va después del `pendiente` con ventana**, no antes: hoy el informe tendría dos estados y el honesto tiene tres, así que construirlo ahora haría que *«nadie lo ejecutó»* y *«no hay nada»* se pintasen igual — el mismo defecto que el informe existe para destapar, un piso más arriba (`v1alpha3/02-ruleset` §9) |
 | **Perfilado consciente de PII** | Sobre columnas marcadas: solo ratio de nulos y cardinalidad. Nunca min/max, histogramas ni muestras |
 | **`ore refactor`** | Renombrar un concepto usado en 200 sitios debe ser un comando. Sin él, un modelo grande se congela |
 | **Ficheros generados** | Dos personas ejecutando `discover` producen conflictos en ficheros que ninguna escribió: orden determinista y marcadores de región |
