@@ -2,7 +2,7 @@
 // Proyeccion del paquete segun `00-overview.md` 4.1.
 
 entity Label enum ["acme.residency:global", "acme.residency:eu_and_us", "acme.residency:eu_only", "gdpr.sensitivity:none", "gdpr.sensitivity:low", "gdpr.sensitivity:medium", "gdpr.sensitivity:high", "gdpr.sensitivity:critical", "oos.maturity:STABLE", "oos.maturity:REVIEWED", "oos.maturity:DRAFT", "oos.maturity:DEPRECATED"];
-entity Role;
+entity Role in [Role];
 entity Customer;
 entity Order;
 entity Department in [Department];
@@ -12,7 +12,7 @@ entity Sku;
 entity Supplier;
 entity Property in [Label, Customer, Order, Department, Employee, Shipment, Sku, Supplier];
 
-action "read" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property] };
-action "aggregate" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property] };
-action "export" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property] };
-action "invoke" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property] };
+action "read" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "aggregate" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "export" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "invoke" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
