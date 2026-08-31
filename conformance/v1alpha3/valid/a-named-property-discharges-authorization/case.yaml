@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/01-gobierno.md#6.1
+level: L0
+expects: accept
+summary: >
+  Una politica que nombra la propiedad DIRECTAMENTE descarga la exigencia de
+  autorizacion. La proyeccion tiene dos mitades y la cobertura leia una.
