@@ -178,6 +178,43 @@ Lo que OOS sí define sobre Cedar:
 Una superficie de autoría en YAML que emita Cedar es admisible (principio P1); no es la
 forma canónica.
 
+#### 4.1.1 · La prueba de fuego, ejecutada
+
+Contra **`cedar-policy` 4**, la implementación de referencia, sobre el esquema que emite el
+caso `emit/cedar-schema-structure`. Se midieron dos cosas, y la segunda es la que importa:
+
+| | Qué pregunta |
+|---|---|
+| `Schema::from_json_str` / `from_str` | ¿acepta Cedar el esquema que proyectamos? |
+| `Validator::validate` | ¿validan contra él **las políticas que el mapeo promete**? |
+
+**El esquema JSON fue rechazado dos veces**, y la forma legible pasó a la primera — que ya es
+un hallazgo: **emitíamos dos representaciones y solo una era válida.**
+
+1. *«unknown field `purpose`»*. `shape` y `context` son **tipos** en el formato JSON de Cedar
+   —`{ "type": "Record", "attributes": {…} }`— y se emitían como mapas de atributos. La forma
+   legible no lo exige, así que la divergencia no se veía.
+2. *«unknown field `x-oos-labels`»*. Los niveles de los retículos viajaban en un campo
+   inventado, y **Cedar no admite campos desconocidos en el espacio de nombres**. El arreglo
+   no fue moverlo: fue usar lo que el anfitrión ya tiene —`entity Label enum [...]`—, que la
+   forma legible **ya usaba** y la JSON perdía. Es P7 aplicado a una proyección en vez de a un
+   documento.
+
+Con eso, las cinco políticas de prueba validan:
+
+```
+① etiquetas: gobernar sin enumerar propiedades       valida
+② ReBAC: la cadena de mando                          valida
+③ atributos del principal                            valida
+④ context.purpose                                    valida
+⑤ las tres juntas, que es como se escribe de verdad  valida
+```
+
+Y eso convierte tres afirmaciones de este documento en hechos comprobados:
+`resource in Label::"…"` gobierna sin enumerar, `resource in principal` recorre la jerarquía
+—lo que hasta esta versión era un error de tipos— y `principal.managerId` existe. **El §7.2-bis
+vale también aquí: un esquema puede ser sintaxis válida y no ser un esquema.**
+
 **Aplazados a v1alpha2 o posterior:** `Relation` como documento propio (en v1alpha1 las
 relaciones se declaran dentro de `Entity`), `Rule`, `Function`, `Test`, `Resolution`, y la
 **resolución de dependencias** — cuyo campo `dependencies`, no obstante, **DEBE** existir
