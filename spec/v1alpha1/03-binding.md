@@ -332,6 +332,15 @@ pertenencia es la afirmación que el binding ya hace en voz alta: quien lee `Ped
 todas sus filas son pedidos. No escapa nada nuevo. Esa es la razón de que la restricción sea
 estructural y no cosmética — quítala y el argumento se cae.
 
+**Y lo que un selector NO es.** Un selector es estático y vale para todas las peticiones:
+dice qué filas *son* la entidad. *«Las filas que **este principal** puede ver»* es otra cosa,
+vive en el plano de gobierno y no aquí — es un **ámbito de fila**
+([`v1alpha3/02-ruleset`](../v1alpha3/02-ruleset.md) §4.2). La frontera es la del lado
+derecho: un selector compara contra un **literal**; un ámbito, contra un **atributo del
+principal**, y por eso no filtra nada que el principal no haya traído él mismo. Meter el
+ámbito aquí lo repetiría en cada binding de la entidad, y una regla de gobierno repetida
+diverge en silencio.
+
 ---
 
 ## 4. Propagación de etiquetas desde la fuente

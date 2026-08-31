@@ -6,13 +6,13 @@ entity Role in [Role];
 entity Customer;
 entity Order;
 entity Department in [Department];
-entity Employee in [Employee];
+entity Employee in [Employee, Role] { departmentId: String, email: String, employeeId: String, fullName: String, grade: String, managerId: String, nationalId: String };
 entity Shipment;
 entity Sku;
 entity Supplier;
 entity Property in [Label, Customer, Order, Department, Employee, Shipment, Sku, Supplier];
 
-action "read" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
-action "aggregate" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
-action "export" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
-action "invoke" appliesTo { principal: [Role], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "read" appliesTo { principal: [Role, Employee], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "aggregate" appliesTo { principal: [Role, Employee], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "export" appliesTo { principal: [Role, Employee], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };
+action "invoke" appliesTo { principal: [Role, Employee], resource: [Customer, Order, Department, Employee, Shipment, Sku, Supplier, Property], context: { purpose: String } };

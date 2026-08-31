@@ -8,21 +8,34 @@
 //
 // Las entidades Label:: y Property:: las genera el compilador desde las
 // etiquetas del paquete. Nadie las escribe a mano.
+//
+// Y una frontera que conviene tener delante al leer lo de abajo:
+//
+//   Cedar gobierna PROPIEDADES. Qué filas ve cada quien es otro eje, y lo
+//   declara un ÁMBITO en el Ruleset, que la política nombra con @oosScope.
+//
+// El recurso se posiciona por PERTENENCIA —`resource in Label::"…"`— y no
+// tiene atributos, a propósito: describirlo con atributos obligaría al motor
+// a leer el recurso para autorizarlo.
 // ---------------------------------------------------------------------------
 
 // Un analista de RRHH lee compensación de su propio departamento, enmascarada,
 // y solo para las finalidades declaradas. `context.purpose` es limitación de
 // finalidad del RGPD expresada como ABAC estándar de Cedar.
+//
+// «De su propio departamento» NO cabe en el `when`: sería un predicado sobre
+// la fila, y evaluarlo exigiría haberla leído. Se declara como ámbito y el
+// ejecutor lo empuja al origen como filtro (`05-ejecutor` §3).
 @id("hr-analyst-reads-masked-comp")
 @obligation("mask:LAST4")
+@oosScope("eu.gdpr-minimization#own-department")
 permit (
     principal in Role::"hr_analyst",
     action == Action::"read",
     resource in Label::"gdpr.sensitivity:critical"
 )
 when {
-    context.purpose in ["compensation_review", "regulatory_reporting"] &&
-    resource.owner.department == principal.department
+    context.purpose in ["compensation_review", "regulatory_reporting"]
 };
 
 
@@ -47,19 +60,21 @@ when {
 };
 
 
-// El manager de la cadena jerárquica ve la compensación sin enmascarar.
-// `in` recorre la autorreferencia hr.Employee.manager, que el compilador
-// proyecta a la jerarquía de entidades de Cedar: ReBAC sin añadir un
-// segundo sistema.
-@id("manager-reads-own-chain")
+// El manager ve sin enmascarar la compensación de quien le reporta.
+//
+// El ámbito recorta por igualdad —`managerId == principal.employeeId`—, que es
+// UN SALTO: lo que un filtro sabe hacer. La cadena de mando entera no es un
+// filtro sino una travesía, y la responde el índice de topología en la fase ②,
+// no esta política (`05-ejecutor` §6.1).
+@id("manager-reads-direct-reports")
+@oosScope("eu.gdpr-minimization#direct-reports")
 permit (
     principal in Role::"people_manager",
     action == Action::"read",
     resource in Label::"gdpr.sensitivity:critical"
 )
 when {
-    context.purpose == "compensation_review" &&
-    resource.owner in principal.directReports
+    context.purpose == "compensation_review"
 };
 
 
@@ -74,15 +89,16 @@ forbid (
 );
 
 
-// Un agente autónomo nunca lee compensación sin finalidad declarada.
-// Sin este forbid, un agente sin `purpose` caería en la política de agregados
-// y obtendría datos que nadie le autorizó explícitamente.
-@id("forbid-agent-without-purpose")
-forbid (
-    principal in Role::"ai_agent",
-    action,
-    resource in Label::"gdpr.sensitivity:critical"
-)
-unless {
-    context has purpose
-};
+// ---------------------------------------------------------------------------
+// Aquí vivía `forbid-agent-without-purpose`, que prohibía leer sin `purpose`.
+//
+// Está borrado porque el validador de Cedar lo declaró IMPOSIBLE: `purpose` es
+// obligatorio en el esquema desde que el contexto se cerró, así que una
+// petición sin finalidad no llega a ser una petición — se rechaza antes de
+// autorizar (`05-ejecutor` §6.1). El `forbid` no protegía de nada, y tenía
+// exactamente el aspecto de uno que sí.
+//
+// Se deja escrito en lugar de borrado en silencio: quien vaya a añadir una
+// política contra una petición inválida merece saber que el esquema ya la
+// rechazó antes.
+// ---------------------------------------------------------------------------

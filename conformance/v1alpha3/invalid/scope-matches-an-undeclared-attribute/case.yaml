@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#4.2.3
+level: L0
+expects: OOS2005
+summary: >
+  Un ambito compara contra un atributo que ninguna entidad `principal: true` declara.
+  No falla al aplicarse: no recorta, y la fila queda visible.

@@ -8,7 +8,13 @@ Aplica el régimen de [`01-gobierno`](01-gobierno.md).
 ## 1. Naturaleza
 
 El único documento nuevo de v1alpha3, y reúne las reglas **sin sujeto** —aserciones,
-máscaras de materialización y deberes— sobre un objetivo común, con un dueño.
+máscaras de materialización, ámbitos de fila y deberes— sobre un objetivo común, con un
+dueño.
+
+*«Sin sujeto»* quiere decir que **ningún principal aparece en el documento**, no que las
+reglas no dependan de quién pregunta: una máscara con sujeto (§4.1) y un ámbito de fila
+(§4.2) los nombra una política de Cedar, y el sujeto lo pone la petición. La definición
+—qué se enmascara, qué columna recorta— sigue viviendo en un solo sitio, con dueño.
 
 Lo que lo hace un documento y no un bloque dentro de `Entity` no es su sintaxis:
 
@@ -245,7 +251,7 @@ motor que lo ejecute, y ODCS mismo dice que ese motor es Soda, Great Expectation
 
 ---
 
-## 4. Las máscaras
+## 4. Las máscaras y los ámbitos
 
 Una máscara sin sujeto: el desclasificador que se aplica al construir el índice, que es el
 hueco que [`99-errors`](../v1alpha1/99-errors.md) registró para v1alpha2 y v1alpha2 no cerró.
@@ -321,6 +327,122 @@ ejecución, y es L3.
 
 ---
 
+### 4.2 · El ámbito de filas: la máscara recorta el valor, el ámbito recorta la fila
+
+Cedar gobierna **propiedades**, y eso está en la forma de la proyección: el recurso se
+posiciona por **pertenencia** —`resource in Label::"…"`— y **no lleva atributos**, porque
+describirlo con atributos obligaría al motor a **leer el recurso para autorizarlo**.
+
+De ahí sale la pregunta que aparece en cuanto hay un dato real y que ninguna versión había
+contestado: *«compensación **de mi departamento»*. Eso no es una propiedad. Es un **recorte
+de filas**, y una política de Cedar no lo puede expresar sin convertirse en una evaluación
+por fila — que es exactamente la lectura que decide el acceso a sí misma.
+
+> **Una máscara recorta el valor. Un ámbito recorta la fila.** La misma figura sobre dos
+> ejes, y por eso viven en el mismo documento.
+
+```yaml
+  scopes:
+    - id: own-department
+      property: hr.Employee.departmentId
+      matches: departmentId            # un ATRIBUTO del principal, por NOMBRE
+```
+
+```cedar
+@oosScope("eu.hr-scoping#own-department")
+permit (
+    principal in Role::"hr_analyst",
+    action == Action::"read",
+    resource in Label::"gdpr.sensitivity:critical"
+) when { context.purpose == "compensation_review" };
+```
+
+El documento **no nombra a ningún sujeto**: nombra una columna y el **nombre** de un
+atributo. Quién es el principal lo pone la petición, igual que en una máscara con sujeto. Por
+eso un ámbito cabe en un `Ruleset` sin contradecir §1.
+
+#### 4.2.1 · Por qué no se deriva de la política
+
+Cedar tiene evaluación parcial —`partial-eval`, y sigue siendo **experimental**— y es el
+mecanismo que la industria usa para esto: se deja el dato como incógnita, el evaluador
+devuelve un **residuo**, y el residuo se traduce a un `WHERE`. Es lo que hace la *Compile
+API* de OPA, y lo que hay debajo de las *row access policies* de los almacenes.
+
+No se toma, y no es prudencia ante una funcionalidad experimental:
+
+> **Un residuo se computa al responder. Un ámbito declarado falla al compilar.**
+
+La tesis entera es que la gobernanza se demuestra cuando compila. Un residuo que nombra una
+columna que el binding no mapea, o que la fuente no sabe ejecutar, se descubre **con la
+consulta en vuelo**. Un ámbito declarado se descubre en el pull request, y con un código que
+ya existe y ya dice justo eso de `requiredFilters`: `OOS2015`.
+
+#### 4.2.2 · La gramática es cerrada, y la cierra un argumento ya escrito
+
+[`03-binding`](../v1alpha1/03-binding.md) §3.5.1 lo dejó dicho para el selector:
+
+> **Un predicado no filtra: lee.** Qué filas aparecen es observable, así que un predicado
+> sobre una columna clasificada es un canal lateral.
+
+Un ámbito **es** un predicado, luego hereda el problema entero. Lo que lo desactiva es
+precisamente la restricción que lo hace útil:
+
+> El lado derecho de un ámbito **DEBE** ser un atributo del principal. Nunca un literal,
+> nunca otra columna.
+
+Con un atributo del principal, la presencia de una fila revela *que existe una fila con el
+valor que el principal ya traía consigo*. **No se filtra nada que el principal no haya
+aportado él mismo**, y el canal lateral se cierra por construcción, no por convención. Con un
+literal sí se filtraría —y además sería estático, que es lo que hace un `selector`—; con otra
+columna se ordenaría, que es lo que §3.5.1 rechaza.
+
+Las dos piezas quedan separadas y sin solaparse:
+
+| | `selector` · binding | `scope` · ruleset |
+|---|---|---|
+| Dice | qué filas **son** la entidad | qué filas **ve este principal** |
+| Vive en | el plano físico | el plano de gobierno |
+| Compara contra | un literal | **un atributo del principal** |
+| Es | una partición | un recorte |
+| Se aplica | siempre | cuando una política lo nombra |
+| Alcance | ese binding | **toda la entidad, en todos sus bindings** |
+
+La última fila es la razón de que no viva en el binding, y no es de comodidad: una entidad
+tiene varios bindings —los dos ejes de materialización, varias fuentes— y una regla de
+gobierno repetida por binding **diverge en silencio** el día que alguien añade el cuarto.
+
+#### 4.2.3 · Normativo
+
+- Un ámbito **DEBE** declarar `id`, `property` y `matches`, y **NO DEBE** declarar nada más.
+  No hay operador: la igualdad es el único que cierra el canal lateral de §4.2.2, así que
+  nombrarlo sería ofrecer una elección que no existe.
+- `property` **DEBE** ser el nombre cualificado de una propiedad existente; si no, `OOS2005`.
+- `matches` **DEBE** ser el nombre de una propiedad de alguna entidad `principal: true`; si
+  no, `OOS2005`. Es la comprobación que importa: un ámbito que apunta a un atributo que nadie
+  declara **no falla, deja de casar**, y la fila queda visible.
+- Todo binding de la entidad de `property` **DEBE** mapear esa propiedad; si no, no hay con
+  qué construir el filtro y la fuente es inconsultable: `OOS2015`, ampliado.
+- La anotación **DEBE** ser `@oosScope` y su valor `<ruleset cualificado>#<id de ámbito>`, y
+  **DEBE** resolver; si no, `OOS2001` — la misma reserva que ya activa `@oosMask`.
+- Una política **PUEDE** nombrar varios ámbitos. **La conjunción es implícita**, igual que en
+  un `selector`.
+- Una política **sin** ámbito no recorta filas. No es un descuido ni contradice **P4**: el
+  `permit` ya afirmó que ese principal puede leer esa propiedad, y sin recorte eso significa
+  todas sus filas. Un recorte implícito dejaría sin efecto toda política ya escrita.
+- Un ámbito **NO descarga** ninguna clase de `requiresGovernance` (§6.1). Quien descarga
+  `authorization` es la política que lo nombra; un ámbito solo **no gobierna nada**, y
+  contarlo permitiría satisfacer la cobertura con un recorte que ninguna política invoca.
+- `scopes` es un **conjunto**: N4 lo ordena. Se aplican todos los nombrados, así que el orden
+  no significa nada — la misma razón que en `assertions`.
+
+**Y no hay ningún código nuevo.** Tres comprobaciones, tres familias que ya existían, y la
+tercera reutiliza una condición que [`05-ejecutor`](../v1alpha1/05-ejecutor.md) §5.3 ya había
+escrito para otro origen: *un filtro exigido que nadie mapea hace inconsultable el binding*.
+Que un requisito de la fuente y un requisito de la política produzcan el mismo defecto no es
+una coincidencia — **son el mismo defecto**.
+
+---
+
 ## 5. Los deberes
 
 ```yaml
@@ -385,6 +507,7 @@ Una regla, tres consecuencias, y las tres cierran un agujero antes de que exista
 | aserción con `severity: warning` | **no** | un aviso es, por definición, *«lo vimos y no paramos nada»*. No descarga la obligación de gobernar |
 | aserción `type: text` o `type: custom` | **no** | se transporta sin interpretar. El compilador no sabe qué afirma |
 | **máscara** | **sí** | el compilador la lee, `OOS8003` la puede rechazar, y una propiedad enmascarada está gobernada |
+| **ámbito de fila** | **no** | recorta filas, no gobierna una propiedad. Quien descarga `authorization` es la política que lo nombra (§4.2.3) |
 | **deber** | **solo si se pide** | no puede fallar al compilar, así que no descarga una exigencia genérica. Pero un retículo **puede exigir `obligation`**, y entonces lo que se comprueba es que el deber exista y nombre una `Function` — que sí es decidible |
 
 Sin esta regla, `OOS8001` se satisface con una aserción `severity: warning` que no para nada,
@@ -417,7 +540,7 @@ endoso registra la adecuación** ([`01-gobierno`](01-gobierno.md) §6.2).
 
 ## 7. Lo que **no** es un campo
 
-Cuarta vez que la ley aparece, y ya no sorprende:
+Quinta vez que la ley aparece, y ya no sorprende:
 
 | | Por qué no |
 |---|---|
@@ -426,6 +549,7 @@ Cuarta vez que la ley aparece, y ya no sorprende:
 | `enabled` | una regla desactivada es una regla que no está |
 | `priority` / orden | `assertions` es un conjunto: todas se sostienen. No hay nada que desempatar (§3) |
 | el operador del objetivo | el gobierno es monótono, luego solo hay uno (§2.3) |
+| el operador de un ámbito | la igualdad es la única que cierra el canal lateral (§4.2.2) |
 
 La cuarta fila conviene leerla junto a `Resolution`. Allí `strategies` **es** una secuencia y
 N4 preserva su orden, porque la primera que casa gana. Aquí no gana ninguna: se sostienen

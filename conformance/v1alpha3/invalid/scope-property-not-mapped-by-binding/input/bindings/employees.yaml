@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: employees, namespace: hr }
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: postgres_erp
+  source: "public.employees"
+  properties:
+    employeeId: employee_id
+    taxId:      tax_id

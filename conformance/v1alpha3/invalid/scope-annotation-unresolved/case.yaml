@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#4.2.3
+level: L0
+expects: OOS2001
+summary: >
+  Una politica nombra un recorte de filas que no existe. Sin recorte, autoriza sobre
+  TODAS las filas de esa propiedad.

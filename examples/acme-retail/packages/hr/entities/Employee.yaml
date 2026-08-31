@@ -24,6 +24,12 @@ spec:
   nature: entity
   primaryKey: [employeeId]
 
+  # Un empleado es SUJETO de peticiones, no solo objeto de ellas: es quien
+  # pregunta. Sin esto el unico principal era `Role` —una bolsa sin atributos—
+  # y `principal.departmentId` no era expresable, asi que lo que se proyectaba
+  # era RBAC puro y ningun ambito de fila tenia contra que comparar.
+  principal: true
+
   # Claves alternativas: lo que hace posible la resolución DETERMINISTA de
   # identidad entre fuentes. El mismo empleado es otro id en el CRM, pero
   # comparte NIF.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/05-ejecutor.md#5.3
+level: L0
+expects: OOS2015
+summary: >
+  Un binding no mapea la columna por la que recorta un ambito. El motor no tiene con que
+  construir el filtro, y servir sin el serian filas que nadie autorizo.

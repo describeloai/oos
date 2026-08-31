@@ -21,6 +21,27 @@ spec:
   targets:
     - atLeast: { gdpr.sensitivity: high }
 
+  # Los recortes de fila. Cedar gobierna PROPIEDADES —«quien ve la
+  # compensacion»—; que filas ve cada quien es otro eje, y se declara aqui
+  # porque es gobierno y no fisica: una entidad tiene varios bindings, y una
+  # regla repetida por binding diverge en silencio el dia que alguien anade el
+  # cuarto.
+  #
+  # El lado derecho es siempre un ATRIBUTO DEL PRINCIPAL, nunca un literal. Por
+  # eso el recorte no filtra nada que el principal no haya traido el mismo: la
+  # presencia de una fila solo le revela un valor que ya tenia.
+  scopes:
+    - id: own-department
+      property: hr.Employee.departmentId
+      matches: departmentId
+
+    # Un salto por igualdad, que es lo que un filtro sabe hacer. La cadena de
+    # mando ENTERA no es un filtro: es una travesia, y la responde el indice de
+    # topologia en la fase ② (`05-ejecutor` §6.1).
+    - id: direct-reports
+      property: hr.Employee.managerId
+      matches: employeeId
+
   assertions:
     - id: sin-nulos
       metric: nullValues

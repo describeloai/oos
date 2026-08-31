@@ -79,6 +79,21 @@ De ahí sale la consecuencia más útil de todo el documento:
 Una máscara `redact` **NO DEBE** aplicarse como post-proceso: la propiedad **DEBE**
 desaparecer de la proyección enviada al origen. Redactar después es haber traído el valor.
 
+Y la otra mitad, que es el eje de las filas. Cedar gobierna **propiedades**; *«compensación
+de mi departamento»* es un recorte de filas, y lo declara un **ámbito**
+([`v1alpha3/02-ruleset`](../v1alpha3/02-ruleset.md) §4.2) que la política nombra.
+
+**Normativo.** Un ámbito que alcanza a una política que autoriza **DEBE** convertirse en un
+**predicado de la petición de la fase ③**, con el valor tomado del atributo del principal que
+llegó con la petición. **NO DEBE** aplicarse localmente sobre filas ya traídas.
+
+> **Un ámbito que no se puede empujar al origen rechaza el plan.**
+
+Servir sin el recorte devolvería filas que nadie autorizó. Aplicarlo después las habría
+traído igual —y entonces el ámbito habría dejado de ser una salvaguarda para ser un adorno
+con coste de cómputo—. Es la ley de §2 otra vez, en el único sitio donde incumplirla no es
+caro sino inseguro.
+
 ---
 
 ## 4. Los dos momentos de aplicación
@@ -165,6 +180,11 @@ no está en el mapeo del binding, **el motor no tiene con qué construir el filt
 nunca podrá consultarse. Es un documento que compila y no sirve para nada, así que falla al
 compilar: `OOS2015`.
 
+El mismo código cubre el otro origen del mismo defecto: la `property` de un **ámbito**
+(`v1alpha3/02-ruleset` §4.2) que algún binding de esa entidad no mapea. Un requisito de la
+fuente y un requisito de la política producen aquí el mismo estado —no hay con qué construir
+el filtro—, y **son el mismo defecto**, no dos parecidos.
+
 ---
 
 ## 6. Credenciales
@@ -181,6 +201,15 @@ petición, firmados por la capa de identidad. Una implementación L2 **NO DEBE**
 contra un binding, y **DEBE** rechazar una petición que no los traiga.
 
 > **Lo que decide el acceso no puede estar sujeto al acceso que decide.**
+
+**Normativo.** Una petición que no satisface el esquema —sin los atributos del principal, sin
+`purpose`— **DEBE** rechazarse **antes** de ①. No es una denegación de política: es una
+petición que no existe.
+
+Y conviene decir la consecuencia, porque muerde a quien escribe políticas: **una política
+escrita para vigilar una petición inválida no vigila nada.** El esquema ya la rechazó, y la
+política queda con el aspecto de estar protegiendo algo — un `forbid` contra un agente sin
+finalidad declarada es exactamente ese caso el día que la finalidad pasa a ser obligatoria.
 
 La jerarquía es el otro caso, y se resuelve sin leer datos tampoco: `resource in principal`
 —la cadena de mando— se responde con el **índice de topología**, que es donde ya viven las
@@ -298,7 +327,8 @@ implementación **DEBE** comunicar como tales:
 
 | Condición | Cuándo |
 |---|---|
-| **plan rechazado** | el plan exige una operación que las capacidades no autorizan (§2, §5) |
+| **petición inválida** | la petición no satisface el esquema: sin los atributos del principal, sin `purpose`. Se rechaza **antes** de ① |
+| **plan rechazado** | el plan exige una operación que las capacidades no autorizan, o un ámbito que no se puede empujar (§2, §3, §5) |
 | **estado degradado** | se superó `freshnessSLA` sin refresco (§7) |
 | **no autorizado** | la política del principal poda el plan hasta dejarlo vacío (§3 ①) |
 | **reconstrucción pendiente** | cambió una máscara sin sujeto y lo materializado aún lleva la anterior (§7.1) |

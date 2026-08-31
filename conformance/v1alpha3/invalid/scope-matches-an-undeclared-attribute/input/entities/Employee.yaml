@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  # Sujeto de peticiones, no solo objeto de ellas: sin esto el unico principal
+  # es `Role`, que no tiene atributos, y un ambito no tiene contra que comparar.
+  principal: true
+  properties:
+    employeeId:   { type: String }
+    departmentId: { type: String }
+    taxId:
+      type: String
+      labels: { gdpr.sensitivity: high }

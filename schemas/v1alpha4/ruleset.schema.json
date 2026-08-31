@@ -183,6 +183,34 @@
         }
       ]
     },
+    "scope": {
+      "description": "El recorte de FILAS, y la otra mitad del par: una mascara recorta el valor, un ambito recorta la fila. Cedar gobierna PROPIEDADES —el recurso se posiciona por pertenencia y no lleva atributos, porque describirlo con atributos obligaria al motor a LEER el recurso para autorizarlo—, asi que «compensacion de mi departamento» no cabe en una politica y se declara aqui.\n\nNo se deriva de la politica por evaluacion parcial —Cedar la tiene, y sigue siendo experimental— porque un residuo se computa al RESPONDER y un ambito declarado falla al COMPILAR: si el binding no mapea la columna, no hay con que construir el filtro (OOS2015).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "property",
+        "matches"
+      ],
+      "properties": {
+        "id": {
+          "description": "Para que una politica de Cedar pueda NOMBRARLO: `@oosScope(\"<ruleset cualificado>#<id>\")`. La misma figura que `@oosMask`, y por la misma razon: la definicion sigue en un solo sitio, con dueno.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "property": {
+          "description": "El nombre cualificado de la propiedad por la que se recorta. Todo binding de su entidad DEBE mapearla, o el motor no tiene con que construir el filtro y la fuente es inconsultable: OOS2015, el mismo codigo que un `requiredFilters` sin mapear. Que un requisito de la fuente y uno de la politica produzcan el mismo defecto no es coincidencia: son el mismo defecto.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "matches": {
+          "description": "El NOMBRE de un atributo del principal, no un valor: por eso el documento no nombra a ningun sujeto y sigue siendo una regla sin sujeto. DEBE ser una propiedad de alguna entidad `principal: true`, o el ambito no casa con nada y la fila queda visible (OOS2005).\n\nY es lo que cierra el canal lateral: 03-binding §3.5.1 dice que un predicado no filtra, LEE. Comparando contra un atributo que el principal ya traia consigo, la presencia de una fila no le revela nada que no supiera. Con un literal si filtraria —y ademas seria estatico, que es lo que hace un `selector`—; con otra columna ordenaria, que es lo que §3.5.1 rechaza. Por eso NO hay operador: la igualdad es la unica que cierra el canal.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      }
+    },
     "mask": {
       "description": "El desclasificador aplicado por objetivo y SIN SUJETO: al construir el índice, no por consulta. Es el hueco que 99-errors registró —«cachear correos tokenizados para unir por ellos»— y que no se pudo cerrar antes porque el único mecanismo disponible, una política de Cedar, exige un principal.",
       "type": "object",
@@ -361,6 +389,11 @@
         },
         {
           "required": [
+            "scopes"
+          ]
+        },
+        {
+          "required": [
             "duties"
           ]
         }
@@ -438,6 +471,14 @@
             "$ref": "#/$defs/mask"
           },
           "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana."
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/scope"
+          },
+          "description": "\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Se aplican todos los nombrados y ninguno gana."
         },
         "duties": {
           "type": "array",

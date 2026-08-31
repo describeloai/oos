@@ -1,0 +1,7 @@
+rule: spec/v1alpha3/02-ruleset.md#4.2
+level: L0
+expects: accept
+summary: >
+  Un ambito de fila recorta por una columna contra un atributo del principal, y una
+  politica lo nombra con @oosScope. Cedar gobierna PROPIEDADES; que filas ve cada
+  quien es el otro eje.
