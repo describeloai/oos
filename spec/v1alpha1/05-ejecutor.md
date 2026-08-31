@@ -196,10 +196,13 @@ abrir una conexión con permiso de escritura.
 
 ```yaml
 materialization:
-  mode: index
-  refresh: { every: 15m, strategy: table_version }
-  watermark: updated_at        # cuando el formato no versiona
-  freshnessSLA: 30m
+  topology:
+    refresh: { every: 15m, strategy: table_version }
+    freshnessSLA: 30m
+  payload:
+    properties: [legalName]
+    refresh: { every: 1h, strategy: poll }
+    watermark: updated_at      # cuando el formato no versiona
 ```
 
 **Normativo.**

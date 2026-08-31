@@ -3,5 +3,5 @@ kind: ConduitPolicy
 metadata: { name: default }
 spec:
   conduits:
-    materialization.index:
+    materialization.topology:
       gdpr.sensitivity: critical

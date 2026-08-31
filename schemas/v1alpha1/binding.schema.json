@@ -78,7 +78,7 @@
         },
 
         "materialization": {
-          "description": "Qué se copia localmente. Omitirlo equivale a `mode: passthrough` — denegación por defecto (P4).\n\nEl modo INSTANCIA UN CONDUCTO: `mode: index` significa que este binding usa el conducto `materialization.index`, cuya autorización se declara en ConduitPolicy. La comprobación es la regla de flujo, sin excepciones.",
+          "description": "Que se copia localmente, en dos ejes independientes. Omitir los dos es no copiar nada: denegacion por defecto (P4).\n\nCada eje INSTANCIA UN CONDUCTO: `topology` usa `materialization.topology` y `payload` usa `materialization.payload`, cada uno con su autorizacion en ConduitPolicy. La comprobacion es la regla de flujo, sin excepciones.",
           "$ref": "#/$defs/materialization"
         }
       }
@@ -164,57 +164,96 @@
       }
     },
 
-    "materialization": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["mode"],
-
-      "allOf": [
-        {
-          "if": { "properties": { "mode": { "const": "cache" } }, "required": ["mode"] },
-          "then": { "required": ["properties"] }
-        }
-      ],
-
-      "properties": {
-
-        "mode": {
-          "description": "`passthrough` no almacena nada; toda lectura alcanza el origen. Es el valor por defecto.\n`index` almacena TOPOLOGÍA —claves de join y aristas—, no carga útil. Es lo que hace local y sub-milisegundo la travesía del grafo sobre datos que nunca se han movido.\n`cache` almacena las propiedades declaradas. ES UNA COPIA, y así hay que decirlo.",
-          "enum": ["passthrough", "index", "cache"]
-        },
-
+      "materialization": {
+        "description": "Que se copia localmente, en DOS EJES INDEPENDIENTES. Omitir los dos es no copiar nada: denegacion por defecto (P4).\n\nNo es un modo con tres valores. `topology` y `payload` copian cosas distintas, cuestan cosas distintas y aceleran cosas distintas, y **se pueden querer las dos a la vez** — un objeto lento cuyas aristas quieres locales Y cuyos valores quieres cerca. Un enum lo prohibia sin motivo.\n\nCada eje INSTANCIA SU PROPIO CONDUCTO: `materialization.topology` y `materialization.payload`, cada uno con su autorizacion en `ConduitPolicy`.\n\nNormativo: spec/v1alpha1/03-binding.md §3.1",
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
         "properties": {
-          "description": "Qué propiedades se copian. OBLIGATORIO en `mode: cache` y no admitido en los demás.\n\nLa asimetría es deliberada: en `index` lo materializado es derivable —la clave primaria y las propiedades `via` de las relaciones—, mientras que una caché es una copia de datos y quien la declara debe decir exactamente de qué.",
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
-        },
-
-        "refresh": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["every"],
-          "properties": {
-            "every": { "$ref": "type/basic.schema.json#/$defs/duration" },
-            "strategy": {
-              "description": "`table_version` aprovecha el versionado nativo del formato —Iceberg, Delta— y solo reconstruye cuando hay una versión nueva: es lo más barato con diferencia.\n`cdc` consume el flujo de cambios del origen.\n`poll` compara para detectar diferencias; el último recurso.",
-              "enum": ["table_version", "cdc", "poll"]
+          "topology": {
+            "description": "Se copian las CLAVES DE JOIN y las ARISTAS. No la carga util.\n\nEs lo que hace local y sub-milisegundo la travesia del grafo sobre datos que nunca se han movido, y lo que permite que el ejecutor NO COMPENSE: cuando abre una conexion ya sabe que claves pide (05-ejecutor §2).\n\nNO declara que copia, y la asimetria con `payload` es deliberada: lo materializado aqui es DERIVABLE —la clave primaria y las propiedades `via` de las relaciones—, asi que declararlo violaria P2.\n\nY aunque sea derivable, ES DATO: una clave primaria es un valor, y saber que dos instancias estan enlazadas puede ser el hecho sensible. Por eso instancia un conducto como cualquier otra copia.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "refresh": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "every"
+                ],
+                "properties": {
+                  "every": {
+                    "$ref": "type/basic.schema.json#/$defs/duration"
+                  },
+                  "strategy": {
+                    "description": "`table_version` aprovecha el versionado nativo del formato —Iceberg, Delta— y solo reconstruye cuando hay una versión nueva: es lo más barato con diferencia.\n`cdc` consume el flujo de cambios del origen.\n`poll` compara para detectar diferencias; el último recurso.",
+                    "enum": [
+                      "table_version",
+                      "cdc",
+                      "poll"
+                    ]
+                  }
+                }
+              },
+              "watermark": {
+                "description": "La propiedad que ordena el avance del refresco. Es el segundo eje de la respuesta de auditoria: el digest dice QUE SIGNIFICABA, la marca de agua dice HASTA CUANDO era cierto.\n\nNO DEBE declararse con `strategy: table_version`: ahi la marca de agua es la version nativa del formato —el identificador de instantanea de Iceberg, la version de Delta— y declararla seria declarar lo derivable (P2).\n\nDEBE declararse con `cdc` o `poll`: sin ella el refresco no sabe desde donde continuar y solo puede recargar entero.\n\nNormativo: spec/v1alpha1/05-ejecutor.md §7",
+                "$ref": "type/basic.schema.json#/$defs/identifier"
+              },
+              "freshnessSLA": {
+                "description": "Antigüedad máxima tolerable de lo materializado.\n\nSuperado el umbral sin refresco, una implementación DEBE declarar el estado degradado al consumidor y NO DEBE servir datos obsoletos como si fueran frescos.\n\nEs normativo y no una recomendación: para un agente, saber que el contexto está degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en silencio convierte una garantía en una trampa.",
+                "$ref": "type/basic.schema.json#/$defs/duration"
+              }
+            }
+          },
+          "payload": {
+            "description": "Se copian las propiedades declaradas. ES UNA COPIA DE DATOS, y asi hay que decirlo: `properties` es obligatorio.\n\nUna cache no es otra fuente: es la misma fuente, mas cerca. Por eso cuelga DEL binding y no es un binding nuevo — un binding es una afirmacion de MODELADO y una cache es una decision de ENRUTAMIENTO. Dos bindings pueden discrepar; una cache no puede, o deja de ser una cache.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "properties"
+            ],
+            "properties": {
+              "properties": {
+                "description": "Que propiedades se copian. Obligatorio: quien declara una copia de datos tiene que decir exactamente de que.",
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "type/basic.schema.json#/$defs/identifier"
+                }
+              },
+              "refresh": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "every"
+                ],
+                "properties": {
+                  "every": {
+                    "$ref": "type/basic.schema.json#/$defs/duration"
+                  },
+                  "strategy": {
+                    "description": "`table_version` aprovecha el versionado nativo del formato —Iceberg, Delta— y solo reconstruye cuando hay una versión nueva: es lo más barato con diferencia.\n`cdc` consume el flujo de cambios del origen.\n`poll` compara para detectar diferencias; el último recurso.",
+                    "enum": [
+                      "table_version",
+                      "cdc",
+                      "poll"
+                    ]
+                  }
+                }
+              },
+              "watermark": {
+                "description": "La propiedad que ordena el avance del refresco. Es el segundo eje de la respuesta de auditoria: el digest dice QUE SIGNIFICABA, la marca de agua dice HASTA CUANDO era cierto.\n\nNO DEBE declararse con `strategy: table_version`: ahi la marca de agua es la version nativa del formato —el identificador de instantanea de Iceberg, la version de Delta— y declararla seria declarar lo derivable (P2).\n\nDEBE declararse con `cdc` o `poll`: sin ella el refresco no sabe desde donde continuar y solo puede recargar entero.\n\nNormativo: spec/v1alpha1/05-ejecutor.md §7",
+                "$ref": "type/basic.schema.json#/$defs/identifier"
+              },
+              "freshnessSLA": {
+                "description": "Antigüedad máxima tolerable de lo materializado.\n\nSuperado el umbral sin refresco, una implementación DEBE declarar el estado degradado al consumidor y NO DEBE servir datos obsoletos como si fueran frescos.\n\nEs normativo y no una recomendación: para un agente, saber que el contexto está degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en silencio convierte una garantía en una trampa.",
+                "$ref": "type/basic.schema.json#/$defs/duration"
+              }
             }
           }
-        },
-
-        "watermark": {
-          "description": "La propiedad que ordena el avance del refresco. Es el segundo eje de la respuesta de auditoria: el digest dice QUE SIGNIFICABA, la marca de agua dice HASTA CUANDO era cierto.\n\nNO DEBE declararse con `strategy: table_version`: ahi la marca de agua es la version nativa del formato —el identificador de instantanea de Iceberg, la version de Delta— y declararla seria declarar lo derivable (P2).\n\nDEBE declararse con `cdc` o `poll`: sin ella el refresco no sabe desde donde continuar y solo puede recargar entero.\n\nNormativo: spec/v1alpha1/05-ejecutor.md §7",
-          "$ref": "type/basic.schema.json#/$defs/identifier"
-        },
-
-        "freshnessSLA": {
-          "description": "Antigüedad máxima tolerable de lo materializado.\n\nSuperado el umbral sin refresco, una implementación DEBE declarar el estado degradado al consumidor y NO DEBE servir datos obsoletos como si fueran frescos.\n\nEs normativo y no una recomendación: para un agente, saber que el contexto está degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en silencio convierte una garantía en una trampa.",
-          "$ref": "type/basic.schema.json#/$defs/duration"
         }
       }
-    }
   },
 
   "$comment": "Un binding no solo LEE etiquetas: las INTRODUCE. Toda propiedad enlazada hereda las `labels` declaradas en su datasource, combinadas por join con las que ya tuviera. La ubicación física es un hecho del mundo, no una decisión de modelado, y por tanto se computa (P2): si la fuente vive en la UE, todo lo enlazado a ella queda etiquetado sin que nadie lo escriba en la entidad."

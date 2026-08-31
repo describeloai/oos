@@ -6,4 +6,3 @@ spec:
   datasourceRef: hr_db
   source: "public.tb_employee"
   properties: { employeeId: "emp_id" }
-  # sin `materialization`: el valor por defecto es passthrough

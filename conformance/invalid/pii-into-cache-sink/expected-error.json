@@ -1,6 +1,6 @@
 {
   "code": "OOS4002",
   "subject": "hr.Employee.email",
-  "conduit": "materialization.cache",
+  "conduit": "materialization.payload",
   "path": "packages/hr/bindings/warehouse.yaml"
 }

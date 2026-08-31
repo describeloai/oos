@@ -7,4 +7,4 @@ spec:
     # Aqui no fluye ninguna etiqueta, pero la materializacion hay que declararla
     # igual — P4, denegacion por defecto: no se obtiene un indice sin decir para
     # que esta autorizado.
-    materialization.index: {}
+    materialization.topology: {}

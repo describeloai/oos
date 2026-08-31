@@ -1,6 +1,6 @@
 {
   "changes": [
-    { "code": "OOS5012", "axis": "POLICY", "conduit": "materialization.index",
+    { "code": "OOS5012", "axis": "POLICY", "conduit": "materialization.topology",
       "from": "gdpr.sensitivity:low", "to": "gdpr.sensitivity:critical" }
   ],
   "requiredBump": "major"

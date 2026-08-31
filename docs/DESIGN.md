@@ -155,9 +155,10 @@ Cap'n Proto), no un KV store.
 
 > **ORE es *stateless* por defecto y *stateful* por declaración.**
 
-Un repositorio con todos sus bindings en `passthrough` no necesita base de datos alguna:
-arranca, mapea el bundle y sirve. El almacenamiento aparece solo con `mode: index` o
-`cache`.
+Un repositorio que no materializa nada no necesita base de datos alguna: arranca, mapea el
+bundle y sirve. El almacenamiento aparece solo cuando un binding declara `topology` o
+`payload` — dos ejes independientes, no un modo con tres valores
+([`03-binding`](../spec/v1alpha1/03-binding.md) §3.1).
 
 Tres consecuencias: el ORE abierto es **apto para producción** en el caso mayoritario; la
 complejidad operativa es proporcional a la ambición y no un peaje de entrada; y el tier
@@ -725,9 +726,7 @@ verdad.**
 
 | | |
 |---|---|
-| **Almacén del modo `cache`** | RocksDB es mala forma para escaneo analítico: ese peldaño quiere Arrow/Parquet + DataFusion. Probablemente dos almacenes |
-| **RocksDB frente a redb / fjall** | La dependencia C++ complica la compilación cruzada y engorda el binario distribuido por npm |
-| **Distribución del índice** | Construir una vez y distribuir como artefacto (checkpoint), no que cada nodo reconstruya y diverja |
+| **Almacén de lo materializado** | **Cerrado, y la respuesta es que no hace falta ninguno.** La topología es un artefacto inmutable que se mapea, igual que el plano de contexto; la carga útil es una tabla Iceberg en el lago del cliente, que es lo que hacen Dremio y Trino. ORE no opera ninguna base de datos. `ore/docs/decisions/0006` |
 | **Perfilado consciente de PII** | Sobre columnas marcadas: solo ratio de nulos y cardinalidad. Nunca min/max, histogramas ni muestras |
 | **`ore refactor`** | Renombrar un concepto usado en 200 sitios debe ser un comando. Sin él, un modelo grande se congela |
 | **Ficheros generados** | Dos personas ejecutando `discover` producen conflictos en ficheros que ninguna escribió: orden determinista y marcadores de región |

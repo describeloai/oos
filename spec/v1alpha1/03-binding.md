@@ -46,108 +46,87 @@ violaciones `OOS4xxx` se detectan.
 
 ## 3. Extensiones
 
-### 3.1 · `materialization`
+### 3.1 · `materialization` — dos ejes, no tres modos
 
 ```yaml
 materialization:
-  mode: index                  # passthrough (defecto) | index | cache
-  refresh:
-    every: 15m
-    strategy: table_version    # table_version | cdc | poll
-  freshnessSLA: 30m
+  topology:                          # las ARISTAS
+    refresh: { every: 15m, strategy: table_version }
+  payload:                           # la CARGA ÚTIL
+    properties: [legalName, segment]
+    refresh: { every: 1h, strategy: cdc }
+    watermark: updated_at
+    freshnessSLA: 2h
 ```
 
+Omitir los dos es no copiar nada, que es el valor por defecto (P4). No hay un `passthrough`
+que escribir: **la ausencia es el valor**, y por eso este campo no necesita que la forma
+canónica repare una ambigüedad que ya no existe.
+
+| Eje | Qué se copia | ¿Hay que decir qué? | Qué acelera |
+|---|---|---|---|
+| `topology` | **claves de join y aristas** | no: es derivable | la **travesía** |
+| `payload` | las propiedades declaradas | **sí, obligatorio** | la **búsqueda** |
+
 **Justificación (P7).** La sección Servers de ODCS declara **dónde vive** el dato. Ningún
-estándar declara **qué se copia, a dónde y bajo qué restricción**, ni convierte una
-violación de esa restricción en un error de compilación.
+estándar declara **qué se copia, a dónde y bajo qué restricción**, ni convierte una violación
+de esa restricción en un error de compilación. Y no es casualidad que no lo hagan: ODCS es
+deliberadamente agnóstico de plataforma —esa es su virtud— así que la materialización queda
+fuera de su alcance por diseño, no por olvido.
 
-Los tres modos:
+#### 3.1.1 · Por qué dos ejes y no un modo
 
-| Modo | Qué se almacena localmente | ¿Hay que decir qué? |
-|---|---|---|
-| `passthrough` | **nada.** Toda lectura alcanza el origen. Es el valor por defecto (P4) | — |
-| `index` | **topología**: claves de join y aristas. No la carga útil | no: es derivable |
-| `cache` | las propiedades declaradas. **Es una copia, y así debe decirse** | **sí, obligatorio** |
+Fueron un enum de tres valores —`passthrough | index | cache`— y era un error de modelado.
+**`index` y `cache` no son dos valores de un eje: copian cosas distintas, cuestan cosas
+distintas y aceleran cosas distintas.** El enum prohibía la combinación obvia: un objeto lento
+cuyas **aristas** quieres locales *y* cuyos **valores** quieres cerca no se podía declarar, y
+no había ninguna razón para impedirlo.
 
-La asimetría de la tercera columna es deliberada. En `index` lo materializado se **deriva**
-—la clave primaria y las propiedades `via` de las relaciones—, así que declararlo violaría
-P2. Una caché, en cambio, **es una copia de datos**, y quien la declara tiene que decir
-exactamente de qué: `materialization.properties` es obligatorio en `mode: cache`.
+La asimetría de la tercera columna sí es deliberada y se conserva. En `topology` lo
+materializado se **deriva** —la clave primaria y las propiedades `via` de las relaciones—, así
+que declararlo violaría P2. `payload` **es una copia de datos**, y quien la declara tiene que
+decir exactamente de qué.
 
-**El modo instancia un conducto.** `mode: index` significa que este binding usa el conducto
-`materialization.index`, cuya autorización se declara en `ConduitPolicy`. La comprobación
-es la regla de flujo de [`04-flow`](04-flow.md) §2, sin excepciones:
+Y una consecuencia que conviene ver: **`topology` es derivable y aun así es dato.** Una clave
+primaria es un valor, y [`00-overview`](00-overview.md) recuerda que saber que dos instancias
+están enlazadas puede ser el hecho sensible. Que no haya que declarar *qué* se copia no
+significa que copiarlo sea gratis.
+
+#### 3.1.2 · Cada eje instancia su conducto
+
+`topology` usa `materialization.topology` y `payload` usa `materialization.payload`, cada uno
+con su autorización en `ConduitPolicy`. La comprobación es la regla de flujo de
+[`04-flow`](04-flow.md) §2, sin excepciones:
 
 ```
 error[OOS4002]: etiqueta por encima de la autorización del conducto
-  hr.Employee.nationalId  ──binding──▶  materialization.index
+  hr.Employee.nationalId  ──binding──▶  materialization.topology
   origen  : gdpr.sensitivity = critical
   conducto: gdpr.sensitivity = medium
 ```
 
-### 3.5 · `selector` — qué filas del objeto son esta entidad
+Que sean **dos** conductos y no uno es lo que permite la postura habitual: *«las aristas
+pueden salir a disco, los valores no»*. Con un solo conducto había que elegir la más
+restrictiva de las dos y renunciar al índice.
 
-`source` dice **qué objeto**. `selector` dice **qué filas de ese objeto**, y hace falta
-porque un objeto físico puede sostener varias entidades: es lo normal en DynamoDB, donde el
-diseño de tabla única mete usuarios, pedidos y eventos en la misma tabla y los distingue por
-un prefijo de la clave. Sin esto, dos bindings sobre el mismo objeto **validaban limpio** y
-nada decía qué filas eran de quién.
+#### 3.1.3 · Una caché no es otra fuente
 
-```yaml
-spec:
-  source: "app_single_table"
-  selector:
-    tipo: PEDIDO                  # igualdad
-    estado: [nuevo, enviado]      # pertenencia
-    borradoEn: null               # ausencia
-```
+> **Una caché es la misma fuente, más cerca.**
 
-La conjunción es implícita. Las claves son **columnas físicas**, opacas como `source`, y no
-propiedades: el discriminante casi nunca es un dato de negocio —`_type`, un prefijo de la
-clave— y exigir que fuera una propiedad metería un artefacto del almacén dentro de la
-entidad, que es justo lo que [`02-entity`](02-entity.md) §1.1 prohíbe. El selector vive aquí
-**porque** es plano físico.
+Por eso `payload` cuelga **del** binding y no es un binding nuevo: un binding es una
+**afirmación de modelado** —*esta entidad vive aquí*— y una caché es una **decisión de
+enrutamiento**. Dos bindings pueden discrepar sobre el valor de una propiedad, y eso es
+legítimo: cubren subconjuntos distintos, o fuentes distintas de la misma entidad. **Una caché
+no puede discrepar de su origen, o deja de ser una caché.**
 
-#### 3.5.1 · Por qué la gramática es cerrada, y no es por elegancia
-
-La respuesta fácil era admitir SQL. `source` ya es una cadena opaca, así que un `where`
-opaco parecería del mismo tipo. No lo es, y la diferencia es toda la tesis del producto:
-
-> **Un predicado no filtra: lee.** Qué filas aparecen es observable, así que un predicado
-> sobre una columna clasificada es un canal lateral — de la presencia de una fila se deduce
-> un hecho sobre esa columna. `WHERE salario > 100000` no emite el salario y lo revela.
-
-Un binding **instancia un conducto** (§1). Si el compilador no puede saber qué lee ese
-conducto, `G2` —*si compila, ningún dato clasificado alcanza un conducto no autorizado*—
-deja de valer para ese binding, y una garantía con un agujero declarado no es una garantía.
-Un predicado opaco es exactamente ese agujero.
-
-De ahí sale la restricción, que no es de sintaxis sino de **qué puede afirmar**:
-
-> El selector hace **selección de pertenencia**, no filtrado. Dice qué filas *son* esta
-> entidad. Es una **partición**, no un `WHERE`.
-
-La igualdad, la pertenencia y la ausencia expresan exactamente una partición: parten el
-objeto en clases y cada fila cae en una. Un rango o una comparación entre columnas no
-particionan — ordenan—, y ahí es donde empieza la fuga. Por eso no están, y su ausencia es
-deliberada: un binding por franja temporal se declara hoy con dos objetos, no con un rango.
-
-Y la gramática cerrada **compra algo que el SQL haría imposible**: la disyunción de dos
-selectores es decidible. Se puede demostrar que dos bindings del mismo objeto no reclaman la
-misma fila. Con un `where` opaco eso no se puede ni plantear.
-
-#### 3.5.2 · Qué NO fuga, y por qué
-
-Con la gramática cerrada, lo único que el selector revela es **pertenencia**, y la
-pertenencia es la afirmación que el binding ya hace en voz alta: quien lee `Pedido` sabe que
-todas sus filas son pedidos. No escapa nada nuevo. Esa es la razón de que la restricción sea
-estructural y no cosmética — quítala y el argumento se cae.
-
----
+Este documento **no dice dónde se almacena** ninguno de los dos ejes. Es del motor, y
+[`05-ejecutor`](05-ejecutor.md) §8 explica por qué la especificación se calla.
 
 ### 3.2 · `freshnessSLA`
 
-Concepto tomado del SLA de ODCS y aplicado a la materialización.
+Concepto tomado del SLA de ODCS y aplicado a la materialización. Se declara **por eje**: la
+topología y la carga útil no tienen por qué envejecer al mismo ritmo, y de hecho casi nunca lo
+hacen — una arista nueva importa antes que un nombre corregido.
 
 Superado el umbral sin refresco, una implementación **DEBE** declarar el estado degradado
 al consumidor. **NO DEBE** servir datos obsoletos como si fueran frescos.
@@ -248,6 +227,66 @@ ellas y el compilador no podría verificar que un plan es ejecutable.
 > Regla recurrente de OOS: **la especificación define la gramática; el ecosistema aporta
 > las instancias.** Se aplica a retículos, a desclasificadores, a conductos y a
 > capacidades por igual.
+
+---
+
+### 3.5 · `selector` — qué filas del objeto son esta entidad
+
+`source` dice **qué objeto**. `selector` dice **qué filas de ese objeto**, y hace falta
+porque un objeto físico puede sostener varias entidades: es lo normal en DynamoDB, donde el
+diseño de tabla única mete usuarios, pedidos y eventos en la misma tabla y los distingue por
+un prefijo de la clave. Sin esto, dos bindings sobre el mismo objeto **validaban limpio** y
+nada decía qué filas eran de quién.
+
+```yaml
+spec:
+  source: "app_single_table"
+  selector:
+    tipo: PEDIDO                  # igualdad
+    estado: [nuevo, enviado]      # pertenencia
+    borradoEn: null               # ausencia
+```
+
+La conjunción es implícita. Las claves son **columnas físicas**, opacas como `source`, y no
+propiedades: el discriminante casi nunca es un dato de negocio —`_type`, un prefijo de la
+clave— y exigir que fuera una propiedad metería un artefacto del almacén dentro de la
+entidad, que es justo lo que [`02-entity`](02-entity.md) §1.1 prohíbe. El selector vive aquí
+**porque** es plano físico.
+
+#### 3.5.1 · Por qué la gramática es cerrada, y no es por elegancia
+
+La respuesta fácil era admitir SQL. `source` ya es una cadena opaca, así que un `where`
+opaco parecería del mismo tipo. No lo es, y la diferencia es toda la tesis del producto:
+
+> **Un predicado no filtra: lee.** Qué filas aparecen es observable, así que un predicado
+> sobre una columna clasificada es un canal lateral — de la presencia de una fila se deduce
+> un hecho sobre esa columna. `WHERE salario > 100000` no emite el salario y lo revela.
+
+Un binding **instancia un conducto** (§1). Si el compilador no puede saber qué lee ese
+conducto, `G2` —*si compila, ningún dato clasificado alcanza un conducto no autorizado*—
+deja de valer para ese binding, y una garantía con un agujero declarado no es una garantía.
+Un predicado opaco es exactamente ese agujero.
+
+De ahí sale la restricción, que no es de sintaxis sino de **qué puede afirmar**:
+
+> El selector hace **selección de pertenencia**, no filtrado. Dice qué filas *son* esta
+> entidad. Es una **partición**, no un `WHERE`.
+
+La igualdad, la pertenencia y la ausencia expresan exactamente una partición: parten el
+objeto en clases y cada fila cae en una. Un rango o una comparación entre columnas no
+particionan — ordenan—, y ahí es donde empieza la fuga. Por eso no están, y su ausencia es
+deliberada: un binding por franja temporal se declara hoy con dos objetos, no con un rango.
+
+Y la gramática cerrada **compra algo que el SQL haría imposible**: la disyunción de dos
+selectores es decidible. Se puede demostrar que dos bindings del mismo objeto no reclaman la
+misma fila. Con un `where` opaco eso no se puede ni plantear.
+
+#### 3.5.2 · Qué NO fuga, y por qué
+
+Con la gramática cerrada, lo único que el selector revela es **pertenencia**, y la
+pertenencia es la afirmación que el binding ya hace en voz alta: quien lee `Pedido` sabe que
+todas sus filas son pedidos. No escapa nada nuevo. Esa es la razón de que la restricción sea
+estructural y no cosmética — quítala y el argumento se cae.
 
 ---
 

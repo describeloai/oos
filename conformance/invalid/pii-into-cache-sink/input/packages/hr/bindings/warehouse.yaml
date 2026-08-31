@@ -11,5 +11,5 @@ spec:
     employeeId: "emp_id"
     email: "txt_email"
   materialization:
-    mode: cache
-    properties: [employeeId, email]
+    payload:
+      properties: [employeeId, email]

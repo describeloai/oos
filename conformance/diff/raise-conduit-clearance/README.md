@@ -4,7 +4,7 @@
 
 ---
 
-`materialization.index` pasa de admitir `low` a admitir `critical`. **Ni una entidad
+`materialization.topology` pasa de admitir `low` a admitir `critical`. **Ni una entidad
 cambia.**
 
 Es el cambio de una línea con mayor radio de acción de todo el sistema: de golpe, cualquier

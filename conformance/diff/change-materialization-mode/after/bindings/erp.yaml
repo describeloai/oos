@@ -9,4 +9,3 @@ spec:
     employeeId: "emp_id"
     departmentId: "dept_id"
   materialization:
-    mode: passthrough

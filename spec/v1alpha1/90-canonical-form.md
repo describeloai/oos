@@ -50,8 +50,19 @@ Todo valor por defecto definido por el esquema **DEBE** escribirse explícitamen
 forma canónica no contiene valores implícitos.
 
 ```yaml
-materialization: {}           →  materialization: { mode: passthrough }
+workspace: {}                 →  workspace: { members: [packages/*] }
 ```
+
+El ejemplo de este apartado **era otro** —`materialization: {}` frente a
+`mode: passthrough`— y dejó de serlo al reescribir `03-binding` §3.1: los dos ejes de
+materialización no tienen valor por defecto que escribir, porque **la ausencia es el valor**.
+Un vocabulario que no crea la ambigüedad no necesita que N2 la repare, y eso es mejor que
+repararla bien.
+
+`workspace.members` sí la crea, y llevaba desde v1alpha1 sin materializarse: dos manifiestos
+que dicen lo mismo —uno omitiendo el campo, otro escribiendo `packages/*`— producían **digests
+distintos**. Y `ore init` omite el campo a propósito, así que todo repositorio recién creado
+caía de un lado del corte.
 
 ### N3 · Ausencia, nunca nulo
 

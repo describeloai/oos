@@ -8,8 +8,8 @@ Es el caso que distingue **denegación por defecto** de **violación de flujo**,
 está construido para que no haya ninguna etiqueta en juego: `quantity` no tiene etiqueta y
 `shipmentId` tampoco. Nada aquí es sensible.
 
-Y aun así falla, porque el binding declara `mode: index` y la política de conductos solo
-autoriza `materialization.cache`.
+Y aun así falla, porque el binding declara el eje `topology` y la política de conductos solo
+autoriza `materialization.payload`.
 
 > **Omitir un conducto no es dejarlo abierto: es cerrarlo.**
 

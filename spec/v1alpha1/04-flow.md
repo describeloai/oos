@@ -104,7 +104,7 @@ Un **conducto** es cualquier salida de información. OOS v1alpha1 define estos:
 
 | Conducto | Aparece en | Ejemplo de autorización |
 |---|---|---|
-| `materialization` | `Binding` — modos `index` y `cache` | qué puede escribirse en disco |
+| `materialization` | `Binding` — ejes `topology` y `payload` | qué puede escribirse en disco |
 | `datasource` | capacidades de `Function` | qué fuentes puede tocar una función |
 | `export` | `ore export` | qué puede salir del paquete |
 | `contextSurface` | superficie servida a consumidores (MCP, GraphQL, SDK) | qué puede ver un agente |
@@ -114,9 +114,9 @@ Un **conducto** es cualquier salida de información. OOS v1alpha1 define estos:
 kind: ConduitPolicy
 spec:
   conduits:
-    cache:          { sensitivity: low,    maturity: STABLE }
-    contextSurface: { sensitivity: medium, maturity: REVIEWED }
-    log:            { sensitivity: none,   maturity: DEPRECATED }
+    materialization.payload:  { sensitivity: low,    maturity: STABLE }
+    contextSurface:           { sensitivity: medium, maturity: REVIEWED }
+    log.audit:                { sensitivity: none,   maturity: DEPRECATED }
 ```
 
 Un conducto sin autorización declarada **DEBE** tratarse como `⊥`: no admite nada

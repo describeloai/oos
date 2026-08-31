@@ -15,6 +15,6 @@ spec:
       column: "base_salary"
       physicalType: "numeric(18,2)"
   materialization:
-    mode: index
-    refresh: { every: 15m, strategy: table_version }
-    freshnessSLA: 30m
+    topology:
+      refresh: { every: 15m, strategy: table_version }
+      freshnessSLA: 30m

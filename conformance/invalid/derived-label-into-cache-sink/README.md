@@ -20,8 +20,8 @@ baseSalary : critical  (declarada)
 bonus      : critical  (declarada)
            ↓ join
 totalCompensation : critical  (COMPUTADA — nadie la escribió)
-           ↓ binding, mode: cache
-materialization.cache : low   →  critical ⋢ low
+           ↓ binding, el eje `payload`
+materialization.payload : low   →  critical ⋢ low
 ```
 
 **Esto es lo que ningún catálogo del mercado hace.** En cualquiera de ellos,

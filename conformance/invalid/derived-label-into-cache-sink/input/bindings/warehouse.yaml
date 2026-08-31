@@ -11,5 +11,5 @@ spec:
     bonus: "bonus"
     totalCompensation: "total_comp"
   materialization:
-    mode: cache
-    properties: [employeeId, totalCompensation]
+    payload:
+      properties: [employeeId, totalCompensation]

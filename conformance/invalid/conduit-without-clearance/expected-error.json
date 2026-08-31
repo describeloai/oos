@@ -1,1 +1,1 @@
-{ "code": "OOS4011", "conduit": "materialization.index", "path": "bindings/erp.yaml" }
+{ "code": "OOS4011", "conduit": "materialization.topology", "path": "bindings/erp.yaml" }

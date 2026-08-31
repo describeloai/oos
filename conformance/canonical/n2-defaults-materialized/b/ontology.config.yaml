@@ -3,3 +3,5 @@ kind: OntologyConfig
 metadata: { name: minimal, version: 0.1.0 }
 datasources:
   - { name: hr_db, type: postgres, connectionEnv: HR_DB_URL }
+workspace:
+  members: [packages/*]

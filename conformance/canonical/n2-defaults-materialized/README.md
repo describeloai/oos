@@ -4,15 +4,20 @@
 
 ---
 
-Un binding sin `materialization` y otro con `mode: passthrough` explícito.
+Un manifiesto sin `workspace` y otro que escribe `members: [packages/*]`.
 
-**La forma canónica no contiene valores implícitos.** Todo valor por defecto se escribe, y
-por eso las dos variantes colapsan en los mismos bytes.
+**La forma canónica no contiene valores implícitos.** Todo valor por defecto se escribe, y por
+eso las dos variantes colapsan en los mismos bytes.
 
-Tiene una consecuencia que vale la pena ver: en el diff canónico, **añadir
-`mode: passthrough` a un binding que no lo tenía no aparece como cambio.** Y eso es lo
-correcto — no cambia nada. Lo que sí aparecería es pasar a `index`, porque eso sí cambia
-qué se copia.
+Este caso tenía **otro sujeto** —un binding sin `materialization` frente a uno con `mode: passthrough` explícito— y lo
+perdió cuando `03-binding` §3.1 pasó de un enum de tres modos a dos ejes independientes: la
+ausencia dejó de ser un valor por defecto y pasó a ser *la ausencia*. **Un vocabulario que no
+crea la ambigüedad no necesita que N2 la repare**, y eso es mejor que repararla bien.
 
-Nótese además que `default` en JSON Schema es **pura anotación**: no rellena nada. Quien
-materializa el valor por defecto es el compilador al normalizar, no el validador.
+Y al mudarlo se vio que el sujeto nuevo **estaba roto**: el esquema declara
+`"default": ["packages/*"]` desde v1alpha1 y nadie lo materializaba, así que estos dos
+manifiestos producían **digests distintos**. Peor: `ore init` omite el campo a propósito
+citando P2, de modo que todo repositorio recién creado caía de un lado del corte.
+
+Es la cuarta vez que N2 se rompe por lo mismo — la regla estaba escrita y se aplicaba a un
+solo campo de los que cubría.

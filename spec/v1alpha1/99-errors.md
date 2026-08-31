@@ -120,7 +120,7 @@ El formato no es normativo; **la cadena causal sí lo es**.
 ```
 error[OOS4001]: flujo de información no autorizado
 
-  hr.Employee.salary  ──derivación──▶  hr.netComp  ──binding──▶  materialization.cache
+  hr.Employee.salary  ──derivación──▶  hr.netComp  ──binding──▶  materialization.payload
 
   etiqueta del origen      : gdpr.sensitivity = critical   (declarada)
   etiqueta de la derivada  : gdpr.sensitivity = critical   (computada, join)
@@ -218,7 +218,7 @@ especificación misma.
 | `OOS2001` | **reservado** | *«referencia a un nombre cualificado inexistente»*. Al poblar la suite se vio que **no es alcanzable**: toda referencia de v1alpha1 tiene código específico — entidad y propiedad (`OOS2005`), datasource (`OOS2004`), etiqueta (`OOS4003`). Se reserva porque `Function`, `Resolution` y `Test` introducen tipos de referencia nuevos |
 | `OOS6001` | **retirado como código** | *«entrada no determinista en la compilación»*. Es una restricción sobre la **implementación**, no un defecto de un documento: ningún paquete puede contener un reloj. La regla sigue siendo normativa en `90-canonical-form` §2 y se verifica con casos `digest/`, comprobando que el mismo paquete produce el mismo digest |
 | `OOS6002` | **retirado como código** | *«fallo de normalización Unicode»*. Sobre UTF-8 válido la normalización NFC no falla, y los identificadores de OOS son ASCII, así que no puede haber colisión tras normalizar. Se verifica como afirmación positiva: dos entradas que difieren solo en composición Unicode **deben** producir la misma forma canónica |
-| `OOS4013` | **retirado** | *«`mode: cache` sobre propiedad etiquetada sin desclasificador autorizado»*. Al escribir su caso de conformidad se vio que **no es una condición distinta de `OOS4002`**: si la etiqueta está por debajo de la autorización del conducto, cachear es legítimo y no hace falta desclasificar; si está por encima, ya lo cubre `OOS4002`. Además su premisa no existe: **no hay forma de declarar un desclasificador en tiempo de materialización** (ver la nota de v1alpha2 abajo). Una regla que no se puede convertir en un caso no es normativa |
+| `OOS4013` | **retirado** | *«`payload` sobre propiedad etiquetada sin desclasificador autorizado»*. Al escribir su caso de conformidad se vio que **no es una condición distinta de `OOS4002`**: si la etiqueta está por debajo de la autorización del conducto, cachear es legítimo y no hace falta desclasificar; si está por encima, ya lo cubre `OOS4002`. Además su premisa no existe: **no hay forma de declarar un desclasificador en tiempo de materialización** (ver la nota de v1alpha2 abajo). Una regla que no se puede convertir en un caso no es normativa |
 | `OOS5004` | **retirado** | superado por `OOS5022`, que cubre cualquier cambio rompedor sin aviso, no solo el endurecimiento de una política |
 | `OOS5005` | **retirado** | superado por `OOS5007` |
 

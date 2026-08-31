@@ -19,11 +19,11 @@ aun así el sistema sabe que este paquete filtraría PII a una caché.
 ## Qué debe ocurrir
 
 `hr.Employee.email` está etiquetada `gdpr.sensitivity: high`. El binding declara
-`mode: cache`, que instancia el conducto `materialization.cache`, cuya autorización es
+el eje `payload`, que instancia el conducto `materialization.payload`, cuya autorización es
 `gdpr.sensitivity: low`.
 
 ```
-hr.Employee.email  ──binding──▶  materialization.cache
+hr.Employee.email  ──binding──▶  materialization.payload
 
   etiqueta del origen      : high
   autorización del conducto: low        →  high ⋢ low

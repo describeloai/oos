@@ -4,7 +4,7 @@
 
 ---
 
-`materialization.index` autoriza hasta `medium`. Lo que se materializa es la topología —la
+`materialization.topology` autoriza hasta `medium`. Lo que se materializa es la topología —la
 clave primaria y la propiedad `via` de la relación—, y `departmentId` está etiquetada
 `low`. `low ⊑ medium`, así que compila.
 
