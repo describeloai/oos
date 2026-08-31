@@ -59,7 +59,7 @@ motor/script»*. Al cerrar la especificación, tres cosas cambiaron:
 Y una honestidad que conviene mantener escrita: **una especificación no puede hacerse
 ejecutable a sí misma.** «Cualquier motor conforme» no es una propiedad de OOS — es un
 hecho empírico que se vuelve cierto **el día que una segunda implementación independiente
-pasa la suite**. Hasta entonces hay evidencia —76 casos, 53 códigos, identidad determinista,
+pasa la suite**. Hasta entonces hay evidencia —la suite de conformidad, identidad determinista,
 una implementación de referencia sin privilegios— y no prueba.
 
 Mapa de cuándo se completa:

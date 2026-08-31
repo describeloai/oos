@@ -131,7 +131,7 @@ otras— siempre que emitan la forma canónica definida en
 
 ## 4. Documentos definidos en v1alpha1
 
-El alcance de v1alpha1 es deliberadamente mínimo. Cinco documentos, ni uno más.
+El alcance de v1alpha1 es deliberadamente mínimo. **Seis documentos**, ni uno más.
 
 | `kind` | Naturaleza | Responde a |
 |---|---|---|
@@ -140,10 +140,18 @@ El alcance de v1alpha1 es deliberadamente mínimo. Cinco documentos, ni uno más
 | `Binding` | **perfil de ODCS** + `materialization` | dónde está y qué se copia |
 | `Lattice` | **gramática propia** | qué etiquetas existen y cómo se ordenan |
 | `ConduitPolicy` | **gramática propia** | qué sale por dónde y con qué autorización |
+| `RequestPolicy` | **gramática propia** | qué entra con una petición, y quién responde de que sea cierto |
 
-`Lattice` y `ConduitPolicy` se definen en [04 · Etiquetas, conductos y flujo](04-flow.md)
-y son **la única gramática nueva que esta especificación introduce**. Todo lo demás es
-perfil, extensión justificada o adopción.
+`Lattice` y `ConduitPolicy` se definen en [04 · Etiquetas, conductos y flujo](04-flow.md),
+`RequestPolicy` en [06 · La frontera que faltaba](06-request.md), y son **la gramática nueva
+que esta especificación introduce**. Todo lo demás es perfil, extensión justificada o
+adopción.
+
+El sexto llegó tarde, y esta tabla dijo *«cinco, ni uno más»* durante seis versiones. No fue
+un olvido: **L0 y L1 no tienen peticiones**, así que la frontera de entrada de identidad no
+faltaba —no existía— hasta que [05 · El ejecutor](05-ejecutor.md) puso un principal delante
+de un dato. Un alcance cerrado se reabre cuando algo lo empuja desde fuera; lo que no puede
+es seguir diciendo que está cerrado en cinco.
 
 ### 4.1 · Las políticas son Cedar
 

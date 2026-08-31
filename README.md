@@ -8,8 +8,8 @@
 
 Apache-2.0 · `oos.dev/v1alpha1` · **borrador inestable, no implementar en producción**
 
-<sub>*«Cualquier motor conforme» es una intención de diseño con evidencia —76 casos de
-conformidad, 53 códigos, identidad determinista, implementación de referencia sin
+<sub>*«Cualquier motor conforme» es una intención de diseño con evidencia —una suite de
+conformidad normativa, identidad determinista, implementación de referencia sin
 privilegios— y **no una prueba**. Se vuelve un hecho el día que una segunda implementación
 independiente pasa la [suite](conformance/README.md).*</sub>
 
@@ -191,6 +191,10 @@ sus tres condiciones, con su estado medido, están en §6.1 del mismo documento.
 
 **Promover no es una decisión: es una comprobación.**
 
+Las tablas de abajo no llevan cuentas de casos. Cada borrador tiene su propio marcador y lo
+imprime al correr la suite; una cifra copiada aquí envejece en silencio, y ya lo hizo: de las
+cuatro que había, **tres estaban desfasadas** —la peor, por catorce casos.
+
 ```
 spec/v1alpha1/     documentos normativos — y alpha: sin garantías
 spec/v1alpha2/     alcance cerrado — los efectos y la derivación
@@ -216,10 +220,13 @@ docs/vision/       ontologías escritas contra el lenguaje completo — NO valid
 | [`examples/acme-retail`](examples/acme-retail/README.md) | ✅ completo · en verde |
 | [`docs/vision/acme-global`](docs/vision/acme-global/README.md) | 🔭 visión · no valida, y es correcto |
 
-Alcance cerrado de v1alpha1: cinco documentos. `Package` y `Binding` son **perfiles**
-sobre ODCS; `Entity`, `Lattice` y `ConduitPolicy` son **gramática propia** —Ossie es
-objetivo de emisión del bundle, no anfitrión de la entidad (`00-overview` §7.2-bis)—. Las
-políticas son **Cedar**, no un documento OOS.
+Alcance cerrado de v1alpha1: **seis documentos**. `Package` y `Binding` son **perfiles**
+sobre ODCS; `Entity`, `Lattice`, `ConduitPolicy` y `RequestPolicy` son **gramática propia**
+—Ossie es objetivo de emisión del bundle, no anfitrión de la entidad (`00-overview`
+§7.2-bis)—. Las políticas siguen siendo **Cedar**, no un documento OOS: `RequestPolicy` no
+autoriza nada, declara **de dónde vienen los atributos con los que Cedar decide**. Fue el
+sexto y llegó el último, cuando el ejecutor puso un principal delante de un dato
+([`00-overview` §4](spec/v1alpha1/00-overview.md)).
 
 | | v1alpha2 · alcance cerrado, no normativo |
 |---|---|
@@ -228,7 +235,7 @@ políticas son **Cedar**, no un documento OOS.
 | [`02-function`](spec/v1alpha2/02-function.md) · la superficie de escritura gobernada | ✅ |
 | [`03-resolution`](spec/v1alpha2/03-resolution.md) · el efecto sobre la identidad | ✅ |
 | [`04-expression`](spec/v1alpha2/04-expression.md) · la promoción de `expression` | ✅ |
-| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **22/22** |
+| [`conformance/v1alpha2/`](conformance/v1alpha2/README.md) · borrador | ✅ **entero en verde** |
 
 **v1alpha1 gobierna lo que se puede saber; v1alpha2, lo que se puede causar.** Añade los dos
 verbos —`Function` y `Resolution`—, **una promoción** —`expression`, que pasa de prosa
@@ -236,13 +243,13 @@ documental a CEL comprobada— y la resolución de dependencias. `quality` de OD
 **cuerpo** de una aserción y su **destino de emisión**, y no se escribe colgando de la
 propiedad: eso sería una segunda superficie de autoría sin dueño propio. `Rule` se retiró como documento
 ([`00-scope`](spec/v1alpha2/00-scope.md) §3.1). Su suite vive en un árbol aparte y se cuenta
-por separado, para que **76/76 siga queriendo decir lo mismo** cuando este directorio tenga
-cincuenta casos.
+por separado, para que **la cuenta de v1alpha1 siga queriendo decir lo mismo** cuando este
+directorio tenga cincuenta casos.
 
 `Test` y lo temporal siguen aplazados.
 
 **v1alpha3 abre la capa de gobierno** —[`spec/v1alpha3/`](spec/v1alpha3/00-scope.md), con
-esquema y [19 casos](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
+esquema y [su propia suite](conformance/v1alpha3/README.md) en un tercer árbol—, y no inventa el
 plano: lo termina. v1alpha1 ya declaraba el vocabulario cerrado de obligaciones
 y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, y sale gratis:
 *una etiqueta ya es un conjunto*. El retículo que v1alpha1 usa para comparar dos elementos
@@ -254,7 +261,7 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 | [`01-significado`](spec/v1alpha4/01-significado.md) · el régimen: el concepto, el mapeo, la forma | ✅ |
 | [`02-property`](spec/v1alpha4/02-property.md) · el concepto: qué cabe en él y qué hereda quien lo referencia | ✅ |
 | [`03-interface`](spec/v1alpha4/03-interface.md) · la forma: qué es satisfacerla y qué alcanza una regla | ✅ |
-| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **28/28** |
+| [`conformance/v1alpha4/`](conformance/v1alpha4/README.md) · borrador | ✅ **entero en verde** |
 | **listo para v1** | ✅ **12 de 12 estaciones** — [`00-scope`](spec/v1alpha4/00-scope.md) §8 |
 
 **v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
