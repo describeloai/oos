@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/04-flow.md#4
+level: L0
+expects: OOS1004
+summary: >
+  Un ConduitPolicy sin dueño. Elevar la autorizacion de un conducto es LA
+  decision de seguridad del modelo, y un techo del que nadie responde es el
+  hueco que el campo cierra.
