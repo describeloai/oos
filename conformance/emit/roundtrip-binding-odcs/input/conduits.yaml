@@ -2,6 +2,7 @@ apiVersion: oos.dev/v1alpha1
 kind: ConduitPolicy
 metadata: { name: default }
 spec:
+  owner: team:security
   conduits:
     # Autorizacion vacia: el conducto existe y no admite nada por encima de bottom.
     # Aqui no fluye ninguna etiqueta, pero la materializacion hay que declararla

@@ -11,6 +11,14 @@ metadata:
 # fichero. Elevar una autorización es una decisión de seguridad, no de dominio.
 # ---------------------------------------------------------------------------
 spec:
+  # El dueño de la superficie de seguridad. Estaba escrito arriba, EN UN
+  # COMENTARIO —«CODEOWNERS exige revisión de @acme/security»— y un dueño en
+  # prosa no viaja en el bundle. Lo que va a una auditoría es el bundle.
+  #
+  # Y es lo que da dueño a las políticas de Cedar, que eran la única superficie
+  # de gobierno sin él: quien eleva la autorización de un conducto y quien
+  # escribe un `permit` son la misma persona.
+  owner: team:acme-security
   conduits:
 
     # --- Materialización ----------------------------------------------------

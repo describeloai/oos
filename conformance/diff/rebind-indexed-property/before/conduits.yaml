@@ -2,6 +2,7 @@ apiVersion: oos.dev/v1alpha1
 kind: ConduitPolicy
 metadata: { name: default }
 spec:
+  owner: team:security
   conduits:
     materialization.topology: { gdpr.sensitivity: medium }
     materialization.payload: { gdpr.sensitivity: medium }

@@ -3,6 +3,7 @@ kind: ConduitPolicy
 metadata:
   name: default
 spec:
+  owner: team:security
   conduits:
     materialization.payload:
       gdpr.sensitivity: low

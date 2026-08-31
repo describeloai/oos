@@ -113,6 +113,7 @@ Un **conducto** es cualquier salida de información. OOS v1alpha1 define estos:
 ```yaml
 kind: ConduitPolicy
 spec:
+  owner: team:security
   conduits:
     materialization.payload:  { sensitivity: low,    maturity: STABLE }
     contextSurface:           { sensitivity: medium, maturity: REVIEWED }
@@ -142,6 +143,22 @@ clases que parecen singleton: puede haber más de un log —auditoría y depurac
 autorizaciones distintas.
 
 ### 4.1 · Combinación de varias políticas
+
+**Normativo.** Un `ConduitPolicy` **DEBE** declarar `owner`, con el mismo vocabulario que
+`Package` y `Ruleset` — `team:<handle>` o `user:<handle>` (`OOS2009`).
+
+Es el cuarto documento que gobierna y era el único sin él, y no porque no lo tuviera: en la
+práctica el dueño está escrito **en un comentario** o en CODEOWNERS, y ninguna de las dos
+cosas viaja en el bundle. Lo que va a una auditoría es el bundle.
+
+> **Elevar la autorización de un conducto es LA decisión de seguridad de este modelo.** Un
+> techo del que nadie responde es exactamente el hueco que este campo cierra.
+
+Y tiene una segunda consecuencia, que es la que lo hace valioso: **da dueño a las políticas
+de Cedar**, la única superficie de gobierno que no lo tenía. Quien eleva la autorización de
+un conducto y quien escribe un `permit` toman la misma clase de decisión —*quién ve qué*— y
+son la misma persona. Con **varias** `ConduitPolicy` la herencia no aplica: no habría forma
+de saber de cuál, y adivinar el dueño de una decisión de seguridad es peor que no tenerlo.
 
 Un repositorio **PUEDE** tener varias `ConduitPolicy`: típicamente una importada de un
 paquete regulatorio y otra local.
