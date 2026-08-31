@@ -350,4 +350,5 @@ implementación **DEBE** comunicar como tales:
 | **plan rechazado** | el plan exige una operación que las capacidades no autorizan, o un ámbito que no se puede empujar (§2, §3, §5) |
 | **estado degradado** | se superó `freshnessSLA` sin refresco (§7) |
 | **no autorizado** | la política del principal poda el plan hasta dejarlo vacío (§3 ①) |
+| **jerarquía no disponible** | una política que alcanza la propiedad exige la jerarquía del principal —`principal in <Entidad>::"…"`— y la implementación no tiene el índice que la resuelve. **Deniega**, que es P4, y **DEBE** decir que no pudo evaluarla: una denegación por falta de un subsistema tiene el mismo aspecto que una por política |
 | **reconstrucción pendiente** | cambió una máscara sin sujeto y lo materializado aún lleva la anterior (§7.1) |
