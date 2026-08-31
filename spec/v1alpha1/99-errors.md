@@ -73,7 +73,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2002` | ciclo en el grafo de dependencias | 01 §3.1 |
 | `OOS2003` | elemento duplicado en un campo declarado como conjunto | 90 §N4 |
 | `OOS2004` | `datasourceRef` no declarado en el manifiesto raíz | 03 §2.1 |
-| `OOS2005` | referencia a una entidad o propiedad inexistente | 02 §10 |
+| `OOS2005` | referencia a una entidad, propiedad o etiqueta inexistente | 02 §10 |
 | `OOS2006` | uso de un nombre declarado en `reserved` | 02 §8 |
 | `OOS2007` | `version` no es semver 2.0.0 válido | 01 §2.1 |
 | `OOS2008` | `status` fuera del vocabulario de ODCS | 01 §2.3 |

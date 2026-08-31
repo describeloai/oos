@@ -119,6 +119,20 @@ spec:
     log.audit:                { sensitivity: none,   maturity: DEPRECATED }
 ```
 
+**Normativo.** Una etiqueta que una política menciona **DEBE** estar declarada por algún
+retículo del paquete (`OOS2005`). Una que no lo esté no hace fallar la evaluación: **deja de
+casar con nada**, y el dato que iba a gobernar queda sin gobernar en silencio — *una política
+que no gobierna tiene exactamente el mismo aspecto que una que gobierna*. Comprobarlo no
+exige un evaluador: es comparar los niveles declarados con los que la política nombra.
+
+Lo contrario **no** es un defecto. Una política que menciona una etiqueta declarada y que hoy
+no lleva ninguna propiedad está **esperando**, y esa es la característica: la proyección
+`Property in [Label, EntityType]` existe para que una entidad nueva quede gobernada **el día
+que se etiqueta**, sin tocar la política. Por eso lo que alcanza cada una se informa y no se
+diagnostica.
+
+---
+
 Un conducto sin autorización declarada **DEBE** tratarse como `⊥`: no admite nada
 (principio P4, denegación por defecto). Lo mismo aplica a un retículo omitido dentro de un
 conducto que sí está declarado.

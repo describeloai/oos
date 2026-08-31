@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/04-flow.md#3
+level: L0
+expects: OOS2005
+summary: >
+  Una política menciona una etiqueta con una errata. No falla al evaluarse: deja de casar con nada, y el dato que iba a gobernar queda sin gobernar en silencio.
