@@ -141,7 +141,24 @@ no las sondea (`03-binding` §3.3: *las capacidades **DEBEN** declararse, no son
 Que el caso por defecto sea justo la fase ③ del plan no es casualidad: **el camino principal
 funciona sin declarar nada, y las capacidades solo desbloquean lo demás.**
 
-### 5.2 · Un filtro exigido que nadie mapea hace inconsultable el binding
+### 5.2 · Las capacidades de lo materializado son las del formato
+
+`capabilities` describe **el origen**. Cuando un binding declara `payload`, el motor tiene un
+segundo sitio de donde leer, y ese sitio **no tiene las capacidades del origen: tiene las del
+formato en que se materializó**.
+
+**Normativo.** Una implementación L2 **PUEDE** planificar contra lo materializado usando las
+capacidades del formato en que lo guarda, y **NO DEBE** exigir que se declaren: son derivables
+de una decisión que ya tomó el motor (P2). Lo que **DEBE** es no atribuirlas al origen —
+`capabilities` sigue describiendo la fuente, y si lo materializado desaparece, el plan que
+dependía de ellas vuelve a ser irrealizable.
+
+Eso es lo que convierte una caché en algo más que velocidad, y está dicho en
+[`03-binding`](03-binding.md) §3.1.4: **habilita consultas que la ley de §2 rechazaría contra
+el origen.** Y su reverso es la razón de que retirar un eje sea un cambio observable y no una
+optimización que se quita sin más.
+
+### 5.3 · Un filtro exigido que nadie mapea hace inconsultable el binding
 
 `requiredFilters` nombra propiedades sin las que el origen no acepta una consulta. Si alguna
 no está en el mapeo del binding, **el motor no tiene con qué construir el filtro** y la fuente
@@ -216,6 +233,23 @@ materialization:
   agua de lo materializado que haya intervenido. Son los dos ejes: **qué significaba** y
   **hasta cuándo era cierto**.
 
+### 7.1 · Refrescar no es reconstruir
+
+Una máscara **sin sujeto** se aplica *al construir el índice*
+([`v1alpha3/02-ruleset`](../v1alpha3/02-ruleset.md) §4), así que **queda horneada en lo
+materializado**. Cambiarla no se propaga refrescando: el refresco trae filas nuevas y deja
+intactas las viejas, que siguen enmascaradas con la regla anterior.
+
+**Normativo.** Cuando cambia una máscara sin sujeto que alcanza a lo materializado, una
+implementación **DEBE reconstruirlo**, no refrescarlo. **NO DEBE** servir de lo materializado
+valores enmascarados con una regla que ya no está vigente.
+
+Es la clase de fallo que no tiene aspecto de fallo: se refresca, todo sale verde, y lo
+materializado sigue sirviendo lo que la máscara nueva prohibiría. Y distingue las dos figuras
+de una vez:
+
+> **Refrescar responde a que el dato cambió. Reconstruir responde a que la REGLA cambió.**
+
 ---
 
 ## 8. Lo que este documento NO decide, y es deliberado
@@ -247,3 +281,4 @@ implementación **DEBE** comunicar como tales:
 | **plan rechazado** | el plan exige una operación que las capacidades no autorizan (§2, §5) |
 | **estado degradado** | se superó `freshnessSLA` sin refresco (§7) |
 | **no autorizado** | la política del principal poda el plan hasta dejarlo vacío (§3 ①) |
+| **reconstrucción pendiente** | cambió una máscara sin sujeto y lo materializado aún lleva la anterior (§7.1) |

@@ -1,4 +1,4 @@
-rule: spec/v1alpha1/05-ejecutor.md#5.2
+rule: spec/v1alpha1/05-ejecutor.md#5.3
 level: L0
 expects: OOS2015
 summary: >

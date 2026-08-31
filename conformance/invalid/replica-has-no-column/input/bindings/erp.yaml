@@ -1,16 +1,16 @@
 apiVersion: oos.dev/v1alpha1
 kind: Binding
-metadata:
-  name: warehouse
-  namespace: hr
+metadata: { name: erp, namespace: hr }
 spec:
   targetEntity: hr.Employee
-  datasourceRef: hr_db
+  datasourceRef: erp
   source: "public.tb_employee"
   properties:
     employeeId: "emp_id"
-    email: "txt_email"
+    departmentId: "dept_id"
   materialization:
+    topology: {}
     payload:
-      properties: [employeeId, email]
+      # `salary` es una propiedad de la entidad y NO esta en el mapeo
+      properties: [salary]
       freshnessSLA: 24h

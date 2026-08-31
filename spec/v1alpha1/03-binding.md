@@ -34,9 +34,11 @@ violaciones `OOS4xxx` se detectan.
 - Y al revés también: **un objeto físico PUEDE sostener varias entidades**, que es como
   funciona el diseño de tabla única. Cuando eso ocurre, cada binding **DEBE** declarar un
   `selector` y los selectores **DEBEN** ser disjuntos (`OOS2014`) — §3.5.
-- El mapeo **DEBE** cubrir la `primaryKey` de la entidad destino. Sin clave no hay
-  resolución de instancia, ni índice de topología, ni identificación de recurso para una
-  política.
+- El mapeo **DEBE** cubrir **todo lo que necesita una columna física**: la `primaryKey` de
+  la entidad destino, las propiedades `via` de sus relaciones y lo que `payload` replica
+  (`OOS2011`). Sin clave no hay resolución de instancia, ni índice de topología, ni
+  identificación de recurso para una política; sin la columna de un enlace, la relación se
+  declara y no se puede recorrer; y **una réplica sin columna no tiene de dónde copiar**.
 - El `datasourceRef` **DEBE** estar declarado en el manifiesto raíz (`OOS2004`).
 - El secreto de conexión **NO DEBE** aparecer nunca. El manifiesto declara únicamente el
   nombre de la variable de entorno de la que se lee. Es lo que hace publicable a un
@@ -116,11 +118,53 @@ restrictiva de las dos y renunciar al índice.
 Por eso `payload` cuelga **del** binding y no es un binding nuevo: un binding es una
 **afirmación de modelado** —*esta entidad vive aquí*— y una caché es una **decisión de
 enrutamiento**. Dos bindings pueden discrepar sobre el valor de una propiedad, y eso es
-legítimo: cubren subconjuntos distintos, o fuentes distintas de la misma entidad. **Una caché
-no puede discrepar de su origen, o deja de ser una caché.**
+legítimo: cubren subconjuntos distintos, o fuentes distintas de la misma entidad.
 
-Este documento **no dice dónde se almacena** ninguno de los dos ejes. Es del motor, y
-[`05-ejecutor`](05-ejecutor.md) §8 explica por qué la especificación se calla.
+**Normativo.** Una caché **NO DEBE** poder discrepar de su origen. Si puede, no es una caché:
+es otra fuente, y entonces es un binding con su `datasourceRef` y su `selector`. La
+transparencia no es una cualidad deseable de la implementación — **es lo que distingue las dos
+figuras**, y confundirlas hace que la respuesta dependa de por dónde se enrutó.
+
+#### 3.1.4 · Por qué es útil, y la respuesta buena no es «latencia»
+
+Conviene decirlo porque se malinterpreta en las dos direcciones. La respuesta obvia —*el
+origen es lento*— es **la más débil aquí**: la fase de carga útil de
+[`05-ejecutor`](05-ejecutor.md) §3 es una búsqueda por clave, y eso es rápido en casi
+cualquier fuente. Contra un PostgreSQL en la misma red, cachear **solo añade obsolescencia**.
+
+La respuesta buena sale de la ley del ejecutor:
+
+> **Una caché no acelera una consulta: habilita consultas que estaban prohibidas.**
+
+El motor **no compensa** (§2 de `05-ejecutor`). Contra un objeto que no declara
+`predicatePushdown`, una consulta con filtro **se rechaza**. Contra su caché se empuja sin
+problema, porque las capacidades de lo materializado son las del formato en que se
+materializa. Bajo la ley, eso es la diferencia entre *rechazado* y *respondido*.
+
+De donde sale el criterio para decidir si merece la pena, y **no es una propiedad de la
+ontología sino de la fuente**:
+
+| Fuente | Búsqueda por clave | ¿Gana algo una caché? |
+|---|---|---|
+| base de datos en la misma red | ~1 ms | **no** — solo obsolescencia |
+| almacén analítico | ~1 s y coste por consulta | sí |
+| API de SaaS con cuota | cientos de ms, y un límite diario | sí, y además desbloquea predicados |
+| ficheros en un almacén de objetos | escaneo completo | sí: es la diferencia entre servible y no |
+
+Y una consecuencia que hay que ver venir: **si la caché habilita respuestas, quitarla las
+retira.** Por eso cambiar los ejes de materialización es `OOS5020` en el eje `INDEX` de
+[`91-versioning`](91-versioning.md) y no un cambio menor.
+
+#### 3.1.5 · Una copia sin cota declarada
+
+**Normativo.** `payload` **DEBE** declarar `freshnessSLA`; `topology` **PUEDE** omitirlo.
+
+La asimetría es la de siempre: `topology` es derivable, y `payload` **pone valores gobernados
+en reposo en un segundo sitio**. Quien copia datos declara cuánto tolera que envejezcan,
+porque una copia sin cota es una copia que nadie va a notar ponerse mala. Y tiene una
+consecuencia de cumplimiento que conviene escribir: **un borrado en el origen tarda hasta
+`freshnessSLA` en propagarse**, así que ese número es lo que acota la respuesta a una
+solicitud de supresión. Sin él no hay nada que responder.
 
 ### 3.2 · `freshnessSLA`
 
@@ -349,8 +393,8 @@ perfil.
 | `OOS2004` | `datasourceRef` no declarado en el manifiesto raíz |
 | `OOS2005` | el mapeo referencia una propiedad inexistente en la entidad destino |
 | `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila |
-| `OOS2015` | `requiredFilters` nombra una propiedad que el mapeo no cubre ([05 §5.2](05-ejecutor.md)) |
-| `OOS2011` | el mapeo no cubre la `primaryKey` ni las propiedades `via` de la entidad destino |
+| `OOS2015` | `requiredFilters` nombra una propiedad que el mapeo no cubre ([05 §5.3](05-ejecutor.md)) |
+| `OOS2011` | el mapeo no cubre lo que necesita columna: la `primaryKey`, las propiedades `via` o lo que `payload` replica |
 | `OOS2012` | secreto de conexión presente en el documento |
 | `OOS4002` | etiqueta por encima de la autorización del conducto instanciado |
 | `OOS4011` | modo de materialización cuyo conducto no tiene autorización declarada |

@@ -13,3 +13,4 @@ spec:
   materialization:
     payload:
       properties: [employeeId, totalCompensation]
+      freshnessSLA: 24h

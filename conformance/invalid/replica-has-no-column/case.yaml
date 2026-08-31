@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#2.1
+level: L0
+expects: OOS2011
+summary: >
+  Un binding replica una propiedad que su mapeo no cubre. La réplica no tiene de dónde copiar, y validaba limpio.

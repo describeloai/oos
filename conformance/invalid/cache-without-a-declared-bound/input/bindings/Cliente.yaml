@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: bCliente, namespace: app }
+spec:
+  targetEntity: app.Cliente
+  datasourceRef: crm
+  source: "Account"
+  properties: { id: "Id", nom: "Name" }
+  materialization:
+    payload:
+      properties: [nom]
+      # sin `freshnessSLA`: la copia no dice cuánto tolera envejecer

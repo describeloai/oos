@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#3.1.5
+level: L0
+expects: OOS1004
+summary: >
+  Una caché que no declara cuánto tolera envejecer. El número acota la respuesta a una solicitud de supresión, y sin él no hay nada que responder.
