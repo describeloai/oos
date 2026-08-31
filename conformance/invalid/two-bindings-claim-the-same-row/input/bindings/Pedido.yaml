@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: bPedido, namespace: app }
+spec:
+  targetEntity: app.Pedido
+  datasourceRef: ddb
+  source: "app_single_table"
+  # Diseño de tabla única: el discriminante es una columna física, no un dato de
+  # negocio, y por eso vive aquí y no en la entidad.
+  selector:
+    tipo: PEDIDO
+  properties: { pk: "pk", sk: "sk" }

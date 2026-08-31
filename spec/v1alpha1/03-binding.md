@@ -31,6 +31,9 @@ violaciones `OOS4xxx` se detectan.
 - Un `Binding` **DEBE** referenciar exactamente **una** entidad destino y **un** datasource.
   Una entidad **PUEDE** tener varios bindings; cada uno cubre un subconjunto de sus
   propiedades.
+- Y al revés también: **un objeto físico PUEDE sostener varias entidades**, que es como
+  funciona el diseño de tabla única. Cuando eso ocurre, cada binding **DEBE** declarar un
+  `selector` y los selectores **DEBEN** ser disjuntos (`OOS2014`) — §3.5.
 - El mapeo **DEBE** cubrir la `primaryKey` de la entidad destino. Sin clave no hay
   resolución de instancia, ni índice de topología, ni identificación de recurso para una
   política.
@@ -81,6 +84,66 @@ error[OOS4002]: etiqueta por encima de la autorización del conducto
   origen  : gdpr.sensitivity = critical
   conducto: gdpr.sensitivity = medium
 ```
+
+### 3.5 · `selector` — qué filas del objeto son esta entidad
+
+`source` dice **qué objeto**. `selector` dice **qué filas de ese objeto**, y hace falta
+porque un objeto físico puede sostener varias entidades: es lo normal en DynamoDB, donde el
+diseño de tabla única mete usuarios, pedidos y eventos en la misma tabla y los distingue por
+un prefijo de la clave. Sin esto, dos bindings sobre el mismo objeto **validaban limpio** y
+nada decía qué filas eran de quién.
+
+```yaml
+spec:
+  source: "app_single_table"
+  selector:
+    tipo: PEDIDO                  # igualdad
+    estado: [nuevo, enviado]      # pertenencia
+    borradoEn: null               # ausencia
+```
+
+La conjunción es implícita. Las claves son **columnas físicas**, opacas como `source`, y no
+propiedades: el discriminante casi nunca es un dato de negocio —`_type`, un prefijo de la
+clave— y exigir que fuera una propiedad metería un artefacto del almacén dentro de la
+entidad, que es justo lo que [`02-entity`](02-entity.md) §1.1 prohíbe. El selector vive aquí
+**porque** es plano físico.
+
+#### 3.5.1 · Por qué la gramática es cerrada, y no es por elegancia
+
+La respuesta fácil era admitir SQL. `source` ya es una cadena opaca, así que un `where`
+opaco parecería del mismo tipo. No lo es, y la diferencia es toda la tesis del producto:
+
+> **Un predicado no filtra: lee.** Qué filas aparecen es observable, así que un predicado
+> sobre una columna clasificada es un canal lateral — de la presencia de una fila se deduce
+> un hecho sobre esa columna. `WHERE salario > 100000` no emite el salario y lo revela.
+
+Un binding **instancia un conducto** (§1). Si el compilador no puede saber qué lee ese
+conducto, `G2` —*si compila, ningún dato clasificado alcanza un conducto no autorizado*—
+deja de valer para ese binding, y una garantía con un agujero declarado no es una garantía.
+Un predicado opaco es exactamente ese agujero.
+
+De ahí sale la restricción, que no es de sintaxis sino de **qué puede afirmar**:
+
+> El selector hace **selección de pertenencia**, no filtrado. Dice qué filas *son* esta
+> entidad. Es una **partición**, no un `WHERE`.
+
+La igualdad, la pertenencia y la ausencia expresan exactamente una partición: parten el
+objeto en clases y cada fila cae en una. Un rango o una comparación entre columnas no
+particionan — ordenan—, y ahí es donde empieza la fuga. Por eso no están, y su ausencia es
+deliberada: un binding por franja temporal se declara hoy con dos objetos, no con un rango.
+
+Y la gramática cerrada **compra algo que el SQL haría imposible**: la disyunción de dos
+selectores es decidible. Se puede demostrar que dos bindings del mismo objeto no reclaman la
+misma fila. Con un `where` opaco eso no se puede ni plantear.
+
+#### 3.5.2 · Qué NO fuga, y por qué
+
+Con la gramática cerrada, lo único que el selector revela es **pertenencia**, y la
+pertenencia es la afirmación que el binding ya hace en voz alta: quien lee `Pedido` sabe que
+todas sus filas son pedidos. No escapa nada nuevo. Esa es la razón de que la restricción sea
+estructural y no cosmética — quítala y el argumento se cae.
+
+---
 
 ### 3.2 · `freshnessSLA`
 
@@ -246,6 +309,7 @@ perfil.
 |---|---|
 | `OOS2004` | `datasourceRef` no declarado en el manifiesto raíz |
 | `OOS2005` | el mapeo referencia una propiedad inexistente en la entidad destino |
+| `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila |
 | `OOS2011` | el mapeo no cubre la `primaryKey` ni las propiedades `via` de la entidad destino |
 | `OOS2012` | secreto de conexión presente en el documento |
 | `OOS4002` | etiqueta por encima de la autorización del conducto instanciado |

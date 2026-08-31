@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Pedido, namespace: app }
+spec:
+  nature: entity
+  primaryKey: [pk, sk]
+  properties:
+    pk: { type: String }
+    sk: { type: String }

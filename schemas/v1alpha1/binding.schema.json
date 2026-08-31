@@ -51,6 +51,18 @@
           "type": "string",
           "maxLength": 1024
         },
+        "selector": {
+          "description": "Que FILAS del objeto son esta entidad. `source` dice que objeto; esto, cuales de sus filas.\n\nHace falta porque un objeto fisico puede sostener varias entidades — el diseno de tabla unica de DynamoDB mete usuarios, pedidos y eventos en la misma tabla. Cuando dos bindings comparten `datasourceRef` y `source`, sus selectores DEBEN ser disjuntos (`OOS2014`).\n\nLas claves son COLUMNAS FISICAS, opacas como `source`, no propiedades: el discriminante casi nunca es un dato de negocio, y exigir que lo fuera meteria un artefacto del almacen dentro de la entidad. La conjuncion es implicita.\n\nLa gramatica es cerrada —igualdad, pertenencia, ausencia— y eso NO es cosmetica. Un predicado no filtra: lee. Que filas aparecen es observable, asi que un predicado sobre una columna clasificada es un canal lateral: `WHERE salario > 100000` no emite el salario y lo revela. Un binding instancia un conducto, y si el compilador no puede saber que lee ese conducto, G2 deja de valer.\n\nIgualdad, pertenencia y ausencia expresan una PARTICION: parten el objeto en clases y cada fila cae en una, asi que lo unico que revelan es pertenencia — justo lo que el binding ya afirma en voz alta. Un rango no particiona, ordena, y ahi empieza la fuga.\n\nNormativo: spec/v1alpha1/03-binding.md §3.5",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              {"type": ["string", "integer", "boolean", "null"]},
+              { "type": "array", "minItems": 1, "items": {"type": ["string", "integer", "boolean", "null"]} }
+            ]
+          }
+        },
+
 
         "properties": {
           "description": "Mapeo de propiedades de la entidad a su representación física.\n\nEl mapeo DEBE cubrir la `primaryKey` de la entidad destino (OOS2011): sin clave no hay resolución de instancia, ni índice de topología, ni recurso identificable en una política.\n\nLas relaciones no se mapean: unen propiedades, y el enlace físico sale de mapear la propiedad `via`.",

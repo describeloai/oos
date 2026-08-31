@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#3.5
+level: L0
+expects: accept
+summary: >
+  Dos entidades sobre el mismo objeto físico, repartido por un selector disjunto. Es el diseño de tabla única, y ahora se puede decir.

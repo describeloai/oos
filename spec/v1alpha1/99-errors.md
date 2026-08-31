@@ -80,6 +80,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2009` | `owner` ausente o mal formado | 01 §3.2 |
 | `OOS2010` | `nature: entity` sin `primaryKey`, o `nature: event` sin `timeKey` | 02 §2 |
 | `OOS2011` | el mapeo no cubre la `primaryKey` ni las propiedades `via` del destino | 03 §2.1 |
+| `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila | 03 §3.5 |
 | `OOS2012` | secreto de conexión presente en un documento | 03 §2.1 |
 | `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar u `ontology.lock` | 00 §5 |
 
@@ -237,12 +238,12 @@ normativo: es una intención.
 | Familia | Códigos activos | Directorio | Cubiertos |
 |---|:---:|---|:---:|
 | `OOS1xxx` | 5 | `invalid/` | **5 ✓** |
-| `OOS2xxx` | 12 | `invalid/` | **12 ✓** |
+| `OOS2xxx` | 13 | `invalid/` | **13 ✓** |
 | `OOS3xxx` | 6 | `invalid/` | **6 ✓** |
 | `OOS4xxx` | 9 | `invalid/` | **9 ✓** |
 | `OOS5xxx` | 22 | `diff/` | **22 ✓** |
 | `OOS6xxx` | 1 | `invalid/` | **1 ✓** |
-| **Total** | **55** | | **55 ✓** |
+| **Total** | **56** | | **56 ✓** |
 
 Y las reglas que **ningún documento puede violar** se verifican como afirmaciones
 positivas, no con códigos: normalización canónica en `canonical/` (9 casos), reproducibilidad

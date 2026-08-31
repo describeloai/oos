@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#3.5
+level: L0
+expects: OOS2014
+summary: >
+  Dos selectores sobre el mismo objeto cuyos conjuntos se cortan: la fila `PEDIDO` cae en los dos. Un ejecutor devolvería unas instancias como si fueran otras.

@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+datasources:
+  - name: ddb
+    type: dynamodb
+    connectionEnv: MINIMAL_DDB_URL

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: bCliente, namespace: app }
+spec:
+  targetEntity: app.Cliente
+  datasourceRef: ddb
+  source: "app_single_table"
+  selector:
+    tipo: [PEDIDO, CLIENTE]
+  properties: { pk: "pk", sk: "sk" }
