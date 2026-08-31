@@ -35,7 +35,11 @@ permit (
     resource in Label::"gdpr.sensitivity:critical"
 )
 when {
-    context.purpose in ["compensation_review", "regulatory_reporting"]
+    // `.contains(...)`, no `context.purpose in [...]`: `in` es el operador de
+    // JERARQUIA de entidades, y `purpose` es un `String`. La forma con `in` no
+    // tipa —lo dijo el validador de Cedar, no una lectura— y llevaba viviendo
+    // en este fichero y en un caso de conformidad desde que se escribieron.
+    ["compensation_review", "regulatory_reporting"].contains(context.purpose)
 };
 
 
