@@ -55,6 +55,10 @@ datasources:
   - name: hr_workday
     type: workday
     connectionEnv: ACME_WORKDAY_URL
+    # La identidad del REFRESCO, distinta de la que responde. El que refresca
+    # necesita lectura amplia y programada; el que responde, lectura por clave y
+    # por peticion. Compartirlas le daria al segundo un permiso que no usa.
+    refreshEnv: ACME_WORKDAY_REFRESH_URL
     labels:
       acme.residency:   eu_only
       gdpr.sensitivity: high      # suelo: todo lo que sale de RRHH es al menos `high`

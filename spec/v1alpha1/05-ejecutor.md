@@ -257,6 +257,11 @@ política del motor sean dos aplicaciones sobre la misma identidad**, y el motor
 segundo, lectura por clave y por petición. Obligarlos a compartir credencial da al segundo un
 permiso que no usa.
 
+Y **poder** exige un sitio donde decirlo: un `datasource` **PUEDE** declarar `refreshEnv`
+además de `connectionEnv`. Omitirlo es legal —el refresco usa la misma— pero una
+implementación **DEBERÍA** avisar, porque colapsar las dos identidades es una decisión y una
+decisión en silencio no es una decisión.
+
 **Normativo.** L2 es **solo lectura**. Escribir es L3 y exige una `Function`
 ([`v1alpha2/02-function`](../v1alpha2/02-function.md)). Una implementación L2 **NO DEBE**
 abrir una conexión con permiso de escritura.
