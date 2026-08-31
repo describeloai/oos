@@ -160,23 +160,88 @@ Así que una entidad clasificada `eu_only` entera queda seleccionada por sus pro
 que este documento tenga que hablar de herencia. La decisión abierta 3 de
 [`00-scope`](00-scope.md) queda cerrada así: **no era una decisión, era una comprobación.**
 
-### 2.5 · Dónde se evalúa
+### 2.5 · Dónde se evalúa: el **workspace**, no el paquete
 
-> Un objetivo se evalúa **sobre el paquete que se compila**, no sobre el paquete que lo
+> Un objetivo se evalúa **sobre el workspace que se compila**, no sobre el paquete que lo
 > declara.
 
-Esto es lo que invierte la relación de dependencia, y merece precisión porque
-[`01-gobierno`](01-gobierno.md) §3 lo decía de forma más vaga —*«sobre el paquete y sus
-dependientes»*—, que exigiría un índice inverso que no existe. No hace falta: en una
-compilación el paquete objetivo es **el que se está compilando**, y sus dependencias
-—incluido el `Ruleset`— entran con él.
+La primera redacción decía *«sobre el paquete que se compila»*, y **era imprecisa en la
+dirección que importa**: lo que se compila es el árbol entero. El manifiesto raíz lo declara
+—`workspace: { members, exclude }`, con `members: [packages/*]` por defecto— y esa es la
+unidad. Un `Ruleset` en el workspace gobierna **a todos sus miembros**.
 
-De ahí sale la propiedad de producto:
+No es una capacidad nueva: **era ya el comportamiento, sin escribir.** Se mide quitando el
+único `Ruleset` de la ontología de referencia, cuyo espacio de nombres es `eu` y que vive en
+la raíz — y lo que se rompe es una propiedad de **otro paquete**, que no lo importa:
+
+```
+error[OOS8001]: `customers.Customer.email` exige `constraint` y no lo tiene
+```
+
+### 2.5.1 · Dos formas de quedar sujeto, y no son la misma
+
+| | **Importado** | **Local al workspace** |
+|---|---|---|
+| De dónde viene | una dependencia | `rulesets/` del repositorio |
+| Quién decide | **el gobernado**, escribiendo la línea | **el gobernante**, poniendo el fichero |
+| Alcance | el paquete que importa | **todos los miembros** |
+| Quitarlo | borrar la dependencia | borrar el fichero |
+
+Las dos son legítimas y responden a cosas distintas. La importada es la que invierte la
+relación de dependencia —**se importa para quedar sujeto a ella**, y manda lo importado—; la
+local es la que permite gobernar sin pedir permiso a cada paquete.
 
 | | Una dependencia de código | Un `Ruleset` |
 |---|---|---|
 | Se importa para | **usarla** | **quedar sujeto a ella** |
 | Manda | quien importa | **lo importado** |
+
+Y en los dos casos vale lo mismo, que es la propiedad que hace esto auditable: **quitarlo no
+es gratis ni silencioso.** Una propiedad que pierde una clase de gobierno es un cambio
+rompedor computado —`OOS5023`— y no una línea que desaparece de un fichero sin que nadie lo
+note. El gobernado **puede** salirse; lo que no puede es hacerlo callando.
+
+### 2.5.2 · Hasta el borde del workspace, y ni un paso más
+
+[`01-gobierno`](01-gobierno.md) §3 lo decía como *«sobre el paquete y sus dependientes»*, y
+se descartó porque **exigiría un índice inverso que no existe**. Ese descarte sigue en pie, y
+ahora se puede decir con precisión de dónde sale el límite:
+
+> **Un `Ruleset` alcanza exactamente lo que la compilación puede ver.** Dentro del
+> workspace, todo. Fuera, nada — y no porque falte una funcionalidad, sino porque la
+> compilación es **hermética** por invariante III, y un alcance que dependiera de un registro
+> central dejaría de ser una función del árbol de ficheros.
+
+Es la frontera que separa lo comprobable de lo prometido. Un sistema con un registro central
+—una instancia, una organización— puede decir *«esta regla gobierna aquellos proyectos»* y
+comprobarlo; nosotros tenemos **un commit**, y con un commit solo es decidible lo que está
+dentro de él. Afirmar más sería una regla que no se puede hacer cumplir, que es peor que no
+tenerla.
+
+La misma frontera aparece resuelta igual en el ecosistema de GitLab, y por un motivo
+completamente distinto: sus *Organizations* están **aisladas entre sí por defecto**, y *«las
+funcionalidades entre espacios de nombres solo funcionan para espacios de nombres que existen
+en una sola Organization»*. Ellos lo hacen por aislamiento de inquilinos y nosotros por
+hermeticidad, y **la regla que sale es la misma**: lo que cruza fronteras solo funciona
+dentro de una.
+
+### 2.5.3 · Y por eso no hay `scope` de miembros
+
+La pregunta evidente es si un `Ruleset` local debería poder decir *«a estos miembros sí y a
+estos no»*. **No lo lleva**, y las dos razones ya estaban escritas:
+
+- **Estrechar es de `targets`.** Un objetivo selecciona por clasificación: *«todo lo que sea
+  `high`»* no necesita *«excepto `supply`»*. Y si `supply` necesita otra regla, esa regla es
+  otro `Ruleset` — probablemente con otro dueño, que es justo lo que este documento existe
+  para permitir (§5).
+- **La exclusión ya existe, y está un piso más arriba.** `workspace.exclude` quita un
+  directorio de la compilación entera. Excluido del workspace es no compilado, luego no
+  gobernado: **un concepto en vez de dos.**
+
+El contraste con GitLab es informativo, porque su `policy_scope` **sí** lleva `excluding`, y
+se ve por qué lo necesita: allí la unidad de gobierno —el enlace a un proyecto de políticas—
+y la unidad de pertenencia —el grupo— **son distintas**, así que hay que reconciliarlas dentro
+de la política. Aquí son la misma, y por eso sobra el campo.
 
 ### 2.6 · Un objetivo vacío es un defecto
 

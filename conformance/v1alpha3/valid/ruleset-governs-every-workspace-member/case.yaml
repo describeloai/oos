@@ -1,0 +1,6 @@
+rule: spec/v1alpha3/02-ruleset.md#2.5
+level: L0
+expects: accept
+summary: >
+  Un Ruleset del workspace cubre una propiedad clasificada de OTRO miembro, que no lo
+  importa. La unidad de evaluacion es el workspace, no el paquete.
