@@ -4,10 +4,7 @@ metadata: { name: acme }
 spec:
   owner: team:platform-identity
   issuer: { url: https://id.example, audience: ore }
-  subject: { entity: hr.Employee, claim: employee_id, roles: groups }
-  # Los atributos del principal salen de AQUI, no de las propiedades de la
-  # entidad. Notese que `baseSalary` no esta, y no por ser `Money`: es que una
-  # capa de identidad no afirma un salario.
+  subject: { entity: hr.Employee, claim: employee_id }
   claims:
     employeeId:   { type: String, from: employee_id }
     departmentId: { type: String, from: department_id }

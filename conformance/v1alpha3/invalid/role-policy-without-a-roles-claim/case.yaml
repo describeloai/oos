@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/06-request.md#2.0
+level: L0
+expects: OOS2005
+summary: >
+  Una politica exige un rol y el RequestPolicy no declara de donde vienen las
+  pertenencias. La politica no falla: no casa nunca.

@@ -3,5 +3,5 @@ kind: RequestPolicy
 metadata: { name: acme }
 spec:
   owner: team:platform-identity
-  subject: { entity: hr.Employee, claim: employee_id }
+  subject: { entity: hr.Employee, claim: employee_id, roles: groups }
   purposes: [compensation_review]

@@ -4,7 +4,7 @@ metadata: { name: acme }
 spec:
   owner: team:platform-identity
   issuer: { url: https://id.example, audience: ore }
-  subject: { entity: hr.Employee, claim: employee_id }
+  subject: { entity: hr.Employee, claim: employee_id, roles: groups }
   claims:
     employeeId:   { type: String, from: employee_id }
     departmentId: { type: String, from: department_id }
