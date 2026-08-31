@@ -12,4 +12,4 @@ spec:
     manager:
       target: hr.Employee
       cardinality: many_to_one
-      via: managerId
+      via: [managerId]

@@ -11,5 +11,5 @@ spec:
     patient:
       target: hr.Diagnosis
       cardinality: many_to_one
-      via: patientId
+      via: [patientId]
       required: false

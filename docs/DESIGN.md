@@ -581,9 +581,14 @@ medio, y eso se filtra a las decisiones en el año cinco.
 | **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
 | **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
 | **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
-| **Enlace compuesto** | `primaryKey` y `uniqueKeys` son secuencias y `relations.via` es **una** propiedad: una entidad puede declarar una identidad compuesta y nada puede enlazar contra ella. No es un caso raro — es lo que aparece en cuanto hay fuentes heredadas. Encuadre y forma propuesta en **§7.1-bis** |
 
-### 7.1-bis · El enlace compuesto, y por qué es una pregunta de escala
+### 7.1-bis · El enlace compuesto — **cerrado**
+
+> **Decidido y escrito.** `via` es una secuencia emparejada posición a posición con la
+> `primaryKey` de `target`: [`02-entity`](../spec/v1alpha1/02-entity.md) §6, `OOS3006` para
+> que la aridad y los tipos casen, `OOS5027` para que `ore diff` lo vea. Lo que sigue es el
+> razonamiento, que no cabe en una especificación normativa y sin el cual la forma elegida
+> parece arbitraria.
 
 Salió construyendo `ore-read-postgres` contra un servidor real, no leyendo: una foránea
 `facturas(id_cliente, cod_pais) → clientes(id, cod_pais)`. BigQuery no tenía ninguna, así
@@ -653,22 +658,32 @@ R2RML nombra **los dos lados** porque no sabe cuál es la clave del padre. **OOS
 sabe**: `target` declara su `primaryKey`, así que escribir el lado del padre sería declarar
 lo derivable y violaría P2. Es la misma razón por la que `one_to_many` no existe.
 
-#### Lo que hay que cerrar antes de escribirlo
+#### Cómo se cerró, y qué límite queda escrito
 
-- **A qué clave apunta.** Si la foránea referencia un `uniqueKeys` y no la `primaryKey`, hay
-  que poder decir a cuál. R2RML no tiene este problema precisamente porque nombra ambos
-  lados; ahorrárselo tiene un precio y hay que pagarlo aquí.
-- **El emparejamiento posicional es un pie de banco.** `via: [cod_pais, id]` contra
-  `primaryKey: [id, cod_pais]` une mal en silencio. Mitigación **comprobable**: el compilador
-  conoce los dos tipos y puede exigir que casen posición a posición, lo que caza la
-  transposición siempre que los tipos difieran. Cuando no difieren —dos `String`— no la caza,
-  y eso hay que escribirlo en vez de fingir que la regla es total.
-- **`OOS3005` se reescribe**: `one_to_one` exige que `via` sea la clave **entera**, no que
-  esté contenida en ella.
-- **`ore diff`** necesita un código propio: ensanchar o estrechar `via` es un cambio
-  observable, y hoy solo la cardinalidad lo tiene (`OOS5003`).
-- **El inductor ya está del lado correcto**: hoy reporta la foránea compuesta en vez de
-  emitirla recortada. Cuando esto se cierre, pasa a emitirse sin más cambios de forma.
+- **`via` es una secuencia siempre**, también para una sola propiedad. No se admitió el
+  escalar como atajo: obligaría a la forma canónica a normalizarlo, y de la forma canónica
+  cuelga el digest. `via` entra en la lista de **secuencias** de N4 — si entrara como
+  conjunto, la normalización la ordenaría y el enlace uniría por otros pares con el
+  documento viéndose igual.
+- **`OOS3006`** comprueba aridad y tipos posición a posición. Es un código propio porque no
+  es `OOS2005` —todo resuelve— ni `OOS3005` —la cardinalidad es coherente—: lo que falla es
+  que el enlace une de menos.
+- **`OOS3005` se reescribió**: `one_to_one` exige que `via` **contenga** una clave declarada.
+  Contener, no estar contenida. La redacción anterior aceptaba `via: [id]` contra
+  `primaryKey: [id, país]`, que no identifica nada.
+- **`OOS5027`** en `ore diff`. Es el cambio que un consumidor no puede ver venir: el campo se
+  llama igual, devuelve el mismo tipo, el SDL emitido no cambia ni una letra, y devuelve
+  otras filas.
+- **El límite que queda, dicho en voz alta.** La transposición —`via: [codPais, id]` contra
+  `primaryKey: [id, codPais]`— se caza **por tipos**, así que se caza cuando los tipos
+  difieren y **no cuando no**. Con dos `String` el compilador no la ve. Está escrito en el
+  módulo que la comprueba, porque una regla con una excepción no anunciada es peor que una
+  que declara su límite.
+- **A qué clave apunta.** Se empareja contra la `primaryKey` del destino y solo contra ella.
+  Una foránea que referencia un `uniqueKeys` sigue sin poder decirse, y esa es la parte que
+  R2RML compra nombrando los dos lados. Es una limitación real y **acotada**: aparece cuando
+  el origen declara una foránea contra una clave alternativa, que es raro incluso en
+  sistemas heredados. Si aparece, se reabre.
 
 #### Y la escala, que es la pregunta de fondo
 
@@ -723,4 +738,5 @@ Open core · lenguaje de autorización (**Cedar** + obligaciones cerradas) · YA
 superficie de autoría · componer con Ossie y ODCS · arranque en frío (`discover` + `review`)
 · deriva de esquema (`drift-detect --auto-pr`) · temporalidad y unidades · declarado vs.
 computado · fijación de perfiles en el lockfile · superficie de servicio (MCP + GraphQL +
-nativo) · caché frente a cero-copia · nombre (**OOS**, decidido).
+nativo) · caché frente a cero-copia · **enlace compuesto** (§7.1-bis) · nombre (**OOS**,
+decidido).

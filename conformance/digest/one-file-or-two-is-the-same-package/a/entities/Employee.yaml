@@ -11,5 +11,5 @@ spec:
     department:
       target: hr.Department
       cardinality: many_to_one
-      via: departmentId
+      via: [departmentId]
       required: true

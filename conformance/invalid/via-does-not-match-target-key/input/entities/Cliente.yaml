@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Cliente, namespace: ventas }
+spec:
+  nature: entity
+  # Identidad compuesta: la que traen los sistemas heredados.
+  primaryKey: [id, codPais]
+  properties:
+    id:      { type: Integer }
+    codPais: { type: String }

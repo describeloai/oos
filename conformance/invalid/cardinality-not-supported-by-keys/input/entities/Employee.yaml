@@ -16,4 +16,4 @@ spec:
       # `one_to_one` afirma que ningún otro empleado apunta al mismo departamento.
       # Nada en las claves declaradas sostiene esa afirmación.
       cardinality: one_to_one
-      via: departmentId
+      via: [departmentId]

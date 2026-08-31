@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: OOS3006
+summary: >
+  `via` tiene una propiedad y la primaryKey del target tiene dos. Todos los nombres resuelven, así que OOS2005 no salta: lo que falla es la forma del enlace.

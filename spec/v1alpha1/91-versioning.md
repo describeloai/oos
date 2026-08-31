@@ -115,6 +115,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | estrechar un tipo (`string` → `enum`; retirar valores de un `enum`) | `OOS5002` |
 | endurecer cardinalidad (`0..n` → `1..n`) | `OOS5003` |
 | cambiar `primaryKey` | `OOS5006` |
+| cambiar el `via` de una relación | `OOS5027` |
 | eliminar una entidad o una relación | `OOS5007` |
 | rebajar `oos.maturity` de una entidad `STABLE` | `OOS5008` |
 | **elevar** la etiqueta de una propiedad | `OOS5009` |

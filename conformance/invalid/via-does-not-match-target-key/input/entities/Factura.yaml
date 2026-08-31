@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Factura, namespace: ventas }
+spec:
+  nature: entity
+  primaryKey: [idFactura]
+  properties:
+    idFactura: { type: Integer }
+    idCliente: { type: Integer }
+    codPais:   { type: String }
+  relations:
+    cliente:
+      target: ventas.Cliente
+      cardinality: many_to_one
+      # `Cliente` se identifica con DOS propiedades y aquí solo va una.
+      via: [idCliente]
+      required: true

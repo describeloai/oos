@@ -229,19 +229,35 @@ spec:
 
   relations:                              # la ARISTA
     manager:
-      target: hr.Employee
+      target: hr.Employee                # primaryKey: [employeeId]
       cardinality: many_to_one
-      via: managerId
+      via: [managerId]
       required: false
+
+    cliente:
+      target: ventas.Cliente             # primaryKey: [id, codPais]
+      cardinality: many_to_one
+      via: [idCliente, codPais]          # se empareja en ORDEN
+      required: true
 ```
 
-Ocho decisiones, y la última no lo es todavía:
+Nueve decisiones:
 
 - **Las relaciones viven en su propio bloque, no dentro de `properties`.** `managerId` es un
   dato y `manager` es una arista: son cosas distintas y mezclarlas obliga además a una unión
   discriminada en el esquema, que produce mensajes de error peores.
 - **Las relaciones unen propiedades, nunca columnas.** El binding traduce a físico. Es el
   principio §1.1 aplicado al grafo.
+- **`via` es una secuencia, y su orden es semántico.** Se empareja **posición a posición**
+  con la `primaryKey` de `target`, así que una clave foránea compuesta se dice entera en vez
+  de recortarse. Secuencia también para una sola propiedad, igual que `primaryKey`: un
+  escalar admitido como atajo obligaría a la forma canónica a normalizarlo, y de la forma
+  canónica cuelga el digest.
+- **El lado del padre NO se declara.** `target` ya publica su `primaryKey`, y escribirlo
+  sería declarar lo derivable (P2) — la misma razón por la que `one_to_many` no existe.
+  R2RML nombra los dos lados porque no sabe cuál es la clave del padre; aquí se sabe. Que la
+  aridad y los tipos casen posición a posición es `OOS3006`, y ningún esquema JSON lo
+  alcanza: exige resolver `target` y leer **otro** documento.
 - **Cardinalidad explícita**, con **dos** valores: `one_to_one` y `many_to_one`. Ossie solo
   expresa many-to-one implícito por la semántica de `from`/`to`; aquí es un campo, porque
   `ore diff` necesita detectar que endurecerla es un cambio rompedor (`OOS5003`).
@@ -251,18 +267,14 @@ Ocho decisiones, y la última no lo es todavía:
   uno-a-muchos hacia `Order` sin que nadie lo escriba. Declararlo violaría P2.
 - **Se declara en el lado que sostiene la clave.** Es el lado que la conoce, y el único que
   puede.
-- **`one_to_one` exige que `via` esté en `primaryKey` o en `uniqueKeys`** (`OOS3005`): de lo
-  contrario la cardinalidad afirma algo que las claves declaradas no sostienen.
+- **`one_to_one` exige que `via` CONTENGA una clave declarada** de la entidad local —su
+  `primaryKey` o una de sus `uniqueKeys`— (`OOS3005`). Contener, no estar contenida: la
+  redacción anterior decía *«que `via` esté en `primaryKey`»* y con `primaryKey: [id, país]`
+  un `via: [id]` la satisfacía **sin identificar nada**. Es la misma forma de fallo que este
+  documento persigue en todas partes: lo que no identifica tiene exactamente el mismo
+  aspecto que lo que identifica.
 - **Many-to-many se modela como entidad puente** en v1alpha1. Es honesto: una tabla puente
   casi siempre acaba teniendo atributos propios, y evita introducir un tipo de documento.
-- **`via` es UNA propiedad, y esa limitación NO es deliberada.** Es la única de esta lista
-  que está abierta, y conviene que quien lea esto no la tome por una decisión. `primaryKey`
-  y `uniqueKeys` son secuencias, así que **una entidad puede declarar una identidad
-  compuesta y ninguna otra puede enlazar contra ella**: el vocabulario admite el blanco y
-  prohíbe la flecha. Y `OOS3005` **subcomprueba** por la misma razón: con
-  `primaryKey: [id, cod_pais]`, un `via: id` pasa la regla sin identificar nada, que es
-  exactamente la forma de fallo que este documento existe para impedir. Encuadre, encuesta
-  del estado del arte y forma propuesta: [`docs/DESIGN.md`](../../docs/DESIGN.md) §7.1-bis.
 
 ---
 

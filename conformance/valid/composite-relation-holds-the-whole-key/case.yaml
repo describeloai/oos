@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: accept
+summary: >
+  Una foránea compuesta se dice entera. `via` es una secuencia emparejada posición a posición con la primaryKey del target, y el lado del padre no se declara porque es derivable.

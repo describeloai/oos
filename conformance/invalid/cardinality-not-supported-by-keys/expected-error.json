@@ -1,1 +1,1 @@
-{ "code": "OOS3005", "subject": "hr.Employee.relations.department", "cardinality": "one_to_one", "via": "departmentId", "path": "entities/Employee.yaml" }
+{"code": "OOS3005", "subject": "hr.Employee.relations.department", "cardinality": "one_to_one", "via": ["departmentId"], "path": "entities/Employee.yaml"}

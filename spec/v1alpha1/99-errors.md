@@ -91,7 +91,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS3002` | `Money` o `Quantity` sin unidad o sin precisión | 02 §3.2 |
 | `OOS3003` | `temporal` declarado sin `validTime` | 02 §7 |
 | `OOS3004` | incompatibilidad de unidades en una derivación | 02 §5 |
-| `OOS3005` | cardinalidad de relación incoherente con las claves del binding | 02 §6 |
+| `OOS3005` | cardinalidad de relación incoherente con las claves declaradas | 02 §6 |
+| `OOS3006` | `via` no casa la `primaryKey` de `target` en aridad o en tipos | 02 §6 |
 
 ## 6. `OOS4xxx` · Gobernanza y flujo
 
@@ -145,6 +146,7 @@ contra los cuatro por separado, y **puede ser compatible en uno y rompedor en ot
 | `OOS5002` | estrechar un tipo, o retirar valores de un `enum` |
 | `OOS5003` | endurecer cardinalidad |
 | `OOS5006` | cambiar `primaryKey` |
+| `OOS5027` | cambiar el `via` de una relación |
 | `OOS5007` | eliminar una entidad o una relación |
 | `OOS5008` | rebajar `oos.maturity` de una entidad `STABLE` |
 | `OOS5009` | **elevar** la etiqueta de una propiedad |
@@ -236,11 +238,11 @@ normativo: es una intención.
 |---|:---:|---|:---:|
 | `OOS1xxx` | 5 | `invalid/` | **5 ✓** |
 | `OOS2xxx` | 12 | `invalid/` | **12 ✓** |
-| `OOS3xxx` | 5 | `invalid/` | **5 ✓** |
+| `OOS3xxx` | 6 | `invalid/` | **6 ✓** |
 | `OOS4xxx` | 9 | `invalid/` | **9 ✓** |
-| `OOS5xxx` | 21 | `diff/` | **21 ✓** |
+| `OOS5xxx` | 22 | `diff/` | **22 ✓** |
 | `OOS6xxx` | 1 | `invalid/` | **1 ✓** |
-| **Total** | **53** | | **53 ✓** |
+| **Total** | **55** | | **55 ✓** |
 
 Y las reglas que **ningún documento puede violar** se verifican como afirmaciones
 positivas, no con códigos: normalización canónica en `canonical/` (9 casos), reproducibilidad

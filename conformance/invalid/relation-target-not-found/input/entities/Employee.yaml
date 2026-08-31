@@ -11,4 +11,4 @@ spec:
     department:
       target: hr.Department        # no existe ningún documento que la declare
       cardinality: many_to_one
-      via: departmentId
+      via: [departmentId]
