@@ -1,5 +1,5 @@
 rule: spec/v1alpha1/91-versioning.md#5.1
 level: L0
-expects: OOS5006, OOS5027
+expects: OOS5006, OOS5018, OOS5027
 summary: >
   Una relación que pasa a unir por dos propiedades. El campo se llama igual y devuelve el mismo tipo, y sin embargo enlaza filas distintas.
