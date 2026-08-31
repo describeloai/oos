@@ -235,7 +235,7 @@ spec:
       required: false
 ```
 
-Cinco decisiones:
+Ocho decisiones, y la última no lo es todavía:
 
 - **Las relaciones viven en su propio bloque, no dentro de `properties`.** `managerId` es un
   dato y `manager` es una arista: son cosas distintas y mezclarlas obliga además a una unión
@@ -255,6 +255,14 @@ Cinco decisiones:
   contrario la cardinalidad afirma algo que las claves declaradas no sostienen.
 - **Many-to-many se modela como entidad puente** en v1alpha1. Es honesto: una tabla puente
   casi siempre acaba teniendo atributos propios, y evita introducir un tipo de documento.
+- **`via` es UNA propiedad, y esa limitación NO es deliberada.** Es la única de esta lista
+  que está abierta, y conviene que quien lea esto no la tome por una decisión. `primaryKey`
+  y `uniqueKeys` son secuencias, así que **una entidad puede declarar una identidad
+  compuesta y ninguna otra puede enlazar contra ella**: el vocabulario admite el blanco y
+  prohíbe la flecha. Y `OOS3005` **subcomprueba** por la misma razón: con
+  `primaryKey: [id, cod_pais]`, un `via: id` pasa la regla sin identificar nada, que es
+  exactamente la forma de fallo que este documento existe para impedir. Encuadre, encuesta
+  del estado del arte y forma propuesta: [`docs/DESIGN.md`](../../docs/DESIGN.md) §7.1-bis.
 
 ---
 

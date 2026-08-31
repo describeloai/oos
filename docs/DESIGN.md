@@ -581,6 +581,113 @@ medio, y eso se filtra a las decisiones en el año cinco.
 | **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
 | **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
 | **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
+| **Enlace compuesto** | `primaryKey` y `uniqueKeys` son secuencias y `relations.via` es **una** propiedad: una entidad puede declarar una identidad compuesta y nada puede enlazar contra ella. No es un caso raro — es lo que aparece en cuanto hay fuentes heredadas. Encuadre y forma propuesta en **§7.1-bis** |
+
+### 7.1-bis · El enlace compuesto, y por qué es una pregunta de escala
+
+Salió construyendo `ore-read-postgres` contra un servidor real, no leyendo: una foránea
+`facturas(id_cliente, cod_pais) → clientes(id, cod_pais)`. BigQuery no tenía ninguna, así
+que la rama nunca se había ejercitado. El inductor la emitía **recortada a su primera
+columna**, que es la forma de fallo que este proyecto lleva encontrando en todas partes —
+una relación que une de menos tiene exactamente el mismo aspecto que una correcta.
+
+**La asimetría, medida.** OOS ya sabe componer en todos los sitios menos en uno:
+
+| Dónde | Qué admite |
+|---|---|
+| `primaryKey` | una **secuencia** de propiedades |
+| `uniqueKeys` | un array de **arrays** — y su propósito declarado es la unión entre fuentes |
+| `Resolution.match` ([v1alpha2 §2](../spec/v1alpha2/03-resolution.md)) | una **lista de pares** de columnas entre fuentes |
+| `@key(fields: "a b")` ([v1alpha5](../spec/v1alpha5/01-emision-graphql.md)) | un **conjunto** de campos, y ORE ya lo emite |
+| `relations.via` | **un** identificador |
+
+> **El vocabulario admite el blanco y prohíbe la flecha.**
+
+Y `OOS3005` —*«`one_to_one` exige que `via` esté en `primaryKey` o en `uniqueKeys`»*—
+**subcomprueba** por lo mismo: con `primaryKey: [id, cod_pais]`, un `via: id` satisface la
+regla sin identificar nada.
+
+**Por qué es de escala y no de comodidad.** Una fuente moderna tiene claves subrogadas de
+una columna y el problema no aparece. Cien fuentes traen sistemas heredados, y ahí la clave
+natural compuesta es la norma: `(sociedad, documento)` en SAP, `(id, país)` en cualquier ERP
+multipaís, `(fecha, tienda)` en cualquier almacén particionado por negocio. **La limitación
+no se manifiesta al probar el producto: se manifiesta cuando el modelo empieza a valer
+algo.**
+
+#### Cómo lo maneja la industria
+
+| | Cómo se dice un enlace de varias columnas |
+|---|---|
+| **R2RML** (W3C) | N × `rr:joinCondition`, cada una con `rr:child` y `rr:parent`: el enlace **es un conjunto de pares** |
+| **Apollo Federation** | `@key(fields: "a b")` — la identidad es un conjunto de campos, y una entidad puede declarar varias claves |
+| **dbt · MetricFlow** | las entidades SON las aristas; una `natural` es *"columnas o combinaciones de columnas"*, y `expr` permite derivar la clave |
+| **Palantir Foundry** | el enlace referencia **una** propiedad clave; lo compuesto se resuelve materializando una clave única |
+| **Cube · LookML** | SQL arbitrario (`sql_on`): no es una postura, es delegar en el motor |
+
+Dos campos, y **solo uno nos sirve**:
+
+- **Derivar una clave única** (Foundry, `expr` de dbt) **no está disponible aquí**:
+  `expression` es documental en v1alpha1 y `Rule` se retiró, así que OOS no puede
+  computarla. Y hay una objeción más de fondo: una clave concatenada es **un valor que nadie
+  almacena**. Inventar una identidad es justo lo que este proyecto no hace.
+- **SQL arbitrario** queda excluido dos veces: por [`02-entity`](../spec/v1alpha1/02-entity.md)
+  §1.1 —una entidad no sabe de columnas— y por el invariante III, porque comprobarlo exigiría
+  un analizador de SQL dentro de un compilador que es puro.
+
+Queda el **enlace plural**, y ese es el sentido de la propuesta.
+
+#### La forma propuesta, y por qué no es la de R2RML
+
+`via` pasa a ser una **secuencia**, emparejada posición a posición contra la `primaryKey`
+del `target`:
+
+```yaml
+  relations:
+    cliente:
+      target: ventas.Clientes      # primaryKey: [id, cod_pais]
+      cardinality: many_to_one
+      via: [id_cliente, cod_pais]  # ← se empareja en orden
+```
+
+R2RML nombra **los dos lados** porque no sabe cuál es la clave del padre. **OOS sí lo
+sabe**: `target` declara su `primaryKey`, así que escribir el lado del padre sería declarar
+lo derivable y violaría P2. Es la misma razón por la que `one_to_many` no existe.
+
+#### Lo que hay que cerrar antes de escribirlo
+
+- **A qué clave apunta.** Si la foránea referencia un `uniqueKeys` y no la `primaryKey`, hay
+  que poder decir a cuál. R2RML no tiene este problema precisamente porque nombra ambos
+  lados; ahorrárselo tiene un precio y hay que pagarlo aquí.
+- **El emparejamiento posicional es un pie de banco.** `via: [cod_pais, id]` contra
+  `primaryKey: [id, cod_pais]` une mal en silencio. Mitigación **comprobable**: el compilador
+  conoce los dos tipos y puede exigir que casen posición a posición, lo que caza la
+  transposición siempre que los tipos difieran. Cuando no difieren —dos `String`— no la caza,
+  y eso hay que escribirlo en vez de fingir que la regla es total.
+- **`OOS3005` se reescribe**: `one_to_one` exige que `via` sea la clave **entera**, no que
+  esté contenida en ella.
+- **`ore diff`** necesita un código propio: ensanchar o estrechar `via` es un cambio
+  observable, y hoy solo la cardinalidad lo tiene (`OOS5003`).
+- **El inductor ya está del lado correcto**: hoy reporta la foránea compuesta en vez de
+  emitirla recortada. Cuando esto se cierre, pasa a emitirse sin más cambios de forma.
+
+#### Y la escala, que es la pregunta de fondo
+
+Lo que **ya está resuelto** y conviene no volver a discutir:
+
+- **Una entidad, N bindings.** El `Binding` lleva `targetEntity` y `datasourceRef`, y nada
+  limita cuántos apuntan a la misma entidad — comprobado ejecutándolo: dos bindings al mismo
+  `targetEntity` no producen error. **Ese es el enfoque centralizado, y ya existe**: el
+  significado se declara una vez, los sitios físicos son cientos.
+- **Dos problemas distintos, ya separados.** `Resolution` une **la misma** entidad entre
+  fuentes —el cliente que es `SF-4471` en Salesforce y `0001234` en SAP—; `relations` une
+  entidades **distintas**. Confundirlos es el error clásico de las capas semánticas, y el
+  vocabulario ya no lo permite.
+
+Con eso escrito, la conclusión es acotada: **para cientos de fuentes no falta un mecanismo
+nuevo. Falta que el que hay admita la forma de las claves que esas fuentes tienen de
+verdad.**
+
+---
 
 ### 7.2 · Bloquean la primera venta enterprise
 
