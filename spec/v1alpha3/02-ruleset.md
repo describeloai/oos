@@ -698,6 +698,12 @@ bien hecha: casi nada hubo que inventarlo.
   No se escribe todavía porque **necesita el operador temporal**, igual que la fila de
   arriba: *«en qué ventana»* no es expresable sin él. Las dos esperan a lo mismo, y ahora
   se sabe que son la misma espera.
+
+  Y conviene decir lo que **no** bloquea. Un informe de cobertura no depende de esto:
+  aquí una propiedad sin la clase de gobierno que exige su clasificación **no compila**,
+  así que un informe **no puede tener filas rojas**. No es una lista de incumplimientos
+  —que es lo que un catálogo puede ofrecer— sino un registro de qué gobierna qué y quién
+  responde. El `pendiente` no lo habilita: le añade la única fila que podrá ser ámbar.
 - **La adecuación de una regla — y no está aplazada: es indecidible.** §6.1 tipa la
   cobertura por naturaleza y con eso elimina el error de categoría, que es el frecuente. Lo
   que no elimina, y ningún análisis estático eliminará, es que **una política que permite todo
