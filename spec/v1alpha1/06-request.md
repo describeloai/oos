@@ -70,6 +70,7 @@ spec:
   subject:
     entity: hr.Employee          # el TIPO del principal
     claim: employee_id           # la reclamación que lo identifica
+    roles: groups                # la que trae sus pertenencias a rol
 
   claims:
     departmentId: { type: String, from: department_id }
@@ -91,12 +92,35 @@ spec:
 - `issuer.url` e `issuer.audience` **DEBEN** declararse. Una implementación L2 **DEBE**
   rechazar una petición cuyo emisor o cuya audiencia no casen.
 - `subject.entity` **DEBE** resolver a una entidad `principal: true`; si no, `OOS2005`.
+- `subject.roles` **PUEDE** declararse, y nombra la reclamación que trae las pertenencias a
+  rol. Sin ella, **un principal no pertenece a ningún rol** y toda política escrita como
+  `principal in Role::"…"` deniega — P4, y medido: es exactamente lo que Cedar contesta.
+- Si alguna política menciona un `Role::"…"` y **no** se declara `subject.roles`, esa
+  política **no puede casar nunca**: `OOS2005`.
 - Cada clave de `claims` **DEBE** ser un identificador, y `from` **DEBE** declarar el nombre
   externo de la reclamación cuando difiera.
 - `purposes` es un **conjunto no vacío** de identificadores. N4 lo ordena.
 - Todos los campos son **cerrados**: una reclamación que no esté en `claims` **NO DEBE**
   llegar al evaluador aunque venga firmada. Es P4 en la entrada — lo que no se declara, no
   se cree.
+
+### 2.0 · Una pertenencia no es un atributo
+
+`claims` declara **atributos**: escalares con tipo. Una pertenencia a rol **no es un
+atributo** — es una **arista de padre** en el almacén de entidades, y por eso necesita su
+propio campo en lugar de caber en `claims`.
+
+La distinción no es de implementación: es la misma asimetría de
+[`02-entity`](02-entity.md) §2.2.1 vista desde el otro lado. Un atributo se **compara**
+(`principal.departmentId == …`); una pertenencia se **recorre** (`principal in Role::"…"`,
+y `in` en Cedar es alcanzabilidad transitiva). Meter una en el sitio de la otra produce una
+política que no casa nunca.
+
+> **Sin `roles` declarado, el único principal expresable es el que no pertenece a nada** —
+> y eso convierte en muertas todas las políticas por rol, en silencio.
+
+Por eso no basta con que el campo exista: si una política menciona un `Role::"…"` y nadie
+declaró de dónde vienen los roles, es `OOS2005`. La regla de siempre, en el sitio nuevo.
 
 ### 2.1 · `claims` sustituye a las propiedades, no las selecciona
 
@@ -116,9 +140,9 @@ Se llaman igual y **no son lo mismo**, y pueden discrepar. Que hasta ahora fuera
 declaración es precisamente el defecto.
 
 `principal: true` conserva su otro sentido, que sí es de la entidad: **qué tipo es el
-sujeto**, que es lo que permite responder `resource in principal` contra el índice de
-topología. Identidad del sujeto y afirmaciones sobre el sujeto son dos cosas, y ahora viven
-en dos sitios.
+sujeto**, que es lo que da nombre a su UID y permite que la jerarquía del principal
+—`principal in Employee::"…"`— tenga tipo. Identidad del sujeto y afirmaciones sobre el
+sujeto son dos cosas, y ahora viven en dos sitios.
 
 ### 2.2 · Se declara y también se deriva, cada mitad por su razón
 
@@ -151,6 +175,7 @@ confianza, y conviene decir de dónde sale cada pieza.
 | `issuer.url` | `bound_issuer` de Vault | contra qué se compara el `iss` del token |
 | `issuer.audience` | `bound_audiences` de Vault, `aud` de los *ID tokens* de GitLab | el token se acuña **para** un destinatario concreto, y el resto lo rechaza |
 | `subject.claim` | `user_claim` de Vault | qué reclamación identifica al sujeto |
+| `subject.roles` | `groups_claim` de Vault | qué reclamación trae las pertenencias |
 | `claims[].from` | `claim_mappings` de Vault | renombra la reclamación externa a un nombre interno |
 | `owner` separado | los *security policy projects* de GitLab | separación de funciones: quien está sujeto a la regla no puede editarla |
 

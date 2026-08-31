@@ -144,17 +144,25 @@ La asimetría es deliberada y ya estaba en la proyección de §4.1, sin nombrars
 | | Cómo se identifica en una política |
 |---|---|
 | **principal** | por sus **atributos** — `principal.clearance == "CONFIDENTIAL"` |
-| **recurso** | por su **pertenencia** — `resource in Label::"gdpr.sensitivity:high"`, `resource in principal` |
+| **recurso** | por su **pertenencia** — `resource in Label::"gdpr.sensitivity:high"` |
 
 Describir el recurso con atributos obligaría al motor a **leerlo para autorizarlo**, que es
 exactamente la lectura gobernada que decide su propio acceso. Posicionarlo por pertenencia no:
 la etiqueta la puso el compilador y la jerarquía sale del índice de topología, que ya está
 materializado y gobernado al construirse.
 
-Y de ahí sale que la cadena de mando —*«puedes ver a quien esté por debajo de ti»*— sea
-`resource in principal` y no una función de grafo: **`in` en Cedar ya es alcanzabilidad
-transitiva.** Lo único que no se expresa es el límite de profundidad, y un límite de
-profundidad no es una frontera de seguridad.
+**Y la cadena de mando NO es `resource in principal`.** Lo fue en la primera redacción, y el
+ámbito de fila ([`v1alpha3/02-ruleset`](../v1alpha3/02-ruleset.md) §4.2) lo retiró por una
+razón que se ve al mirar la tabla de arriba: el recurso de una autorización es **una
+propiedad**, no una fila, así que no puede pertenecer a un principal. *«Puedes ver a quien
+esté por debajo de ti»* es un recorte de **filas**, y un recorte de filas se traduce en un
+filtro que viaja al origen, no en una condición que se evalúa fila a fila — eso sería leer la
+fila para autorizar la fila.
+
+Lo que sí queda de aquella idea es su mitad correcta, del lado del principal:
+`principal in Employee::"…"` sigue siendo expresable, y **`in` en Cedar ya es alcanzabilidad
+transitiva**, así que la cadena no necesita una función de grafo. Exige que el almacén lleve
+las aristas del principal, que es el índice de topología.
 
 ---
 

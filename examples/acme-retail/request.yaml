@@ -23,11 +23,15 @@ spec:
     url: https://id.acme.example
     audience: ore
 
-  # Qué TIPO es el sujeto, y qué reclamación lo identifica. Lo primero es lo que
-  # permite responder `resource in principal` contra el índice de topología.
+  # Qué TIPO es el sujeto, qué reclamación lo identifica y de dónde vienen sus
+  # pertenencias. El tipo es lo que da nombre a su UID.
   subject:
     entity: hr.Employee
     claim: employee_id
+    # Las pertenencias no caben en `claims`: un atributo se compara y una
+    # pertenencia se recorre. Sin esto, `principal in Role::"hr_analyst"` no
+    # casaria nunca — y no fallaria: denegaria en silencio.
+    roles: groups
 
   # Lo que la capa de identidad afirma, y lo ÚNICO que una política puede
   # evaluar sobre el principal.

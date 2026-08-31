@@ -92,6 +92,12 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 256
+            },
+            "roles": {
+              "description": "La reclamacion que trae las PERTENENCIAS a rol. Es `groups_claim` de Vault, al lado de `user_claim`.\\n\\nNo cabe en `claims` porque una pertenencia no es un atributo: un atributo se COMPARA —`principal.departmentId == ...`— y una pertenencia se RECORRE —`principal in Role::\"...\"`, y `in` en Cedar es alcanzabilidad transitiva—. Son una arista de padre en el almacen de entidades, no un escalar.\\n\\nSin este campo un principal no pertenece a ningun rol y toda politica por rol deniega, que es P4 y esta medido. Por eso, si alguna politica menciona un `Role::\"...\"` y esto no se declara, es OOS2005: la politica no puede casar nunca.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
             }
           }
         },

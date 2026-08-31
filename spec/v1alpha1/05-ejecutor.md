@@ -217,11 +217,24 @@ escrita para vigilar una petición inválida no vigila nada.** El esquema ya la 
 política queda con el aspecto de estar protegiendo algo — un `forbid` contra un agente sin
 finalidad declarada es exactamente ese caso el día que la finalidad pasa a ser obligatoria.
 
-La jerarquía es el otro caso, y se resuelve sin leer datos tampoco: `resource in principal`
-—la cadena de mando— se responde con el **índice de topología**, que es donde ya viven las
-aristas y que se gobernó al construirse. Ninguna de las dos cosas que Cedar necesita para
-autorizar exige una lectura gobernada en el camino de autorización, y eso no es casualidad:
-es lo que hace que el orden de las fases de §3 se pueda cumplir.
+Las **pertenencias** son el otro caso, y tampoco exigen leer datos: llegan con la petición,
+en la reclamación que [`06-request`](06-request.md) §2 declara como `subject.roles`. Ninguna
+de las dos cosas que Cedar necesita para autorizar —atributos y pertenencias— exige una
+lectura gobernada en el camino de autorización, y eso no es casualidad: es lo que hace que el
+orden de las fases de §3 se pueda cumplir.
+
+**Y `resource in principal` queda retirado.** Lo llevaba este apartado como *«la cadena de
+mando»*, y el ámbito de fila ([`v1alpha3/02-ruleset`](../v1alpha3/02-ruleset.md) §4.2) lo
+sustituyó: **el recurso de una autorización es una propiedad, no una fila**, así que no puede
+ser miembro de un principal. La cadena se responde donde le corresponde —un salto por
+igualdad es un **ámbito**, y la cadena entera es la **travesía** de la fase ②— y no como
+condición de una política.
+
+> **Cedar decide qué propiedades. Qué filas es otro eje, y no se autoriza: se filtra.**
+
+Lo que sí sigue vivo es la jerarquía **del lado del principal**: `principal in Employee::"…"`
+es expresable y significa *«el que pregunta está bajo esa cadena»*. Necesita que el almacén
+lleve la cadena del principal, que es el índice de topología — y por eso es de M3, no de ①.
 
 ### 6.2 · Credenciales de la fuente
 
