@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/06-request.md#4
+level: L0
+expects: OOS4005
+summary: >
+  Una politica limita por una finalidad con una errata. No falla al aplicarse: deja de
+  casar, y el dato queda sin gobernar en silencio.

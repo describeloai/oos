@@ -27,9 +27,10 @@
     {
       "entity": "Employee",
       "in": [
-        "Employee"
+        "Employee",
+        "Role"
       ],
-      "reason": "la autorreferencia hr.Employee.manager se proyecta como jerarquía: ReBAC sin un segundo sistema"
+      "reason": "la autorreferencia hr.Employee.manager se proyecta como jerarquia —ReBAC sin un segundo sistema— y `Role` porque un principal TIENE que poder pertenecer a un rol: sin esa arista, declarar `principal: true` desconectaba a la entidad de toda politica escrita como `principal in Role::\"...\"`"
     },
     {
       "actions": [
@@ -48,10 +49,10 @@
         "invoke"
       ],
       "attributes": [
-        "employeeId",
-        "managerId"
+        "departmentId",
+        "employeeId"
       ],
-      "reason": "una entidad `principal: true` es sujeto de peticion y sus propiedades son la forma que la capa de identidad rellena; sin ella el principal era `Role`, sin atributos, y `resource in principal` era un error de tipos"
+      "reason": "una entidad `principal: true` es sujeto de peticion, y sus atributos son las RECLAMACIONES del RequestPolicy — no sus propiedades. La diferencia es de procedencia: una propiedad la afirma la fuente y esta gobernada; una reclamacion la firma la capa de identidad y es lo que gobierna. Cuando se tomaban de la entidad, el DNI de un empleado entraba como atributo OBLIGATORIO de quien pregunta"
     },
     {
       "context": [

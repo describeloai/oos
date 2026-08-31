@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/06-request.md#2
+level: L0
+expects: OOS1004
+summary: >
+  Un RequestPolicy sin emisor. «Los atributos llegan firmados» deja de ser comprobable si
+  no se declara contra quien se verifica la firma.

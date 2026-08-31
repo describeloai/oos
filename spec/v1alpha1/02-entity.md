@@ -111,10 +111,14 @@ existía y ninguna política podía recorrerla.
 
 **Normativo.**
 
-- Las **propiedades** de una entidad `principal` son la forma de los atributos que la capa de
-  identidad **DEBE** rellenar.
-- Los **valores** de esos atributos **DEBEN** llegar **con la petición**. Un motor **NO DEBE**
-  resolverlos contra un binding.
+- `principal: true` declara **qué tipo es el sujeto**, y con eso `resource in principal` se
+  puede responder contra el índice de topología. Nada más.
+- Las **propiedades** de la entidad **NO SON** los atributos del principal. Los declara
+  [`06-request`](06-request.md) §2.1, y la razón es de procedencia: una propiedad la afirma
+  la fuente y está gobernada; una reclamación la firma la capa de identidad y **es lo que
+  gobierna**. Se llaman igual y pueden discrepar.
+- Los **valores** **DEBEN** llegar **con la petición**. Un motor **NO DEBE** resolverlos
+  contra un binding.
 - `principal: true` **NO DEBE** declararse sobre `nature: event`: un evento no tiene identidad
   estable, así que no hay sujeto que nombrar (`OOS1004`).
 
@@ -124,7 +128,14 @@ La segunda regla es la que impide la circularidad, y conviene decirla como princ
 
 Si para saber si puedes leer una propiedad hubiera que leer tu departamento, esa lectura
 estaría gobernada por una política que quizá necesita otro atributo, y así indefinidamente.
-Aquí se declara **la forma**; los valores vienen firmados de fuera, o la petición se rechaza.
+Los valores vienen firmados de fuera, o la petición se rechaza.
+
+**Y vale en las dos direcciones.** La primera redacción de este apartado aplicaba el
+principio a *leer* los atributos y hacía lo contrario con su **forma**: las tomaba de las
+propiedades de una entidad gobernada. El resultado, medido sobre el ejemplo de referencia,
+fue que el DNI de un empleado entró en el esquema de autorización como atributo
+**obligatorio de quien pregunta** — el dato que la política protege, convertido en lo que la
+política consume. Por eso la forma se declara ahora en `06-request` y no aquí.
 
 #### 2.2.1 · Los atributos son del principal; el recurso se posiciona por pertenencia
 

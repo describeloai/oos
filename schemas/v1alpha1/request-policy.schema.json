@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha1/request-policy.schema.json",
+  "title": "RequestPolicy",
+  "description": "La tercera frontera. OOS declaraba dos —`datasources` la entrada de datos y `ConduitPolicy` la salida— y la de identidad no estaba en ninguna parte. Y es la unica entrada que DECIDE en vez de ser gobernada.\\n\\nOOS describio el dato y describio la regla; nunca describio la peticion. No fue un olvido: L0 y L1 no tienen peticiones, asi que la frontera no faltaba — no existia hasta que 05-ejecutor puso un principal delante de un dato.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha1"
+    },
+    "kind": {
+      "const": "RequestPolicy"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "issuer",
+        "subject",
+        "purposes"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Y es otro equipo: quien opera la identidad no es quien modela el dominio ni quien escribe las politicas. Son tres, y hasta este documento solo dos tenian donde firmar. Misma razon que hace de `Ruleset` un documento aparte.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "issuer": {
+          "description": "Contra quien se verifica la firma. 05-ejecutor 6.1 ya exigia que los atributos llegasen firmados y que se verificasen, y no habia contra que: la exigencia no era comprobable.\\n\\nEs `bound_issuer` + `bound_audiences` de Vault, y la leccion de fondo es suya: LA FRONTERA DE CONFIANZA LA DECLARA QUIEN CONFIA, NO QUIEN EMITE.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "audience"
+          ],
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "minLength": 1
+            },
+            "audience": {
+              "description": "El `aud` del token. Importa tanto como el emisor: un token acunado para otro destinatario es un token robado, aunque lo firme quien debe. Es lo que los ID tokens de GitLab declaran por trabajo.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "subject": {
+          "description": "Que TIPO es el sujeto, y que reclamacion lo identifica. Lo primero es lo que permite responder `resource in principal` contra el indice de topologia; lo segundo es `user_claim` de Vault.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "entity",
+            "claim"
+          ],
+          "properties": {
+            "entity": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "claim": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        },
+        "claims": {
+          "description": "Lo que la capa de identidad afirma, y lo UNICO que una politica puede evaluar sobre el principal. NO son las propiedades de la entidad `principal: true`, y la diferencia es de procedencia: una propiedad la afirma la fuente y esta gobernada; una reclamacion la firma la identidad y ES lo que gobierna. Se llaman igual y pueden discrepar.\\n\\nCuando la forma se tomaba de la entidad, el DNI de un empleado entraba en el esquema de autorizacion como atributo OBLIGATORIO de quien pregunta: el dato que la politica protege, convertido en lo que la politica consume.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "from": {
+                "description": "El nombre externo de la reclamacion, cuando difiere. Es `claim_mappings` de Vault: renombrar en la frontera evita que el vocabulario del proveedor se filtre a las politicas.",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "purposes": {
+          "description": "Limitacion de finalidad del RGPD, y ahora comprobable: OOS4005.\\n\\nSe habia RETIRADO delegando en el validador de Cedar una comprobacion que Cedar no puede hacer — `context.purpose` es un `String`, y un validador comprueba el TIPO, no el VALOR. `context.purpose == \\\"compenstaion_review\\\"` tipa perfectamente y no casa con nada.\\n\\nN4 - CONJUNTO: ninguna finalidad es MAS que otra, luego no hay orden y no es un reticulo. La forma canonica lo ordena.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "type/basic.schema.json#/$defs/identifier"
+          }
+        }
+      }
+    }
+  }
+}

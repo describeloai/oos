@@ -197,8 +197,14 @@ postura.
 ### 6.1 · Los atributos del principal no se leen: llegan
 
 **Normativo.** Los atributos que la política evalúa sobre el principal **DEBEN** llegar con la
-petición, firmados por la capa de identidad. Una implementación L2 **NO DEBE** resolverlos
-contra un binding, y **DEBE** rechazar una petición que no los traiga.
+petición, firmados por la capa de identidad, y **DEBEN** verificarse. Una implementación L2
+**NO DEBE** resolverlos contra un binding, y **DEBE** rechazar —con condiciones distintas—
+una petición que no los traiga y una cuya firma no valide.
+
+Contra quién se verifican lo declara [`06-request`](06-request.md), que es también donde se
+declara qué reclamaciones se creen. **Y la ley de abajo vale en las dos direcciones**: no
+leer los atributos desde un dato gobernado, y tampoco **derivar su forma** de uno — que es
+como el DNI de un empleado acabó siendo atributo obligatorio de quien pregunta.
 
 > **Lo que decide el acceso no puede estar sujeto al acceso que decide.**
 

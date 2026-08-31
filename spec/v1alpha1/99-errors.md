@@ -106,6 +106,7 @@ credenciales, sin tocar un solo dato.
 | `OOS4001` | violación de la regla de flujo **por propagación** | 04 §2 |
 | `OOS4002` | violación **directa**: etiqueta por encima de la autorización del conducto | 04 §2 |
 | `OOS4003` | etiqueta que no pertenece a ningún retículo declarado ni importado | 04 §3 |
+| `OOS4005` | política que referencia una finalidad que `purposes` no declara | 06 §4 |
 | `OOS4006` | desclasificador fuera del conjunto cerrado | 04 §5 |
 | `OOS4007` | `aggregate` sin `minGroupSize`, o por debajo del umbral del retículo | 04 §5 |
 | `OOS4008` | propiedad derivada que declara etiqueta en lugar de computarla | 02 §5 |
@@ -212,7 +213,7 @@ especificación misma.
 | Código | Estado | Motivo |
 |---|---|---|
 | `OOS4004` | **retirado** | *«propiedad clasificada sin política que la cubra»*. Era un error de consistencia entre documentos que existía solo por una descomposición incorrecta, resuelta al unificar todo en el sistema de flujo |
-| `OOS4005` | **retirado** | *«política que referencia una finalidad no declarada en la taxonomía»*. Las políticas son Cedar y las finalidades son `context.purpose`: la comprobación corresponde al validador de Cedar, no a OOS |
+| `OOS4005` | **REABIERTO** | Se retiró razonando que *«la comprobación corresponde al validador de Cedar»*. **Se midió, y Cedar no puede hacerla**: `context.purpose` es un `String`, y un validador comprueba el tipo, no el valor — `context.purpose == "compenstaion_review"` tipa perfectamente y no casa con nada. La premisa era falsa, así que el código vuelve, y ahora tiene contra qué comprobar: [`06-request`](06-request.md) declara `purposes`. Un código retirado por una razón que resulta falsa **se reabre**; lo que no se puede es reutilizar su número para otra cosa, y no se hace: significa exactamente lo mismo que significaba |
 | `OOS4009` | **reservado** | capacidad solicitada por una función y no concedida. `Function` llega en v1alpha2 y sus errores son la familia `OOS7xxx`; sigue reservado porque el vocabulario de capacidades del sandbox no está escrito |
 | `OOS4010` | **reservado** | acción invocable por agentes sin `requiresApproval` ni límite. En v1alpha2 eso es un **endosante** y la carencia la detecta `OOS7002`; sigue reservado por si el límite de invocación acaba siendo una condición propia |
 | `OOS2001` | **reservado** | *«referencia a un nombre cualificado inexistente»*. Al poblar la suite se vio que **no es alcanzable**: toda referencia de v1alpha1 tiene código específico — entidad y propiedad (`OOS2005`), datasource (`OOS2004`), etiqueta (`OOS4003`). Se reserva porque `Function`, `Resolution` y `Test` introducen tipos de referencia nuevos |

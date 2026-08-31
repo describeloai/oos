@@ -1,0 +1,58 @@
+apiVersion: oos.dev/v1alpha1
+kind: RequestPolicy
+metadata:
+  name: acme-default
+  description: >
+    La tercera frontera. Los datos entran por un `datasource` declarado y salen
+    por un `conduit` declarado; esto declara lo que entra con la PETICIÓN — y es
+    la única entrada que decide en vez de ser gobernada.
+
+    Vive en su propio documento y con su propio `owner` porque quien opera la
+    identidad no es quien modela el dominio ni quien escribe las políticas. Son
+    tres equipos, y hasta ahora solo dos tenían documento.
+
+spec:
+  owner: team:platform-identity
+
+  # Contra quién se verifica la firma. `05-ejecutor` §6.1 ya exigía verificarla
+  # y no había contra qué: la exigencia no era comprobable.
+  #
+  # La audiencia importa tanto como el emisor: un token acuñado para otro
+  # destinatario es un token robado, aunque lo firme quien debe.
+  issuer:
+    url: https://id.acme.example
+    audience: ore
+
+  # Qué TIPO es el sujeto, y qué reclamación lo identifica. Lo primero es lo que
+  # permite responder `resource in principal` contra el índice de topología.
+  subject:
+    entity: hr.Employee
+    claim: employee_id
+
+  # Lo que la capa de identidad afirma, y lo ÚNICO que una política puede
+  # evaluar sobre el principal.
+  #
+  # `hr.Employee` también tiene `departmentId`, y NO es este: aquel lo afirma
+  # Workday y está gobernado; éste lo firma el proveedor de identidad y es lo
+  # que gobierna. Se llaman igual y pueden discrepar.
+  #
+  # Y nótese lo que NO está: `nationalId`, `baseSalary`, `grade`. Cuando la
+  # forma se tomaba de la entidad, el DNI entraba aquí como atributo
+  # OBLIGATORIO de quien pregunta — el dato que la política protege, convertido
+  # en lo que la política consume.
+  claims:
+    employeeId:
+      type: String
+      from: employee_id
+    departmentId:
+      type: String
+      from: department_id
+
+  # Limitación de finalidad del RGPD, y ahora comprobable. `OOS4005` se había
+  # retirado delegando en el validador de Cedar una comprobación que Cedar no
+  # puede hacer: `context.purpose` es un `String`, y un validador comprueba el
+  # tipo, no el valor.
+  purposes:
+    - compensation_review
+    - regulatory_reporting
+    - workforce_analytics

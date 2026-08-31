@@ -6,7 +6,7 @@ entity Role in [Role];
 entity Customer;
 entity Order;
 entity Department in [Department];
-entity Employee in [Employee, Role] { departmentId: String, email: String, employeeId: String, fullName: String, grade: String, managerId: String, nationalId: String };
+entity Employee in [Employee, Role] { departmentId: String, employeeId: String };
 entity Shipment;
 entity Sku;
 entity Supplier;
