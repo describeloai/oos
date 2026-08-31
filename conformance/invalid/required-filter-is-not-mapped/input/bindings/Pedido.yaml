@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: bPedido, namespace: app }
+spec:
+  targetEntity: app.Pedido
+  datasourceRef: ddb
+  source: "app_single_table"
+  capabilities:
+    # La API no acepta una consulta sin filtrar por `cuenta`…
+    requiredFilters: [cuenta]
+    fullScan: forbidden
+  # …y `cuenta` no está en el mapeo.
+  properties: { pk: "pk", sk: "sk" }

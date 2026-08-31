@@ -204,6 +204,11 @@
           }
         },
 
+        "watermark": {
+          "description": "La propiedad que ordena el avance del refresco. Es el segundo eje de la respuesta de auditoria: el digest dice QUE SIGNIFICABA, la marca de agua dice HASTA CUANDO era cierto.\n\nNO DEBE declararse con `strategy: table_version`: ahi la marca de agua es la version nativa del formato —el identificador de instantanea de Iceberg, la version de Delta— y declararla seria declarar lo derivable (P2).\n\nDEBE declararse con `cdc` o `poll`: sin ella el refresco no sabe desde donde continuar y solo puede recargar entero.\n\nNormativo: spec/v1alpha1/05-ejecutor.md §7",
+          "$ref": "type/basic.schema.json#/$defs/identifier"
+        },
+
         "freshnessSLA": {
           "description": "Antigüedad máxima tolerable de lo materializado.\n\nSuperado el umbral sin refresco, una implementación DEBE declarar el estado degradado al consumidor y NO DEBE servir datos obsoletos como si fueran frescos.\n\nEs normativo y no una recomendación: para un agente, saber que el contexto está degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en silencio convierte una garantía en una trampa.",
           "$ref": "type/basic.schema.json#/$defs/duration"

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/05-ejecutor.md#5.2
+level: L0
+expects: OOS2015
+summary: >
+  El origen exige filtrar por una propiedad que el binding no mapea. El motor no tiene con qué construir el filtro, así que la fuente no se puede consultar nunca.

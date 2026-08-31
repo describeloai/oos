@@ -389,6 +389,7 @@ justificación:
 | [`02-entity.md`](02-entity.md) | **gramática propia** | propiedades, tipos, temporalidad, unidades, etiquetas, derivación, `moved`/`reserved` |
 | [`03-binding.md`](03-binding.md) | perfil de **ODCS** | mapeo físico, `materialization`, `freshnessSLA`, perfil de conector |
 | [`04-flow.md`](04-flow.md) | **gramática propia** | retículos, conductos, desclasificadores, la regla de flujo |
+| [`05-ejecutor.md`](05-ejecutor.md) | **gramática propia** | qué debe hacer un L2: la ley del ejecutor, las dos aplicaciones, credenciales, marca de agua |
 | [`90-canonical-form.md`](90-canonical-form.md) | — | normalización, serialización determinista, digest |
 | `91-versioning.md` | — | versionado de la especificación y de los paquetes |
 | [`99-errors.md`](99-errors.md) | — | registro de códigos de error |
