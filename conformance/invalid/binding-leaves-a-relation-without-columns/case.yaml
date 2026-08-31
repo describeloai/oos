@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/03-binding.md#2.1
+level: L0
+expects: OOS2011
+summary: >
+  El mapeo cubre la clave primaria y deja sin columna física las dos propiedades que sostienen el enlace. La relación se declara y no se puede recorrer.

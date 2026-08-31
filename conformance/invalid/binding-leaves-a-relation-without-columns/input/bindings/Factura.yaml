@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: bFactura, namespace: ventas }
+spec:
+  targetEntity: ventas.Factura
+  datasourceRef: erp
+  source: "public.facturas"
+  # Cubre la clave primaria, y NINGUNA de las dos propiedades del enlace.
+  properties: { idFactura: "id_factura" }

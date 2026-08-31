@@ -246,7 +246,7 @@ perfil.
 |---|---|
 | `OOS2004` | `datasourceRef` no declarado en el manifiesto raíz |
 | `OOS2005` | el mapeo referencia una propiedad inexistente en la entidad destino |
-| `OOS2011` | el mapeo no cubre la `primaryKey` de la entidad destino |
+| `OOS2011` | el mapeo no cubre la `primaryKey` ni las propiedades `via` de la entidad destino |
 | `OOS2012` | secreto de conexión presente en el documento |
 | `OOS4002` | etiqueta por encima de la autorización del conducto instanciado |
 | `OOS4011` | modo de materialización cuyo conducto no tiene autorización declarada |

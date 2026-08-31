@@ -580,6 +580,8 @@ medio, y eso se filtra a las decisiones en el año cinco.
 | **Frescura del índice** | CDC · sondeo con marca de agua · versionado nativo Iceberg/Delta. Lo más caro del runtime |
 | **Writeback** | **Decidido en la especificación** — una transacción, una fuente ([`02-function`](../spec/v1alpha2/02-function.md) §5.2, `OOS7008`). Queda el *cómo*: qué hace el runtime cuando un flujo necesita dos fuentes y la spec le niega la atomicidad |
 | **Resolución de identidad** | **Decidido** — [`03-resolution`](../spec/v1alpha2/03-resolution.md): la determinista lee solo la clave; la probabilística **es un conducto** y no alcanza la cima del retículo de integridad sin un endoso. Queda el emparejador en el runtime |
+| **Enlace contra una clave alternativa** | SQL permite `REFERENCES t (columna_unica)` y los sistemas heredados enlazan justo asi —por NIF, por DUNS, por codigo de articulo—. `via` solo se empareja con la `primaryKey` del destino, y peor: `discover` emitiria una relacion **verde y equivocada** cuando la aridad y los tipos coincidan por casualidad. Forma propuesta: un `toKey` opcional. Reabierto desde **§7.1-bis** |
+| **Diseno de tabla unica** | DynamoDB pone N entidades en una tabla y las distingue por un prefijo de la clave. Dos `Binding` con el mismo `source` y distinto `targetEntity` **validan limpio**, y nada dice que filas son de quien: falta un predicado en el binding. Solo muerde al ejecutar, asi que se decide con L2 |
 | **Atributos ABAC en tiempo de consulta** | ¿JWT, IdP, la propia ontología? Sin cerrarlo, las políticas no son ejecutables. Se decide con la capa de gobierno (v1alpha3) |
 
 ### 7.1-bis · El enlace compuesto — **cerrado**
@@ -679,11 +681,19 @@ lo derivable y violaría P2. Es la misma razón por la que `one_to_many` no exis
   difieren y **no cuando no**. Con dos `String` el compilador no la ve. Está escrito en el
   módulo que la comprueba, porque una regla con una excepción no anunciada es peor que una
   que declara su límite.
-- **A qué clave apunta.** Se empareja contra la `primaryKey` del destino y solo contra ella.
-  Una foránea que referencia un `uniqueKeys` sigue sin poder decirse, y esa es la parte que
-  R2RML compra nombrando los dos lados. Es una limitación real y **acotada**: aparece cuando
-  el origen declara una foránea contra una clave alternativa, que es raro incluso en
-  sistemas heredados. Si aparece, se reabre.
+- **A qué clave apunta — y aquí me equivoqué al cerrar.** Se empareja contra la
+  `primaryKey` del destino y solo contra ella, así que una foránea contra un `uniqueKeys`
+  no se puede decir. Lo escribí como *«raro incluso en sistemas heredados»* **sin medirlo**,
+  y medirlo lo desmiente: SQL exige que una foránea referencie una PK **o una UNIQUE**, y
+  referenciar por clave natural —el NIF, el DUNS, el código de artículo— es justo como los
+  sistemas heredados enlazan. Un `CREATE TABLE ... REFERENCES clientes (nif)` se acepta sin
+  protestar en PostgreSQL; está comprobado, no supuesto.
+
+  Y tiene una consecuencia peor que no poder decirlo: hoy `discover` emitiría
+  `via: [nifCliente]` contra un destino cuya `primaryKey` es `[id]`, la aridad casaría, los
+  tipos también si ambos son `String`, y **saldría verde estando mal**. Queda reabierto en
+  **§7.1** con una forma propuesta: un `toKey` opcional que nombre la clave del destino
+  cuando no sea la primaria — omitirlo significa la primaria, que es lo derivable (P2).
 
 #### Y la escala, que es la pregunta de fondo
 

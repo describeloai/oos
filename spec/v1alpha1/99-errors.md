@@ -79,7 +79,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2008` | `status` fuera del vocabulario de ODCS | 01 §2.3 |
 | `OOS2009` | `owner` ausente o mal formado | 01 §3.2 |
 | `OOS2010` | `nature: entity` sin `primaryKey`, o `nature: event` sin `timeKey` | 02 §2 |
-| `OOS2011` | el mapeo no cubre la `primaryKey` de la entidad destino | 03 §2.1 |
+| `OOS2011` | el mapeo no cubre la `primaryKey` ni las propiedades `via` del destino | 03 §2.1 |
 | `OOS2012` | secreto de conexión presente en un documento | 03 §2.1 |
 | `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar u `ontology.lock` | 00 §5 |
 

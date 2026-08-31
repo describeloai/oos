@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+
+datasources:
+  - name: erp
+    type: postgres
+    connectionEnv: MINIMAL_ERP_URL
