@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Cliente, namespace: ventas }
+spec:
+  nature: entity
+  # Identidad interna subrogada, y una clave natural que es la que ve el resto
+  # del mundo. Es la forma de casi cualquier ERP.
+  primaryKey: [id]
+  uniqueKeys:
+    - [nif]
+  properties:
+    id:  { type: Integer }
+    nif: { type: String }

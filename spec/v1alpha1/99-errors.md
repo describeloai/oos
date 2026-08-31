@@ -92,7 +92,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS3003` | `temporal` declarado sin `validTime` | 02 §7 |
 | `OOS3004` | incompatibilidad de unidades en una derivación | 02 §5 |
 | `OOS3005` | cardinalidad de relación incoherente con las claves declaradas | 02 §6 |
-| `OOS3006` | `via` no casa la `primaryKey` de `target` en aridad o en tipos | 02 §6 |
+| `OOS3006` | el enlace no casa una clave declarada del destino: aridad, tipos o `toKey` | 02 §6 |
 
 ## 6. `OOS4xxx` · Gobernanza y flujo
 

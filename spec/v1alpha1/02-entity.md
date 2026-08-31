@@ -241,7 +241,7 @@ spec:
       required: true
 ```
 
-Nueve decisiones:
+Diez decisiones:
 
 - **Las relaciones viven en su propio bloque, no dentro de `properties`.** `managerId` es un
   dato y `manager` es una arista: son cosas distintas y mezclarlas obliga además a una unión
@@ -253,11 +253,24 @@ Nueve decisiones:
   de recortarse. Secuencia también para una sola propiedad, igual que `primaryKey`: un
   escalar admitido como atajo obligaría a la forma canónica a normalizarlo, y de la forma
   canónica cuelga el digest.
-- **El lado del padre NO se declara.** `target` ya publica su `primaryKey`, y escribirlo
-  sería declarar lo derivable (P2) — la misma razón por la que `one_to_many` no existe.
-  R2RML nombra los dos lados porque no sabe cuál es la clave del padre; aquí se sabe. Que la
-  aridad y los tipos casen posición a posición es `OOS3006`, y ningún esquema JSON lo
-  alcanza: exige resolver `target` y leer **otro** documento.
+- **El lado del padre no se declara cuando es derivable**, y esa es la mayoría de las
+  veces: `target` ya publica su `primaryKey`, y repetirla violaría P2 — la misma razón por
+  la que `one_to_many` no existe. Que la aridad y los tipos casen posición a posición es
+  `OOS3006`, y ningún esquema JSON lo alcanza: exige resolver `target` y leer **otro**
+  documento.
+- **`toKey`, para cuando NO es derivable.** SQL no obliga a referenciar la clave primaria:
+  una foránea puede apuntar a cualquier `UNIQUE`, y así es como enlazan los sistemas
+  heredados —por NIF, por DUNS, por código de artículo—. `REFERENCES clientes (nif)` es
+  legal, y sin este campo esa relación no se podía decir. Se omite en el caso normal; cuando
+  aparece, **como conjunto DEBE ser exactamente una clave declarada del destino** —su
+  `primaryKey` o una entrada de sus `uniqueKeys`— o el enlace no identifica una instancia
+  (`OOS3006`). Su **orden** es el que empareja con `via`: `REFERENCES t (b, a)` es legal y
+  no es lo mismo que `(a, b)`.
+
+  > Callarlo tenía un coste peor que no poder expresarlo: `discover` emitía
+  > `via: [nifCliente]` contra un destino identificado por `[id]`, la aridad casaba, los
+  > tipos también si ambos eran `String`, y **salía verde estando mal**. Aquí es donde R2RML
+  > acertaba al nombrar los dos lados, y este campo es el precio de haberlo ahorrado.
 - **Cardinalidad explícita**, con **dos** valores: `one_to_one` y `many_to_one`. Ossie solo
   expresa many-to-one implícito por la semántica de `from`/`to`; aquí es un campo, porque
   `ore diff` necesita detectar que endurecerla es un cambio rompedor (`OOS5003`).

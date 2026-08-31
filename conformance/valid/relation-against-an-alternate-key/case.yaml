@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: accept
+summary: >
+  Una foránea contra una clave alternativa. SQL no obliga a referenciar la primaria y los sistemas heredados enlazan por clave natural; `toKey` es lo que permite decirlo.

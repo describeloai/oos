@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#6
+level: L0
+expects: OOS3006
+summary: >
+  `toKey` nombra dos propiedades que existen y que juntas no son ninguna clave declarada. Enlazar contra algo que no identifica devuelve más de una fila por instancia.

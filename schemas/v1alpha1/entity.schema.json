@@ -277,6 +277,13 @@
           "minItems": 1,
           "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
         },
+        "toKey": {
+          "description": "La clave del DESTINO contra la que se empareja `via`. Se omite cuando es su `primaryKey`, que es el caso normal: lo derivable no se declara (P2).\n\nExiste porque SQL no obliga a referenciar la clave primaria. Una foranea puede apuntar a cualquier restriccion UNIQUE, y asi es como enlazan los sistemas heredados — por NIF, por DUNS, por codigo de articulo. `REFERENCES clientes (nif)` es legal, y sin este campo esa relacion no se podia decir.\n\nComo CONJUNTO debe ser exactamente una clave declarada del destino: su `primaryKey` o una entrada de sus `uniqueKeys`. Si no lo es, el enlace no identifica una instancia y es `OOS3006`.\n\nComo SECUENCIA su orden es el que empareja con `via`, posicion a posicion, y por eso no se ordena en la forma canonica. `REFERENCES t (b, a)` es legal y no es lo mismo que `(a, b)`.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "type/basic.schema.json#/$defs/identifier" }
+        },
+
 
         "required": { "type": "boolean" },
         "description": { "type": "string", "maxLength": 2048 },

@@ -68,7 +68,7 @@ Cada campo de tipo lista **DEBE** declarar en su esquema si es un **conjunto** o
   forma canónica serializada. Los duplicados **DEBEN** rechazarse (`OOS2003`).
   Ejemplos: `derivedFrom`, `reserved`, `uniqueKeys`, `dependencies`, `targets`.
 - **Secuencia** — el orden es semántico. **DEBE** preservarse.
-  Ejemplos: `levels`, `primaryKey`, `via`, `enum`, `strategies`.
+  Ejemplos: `levels`, `primaryKey`, `via`, `toKey`, `enum`, `strategies`.
 
 > Sin esta distinción, dos autores que escriben las mismas etiquetas en distinto orden
 > producen digests distintos, y el diff semántico se llena de ruido.
