@@ -1,0 +1,8 @@
+rule: spec/v1alpha6/03-transparencia.md#6.2
+level: L0
+expects: OOS2017
+summary: >
+  El log da dos raices para un arbol del mismo tamano. Las dos cabezas estan
+  firmadas por su clave buena y la prueba de inclusion del paquete cuadra en
+  las dos, porque la entrada esta en las dos historias: lo unico que lo delata
+  es la cabeza que el lock anoto.

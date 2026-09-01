@@ -171,11 +171,10 @@ no manipulándolo.
 
 ## 7. El horizonte
 
-**El log de transparencia.** Una firma dice de quién; un log append-only y verificable por un
-tercero dice *que esa clave nunca dijo dos cosas distintas*. Es lo que separa «confío en esta
-clave» de «puedo comprobarlo», y en sector regulado es **el** producto: poder probar qué decía
-la definición de dato personal en una fecha. No toca nada de aquí — es una capa encima de un
-enunciado que ya es canónico y ya está firmado.
+**El log de transparencia.** ~~Una firma dice de quién; un log append-only dice *que esa clave
+nunca dijo dos cosas distintas*.~~ Está en [`03-transparencia`](03-transparencia.md), y salió
+donde este párrafo decía: una capa encima del mismo enunciado, sin tocar nada de aquí. La hoja
+del log es este enunciado **y su firma**.
 
 **Rotación y revocación de claves.** Hoy `trustedKeys` es una lista y cambiarla es un pull
 request, que ya es un mecanismo de revocación — lento, revisado y sin infraestructura. Lo que

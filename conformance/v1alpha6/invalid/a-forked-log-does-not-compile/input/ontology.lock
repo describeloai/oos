@@ -1,0 +1,19 @@
+lockfileVersion: 1
+generatedFor: rrhh
+
+packages:
+
+  - name: oos.dev/regulatory/gdpr
+    version: 0.1.0
+    resolved: file:vendor/gdpr-0.1.0.oob
+    digest: sha256:349871ca0cebb40ee90d5513a937f0758e08816a0a9ddfea2e92eab322810ea4
+    range: "^0.1"
+    signedBy: [oos.dev]
+    logged: ["oos.dev/log"]
+    requestedBy: root
+
+logs:
+
+  - id: "oos.dev/log"
+    treeSize: 2
+    root: 7efe38efc477b5b4c5624662e2be55ca286d0a4c375aa10be965c0f5e2171940
