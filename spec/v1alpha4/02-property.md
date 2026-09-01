@@ -1,4 +1,4 @@
-# `Property` — el concepto
+# `Concept` — el concepto
 
 **Estado:** borrador. Gobierna los documentos que declaran su `apiVersion`, y es **alpha**:
 sin garantías de compatibilidad.
@@ -10,11 +10,11 @@ normativa del documento**: qué se escribe, qué no cabe, y qué comprueba el co
 
 ## 1. Naturaleza
 
-Un `Property` dice **qué es** un dato. No dónde vive, no cómo se llama, no cómo se calcula.
+Un `Concept` dice **qué es** un dato. No dónde vive, no cómo se llama, no cómo se calcula.
 
 ```yaml
 apiVersion: oos.dev/v1alpha4
-kind: Property
+kind: Concept
 metadata: { name: personalEmail, namespace: gdpr }
 spec:
   type: String
@@ -120,7 +120,7 @@ en el primer caso que lo usó.
 | `requiresGovernance` | §3.3 — qué clase de regla exige, **categóricamente** |
 | `confidence` | §4 |
 
-Un `Property` sin `type` es un fallo de forma —`OOS1004`—, y no por rigor: `type` es la mitad
+Un `Concept` sin `type` es un fallo de forma —`OOS1004`—, y no por rigor: `type` es la mitad
 de lo que hereda todo el que lo referencie. Un concepto sin tipo no clasifica nada, solo
 nombra.
 
@@ -130,10 +130,10 @@ un error en un concepto no vale por uno.
 
 ### 3.3 · `requiresGovernance` — y por qué el concepto también puede exigir
 
-Un `Property` **PUEDE** declarar qué naturalezas de regla exige quien lo lleve:
+Un `Concept` **PUEDE** declarar qué naturalezas de regla exige quien lo lleve:
 
 ```yaml
-kind: Property
+kind: Concept
 metadata: { name: healthCondition, namespace: gdpr }
 spec:
   type: String
@@ -166,7 +166,7 @@ pasar por el juicio de nadie sobre cuánto pesa. **Es la misma frase de arriba, 
 
 **Normativo.**
 
-- `requiresGovernance` en un `Property` es una **lista de naturalezas**, no un mapa por nivel:
+- `requiresGovernance` en un `Concept` es una **lista de naturalezas**, no un mapa por nivel:
   un concepto no tiene niveles, y la exigencia es categórica.
 - Se llama igual que en el retículo **a propósito**. Es la misma noción —qué clase de regla
   hace falta— sobre otro sujeto, y ponerle otro nombre sería el error de los dos nombres para
@@ -204,7 +204,7 @@ adecuación.*
 `basic.schema.json` declara este tipo **desde v1alpha1**, y hasta v1alpha4 **ningún documento
 lo referenciaba**: un `$def` esperando a que existiera algo que infiriera.
 
-Un `Property` **PUEDE** llevarlo, porque **acuñar un concepto es una inferencia**:
+Un `Concept` **PUEDE** llevarlo, porque **acuñar un concepto es una inferencia**:
 
 > *«Estas catorce columnas comparten un concepto; llámalo así.»*
 
@@ -319,7 +319,7 @@ acuñar— es ergonomía del inductor y queda fuera de esta especificación
 
 ## 7. Cómo se publica
 
-Un `Property` tiene `namespace`, y con él todo lo que ya existe: **dueño, versión, digest,
+Un `Concept` tiene `namespace`, y con él todo lo que ya existe: **dueño, versión, digest,
 resolución de dependencias y fijación en el lock.** No hace falta ningún mecanismo nuevo.
 
 ```yaml

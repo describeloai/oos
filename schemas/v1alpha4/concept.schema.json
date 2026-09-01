@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oos.dev/schemas/v1alpha4/property.schema.json",
-  "title": "Property",
+  "$id": "https://oos.dev/schemas/v1alpha4/concept.schema.json",
+  "title": "Concept",
   "description": "El concepto. Qué ES un dato, no dónde vive ni cómo se llama.\n\nEs el mismo movimiento que Binding, en la otra dirección: un Binding declara una identidad hacia abajo —esta propiedad del modelo es esa columna física—; un `is` la declara hacia arriba —esta propiedad del modelo es ese concepto—. Ninguno de los dos duplica la entidad: relacionan.\n\nLa línea que decide qué cabe aquí y qué no: EL CONCEPTO DECLARA LO QUE ES CIERTO DE ÉL EN TODAS PARTES; LA PROPIEDAD DECLARA LO QUE ES CIERTO DE ESA COLUMNA. Un correo personal es sensible siempre, y sus sinónimos son los mismos en los quince sistemas donde aparece; que sea obligatorio, único o historizado depende de la tabla.\n\nTiene `namespace`, luego dueño, versión y digest: se publica, se importa y se fija en el lock como cualquier otro documento. Un paquete regulatorio puede traer sesenta conceptos con su clasificación ya decidida, y eso convierte «GDPR como dependencia» en algo que además CLASIFICA, no solo exige.\n\nNormativo: spec/v1alpha4/01-significado.md §4.1",
   "type": "object",
   "additionalProperties": false,
@@ -28,7 +28,7 @@
       "const": "oos.dev/v1alpha4"
     },
     "kind": {
-      "const": "Property"
+      "const": "Concept"
     },
     "metadata": {
       "type": "object",

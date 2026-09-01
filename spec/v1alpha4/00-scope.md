@@ -11,7 +11,7 @@
 | [`03-interface`](03-interface.md) | la forma — su superficie normativa |
 
 **Estado: doce de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
-la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
+la suite da 19/19 — y aun así la versión **no está lista**, porque `Concept` e `Interface`
 atraviesan siete de las doce estaciones de la cadena. y desde la fase 4 **atraviesan las doce**, con
 un caso al menos por estación que las certifica. Cuántos son lo dice el marcador al correr:
 una cifra copiada aquí envejece en silencio, y esta ya lo hizo. Lo que las cuatro fases encontraron —y una de esas cosas no es
@@ -82,7 +82,7 @@ estándares de industria o definidos por el cliente**»*, y llama a lo segundo *
 Llegaron al mismo sitio por otro camino: una IA que redacta sin vocabulario produce texto
 libre; anclada a uno, produce mapeos.
 
-Un paquete de `Property` publicado **es ese anclaje**.
+Un paquete de `Concept` publicado **es ese anclaje**.
 
 > Un concepto compartido no es una comodidad de modelado: es el sustrato sin el cual inducir
 > una ontología produce ruido en lugar de ontología.
@@ -105,14 +105,14 @@ Casi todo está ya, y en el sitio equivocado solo por el nivel:
 
 ## 4. Los documentos
 
-### 4.1 · `Property` — el concepto
+### 4.1 · `Concept` — el concepto
 
 Qué **es** un dato: `type`, `labels`, `description`. No dónde vive ni cómo se llama. Con
 `namespace`, y por tanto con dueño, versión y digest — un paquete regulatorio puede publicar
 sesenta conceptos con su clasificación ya decidida.
 
 ```yaml
-kind: Property
+kind: Concept
 metadata: { name: personalEmail, namespace: gdpr }
 spec:
   type: String
@@ -275,7 +275,7 @@ Ninguna de las tres exige un plano nuevo, y **ninguna añade un código**:
 | | Qué toca |
 |---|---|
 | **1** | nada. Es una prohibición que ya se cumple por no existir el campo |
-| **2** | un campo en el esquema de `Property`, y un origen más en el cálculo de cobertura |
+| **2** | un campo en el esquema de `Concept`, y un origen más en el cálculo de cobertura |
 | **3** | una clausura por inclusión de conjuntos al resolver un objetivo `implements` |
 
 ### Cerradas antes
@@ -425,7 +425,7 @@ Al medir las estaciones 8 y 10 sobre todo lo que existe, sale esto:
 | **v1alpha1** | `Entity` · `Binding` · `Lattice` · `ConduitPolicy` | ✅ | ✅ | ✅ |
 | **v1alpha2** | `Function` · `Resolution` | ✅ | ✅ | — no hay destino |
 | **v1alpha3** | `Ruleset` | ✅ | ✅ | ✅ `quality` de ODCS |
-| **v1alpha4** | `Property` · `Interface` | ✅ | ✅ | ✅ |
+| **v1alpha4** | `Concept` · `Interface` | ✅ | ✅ | ✅ |
 
 **Las cuatro filas están en verde, y ninguna lo estaba cuando este apartado se escribió.**
 La tabla original —v1alpha1 completo, v1alpha4 vacío— resultó ser falsa por los dos extremos.
@@ -586,7 +586,7 @@ validador rechazaría es peor que uno que no importa.
 **Fase 4 · Dependencia** — estación 12.
 
 Un caso de conformidad con **dos paquetes**: el concepto en uno, la entidad en otro, fijado
-en el lock. No hace falta nada nuevo —un `Property` se importa como cualquier documento— y
+en el lock. No hace falta nada nuevo —un `Concept` se importa como cualquier documento— y
 justamente por eso hay que probarlo: *«GDPR como dependencia»* es el argumento central de
 [`02-property`](02-property.md) §7 y hoy **es una afirmación sin caso**.
 

@@ -18,7 +18,7 @@ determinista de un paquete, y su digest ya está definido desde v1alpha1.
 |---|---|
 | `oobVersion` | la versión **del sobre**. Puede cambiar sin que cambie ninguna gramática, y al revés |
 | `package` · `version` | la identidad **dentro** del fichero: uno renombrado es uno que miente |
-| `oos` | la mayor `apiVersion` de sus documentos, **derivada**. Aquí la pone el `Property` (v1alpha4), no el `Package` (v1alpha1) |
+| `oos` | la mayor `apiVersion` de sus documentos, **derivada**. Aquí la pone el `Concept` (v1alpha4), no el `Package` (v1alpha1) |
 | `documents` | indexados por **identidad**, nunca por ruta |
 
 Y tres ausencias, que son la mitad del formato:

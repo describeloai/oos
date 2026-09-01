@@ -52,7 +52,7 @@ veintiocho se certifican con maquinaria que ya existía — y de los cinco cambi
 mete en el `diff`, **cuatro reutilizan códigos de v1alpha1 sin tocarlos**, porque un concepto
 declara lo mismo que una propiedad y sus cambios son los mismos cambios.
 
-Con estos dos últimos, `Property` e `Interface` **atraviesan las doce estaciones de la
+Con estos dos últimos, `Concept` e `Interface` **atraviesan las doce estaciones de la
 cadena**: cada tránsito tiene un caso. Qué significa eso y qué sigue sin cubrir está en
 [`00-scope`](../../spec/v1alpha4/00-scope.md) §8.
 

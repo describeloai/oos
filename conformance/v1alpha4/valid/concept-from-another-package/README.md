@@ -20,7 +20,7 @@ que importa**, y si no pone la politica no compila.
 ## Lo que este caso certifica
 
 Que un concepto **se comporta igual viniendo de otro paquete**. No hace falta ningun
-mecanismo nuevo —un `Property` tiene `namespace`, version y digest como cualquier documento—
+mecanismo nuevo —un `Concept` tiene `namespace`, version y digest como cualquier documento—
 y precisamente por eso habia que probarlo: lo que no tiene caso no se sabe si funciona.
 
 ## Y lo que NO certifica

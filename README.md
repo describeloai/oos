@@ -286,7 +286,7 @@ y lo dejó sin sitio donde engancharse. Lo único que falta es **el objetivo**, 
 **v1alpha4 gobierna qué es la misma cosa**, y no es la capa de encima: es **la que faltaba
 debajo**. Toda la maquinaria de v1alpha1 y v1alpha3 opera sobre etiquetas y nada comprobaba
 que la clasificación fuera consistente, porque no había forma de decir que dos propiedades
-son la misma — *v1alpha3 gobierna lo que alguien acertó a etiquetar*. Un `Property` es el
+son la misma — *v1alpha3 gobierna lo que alguien acertó a etiquetar*. Un `Concept` es el
 concepto, un `Interface` es la forma, y `is` hace hacia arriba lo que un `Binding` hace hacia
 abajo. La herencia no se inventó: `OOS4012` sube un nivel **sin cambiar una letra**.
 
@@ -298,7 +298,7 @@ la implementación delante.
 
 **Y ahora sí quiere decir terminado, en el sentido que el propio alcance define.** Un `kind`
 atraviesa doce estaciones —despacho, forma, referencias, tipos, flujo, gobierno, significado,
-forma canónica, sellado, compatibilidad, emisión y dependencia— y `Property` e `Interface`
+forma canónica, sellado, compatibilidad, emisión y dependencia— y `Concept` e `Interface`
 **las atraviesan las doce**, con un caso por tránsito. Ese criterio no existía: se escribió
 midiendo, y midiendo salió que **v1alpha1 llegó al final y cada borrador posterior se quedó
 antes sin decirlo**.

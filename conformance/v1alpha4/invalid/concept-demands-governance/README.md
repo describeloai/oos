@@ -11,7 +11,7 @@ nada aqui. La propiedad esta en `low`, el nivel mas bajo que se usa en toda la s
 Y no compila, porque el concepto lo exige:
 
 ```yaml
-kind: Property
+kind: Concept
 metadata: { name: healthCondition, namespace: gdpr }
 spec:
   labels: { gdpr.sensitivity: low }

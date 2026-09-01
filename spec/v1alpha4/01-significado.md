@@ -15,7 +15,7 @@ llamó *el efecto sobre la identidad*. Era una de tres, y nadie lo vio:
 | Declara que son la misma cosa | Nivel | |
 |---|---|---|
 | `Resolution` | dos **registros** | ✅ v1alpha2 |
-| `Property` | dos **propiedades** | **falta** |
+| `Concept` | dos **propiedades** | **falta** |
 | `Interface` | dos **entidades** | **falta** |
 
 > **v1alpha1 gobierna lo que se puede saber. v1alpha2, lo que se puede causar. v1alpha3, qué
@@ -79,7 +79,7 @@ confunde con la entidad — porque no duplica nada: **relaciona**.
 | | Mapea una propiedad | Del modelo | A |
 |---|---|---|---|
 | `Binding` | ✓ | ✓ | **la fuente física** |
-| `Property` | ✓ | ✓ | **el concepto** |
+| `Concept` | ✓ | ✓ | **el concepto** |
 
 Es el mismo movimiento en la otra dirección: hacia abajo, dónde vive el dato; hacia arriba,
 qué significa. Y la herencia también existe ya, con su dirección decidida: `02-entity` §4.1
@@ -94,13 +94,13 @@ dice que una propiedad **PUEDE** elevar la etiqueta que hereda y **NO DEBE** reb
 
 ### 4.1 · El concepto
 
-Un `Property` no dice dónde vive un dato ni cómo se llama. Dice **qué es**. Su superficie
+Un `Concept` no dice dónde vive un dato ni cómo se llama. Dice **qué es**. Su superficie
 completa —campo a campo, y por qué `required` no cabe y `aiContext` sí— está en
 [`02-property`](02-property.md).
 
 ```yaml
 apiVersion: oos.dev/v1alpha4
-kind: Property
+kind: Concept
 metadata: { name: personalEmail, namespace: gdpr }
 spec:
   type: String
@@ -128,12 +128,12 @@ almacena clases y propiedades por separado, y llama a lo segundo *ontologías in
 **Normativo.**
 
 - `type` y `labels` son lo que el concepto **declara**.
-- Un `Property` **NO DEBE** declarar `derivedFrom`, `expression` ni `examples`: eso es de la
+- Un `Concept` **NO DEBE** declarar `derivedFrom`, `expression` ni `examples`: eso es de la
   propiedad concreta, no del concepto. Un correo personal significa lo mismo se calcule como
   se calcule.
-- Un `Property` **PUEDE** llevar `confidence`, con las mismas dos reglas que un mapeo
+- Un `Concept` **PUEDE** llevar `confidence`, con las mismas dos reglas que un mapeo
   (§4.2.1): **acuñar un concepto es una inferencia**, y una de las caras.
-- Un `Property` declarado **localmente** al que ninguna propiedad del paquete referencia es
+- Un `Concept` declarado **localmente** al que ninguna propiedad del paquete referencia es
   una palabra que nadie habla: `OOS9004`. La regla no se aplica a un paquete **sin
   entidades**, que es el caso degenerado de publicar vocabulario para que otros lo importen.
 

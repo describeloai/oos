@@ -21,7 +21,7 @@ la maquinaria de flujo y de gobierno correria encima de ellos.
 
 El diagnostico dice donde mirar:
 
-> *un concepto es un documento `Property`, propio o importado. Si lo publica una dependencia,
+> *un concepto es un documento `Concept`, propio o importado. Si lo publica una dependencia,
 > comprueba que este en `ontology.config.yaml` y fijada en el lock*
 
 En un `is` que no resuelve hay dos causas muy distintas —una errata, o una dependencia que no

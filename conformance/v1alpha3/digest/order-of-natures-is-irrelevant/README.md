@@ -17,7 +17,7 @@ estar en ninguna lista fija. Así que añadir `requiresGovernance` a `CONJUNTOS`
 concepto de v1alpha4 y **no arreglaba el retículo**.
 
 Eso habría dejado **el mismo nombre comportándose distinto en dos documentos**: ordenado en
-un `Property`, sin ordenar en un `Lattice`. Dos semánticas para una palabra, que es
+un `Concept`, sin ordenar en un `Lattice`. Dos semánticas para una palabra, que es
 exactamente lo que esta especificación persigue en todas partes menos, resultó, en su propia
 forma canónica.
 

@@ -9,7 +9,7 @@ etiquetas, cero entidades.
 
 ## Qué resuelve, y en qué se diferencia del regulatorio
 
-Los dos son vocabulario y publican `kind: Property`. Lo que traen **no es lo mismo**, y esa
+Los dos son vocabulario y publican `kind: Concept`. Lo que traen **no es lo mismo**, y esa
 diferencia es la que decide en cuál va cada concepto:
 
 | | `regulatory/gdpr` | `types/iso` |

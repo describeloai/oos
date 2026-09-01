@@ -18,7 +18,7 @@
       "contains": [
         "\"oos\":\"oos.dev/v1alpha4\""
       ],
-      "reason": "la mayor `apiVersion` de sus documentos, DERIVADA. Es lo que permite rechazar un paquete del futuro sin abrirlo entero — aqui la pone el `Property`, que es de v1alpha4, y no el `Package`, que es de v1alpha1"
+      "reason": "la mayor `apiVersion` de sus documentos, DERIVADA. Es lo que permite rechazar un paquete del futuro sin abrirlo entero — aqui la pone el `Concept`, que es de v1alpha4, y no el `Package`, que es de v1alpha1"
     },
     {
       "contains": [

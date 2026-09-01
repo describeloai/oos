@@ -75,7 +75,7 @@ siempre: dueño, versión, digest y fijación en el lock. Un paquete sectorial p
 
 Lo único, y **obligatorio**.
 
-- Es una lista de **nombres cualificados de `Property`**. Nunca de otra `Interface` —la
+- Es una lista de **nombres cualificados de `Concept`**. Nunca de otra `Interface` —la
   herencia no está escrita— ni de nombres de propiedad de una entidad.
 - Un nombre que no resuelve es `OOS2001`.
 - Es un **conjunto**: el orden no significa nada y la forma canónica lo ordena. Dos

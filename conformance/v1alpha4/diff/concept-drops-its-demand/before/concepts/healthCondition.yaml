@@ -1,5 +1,5 @@
 apiVersion: oos.dev/v1alpha4
-kind: Property
+kind: Concept
 metadata: { name: healthCondition, namespace: gdpr }
 spec:
   type: String

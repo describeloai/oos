@@ -2,7 +2,7 @@
 
 **Ontologías que no modelan nada: publican los conceptos con los que otros modelan.**
 
-Un paquete de aquí no describe el patrimonio de nadie. Declara `kind: Property` —qué es un
+Un paquete de aquí no describe el patrimonio de nadie. Declara `kind: Concept` —qué es un
 dato, cuánto pesa y qué clase de regla exige— para que una ontología pueda **acogerse** a
 ellos en vez de volver a decidirlos. Es lo que `02-property` §7 llama publicar vocabulario,
 y lo que convierte *«GDPR como dependencia»* en algo literal.
@@ -12,7 +12,7 @@ packages/regulatory/gdpr/   los conceptos que el RGPD nombra, y la escala con la
 packages/types/iso/         los codigos de un registro internacional, sin clasificar nada
 ```
 
-Los dos publican `kind: Property` y **no traen lo mismo**: uno dice cuánto pesa un dato y qué
+Los dos publican `kind: Concept` y **no traen lo mismo**: uno dice cuánto pesa un dato y qué
 gobierno exige; el otro, qué es y qué forma tiene. Es la misma distinción que separa a un
 regulador de un registro, y decide en cuál va cada concepto.
 
