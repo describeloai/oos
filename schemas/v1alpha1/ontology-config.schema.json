@@ -108,6 +108,45 @@
       }
     },
 
+    "trustedLogs": {
+      "description": "Los logs de transparencia con los que este arbol comprueba lo que importa.\n\nUna firma dice DE QUIEN es un paquete. No dice si esa clave le ha dicho lo mismo a todo el mundo: quien la tenga puede firmar dos `0.2.0` distintos \u2014uno para el auditor y otro para ti\u2014 y las dos firmas verifican. Ninguna comprobacion local los distingue, porque el defecto no esta en lo que tienes.\n\nUn log no lo impide; garantiza que no se pueda hacer EN PRIVADO. Y su clave publica se declara aqui por la misma razon que `trustedKeys`, y con mas motivo: es la que convierte una raiz en la afirmacion de alguien. Sin ella, cualquiera construye un arbol con la hoja que quiera y presenta una prueba de inclusion impecable de algo que ningun log ha visto.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "publicKey"
+        ],
+        "properties": {
+          "id": {
+            "description": "Con que nombre lo referencia un `.oob` en su campo `logId`, y con el que se anota en `logged`. Va DENTRO de la cabeza firmada, para que la cabeza de un log no valga como cabeza de otro.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "algorithm": {
+            "description": "Hoy solo `ed25519`, como en `trustedKeys`.",
+            "enum": [
+              "ed25519"
+            ],
+            "default": "ed25519"
+          },
+          "publicKey": {
+            "description": "La clave con la que el log firma SU CABEZA, no los paquetes. Son dos autoridades distintas: quien publica afirma \u00abesto es mio\u00bb, y el log afirma \u00abesto lo he visto y esta es toda mi lista\u00bb. Hexadecimal minusculo, 32 bytes para `ed25519`.",
+            "type": "string",
+            "pattern": "^[0-9a-f]+$",
+            "minLength": 64,
+            "maxLength": 256
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      }
+    },
+
     "datasources": {
       "description": "Las fuentes físicas alcanzables desde este repositorio.\n\nEs la única sección del manifiesto que no habla de semántica sino del mundo exterior: dónde vive realmente el dato.",
       "type": "array",

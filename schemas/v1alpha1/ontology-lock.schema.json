@@ -42,6 +42,37 @@
       }
     },
 
+    "logs": {
+      "description": "La ultima cabeza que este arbol dio por buena de cada log.\n\nNo es de ningun paquete: es del arbol, y por eso vive fuera de `packages`. Es el ancla contra la BIFURCACION \u2014 un log con dos historias firma las dos con su clave buena, y cada prueba de inclusion cuadra contra la suya. Lo unico que lo delata es tener otra raiz para el mismo tamano, o no poder demostrar que el arbol de ahora extiende al de entonces.\n\nAvanzar esta cabeza exige una prueba de consistencia, que se pide al log porque no puede viajar dentro de un paquete: quien publica no sabe que cabeza vio el consumidor la ultima vez.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "treeSize",
+          "root"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "treeSize": {
+            "description": "Cuantas entradas tenia el log en esa cabeza.",
+            "type": "integer",
+            "minimum": 0
+          },
+          "root": {
+            "description": "La raiz de Merkle de ese arbol, en hexadecimal minusculo.",
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+
     "packages": {
       "description": "Cada dependencia resuelta a una versión exacta. El orden DEBE ser determinista —alfabético por `name`— para que dos resoluciones equivalentes produzcan bytes idénticos.",
       "type": "array",
@@ -76,6 +107,16 @@
 
           "signedBy": {
             "description": "Quien firmo este paquete, de lo que se COMPROBO al resolver.\n\nUn digest dice QUE es un paquete; una firma dice DE QUIEN, y es lo unico que un digest no puede contestar: uno correcto lo produce cualquiera que tenga los bytes, incluido quien los sustituyo.\n\nSolo entra un `keyId` cuya firma verifique contra una clave declarada en `trustedKeys`. Anotar lo que el paquete dice de si mismo convertiria un rumor en un hecho por el mero acto de escribirlo, y el lock es el documento del que todo lo demas tira.\n\nY una vez escrito OBLIGA: quitar la firma del arbol deja de compilar (`OOS2016`). Sin eso, borrar el campo habria sido la forma barata de saltarse la comprobacion.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+
+          "logged": {
+            "description": "En que logs de transparencia esta probado este paquete, de lo que se COMPROBO al resolver.\n\nSolo entra un log cuya cabeza firmada verifique y cuya prueba de inclusion reconstruya la raiz, con la hoja construida a partir del digest recomputado. Y una vez escrito OBLIGA: quitar la prueba del arbol deja de compilar (`OOS2017`), igual que quitar la firma. Sin eso, borrar el campo seria la forma barata de saltarse la comprobacion.",
             "type": "array",
             "items": {
               "type": "string",
