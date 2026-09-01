@@ -24,17 +24,20 @@ La mecánica es la misma —producir algo y afirmar su forma— y por eso el cor
 igual. Lo que no es igual es la pregunta: `emit/` comprueba que traducimos bien a la casa de
 otro, y `pack/` comprueba **qué se lleva y qué se queda** cuando lo que viaja es nuestro.
 
-## Lo que esta suite todavía no cubre, y por qué
+## Lo que esta suite cubre, y lo que se comprueba en otro sitio
 
 De los [tres peldaños](../../spec/v1alpha6/01-distribucion.md#6-listo--tres-peldaños), aquí
-solo puede vivir el primero:
+solo puede vivir uno entero, y conviene decir dónde vive cada uno:
 
-- **Es determinista** — el formato. Está, y su mitad más importante —que el digest del `.oob`
-  sea el del paquete sin empaquetar— **no se puede afirmar con una subcadena**: se comprueba
-  comparando dos cómputos, y eso lo hace el motor en sus propias pruebas.
-- **Es verificable sin extraerlo** y **el registro es prescindible** necesitan un obtenedor y
-  dos orígenes. No hay casos, y no es un olvido: un caso que fingiera obtener algo comprobaría
-  el fingimiento.
+| Peldaño | Dónde se comprueba |
+|---|---|
+| **es determinista** | la **forma** del sobre, aquí. Su otra mitad —que el digest del `.oob` sea el del paquete sin empaquetar— **no cabe en una subcadena**: se comprueba comparando dos cómputos |
+| **es verificable sin extraerlo** | en el motor: un `.oob` con una clasificación rebajada a mano se detecta **leyéndolo**, sin escribir nada |
+| **el registro es prescindible** | en el motor: se trae un paquete, se **vacía el origen**, y el árbol sigue compilando |
 
-> Una suite que cubre lo que puede y **dice qué no cubre** es una suite. Una que se completa
-> con casos que no miden nada es un número.
+Los dos últimos necesitan **ejecutar** un obtenedor y borrar un directorio, y eso no es una
+entrada de caso: es una prueba de integración. Un caso que fingiera obtener algo comprobaría
+el fingimiento.
+
+> Una suite que cubre lo que puede y **dice dónde está el resto** es una suite. Una que se
+> completa con casos que no miden nada es un número.

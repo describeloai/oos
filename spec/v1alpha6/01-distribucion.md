@@ -79,6 +79,11 @@ sido el del fichero, cambiar de contenedor habría sido indistinguible de cambia
 entrada de su lock. Si no coinciden, **DEBE** parar. **NO DEBE** aceptar el digest que el
 origen declare, venga en el fichero, en una cabecera o en un índice.
 
+Y **DEBE** volver a compararlo cada vez que compila, no solo al traerlo: un paquete que ya
+está en el árbol se puede editar, y el momento en que se obtuvo no es el momento en que se
+usa. El síntoma —*lo que usas no es lo que declaraste*— es el de `OOS2013`, y no hace falta
+un código nuevo: el lock y lo que hay dicen cosas distintas sobre el mismo artefacto.
+
 ---
 
 ## 3. Inmutabilidad
@@ -118,8 +123,13 @@ programa que lo hace.
 - El motor **DEBE** mostrar ese stderr **literal**. Es lo único accionable que existe: «no
   estás autenticado» y «esa versión fue retirada» se arreglan solos en cuanto se leen, y
   resumirlos convierte un problema de cinco minutos en una tarde.
-- El motor **DEBE** verificar el digest antes de usar nada de lo que reciba, y **NO DEBE**
-  escribir en disco lo que no haya verificado.
+- El motor **DEBE** comprobar que el `.oob` que recibe **dice el paquete que se pidió** y una
+  versión **dentro del rango**, y **NO DEBE** escribir en disco lo que no lo cumpla. Que el
+  obtenedor ya lo haya mirado no cuenta: lo que hace que su origen no tenga que ser de
+  confianza es precisamente que quien pide **no se crea nada**.
+- Un obtenedor **PUEDE** ignorar el rango y devolver lo que tenga. No es dejadez: es la
+  consecuencia de lo anterior — si la comprobación de verdad está del lado del que pide, un
+  obtenedor esmerado solo conseguiría que pareciera redundante.
 
 ### 4.1 · Y por eso el registro no es de confianza
 
@@ -193,6 +203,12 @@ no toca nada de aquí: el hueco donde iría es una clave junto al digest en el l
 **Espejos y caché compartida.** Se siguen de §4.1 sin añadir nada: si el origen no importa,
 cualquiera puede servir lo mismo. Es la propiedad que un formato de identidad por contenido
 regala y que uno por URL no puede tener.
+
+**Y dónde se queda lo traído es del motor, no de aquí.** La implementación de referencia lo
+**vendoriza en el árbol** en vez de guardarlo en una caché, y la diferencia se nota en un
+clon recién hecho: con caché hace falta el obtenedor otra vez, y con el árbol no hace falta
+nadie. Un artefacto que se compromete a Git se revisa en un pull request como todo lo demás —
+que es donde este proyecto pone las decisiones de confianza.
 
 **Publicar desde CI.** Empaquetar es puro y el digest es reproducible, así que un tercero puede
 recomputar el `.oob` desde el commit y comprobar que el registro sirve lo que ese commit dice.

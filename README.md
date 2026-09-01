@@ -325,8 +325,8 @@ es una clase definida y su jerarquía es inferida por construcción
 |---|---|
 | [`00-scope`](spec/v1alpha6/00-scope.md) · alcance, la tesis, y por qué la distribución es lo último | ✅ |
 | [`01-distribucion`](spec/v1alpha6/01-distribucion.md) · el formato `.oob`, el contrato de obtención, y qué significa que esto esté listo (§6) | ✅ |
-| [`conformance/v1alpha6/`](conformance/v1alpha6/README.md) · borrador | ◐ el formato; el resto espera al obtenedor |
-| **listo para v1** | ◐ **uno de tres peldaños** — [`01-distribucion`](spec/v1alpha6/01-distribucion.md) §6 |
+| [`conformance/v1alpha6/`](conformance/v1alpha6/README.md) · borrador | ✅ el formato; los otros dos peldaños se ejecutan, no se declaran |
+| **listo para v1** | ✅ **los tres peldaños** — [`01-distribucion`](spec/v1alpha6/01-distribucion.md) §6 |
 
 | | v1alpha5 · borrador de alcance, no normativo |
 |---|---|
