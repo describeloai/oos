@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: customers, namespace: crm }
+spec:
+  targetEntity: crm.Customer
+  datasourceRef: crm
+  source: "public.customers"
+  properties: { customerId: "id", nickname: "nick", email: "email", vatId: "vat" }

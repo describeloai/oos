@@ -1,0 +1,46 @@
+{
+  "description": "La prosa llega al contrato, y los delimitados con ella. Cuatro campos porque hay cuatro combinaciones y cada una decide algo distinto.",
+  "mustContain": [
+    {
+      "contains": [
+        "Quien compra. La entidad tambien lleva documentacion."
+      ],
+      "reason": "la documentacion de la entidad sale de `metadata`, que es donde el esquema la pone: en una entidad la prosa documenta EL DOCUMENTO"
+    },
+    {
+      "contains": [
+        "Como pide que le llamen."
+      ],
+      "reason": "la de una propiedad sale de la propiedad, donde documenta el dato"
+    },
+    {
+      "contains": [
+        "La direccion de correo electronico de una persona fisica.",
+        "synonyms: correo, email, mail",
+        "guidance: Un buzon de rol no es esto: no identifica a una persona."
+      ],
+      "reason": "`email` declara `is` y no escribe una palabra: prosa, sinonimos y guia se HEREDAN del concepto —`02-property` §5— que es el motivo de subirlos a un concepto. Y los sinonimos salen ORDENADOS aunque el fichero diga `mail, correo, email`: la forma canonica los trata como un conjunto, asi que el orden del fichero no puede cambiar el SDL"
+    },
+    {
+      "contains": [
+        "synonyms: cif, nif, vat"
+      ],
+      "reason": "sin prosa, el bloque empieza por los delimitados"
+    }
+  ],
+  "mustNotContain": [
+    {
+      "contains": [
+        "@aiContext",
+        "@synonyms"
+      ],
+      "reason": "`aiContext` es descriptivo, NUNCA directivo, y una directiva es una instruccion a la herramienta. §2.9"
+    },
+    {
+      "contains": [
+        "synonyms: mail, correo, email"
+      ],
+      "reason": "es el orden del fichero, y el fichero no manda: dos escrituras que solo difieren en el orden de los sinonimos tienen el mismo digest y DEBEN emitir el mismo SDL"
+    }
+  ]
+}

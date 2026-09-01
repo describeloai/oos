@@ -1,0 +1,23 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata:
+  name: Customer
+  namespace: crm
+  description: Quien compra. La entidad tambien lleva documentacion.
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    # Ni prosa ni sinonimos: no se emite bloque. Un docstring vacio es ruido y
+    # ademas cambia el digest del SDL.
+    customerId: { type: String }
+    # La suya propia.
+    nickname:
+      type: String
+      description: Como pide que le llamen.
+    # Heredada entera del concepto, sin escribir una palabra aqui.
+    email: { is: gdpr.personalEmail }
+    # Solo sinonimos, sin prosa: el bloque empieza por los delimitados.
+    vatId:
+      type: String
+      aiContext: { synonyms: [nif, cif, vat] }

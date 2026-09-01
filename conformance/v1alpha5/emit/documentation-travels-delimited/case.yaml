@@ -1,0 +1,8 @@
+rule: spec/v1alpha5/01-emision-graphql.md#2.9
+level: L0
+expects: structure
+format: graphql
+summary: >
+  La prosa llega al contrato, y con ella los sinonimos y la guia — delimitados,
+  nunca como directiva. Es lo unico que hace que un concepto signifique algo
+  para quien lo consume sin haber leido el paquete.

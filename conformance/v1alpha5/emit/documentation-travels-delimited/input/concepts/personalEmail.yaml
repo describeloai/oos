@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: gdpr }
+spec:
+  type: String
+  description: La direccion de correo electronico de una persona fisica.
+  aiContext:
+    # En orden NO alfabetico a proposito: la forma canonica los trata como un
+    # conjunto, asi que la emision los ordena y el fichero no manda.
+    synonyms: [mail, correo, email]
+    guidance: "Un buzon de rol no es esto: no identifica a una persona."

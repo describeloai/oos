@@ -267,6 +267,44 @@ una instrucción a la herramienta.
 Y hereda las etiquetas de lo que lo contiene, así que **pasa por el filtro de §4 como
 cualquier otra cosa**: un sinónimo puede ser confidencial.
 
+**La forma, que hacía falta fijar.** *Delimitados* admitía tantas lecturas como
+implementaciones, y dos conformes emitirían documentación distinta del mismo bundle:
+
+```graphql
+"""
+La dirección de correo electrónico de una persona física.
+
+synonyms: email, correo, correo_electronico
+guidance: Un buzón de rol no es esto: no identifica a una persona.
+"""
+email: Gdpr_personalEmail
+```
+
+- La prosa va primero y **tal cual**. Si no hay `description`, el bloque empieza por los
+  delimitados.
+- Cada delimitado va en **su propia línea**, con el nombre de su campo de OOS —`synonyms`,
+  `guidance`— como etiqueta. El nombre es el del campo y no una traducción, porque es lo que
+  dice de dónde salió: la documentación emitida tiene que ser **rastreable hasta el documento
+  que la escribió**.
+- Los sinónimos van separados por `, ` y **ordenados**. No es estética: la forma canónica los
+  trata como un **conjunto** —`synonyms` no está entre las secuencias de `90-canonical-form`,
+  al contrario que `enum`—, así que dos ficheros que solo difieren en su orden tienen el mismo
+  digest. Emitirlos en el orden del fichero haría que el SDL dejara de ser función del bundle,
+  que es justo lo que §6.3 exige.
+- Sin `description` ni `aiContext`, **no se emite bloque**. Un docstring vacío es ruido que
+  además cambia el digest del SDL.
+
+**Y se hereda con lo demás.** `02-property` §5 hereda `description` y `aiContext` igual que el
+tipo, así que una propiedad que declara `is` documenta con lo del concepto — que es el motivo
+de subirlos a un concepto: *declararlos una vez evita que cada una de cuatro mil columnas los
+vuelva a adivinar*.
+
+**El filtro de §4 no necesita nada aquí, y conviene decir por qué.** La documentación hereda
+las etiquetas de lo que la contiene, y lo que la contiene ya pasó el techo: un campo podado no
+lleva su documentación a ninguna parte porque **el campo no está**. No hay un caso en que la
+prosa deba podarse y el campo sobrevivir — para eso tendría que llevar una clasificación
+propia, y no la lleva.
+
 ### 2.10 · Enumeraciones — y qué pasa cuando el valor no es un identificador
 
 `00-scope` §5 lo daba por mapeado —`enum` → `enum` ✓— y le faltaba la mitad que decide: **no
