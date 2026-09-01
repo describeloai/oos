@@ -1,0 +1,58 @@
+{
+  "description": "Se afirman cadenas sobre el JCS emitido. `contains` es la forma que sirve para cualquier productor: la alternativa seria escribir un comparador de forma canonica dentro del arnes, que es lo que la forma canonica ya es.",
+  "mustContain": [
+    {
+      "contains": [
+        "\"oobVersion\":1"
+      ],
+      "reason": "la version DEL SOBRE, no la de OOS: un `.oob` puede cambiar de forma sin que cambie ninguna gramatica, y al reves"
+    },
+    {
+      "contains": [
+        "\"package\":\"oos.dev/regulatory/gdpr\"",
+        "\"version\":\"0.1.0\""
+      ],
+      "reason": "la identidad va DENTRO: un fichero renombrado es un fichero que miente"
+    },
+    {
+      "contains": [
+        "\"oos\":\"oos.dev/v1alpha4\""
+      ],
+      "reason": "la mayor `apiVersion` de sus documentos, DERIVADA. Es lo que permite rechazar un paquete del futuro sin abrirlo entero — aqui la pone el `Property`, que es de v1alpha4, y no el `Package`, que es de v1alpha1"
+    },
+    {
+      "contains": [
+        "\"Property:gdpr.personalEmail\"",
+        "\"Lattice:gdpr.sensitivity\"",
+        "\"Package:oos.dev/regulatory/gdpr\""
+      ],
+      "reason": "indexado por IDENTIDAD y no por ruta, que es lo que hace que el contenedor no cambie el digest"
+    },
+    {
+      "contains": [
+        "\"documents\":"
+      ],
+      "reason": "JCS ordena las claves por sus unidades de codigo, asi que `documents` va delante de `oobVersion`: el orden del sobre no lo elige quien lo escribe. Dos productores conformes dan LOS MISMOS BYTES"
+    }
+  ],
+  "mustNotContain": [
+    {
+      "contains": [
+        "OntologyConfig"
+      ],
+      "reason": "el manifiesto es del WORKSPACE de quien publica: lleva sus fuentes fisicas y sus dependencias, y publicarlo seria publicar la infraestructura de otro"
+    },
+    {
+      "contains": [
+        "INTERNO_URL"
+      ],
+      "reason": "corolario del anterior, y el que se nota: el nombre de la variable de una fuente interna no tiene por que viajar a los consumidores"
+    },
+    {
+      "contains": [
+        "\"digest\""
+      ],
+      "reason": "el digest NO va dentro. Se podria computar sobre `documents` y guardarlo al lado sin autorreferencia; no va porque un numero que un lector no debe creerse acaba creido. Lo que se verifica es contra el lock de quien consume"
+    }
+  ]
+}

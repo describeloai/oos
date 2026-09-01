@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  description: La direccion de correo de una persona fisica.

@@ -67,11 +67,13 @@ conformance/
 │               <caso>/  input/ + expected.absent.json
 ├── digest/     <caso>/  a/ + b/           → mismo | distinto digest
 ├── emit/       <caso>/  input/ + expected.*
+├── pack/       <caso>/  input/ + expected.structure.json
 │
 ├── v1alpha2/   ── un árbol por borrador, con las mismas familias dentro
 ├── v1alpha3/
 ├── v1alpha4/
-└── v1alpha5/
+├── v1alpha5/
+└── v1alpha6/
 ```
 
 | Directorio | Qué afirma | Entradas |
@@ -82,6 +84,13 @@ conformance/
 | `canonical/` | dos entradas **convergen** —o deliberadamente **no** convergen— | **2** |
 | `digest/` | **relaciones** entre digests: mismo, o distinto (§4.1) | **2** |
 | `emit/` | ida y vuelta sin pérdida | 1 |
+| `pack/` | el **paquete publicable**: qué lleva el `.oob` y qué no | 1 |
+
+`pack/` es aparte de `emit/` y la mecánica es la misma —producir un artefacto y afirmar su
+forma—, así que la separación es por lo que producen: `emit/` habla **formatos ajenos** y un
+`.oob` es **nuestro artefacto** (`v1alpha6/00-scope` §3). Mezclarlos habría dado un número que
+ya no se sabe qué mide, que es la misma razón por la que los borradores cuentan aparte
+(§4.2).
 
 `diff/` es el que certifica `ore diff --breaking`. Sin él, la afirmación de que el carácter
 rompedor de un cambio *se computa* en lugar de *afirmarse* no está respaldada por nada.

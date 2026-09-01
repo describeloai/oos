@@ -1,6 +1,6 @@
 # Suite de conformidad — v1alpha5
 
-**Borrador — 8 casos.** Certifica la emisión a GraphQL de
+**Borrador.** Certifica la emisión a GraphQL de
 [`spec/v1alpha5/`](../../spec/v1alpha5/), cuyo alcance sigue **abierto** y que **no es
 normativo**.
 
@@ -12,7 +12,9 @@ Por lo mismo que los de v1alpha2, v1alpha3 y v1alpha4. `74/74` significa algo pr
 implementación de referencia pasa la especificación completa*— y mezclar casos de un borrador
 no daría un número falso: daría **un número que ya no se sabe qué mide**.
 
-Cinco árboles, cinco marcadores.
+Un árbol por borrador, un marcador por árbol. Cuántos son y cuántos van en verde lo
+imprime el marcador al correr: una cifra copiada aquí envejece en silencio, y esta ya lo
+hizo dos veces.
 
 ## Qué afirma
 

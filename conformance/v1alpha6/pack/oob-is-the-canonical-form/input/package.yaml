@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata:
+  name: oos.dev/regulatory/gdpr
+  version: 0.1.0
+  status: draft
+  domain: compliance
+spec: { owner: "team:compliance" }

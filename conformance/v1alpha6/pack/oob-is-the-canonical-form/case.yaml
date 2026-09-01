@@ -1,0 +1,8 @@
+rule: spec/v1alpha6/01-distribucion.md#1
+level: L0
+expects: structure
+format: oob
+summary: >
+  Un `.oob` es la forma canonica escrita en un fichero, no un archivo
+  comprimido. Lleva la identidad que declara y NO lleva ni el manifiesto del
+  workspace ni su propio digest.

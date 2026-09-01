@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: publicador, version: 0.1.0 }
+# Este fichero NO va dentro del `.oob`: es del workspace de quien publica, y
+# lleva sus fuentes fisicas y sus dependencias. Publicarlo seria publicar la
+# infraestructura de otro.
+datasources:
+  - { name: interno, type: postgres, connectionEnv: INTERNO_URL }

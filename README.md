@@ -184,7 +184,7 @@ ningún privilegio** y ejecuta la suite como un consumidor externo más.
 
 ## Estado
 
-**Las cinco versiones son `alpha`**, y eso significa exactamente lo que dice
+**Todas las versiones son `alpha`**, y eso significa exactamente lo que dice
 [`00-overview` §6](spec/v1alpha1/00-overview.md): pueden romper compatibilidad en cualquier
 publicación, sin garantías. El siguiente peldaño es `v1beta1` —la escalera no se salta— y
 sus tres condiciones, con su estado medido, están en §6.1 del mismo documento.
@@ -201,6 +201,7 @@ spec/v1alpha2/     alcance cerrado — los efectos y la derivación
 spec/v1alpha3/     alcance cerrado — la capa de gobierno
 spec/v1alpha4/     borrador de alcance — el significado
 spec/v1alpha5/     borrador de alcance — la emisión a GraphQL
+spec/v1alpha6/     borrador de alcance — la distribución
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
@@ -320,12 +321,40 @@ categoría y no por nivel; y la herencia entre interfaces **se computa**, porque
 es una clase definida y su jerarquía es inferida por construcción
 ([`00-scope`](spec/v1alpha4/00-scope.md) §6). Ninguna añade un código nuevo.
 
+| | v1alpha6 · borrador de alcance, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha6/00-scope.md) · alcance, la tesis, y por qué la distribución es lo último | ✅ |
+| [`01-distribucion`](spec/v1alpha6/01-distribucion.md) · el formato `.oob`, el contrato de obtención, y qué significa que esto esté listo (§6) | ✅ |
+| [`conformance/v1alpha6/`](conformance/v1alpha6/README.md) · borrador | ◐ el formato; el resto espera al obtenedor |
+| **listo para v1** | ◐ **uno de tres peldaños** — [`01-distribucion`](spec/v1alpha6/01-distribucion.md) §6 |
+
 | | v1alpha5 · borrador de alcance, no normativo |
 |---|---|
 | [`00-scope`](spec/v1alpha5/00-scope.md) · alcance, la tesis, y por qué GraphQL | ✅ |
 | [`01-emision-graphql`](spec/v1alpha5/01-emision-graphql.md) · el mapeo normativo, y qué significa que esto esté listo (§6) | ✅ |
 | [`conformance/v1alpha5/`](conformance/v1alpha5/README.md) · borrador | ✅ **entero en verde** |
 | **listo para v1** | ✅ **los cuatro peldaños** — [`01-emision-graphql`](spec/v1alpha5/01-emision-graphql.md) §6 |
+
+**v1alpha6 gobierna de quién es lo que usas.** Su regla se lee: *nada entra en una
+compilación sin que su digest esté escrito en el lock*. Y de ahí sale la frase que decide el
+diseño entero — **el registro no es de confianza**, y no hace falta que lo sea: un paquete se
+identifica por lo que contiene, no por de dónde vino, así que un registro que sirviera otra
+cosa produciría otro digest y la compilación se pararía. Lo único que puede hacer es **no
+servirte**.
+
+La decisión que cierra no era la evidente. **Un `.oob` no es un archivo comprimido**: uno
+lleva marcas de tiempo, orden de entradas y nivel de compresión, así que el mismo paquete
+daría bytes distintos y el digest dejaría de ser función del contenido. Un `.oob` es **la
+forma canónica escrita en un fichero** — que ya es determinista y ya tiene digest desde
+v1alpha1—, con dos consecuencias que valen por sí solas: **el contenedor no cambia la
+identidad**, así que un lock resuelto contra un árbol sigue valiendo cuando ese paquete se
+publique; y **no hay que extraerlo para verificarlo**, así que nadie escribe en disco algo que
+todavía no ha comprobado.
+
+Lo que **no** entra es tan importante: el registro como servicio, y **cómo una coordenada se
+convierte en una URL**. Traer un paquete se delega en un programa del usuario, igual que se
+delega leer una fuente, y por la misma razón — un compilador que resolviera nombres en la red
+dejaría de ser una función del árbol de ficheros.
 
 **v1alpha5 gobierna lo que se puede pedir**, y es la versión de menor radio del proyecto: no
 añade ningún `kind`, ningún esquema y ningún código de error. Añade **un objetivo de
