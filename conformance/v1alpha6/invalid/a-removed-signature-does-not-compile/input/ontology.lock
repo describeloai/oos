@@ -6,7 +6,7 @@ packages:
   - name: oos.dev/regulatory/gdpr
     version: 0.1.0
     resolved: file:vendor/gdpr-0.1.0.oob
-    digest: sha256:349871ca0cebb40ee90d5513a937f0758e08816a0a9ddfea2e92eab322810ea4
+    digest: sha256:ded9faf5a8589405b3cfd3d8a285f074a18527209328de93b6e52d7db0338aba
     range: "^0.1"
     signedBy: [oos.dev]
     requestedBy: root

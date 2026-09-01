@@ -22,7 +22,7 @@
     },
     {
       "contains": [
-        "\"Property:gdpr.personalEmail\"",
+        "\"Concept:gdpr.personalEmail\"",
         "\"Lattice:gdpr.sensitivity\"",
         "\"Package:oos.dev/regulatory/gdpr\""
       ],
