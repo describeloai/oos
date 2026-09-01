@@ -1,7 +1,6 @@
 rule: spec/v1alpha6/02-firma.md#6.2
 level: L0
-expects: error
-code: OOS2016
+expects: OOS2016
 summary: >
   El lock afirma que este paquete lo firmo `oos.dev`, y el `.oob` del arbol no
   trae esa firma. Se para: quitar una firma no es lo mismo que no haberla
