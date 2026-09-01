@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    # El tipo lo pone el concepto, y son de tres familias distintas a proposito:
+    # un escalar que GraphQL nombra igual, uno que renombra, y uno que exige
+    # declarar `scalar`. Con uno solo, caerse a `String` habria pasado en dos.
+    born:    { is: gdpr.birthDate }
+    reports: { is: hr.employeeCount }

@@ -1,0 +1,38 @@
+{
+  "description": "El tipo de un campo que declara `is` sale del concepto, no de un valor por defecto. Se afirman tres familias de escalar porque caerse a `String` acertaba en una de ellas por casualidad.",
+  "mustContain": [
+    {
+      "contains": [
+        "born: Date",
+        "scalar Date"
+      ],
+      "reason": "`gdpr.birthDate` es `Date`, y un escalar que no es de GraphQL DEBE declararse en el mismo SDL"
+    },
+    {
+      "contains": [
+        "reports: Int"
+      ],
+      "reason": "`hr.employeeCount` es `Integer`, que en GraphQL se llama `Int`: el nombre lo pone el mapeo de §2.2, no la propiedad"
+    },
+    {
+      "contains": [
+        "employeeId: ID!"
+      ],
+      "reason": "la clave sigue declarando su tipo localmente; las dos formas conviven en la misma entidad"
+    }
+  ],
+  "mustNotContain": [
+    {
+      "contains": [
+        "born: String"
+      ],
+      "reason": "es el fallo que este caso existe para impedir. Sin `type` propio el emisor no tenia de donde sacarlo y ponia `String`, y un contrato que MIENTE sobre el tipo de un campo es peor que uno al que le falta"
+    },
+    {
+      "contains": [
+        "is:"
+      ],
+      "reason": "el concepto es procedencia del tipo, no parte de la forma: quien consume el SDL pide un `Date`, y de donde salio ese `Date` no cambia lo que puede pedir"
+    }
+  ]
+}

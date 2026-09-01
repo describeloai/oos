@@ -1,0 +1,7 @@
+rule: spec/v1alpha4/02-property.md#1
+level: L0
+expects: OOS1004
+summary: >
+  La otra mitad del `oneOf`. Una propiedad declara su tipo localmente o
+  referencia un concepto que lo pone; sin ninguna de las dos no hay tipo, y lo
+  que emita el contrato tendria que inventarlo.

@@ -1,0 +1,8 @@
+rule: spec/v1alpha5/01-emision-graphql.md#2.2
+level: L0
+expects: structure
+format: graphql
+summary: >
+  Una propiedad que declara `is` NO tiene tipo propio: lo pone el concepto. Es
+  la unica emision que tiene que resolverlo —ODCS transporta la referencia y no
+  pierde nada— y la que se caia a `String` para todas.

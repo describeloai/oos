@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: nationalId, namespace: gdpr }
+spec:
+  type: String
+  description: >
+    El identificador que un estado asigna a una persona fisica. NADIE lo habla
+    en este workspace, y ese es el punto: esta publicado para quien lo importe.

@@ -117,7 +117,7 @@ versión toca.**
 | | |
 |---|---|
 | **se crea** | `spec/v1alpha5/` · `conformance/v1alpha5/emit/` |
-| **no se toca** | los ocho documentos de v1alpha1 salvo una fila de §7.2-bis · **ningún esquema** · los 146 casos existentes · la forma canónica · el digest · el registro de errores |
+| **no se toca** | los ocho documentos de v1alpha1 salvo una fila de §7.2-bis · **ningún esquema** · la suite existente · la forma canónica · el digest · el registro de errores |
 
 Que no haga falta **ni un código nuevo** no es una economía: es una consecuencia del molde.
 La suite ya distingue tres expectativas de emisión, y las tres sirven aquí sin cambios:

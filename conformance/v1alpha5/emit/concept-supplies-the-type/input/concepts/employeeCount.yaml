@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: employeeCount, namespace: hr }
+spec:
+  type: Integer
+  description: Cuantas personas hay a cargo.

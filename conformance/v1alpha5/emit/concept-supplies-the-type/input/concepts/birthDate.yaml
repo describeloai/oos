@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: birthDate, namespace: gdpr }
+spec:
+  type: Date
+  labels: { gdpr.sensitivity: medium }
+  description: La fecha de nacimiento de una persona fisica.

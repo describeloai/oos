@@ -13,7 +13,8 @@
 **Estado: doce de doce.** El vocabulario está completo, no queda ninguna decisión abierta y
 la suite da 19/19 — y aun así la versión **no está lista**, porque `Property` e `Interface`
 atraviesan siete de las doce estaciones de la cadena. y desde la fase 4 **atraviesan las doce**, con
-28 casos que las certifican. Lo que las cuatro fases encontraron —y una de esas cosas no es
+un caso al menos por estación que las certifica. Cuántos son lo dice el marcador al correr:
+una cifra copiada aquí envejece en silencio, y esta ya lo hizo. Lo que las cuatro fases encontraron —y una de esas cosas no es
 de esta versión ni de ninguna— está en §8.5 y §8.6. La definición de listo, la medición y las
 cuatro fases están en **§8**.
 
@@ -463,7 +464,7 @@ condiciones que ya se cumplen y conviene dejar contadas:
 |---|---|---|
 | **a** | ninguna decisión abierta | ✅ §6 |
 | **b** | la prueba de fuego ejecutada, con lo que encontró escrito | ✅ §7.1 |
-| **c** | las doce estaciones, con caso cada una | ✅ **doce de doce**, 28 casos |
+| **c** | las doce estaciones, con caso cada una | ✅ **doce de doce** |
 
 La (c) es la única que falta, y **no admite grados**: una estación sin caso es una estación
 que no sabemos si funciona. Es la misma lección de `confidence`, que llevaba cuatro versiones

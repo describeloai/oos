@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: employees, namespace: hr }
+spec:
+  targetEntity: hr.Employee
+  datasourceRef: crm
+  source: "public.employees"
+  properties:
+    employeeId: "employee_id"
+    born: "birth_date"
+    reports: "n_reports"

@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+
+# `workspace` no se declara: `members: [packages/*]` es el valor por defecto y
+# lo aplica el compilador al normalizar. Los dos directorios de `packages/` son
+# los dos miembros, y esa es toda la disposicion que hace falta.
+datasources:
+  - { name: crm, type: postgres, connectionEnv: CRM_URL }

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Customer, namespace: crm }
+spec:
+  nature: entity
+  primaryKey: [customerId]
+  properties:
+    customerId: { type: String }
+    # Ni `type` ni `is`. Lleva descripcion, que es lo que hace que parezca
+    # declarada: un fichero con algo escrito dentro no se lee como un hueco.
+    email:      { description: "El correo del cliente." }

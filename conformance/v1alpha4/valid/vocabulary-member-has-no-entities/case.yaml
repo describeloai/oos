@@ -1,0 +1,8 @@
+rule: spec/v1alpha4/02-property.md#6.1
+level: L0
+expects: accept
+summary: >
+  La excepcion de OOS9004 es de un PAQUETE sin entidades, y un workspace no es
+  un paquete: tiene miembros. Un vocabulario publicado junto a quien lo habla
+  sigue siendo un vocabulario, y los conceptos que ese miembro no usa no estan
+  muertos — estan para que los importe otro.
