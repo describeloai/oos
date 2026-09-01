@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: currencyCode, namespace: iso }
+spec:
+  type: String
+  description: >
+    Una moneda, en el codigo de tres letras de ISO 4217. Es el ejemplo con el
+    que `02-property` §2 explica por que un `enum` cabe en un concepto y el
+    estado de un pedido no: esto es ISO 4217 en los quince sistemas donde
+    aparezca.
+  aiContext:
+    synonyms: [moneda, divisa, cod_moneda, currency, currency_code, ccy, iso_currency]
+    guidance: >
+      El codigo, no el importe. Una columna `importe_eur` no es esto: es un
+      `Money<EUR, 2>`, donde la moneda es parte del TIPO y no un valor al lado.

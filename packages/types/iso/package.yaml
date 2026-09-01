@@ -1,0 +1,22 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata:
+  name: iso
+  version: 0.1.0
+  status: draft
+  domain: types
+  description:
+    purpose: >
+      Fijar que son y que forma tienen los codigos que un registro
+      internacional define, para que dos sistemas que los usan estén hablando
+      de lo mismo sin haberlo acordado.
+    limitations: >
+      NO clasifica. Ninguno de estos conceptos lleva `labels`, y es
+      deliberado: un codigo de pais no es dato personal por si solo. Lo que
+      SEA sensible se declara donde se declare la sensibilidad, que es otro
+      paquete y otra autoridad.
+    usage: >
+      Se importa. `dependencies: [{ package: oos.dev/types/iso, version: "^0.1" }]`
+      y cada propiedad que sea uno de estos codigos lo declara con `is`.
+spec:
+  owner: "team:platform"

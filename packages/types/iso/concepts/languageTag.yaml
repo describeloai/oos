@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: languageTag, namespace: iso }
+spec:
+  type: String
+  description: >
+    Una lengua, en una etiqueta BCP 47 — `es`, `es-ES`, `zh-Hant-TW`. No es un
+    codigo ISO suelto: BCP 47 COMPONE varios registros —ISO 639 para la lengua,
+    ISO 15924 para la escritura, ISO 3166-1 para la region— y esa composicion es
+    justamente lo que hace que no se pueda partir en tres columnas sin perder
+    cual va con cual.
+  aiContext:
+    synonyms: [idioma, lengua, locale, lang, language, language_tag, cod_idioma]

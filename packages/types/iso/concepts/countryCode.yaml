@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: countryCode, namespace: iso }
+spec:
+  type: String
+  description: >
+    Un pais, en el codigo de dos letras de ISO 3166-1 alfa-2. `String` y no una
+    entidad: el codigo ES el dato, y quien necesite el nombre del pais o su
+    moneda esta modelando un pais, que es otra cosa.
+  aiContext:
+    synonyms: [pais, cod_pais, codigo_pais, country, country_code, cc, iso_country, nacionalidad_cod]
+    guidance: >
+      Dos letras, no tres. `ESP` es alfa-3 y no es esto: son dos codificaciones
+      distintas del mismo registro, y mezclarlas produce uniones que fallan solo
+      para algunos paises.

@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata:
+  name: types-iso
+  version: 0.1.0
+  description: >
+    Los codigos de un registro internacional, publicados como conceptos. No
+    clasifican nada: dicen que es un dato y que forma tiene.
+
+# Sin `datasources` y sin `dependencies`, por lo mismo que el paquete
+# regulatorio: un vocabulario no toca un dato, y su autoridad no viene de otro
+# paquete de OOS — viene de una norma ISO.

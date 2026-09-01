@@ -9,7 +9,12 @@ y lo que convierte *«GDPR como dependencia»* en algo literal.
 
 ```
 packages/regulatory/gdpr/   los conceptos que el RGPD nombra, y la escala con la que pesan
+packages/types/iso/         los codigos de un registro internacional, sin clasificar nada
 ```
+
+Los dos publican `kind: Property` y **no traen lo mismo**: uno dice cuánto pesa un dato y qué
+gobierno exige; el otro, qué es y qué forma tiene. Es la misma distinción que separa a un
+regulador de un registro, y decide en cuál va cada concepto.
 
 La ruta espeja la coordenada con la que se importa —`oos.dev/regulatory/gdpr`— y esa es toda
 la convención que hay aquí. **No decide** la pregunta que `spec/v1alpha4/00-scope` deja
