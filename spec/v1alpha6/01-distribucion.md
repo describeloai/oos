@@ -201,9 +201,9 @@ hace que adoptar esto no sea adoptar a un proveedor. Se mide con dos orígenes y
 [`02-firma`](02-firma.md), y salió justo donde este párrafo decía que iría: una clave junto al
 digest en el lock. No tocó nada de aquí.
 
-**Espejos y caché compartida.** Se siguen de §4.1 sin añadir nada: si el origen no importa,
-cualquiera puede servir lo mismo. Es la propiedad que un formato de identidad por contenido
-regala y que uno por URL no puede tener.
+**Espejos y caché compartida.** ~~Se siguen de §4.1 sin añadir nada.~~ La forma del registro
+está en [`04-registro`](04-registro.md), y sigue siendo lo que este párrafo decía: un espejo es
+una copia, porque si el origen no importa cualquiera puede servir lo mismo.
 
 **Y dónde se queda lo traído es del motor, no de aquí.** La implementación de referencia lo
 **vendoriza en el árbol** en vez de guardarlo en una caché, y la diferencia se nota en un
@@ -213,4 +213,5 @@ que es donde este proyecto pone las decisiones de confianza.
 
 **Publicar desde CI.** Empaquetar es puro y el digest es reproducible, así que un tercero puede
 recomputar el `.oob` desde el commit y comprobar que el registro sirve lo que ese commit dice.
-Es la construcción reproducible aplicada a la distribución, y no exige nada que no esté ya.
+Es la construcción reproducible aplicada a la distribución, y no exige nada que no esté ya —
+[`04-registro` §5](04-registro.md) lo mide entre esos dos orígenes.
