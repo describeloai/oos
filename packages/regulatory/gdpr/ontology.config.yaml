@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata:
+  name: regulatory-gdpr
+  version: 0.1.0
+  description: >
+    El vocabulario del RGPD como paquete. No modela nada: publica los conceptos
+    con los que otros modelan, y la escala con la que se clasifican.
+
+# Sin `datasources`. Un paquete de vocabulario no toca un dato: dice qué son los
+# datos que toca otro. Que este fichero no tenga una sola credencial que declarar
+# es la propiedad, no una omision.
+#
+# Sin `dependencies`. Un paquete regulatorio esta en la raiz del grafo — importar
+# es transferir autoridad, y la de este no viene de ningun paquete de OOS: viene
+# de un reglamento.

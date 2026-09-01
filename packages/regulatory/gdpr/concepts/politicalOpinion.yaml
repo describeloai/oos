@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: politicalOpinion, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Opinion politica. Categoria especial del articulo 9.1.
+  aiContext:
+    synonyms: [opinion_politica, ideologia, afiliacion_politica, partido, political_opinion, political_affiliation]

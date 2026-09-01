@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: biometricIdentifier, namespace: gdpr }
+spec:
+  type: Opaque
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Dato biometrico dirigido a identificar de manera univoca a una persona
+    fisica. Categoria especial del articulo 9.1, y la finalidad es parte de la
+    definicion: una foto de perfil no es esto; una plantilla facial con la que
+    se hace login, si.
+  aiContext:
+    synonyms: [biometria, huella, huella_dactilar, fingerprint, face_template, plantilla_facial, iris, biometric, voiceprint]

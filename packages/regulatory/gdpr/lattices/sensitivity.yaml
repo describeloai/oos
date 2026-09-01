@@ -1,0 +1,35 @@
+apiVersion: oos.dev/v1alpha3
+kind: Lattice
+metadata:
+  name: sensitivity
+  namespace: gdpr
+  description: >
+    Sensibilidad de datos personales segun el RGPD.
+
+    Vive aqui y no en cada ontologia porque la autoridad sobre el orden no es de
+    quien modela: si cada repositorio declarase su propia escala, `high` querria
+    decir una cosa distinta en cada uno y una etiqueta importada no significaria
+    nada. El retículo es lo que hace comparable una clasificacion entre paquetes.
+
+spec:
+  # Secuencia ascendente por sensibilidad.
+  #   none ⊑ low ⊑ medium ⊑ high ⊑ critical
+  levels: [none, low, medium, high, critical]
+  join: max
+
+  # La exigencia viaja CON la clasificacion: quien importa este retículo queda
+  # sujeto a esto sin tener que enterarse. Nombra CLASES de regla y no solo un
+  # nivel — una comprobacion de nulos no descarga lo que el RGPD pide como
+  # politica.
+  requiresGovernance:
+    high:     [constraint]
+    critical: [constraint, authorization]
+
+  # `bottom` y `top` NO se declaran: son levels[0] y levels[-1]. P2.
+
+  levelDescriptions:
+    none:     "No es dato personal."
+    low:      "Personal pero publico o trivialmente inferible."
+    medium:   "Personal, no publico. El caso normal de un CRM."
+    high:     "Identifica directamente a una persona: nombre, correo, telefono."
+    critical: "Categoria especial del articulo 9, o identificador que asigna un estado."

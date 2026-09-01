@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: phoneNumber, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  description: >
+    El numero de telefono de una persona fisica. `String` y no `Integer`: los
+    ceros a la izquierda y el prefijo internacional son parte del dato, y
+    sumarlo o compararlo como numero no significa nada.
+  aiContext:
+    synonyms: [telefono, tlf, tfno, movil, celular, phone, phone_number, tel, mobile, msisdn, contacto_telefono]

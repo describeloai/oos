@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: healthCondition, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Dato relativo a la salud fisica o mental. Categoria especial del articulo
+    9.1. Alcanza a lo que lo revela sin nombrarlo: una baja laboral por
+    diagnostico, o un producto comprado que solo se usa para una patologia.
+  aiContext:
+    synonyms: [salud, diagnostico, patologia, enfermedad, condicion_medica, health, diagnosis, medical_condition, baja_medica]

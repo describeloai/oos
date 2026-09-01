@@ -206,6 +206,7 @@ schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
+packages/          vocabulario publicable — se consume, no se copia
 docs/              diseño y razonamiento — no normativo
 docs/vision/       ontologías escritas contra el lenguaje completo — NO validan
 ```

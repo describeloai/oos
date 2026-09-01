@@ -1,0 +1,25 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata:
+  name: gdpr
+  version: 0.1.0
+  status: draft
+  domain: compliance
+  description:
+    purpose: >
+      Publicar los conceptos que el RGPD nombra, con su clasificacion y con la
+      clase de regla que exigen, para que una ontologia pueda acogerse a ellos
+      en vez de volver a decidirlos.
+    limitations: >
+      No es asesoramiento juridico ni una lectura completa del reglamento.
+      Es la parte del RGPD que se puede escribir como tipos: que es cada dato,
+      cuanto pesa y que clase de gobierno exige. Lo que depende del caso
+      concreto —la base de licitud, el plazo de conservacion, la evaluacion de
+      impacto— no cabe en un concepto y no esta aqui.
+    usage: >
+      Se importa. `dependencies: [{ package: oos.dev/regulatory/gdpr, version: "^0.1" }]`
+      y cada propiedad que sea uno de estos conceptos lo declara con `is`.
+spec:
+  # Quien responde por este paquete responde por la clasificacion de todo lo que
+  # lo importe: elevar un nivel aqui reclasifica el patrimonio de otros.
+  owner: "team:compliance"

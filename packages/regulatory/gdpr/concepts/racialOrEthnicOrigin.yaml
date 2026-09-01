@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: racialOrEthnicOrigin, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Origen racial o etnico. Categoria especial del articulo 9.1.
+  aiContext:
+    synonyms: [etnia, origen_etnico, origen_racial, raza, ethnicity, race, ethnic_origin]

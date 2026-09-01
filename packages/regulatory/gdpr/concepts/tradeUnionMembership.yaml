@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: tradeUnionMembership, namespace: gdpr }
+spec:
+  type: Boolean
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Afiliacion sindical. Categoria especial del articulo 9.1, y la unica que
+    suele aparecer como un booleano en una tabla de nomina — lo que la hace
+    facil de pasar por alto al clasificar a ojo.
+  aiContext:
+    synonyms: [sindicato, afiliacion_sindical, afiliado_sindicato, union_member, trade_union, sindicado]

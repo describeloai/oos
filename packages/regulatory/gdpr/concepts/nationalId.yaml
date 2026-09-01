@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: nationalId, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  # El articulo 87 deja a cada estado regular el uso de su identificador
+  # nacional, y de ahi la exigencia CATEGORICA: no depende de cuanto pese en un
+  # contexto concreto, depende de que es.
+  requiresGovernance: [authorization]
+  description: >
+    El identificador que un estado asigna a una persona fisica. No es una
+    categoria especial del articulo 9, y aun asi es `critical`: es la clave con
+    la que se une un patrimonio de datos con los de un tercero, y esa union es
+    la que convierte dos conjuntos inocuos en un perfil.
+  aiContext:
+    synonyms: [dni, nif, nie, documento, num_documento, numero_documento, ssn, national_id, tax_id, identity_number, cedula, curp, rut]

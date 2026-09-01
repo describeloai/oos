@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: personalEmail, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  description: >
+    La direccion de correo electronico de una persona fisica. Identifica
+    directamente y ademas es la clave con la que se cruzan patrimonios enteros,
+    que es lo que la hace peor que un identificador interno.
+  aiContext:
+    synonyms: [email, correo, correo_electronico, e_mail, mail, email_address, direccion_correo, correo_contacto]
+    guidance: >
+      Un buzon de rol —soporte@, facturacion@— no es esto: no identifica a una
+      persona. La distincion no la puede hacer el tipo, la hace quien mapea.

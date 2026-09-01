@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: sexLifeOrOrientation, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Vida sexual u orientacion sexual. Categoria especial del articulo 9.1.
+  aiContext:
+    synonyms: [orientacion_sexual, vida_sexual, sexual_orientation, sexualidad, orientacion]
+    guidance: >
+      El sexo o el genero NO son esto ni son categoria especial del articulo 9.
+      Confundirlos clasifica como critical media base de datos y hace inutil la
+      escala, que es la forma mas rapida de que nadie la respete.

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: religiousOrPhilosophicalBelief, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Conviccion religiosa o filosofica. Categoria especial del articulo 9.1.
+  aiContext:
+    synonyms: [religion, confesion, creencia, conviccion, religious_belief, faith, denomination]

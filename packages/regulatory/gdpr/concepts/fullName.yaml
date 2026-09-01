@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: fullName, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  description: >
+    El nombre con el que se designa a una persona fisica. Identifica
+    directamente, y por eso es `high` aunque circule sin restriccion en casi
+    todos los sistemas donde aparece: la clasificacion dice lo que el dato ES,
+    no como se trata hoy.
+  aiContext:
+    synonyms: [nombre, nombre_completo, nombre_y_apellidos, apellidos, full_name, name, customer_name, nom]

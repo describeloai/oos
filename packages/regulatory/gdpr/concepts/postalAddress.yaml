@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: postalAddress, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: high }
+  description: >
+    El domicilio de una persona fisica. Se declara `String` porque el concepto
+    es la direccion, no su descomposicion: quien la parta en calle, numero y
+    codigo postal tiene tres propiedades que SON este concepto, y eso lo dice
+    cada una con su `is`.
+  aiContext:
+    synonyms: [direccion, domicilio, direccion_postal, address, street, calle, addr, domicilio_fiscal]

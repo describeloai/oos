@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: ipAddress, namespace: gdpr }
+spec:
+  type: String
+  labels: { gdpr.sensitivity: medium }
+  description: >
+    La direccion IP desde la que actua una persona fisica. Es dato personal —el
+    considerando 30 nombra los identificadores en linea— y es la que mas veces
+    se cuela en un log creyendo que es telemetria.
+  aiContext:
+    synonyms: [ip, ip_address, direccion_ip, remote_addr, client_ip, ip_origen, ip_cliente]

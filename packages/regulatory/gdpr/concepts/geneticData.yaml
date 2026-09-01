@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: geneticData, namespace: gdpr }
+spec:
+  type: Opaque
+  labels: { gdpr.sensitivity: critical }
+  requiresGovernance: [authorization]
+  description: >
+    Dato genetico. Categoria especial del articulo 9.1. `Opaque` es literal
+    aqui: hay un valor y su interior no se modela — y ademas identifica a
+    parientes que nunca dieron un consentimiento.
+  aiContext:
+    synonyms: [genetica, genoma, genotipo, adn, dna, genetic_data, secuencia]

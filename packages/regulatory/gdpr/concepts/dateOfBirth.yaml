@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: dateOfBirth, namespace: gdpr }
+spec:
+  type: Date
+  labels: { gdpr.sensitivity: medium }
+  description: >
+    La fecha de nacimiento de una persona fisica. `medium` y no `high` porque
+    por si sola no identifica a nadie — y ese es exactamente su riesgo: es el
+    cuasi-identificador con el que se reidentifica un conjunto supuestamente
+    anonimo. Quien la trate junto a un codigo postal deberia ELEVARLA, que es
+    lo que `OOS4012` permite hacer sin tocar este fichero.
+  aiContext:
+    synonyms: [fecha_nacimiento, fnac, f_nac, nacimiento, birth_date, date_of_birth, dob, birthdate]
