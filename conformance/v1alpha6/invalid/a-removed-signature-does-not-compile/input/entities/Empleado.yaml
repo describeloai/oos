@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Empleado, namespace: rrhh }
+spec:
+  nature: entity
+  primaryKey: [id]
+  properties:
+    id: { type: String }
+    nacido: { is: gdpr.dateOfBirth }

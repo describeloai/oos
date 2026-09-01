@@ -84,6 +84,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2015` | un filtro exigido —por `requiredFilters` o por un ámbito de fila— nombra una propiedad que el binding no mapea | 05 §5.3 |
 | `OOS2012` | secreto de conexión presente en un documento | 03 §2.1 |
 | `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar u `ontology.lock` | 00 §5 |
+| `OOS2016` | la firma de un paquete importado no verifica, o falta la que el lock afirma | v1alpha6 02 §5 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

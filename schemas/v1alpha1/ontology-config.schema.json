@@ -69,6 +69,45 @@
         "$ref": "type/basic.schema.json#/$defs/packageRef"
       }
     },
+    "trustedKeys": {
+      "description": "Las claves publicas con las que este arbol verifica la firma de lo que importa.\n\nViven AQUI, en el manifiesto de quien consume, y no dentro del paquete que firman. Una clave que viajara con su propio paquete cerraria el circulo entero: quien sustituye el paquete sustituye la clave, firma con la suya, y todo verifica.\n\nDeclarar una clave no exige que nadie firme: un paquete sin firmar se usa igual. Lo que cambia es que una firma que diga ser de esta clave y no lo sea PARA la compilacion, con el mismo trato que un digest que no case (`OOS2016`).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "publicKey"
+        ],
+        "properties": {
+          "id": {
+            "description": "Con que nombre la referencia un `.oob` en su campo `keyId`, y con el que se anota en `signedBy`.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "algorithm": {
+            "description": "Hoy solo `ed25519`. Se escribe aunque solo haya uno: el dia que haya un segundo, lo que no puede pasar es que las claves viejas no digan cual son.",
+            "enum": [
+              "ed25519"
+            ],
+            "default": "ed25519"
+          },
+          "publicKey": {
+            "description": "La clave publica en hexadecimal minusculo, sin prefijo. 32 bytes para `ed25519`.\n\nEn hexadecimal y no en base64 por lo mismo que el digest: una sola forma de escribir cada valor es lo que pide la forma canonica de todo lo demas.",
+            "type": "string",
+            "pattern": "^[0-9a-f]+$",
+            "minLength": 64,
+            "maxLength": 256
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      }
+    },
+
     "datasources": {
       "description": "Las fuentes físicas alcanzables desde este repositorio.\n\nEs la única sección del manifiesto que no habla de semántica sino del mundo exterior: dónde vive realmente el dato.",
       "type": "array",

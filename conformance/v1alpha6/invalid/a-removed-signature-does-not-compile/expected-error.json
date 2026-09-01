@@ -1,0 +1,6 @@
+{
+  "code": "OOS2016",
+  "package": "oos.dev/regulatory/gdpr",
+  "keyId": "oos.dev",
+  "reason": "el lock afirma un firmante y el arbol no trae esa firma valida"
+}

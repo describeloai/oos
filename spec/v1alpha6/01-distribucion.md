@@ -197,8 +197,9 @@ hace que adoptar esto no sea adoptar a un proveedor. Se mide con dos orígenes y
 
 ## 7. El horizonte
 
-**Firmas.** Un digest dice *qué* es; una firma diría *quién* lo publicó. Es una capa encima y
-no toca nada de aquí: el hueco donde iría es una clave junto al digest en el lock.
+**Firmas.** ~~Un digest dice *qué* es; una firma diría *quién* lo publicó.~~ Está en
+[`02-firma`](02-firma.md), y salió justo donde este párrafo decía que iría: una clave junto al
+digest en el lock. No tocó nada de aquí.
 
 **Espejos y caché compartida.** Se siguen de §4.1 sin añadir nada: si el origen no importa,
 cualquiera puede servir lo mismo. Es la propiedad que un formato de identidad por contenido

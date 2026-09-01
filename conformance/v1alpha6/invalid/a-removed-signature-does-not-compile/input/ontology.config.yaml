@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: rrhh, version: 0.1.0 }
+dependencies:
+  - { package: oos.dev/regulatory/gdpr, version: "^0.1" }
+trustedKeys:
+  - id: oos.dev
+    algorithm: ed25519
+    publicKey: "c853ad0f0cd2b619aea92ceec4fd56a24d6499d584ce79257e45cfd8139b60a7"

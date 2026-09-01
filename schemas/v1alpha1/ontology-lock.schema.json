@@ -74,6 +74,16 @@
             "$ref": "type/basic.schema.json#/$defs/digest"
           },
 
+          "signedBy": {
+            "description": "Quien firmo este paquete, de lo que se COMPROBO al resolver.\n\nUn digest dice QUE es un paquete; una firma dice DE QUIEN, y es lo unico que un digest no puede contestar: uno correcto lo produce cualquiera que tenga los bytes, incluido quien los sustituyo.\n\nSolo entra un `keyId` cuya firma verifique contra una clave declarada en `trustedKeys`. Anotar lo que el paquete dice de si mismo convertiria un rumor en un hecho por el mero acto de escribirlo, y el lock es el documento del que todo lo demas tira.\n\nY una vez escrito OBLIGA: quitar la firma del arbol deja de compilar (`OOS2016`). Sin eso, borrar el campo habria sido la forma barata de saltarse la comprobacion.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+
           "requestedBy": {
             "description": "`root` si la declara ontology.config.yaml. El nombre del paquete que la pide si es transitiva. Ausente equivale a transitiva de origen no registrado.",
             "type": "string",
