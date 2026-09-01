@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: minimal, version: 0.1.0 }
+
+# `members` se omite: `packages/*` es el valor por defecto y es lo que hay.
+# `exclude` NO se omite, y es de lo que trata este caso.
+workspace:
+  exclude: [legacy]
+
+datasources:
+  - { name: postgres_erp, type: postgres, connectionEnv: ERP_URL }

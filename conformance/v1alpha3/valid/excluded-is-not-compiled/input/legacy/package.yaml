@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: legacy, version: 0.9.0, status: deprecated, domain: historico }
+spec: { owner: team:nadie }

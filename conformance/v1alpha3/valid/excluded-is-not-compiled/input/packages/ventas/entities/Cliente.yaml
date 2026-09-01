@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Cliente, namespace: ventas }
+spec:
+  nature: entity
+  primaryKey: [clienteId]
+  properties:
+    clienteId: { type: String }
+    email:
+      type: String
+      labels: { gdpr.sensitivity: high }

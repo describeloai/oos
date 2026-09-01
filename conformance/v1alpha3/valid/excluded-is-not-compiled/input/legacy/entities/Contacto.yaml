@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Contacto, namespace: legacy }
+spec:
+  nature: entity
+  primaryKey: [contactoId]
+  properties:
+    contactoId: { type: String }
+    # `critical`, que exige `constraint` Y `authorization`. El `Ruleset` de la
+    # raiz apunta por clasificacion y alcanza a todos los miembros, pero solo
+    # aporta la aserción: compilado, esto es `OOS8001` por la autorizacion que
+    # falta. Excluido, no hay nada que gobernar.
+    nif:
+      type: String
+      labels: { gdpr.sensitivity: critical }

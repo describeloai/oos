@@ -1,0 +1,7 @@
+rule: spec/v1alpha3/02-ruleset.md#2.5.3
+level: L0
+expects: accept
+summary: >
+  Excluido del workspace es NO COMPILADO, luego no gobernado. `legacy` lleva una
+  propiedad `high` sin regla que la cubra —`OOS8001` si se compilara— y el
+  paquete acepta, porque `workspace.exclude` la saca de la compilacion entera.
