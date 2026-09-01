@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Refund, namespace: sales }
+spec:
+  nature: entity
+  primaryKey: [refundId]
+  properties:
+    refundId: { type: String }
+    # El MISMO concepto que `Order.currency`: tienen que salir con el mismo
+    # tipo, o un cliente puede pasar una moneda donde va la otra.
+    currency: { is: iso.currencyCode }

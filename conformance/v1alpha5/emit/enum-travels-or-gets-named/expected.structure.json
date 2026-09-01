@@ -1,0 +1,50 @@
+{
+  "description": "Las dos salidas de un conjunto cerrado, y la razon de nombrarlo por el concepto: dos entidades que declaran el mismo concepto tienen que compartir tipo.",
+  "mustContain": [
+    {
+      "contains": [
+        "enum Iso_currencyCode {",
+        "EUR",
+        "USD",
+        "GBP"
+      ],
+      "reason": "los tres valores son identificadores de GraphQL, asi que el conjunto se dice ENTERO"
+    },
+    {
+      "contains": [
+        "currency: Iso_currencyCode"
+      ],
+      "reason": "el campo tiene el tipo del conjunto. Sale DOS veces —`Order` y `Refund`— con el mismo nombre porque declaran el mismo concepto: nombrarlo por el campo daria dos tipos identicos y mutuamente incompatibles"
+    },
+    {
+      "contains": [
+        "scalar Iso_languageTag",
+        "locale: Iso_languageTag"
+      ],
+      "reason": "`es-ES` no es un identificador de GraphQL, asi que el conjunto NO cabe en un `enum`. Sale como escalar especializado —la salida de §3.1— porque lo que no cabe en la traduccion se nombra, no se tira"
+    },
+    {
+      "contains": [
+        "enum Order_status {",
+        "PLACED"
+      ],
+      "reason": "declarado en la propiedad y sin concepto: el nombre sale del tipo y el campo"
+    }
+  ],
+  "mustNotContain": [
+    {
+      "contains": [
+        "currency: String",
+        "locale: String",
+        "status: String"
+      ],
+      "reason": "es el fallo que este caso existe para impedir. Caerse al escalar base hace que el contrato admita CUALQUIER cadena, y ni un consumidor ni un agente tienen ya forma de saber que habia un conjunto"
+    },
+    {
+      "contains": [
+        "enum Iso_languageTag"
+      ],
+      "reason": "un `enum` con `es-ES` dentro no es un esquema valido, y renombrar el valor para que quepa cambiaria el dato"
+    }
+  ]
+}

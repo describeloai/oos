@@ -91,6 +91,10 @@ es **nombrarlo y mapear el vocabulario que existe de verdad**, que es el del mot
 | `list<T>` | `[T!]` | un solo nivel, como en OOS |
 | `Money<M,P>` · `Quantity<U,P>` | §3.1 | |
 
+Un `enum` es un caso aparte y tiene su sección: §2.10. La tabla de arriba mapea el **tipo**,
+y un conjunto cerrado de valores no es un tipo distinto — es una restricción encima, que a
+veces GraphQL sabe escribir y a veces no.
+
 Los escalares personalizados **DEBEN** emitirse con su declaración `scalar` en el mismo SDL.
 Un esquema que referencia un escalar que no declara no es un esquema válido.
 
@@ -262,6 +266,40 @@ una instrucción a la herramienta.
 
 Y hereda las etiquetas de lo que lo contiene, así que **pasa por el filtro de §4 como
 cualquier otra cosa**: un sinónimo puede ser confidencial.
+
+### 2.10 · Enumeraciones — y qué pasa cuando el valor no es un identificador
+
+`00-scope` §5 lo daba por mapeado —`enum` → `enum` ✓— y le faltaba la mitad que decide: **no
+todo `enum` de OOS puede ser un `enum` de GraphQL.** Un valor de enumeración de GraphQL es un
+identificador, así que `EUR` cabe y `es-ES`, `2` o `sin definir` no. Y esa mitad no es un caso
+raro: `iso.languageTag` es BCP 47, y ninguno de sus valores es un identificador.
+
+**Normativo.**
+
+- Un `enum` cuyos valores son **todos** identificadores de GraphQL —`[_A-Za-z][_0-9A-Za-z]*`,
+  y ninguno `true`, `false` ni `null`— **DEBE** emitir un `enum` con esos valores, y el campo
+  **DEBE** tener ese tipo.
+- Un `enum` con **algún** valor que no lo sea **DEBE** emitir un **escalar especializado**, no
+  el escalar base. Es la salida de §3.1 y por la misma razón: *el conjunto cerrado es parte del
+  tipo, y GraphQL no puede escribirlo* — así que se **nombra** en vez de perderse.
+- El nombre, en los dos casos, sale de **de dónde viene el conjunto**:
+
+  | De dónde | Nombre |
+  |---|---|
+  | un concepto (`is`) | el nombre cualificado, `.` → `_`, inicial en mayúscula: `iso.currencyCode` → `Iso_currencyCode` |
+  | declarado en la propiedad | `<Tipo>_<campo>`: `Payment.method` → `Payment_method` |
+
+- Dos propiedades que declaran **el mismo concepto** producen **un solo tipo**, y ahí está el
+  motivo de nombrarlo por el concepto y no por el campo: cuatro columnas que son la misma
+  moneda tienen que salir con el mismo tipo, o el cliente puede pasar una donde va otra.
+- Dos conjuntos **distintos** que reclamen el mismo nombre son un error de emisión. No se
+  desambigua con un sufijo: dos tipos que se llaman casi igual es peor que no emitir.
+
+**Por qué no se cae al escalar base.** Emitir `String` para un conjunto cerrado no es una
+pérdida que se pueda disimular: el contrato pasaría a admitir cualquier cadena, y el
+consumidor —o un agente— dejaría de tener forma de saber que hay un conjunto. Es la misma
+frase de §3.1 y la misma de la tesis: **lo que no cabe en la traducción se nombra, no se
+tira.**
 
 ---
 

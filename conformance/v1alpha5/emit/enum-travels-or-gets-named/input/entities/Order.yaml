@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Order, namespace: sales }
+spec:
+  nature: entity
+  primaryKey: [orderId]
+  properties:
+    orderId:  { type: String }
+    currency: { is: iso.currencyCode }
+    locale:   { is: iso.languageTag }
+    # Declarado en la propiedad, sin concepto: el nombre sale del tipo y el
+    # campo. Un estado de pedido NO es un buen concepto —no es el mismo en los
+    # quince sistemas— y por eso vive aqui y no en un paquete publicado.
+    status:   { type: String, enum: [PLACED, SHIPPED, CANCELLED] }

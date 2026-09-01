@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: currencyCode, namespace: iso }
+spec:
+  type: String
+  enum: [EUR, USD, GBP]
+  description: Una moneda, en el codigo de tres letras de ISO 4217.

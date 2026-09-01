@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: orders, namespace: sales }
+spec:
+  targetEntity: sales.Order
+  datasourceRef: erp
+  source: "public.orders"
+  properties: { orderId: "order_id", currency: "cur", locale: "lang", status: "st" }
+---
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: refunds, namespace: sales }
+spec:
+  targetEntity: sales.Refund
+  datasourceRef: erp
+  source: "public.refunds"
+  properties: { refundId: "refund_id", currency: "cur" }

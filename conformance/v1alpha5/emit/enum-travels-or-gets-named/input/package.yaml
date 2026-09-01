@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: sales, version: 1.0.0, status: active, domain: commerce }
+spec: { owner: team:sales }

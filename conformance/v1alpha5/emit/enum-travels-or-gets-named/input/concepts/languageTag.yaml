@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha4
+kind: Property
+metadata: { name: languageTag, namespace: iso }
+spec:
+  type: String
+  # BCP 47. NINGUNO de estos es un identificador de GraphQL, y no es un caso
+  # rebuscado: es como se escribe una lengua en todas partes.
+  enum: [es, es-ES, zh-Hant-TW]
+  description: Una lengua, en una etiqueta BCP 47.

@@ -1,0 +1,8 @@
+rule: spec/v1alpha5/01-emision-graphql.md#2.10
+level: L0
+expects: structure
+format: graphql
+summary: >
+  Un conjunto cerrado se dice entero cuando sus valores son identificadores y se
+  NOMBRA cuando no lo son. Lo que no cabe en la traduccion no se tira: sale como
+  escalar especializado, igual que `Money<EUR, 2>` y por lo mismo.
