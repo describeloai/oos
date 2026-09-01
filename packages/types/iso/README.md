@@ -72,6 +72,9 @@ dependencies:
   - { package: oos.dev/types/iso, version: "^0.1" }
 ```
 
+Se copia como un miembro más del workspace y `ore lock` lo resuelve por su nombre, que **es**
+esa coordenada.
+
 ```yaml
 properties:
   moneda: { is: iso.currencyCode }
@@ -82,11 +85,17 @@ Se hereda `type`, `enum`, `aiContext` y `description` —`02-property` §5— y 
 heredar. Una propiedad que además sea sensible **declara su clasificación localmente**: el
 concepto pone un suelo, y aquí el suelo es ninguno.
 
-## Una advertencia sobre `enum`, para cuando los haya
+## Y cuando haya `enum`, ya hay dónde llegan
 
-`02-property` §5 dice que `enum` **se hereda**, y la emisión a ODCS lo implementa: una
-propiedad con `is` sale con el `enum` del concepto resuelto. La emisión a **GraphQL no**, y ni
-siquiera emite los `enum` declarados localmente — sale `String`. `v1alpha5/00-scope` §5 lo
-lista como `enum → enum ✓` **medido**, y no hay ningún caso en la suite que lo afirme.
+Escribir este paquete destapó que la emisión a GraphQL **no emitía enums en absoluto** — ni
+los heredados de un concepto ni los declarados en una propiedad—: todos salían `String`, y el
+contrato pasaba a admitir cualquier cadena donde el dato admite tres valores. Está arreglado
+(`01-emision-graphql` §2.10), y con las dos salidas que hacían falta:
 
-No bloquea a este paquete, porque hoy no publica ninguno. Bloqueará al primero que lo haga.
+- `iso.currencyCode`, cuando tenga sus valores, saldrá como `enum Iso_currencyCode { EUR … }`.
+- `iso.languageTag` **no puede**: `es-ES` no es un identificador de GraphQL. Saldrá como
+  `scalar Iso_languageTag`, que es la salida que §3.1 ya había elegido para `Money<EUR, 2>` y
+  por lo mismo — lo que no cabe en la traducción se **nombra**, no se tira.
+
+Que los dos casos estén resueltos antes de publicar un solo valor no es adelantarse: es la
+única forma de saber que la lista, cuando llegue, tiene dónde aterrizar.

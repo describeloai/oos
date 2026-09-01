@@ -90,6 +90,14 @@ dependencies:
   - { package: oos.dev/regulatory/gdpr, version: "^0.1" }
 ```
 
+Se copia como un miembro más del workspace y se resuelve:
+
+```
+$ ore lock
+  ✓ ontology.lock
+  · oos.dev/regulatory/gdpr 0.1.0 · packages/gdpr · sha256:d47f6ee8ccb7
+```
+
 y después, en cada propiedad que **sea** uno de estos conceptos:
 
 ```yaml
@@ -114,12 +122,14 @@ cuadrar con un lock de mentira habría sugerido que el lock es de verdad.
 
 ## Lo que falta, y lo que ya no
 
-**Falta el resolutor.** `dependencies` se declara y el compilador comprueba que esté resuelta
-en `ontology.lock`, pero nadie la resuelve: `ore lock` no existe y no puede vivir dentro de un
-compilador que no habla por la red. Se delegará, como se delegan los lectores de fuente.
+**El resolutor ya existe para la mitad que se puede usar hoy.** `ore lock` resuelve una
+dependencia **contra el árbol**: si el paquete está vendorizado como miembro del workspace, lo
+encuentra por su nombre —que es su coordenada—, comprueba el rango, computa su digest y
+escribe la entrada. Lo que no hace es **traer** nada: `ore` no sabe hablar por la red, y el día
+que exista un registro eso se delegará como se delega leer una fuente.
 
-**Mientras tanto se vendoriza**, copiándolo como un miembro más del workspace. Eso **no
-funcionaba**, y arreglarlo salió de medir con este paquete:
+**Y vendorizarlo tampoco funcionaba**, que era el otro lado. Arreglarlo salió de medir con
+este paquete:
 
 ```
 $ ore validate .            # el vocabulario copiado dentro de un consumidor

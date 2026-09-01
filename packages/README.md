@@ -57,6 +57,12 @@ entidades es un vocabulario, y los conceptos que nadie habla en ese workspace no
 muertos — están para que los importe otro. Lo fija
 `conformance/v1alpha4/valid/vocabulary-member-has-no-entities`.
 
-Lo que todavía **no** hay es resolutor: `dependencies` se declara y se comprueba contra el
-lock, pero nadie lo resuelve. `ore lock` no existe y no puede vivir dentro de un compilador
-que no habla por la red — se delegará, como se delegan los lectores de fuente.
+Y se **declara**: `ore lock` resuelve la dependencia contra el árbol y escribe la entrada del
+lock, con el digest de lo que hay y lo que el paquete aporta, derivado de su contenido. Casa
+por el **nombre**, que es la coordenada — de ahí que un paquete publicado se llame
+`oos.dev/regulatory/gdpr` y no `gdpr`.
+
+Lo que todavía **no** hay es de dónde traerlo. Si la coordenada no está en el árbol, `ore
+lock` falla diciéndolo: no la busca, no la descarga y no inventa una entrada. `ore` no sabe
+hablar por la red, y el día que exista un registro traer un paquete se delegará como se delega
+leer una fuente.

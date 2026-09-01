@@ -14,10 +14,10 @@
     },
 
     "packageName": {
-      "description": "Nombre de paquete: minúsculas y guiones. Los paquetes publicados llevan espacio de nombres, p. ej. oos.dev/regulatory/gdpr.",
+      "description": "Nombre de paquete, y **es también la coordenada con la que otro lo importa**: el nombre y la referencia son la misma cosa vista desde los dos lados.\n\nDos formas legítimas. Un nombre CORTO —minúsculas, dígitos y guiones— para un paquete local del workspace: `hr`, `acme-retail`. Y un nombre con ESPACIO DE NOMBRES para un paquete publicado, cuyos segmentos van separados por `/` y cuyo primero suele ser un dominio: `oos.dev/regulatory/gdpr`.\n\nLa segunda forma estaba en esta descripción desde el principio, con este mismo ejemplo, y el patrón la rechazaba: `^[a-z][a-z0-9-]*$` no admite ni `.` ni `/`. Un esquema que da como ejemplo algo que él mismo declara inválido no tiene un defecto de redacción — tiene dos ideas de qué es un nombre de paquete, y la que gana es la que alguien implemente.\n\nQue la coordenada SEA el nombre es lo que permite resolver una dependencia contra un paquete que ya está en el árbol sin inventar una convención de rutas. Es media respuesta a la pregunta que `v1alpha4/00-scope` deja abierta; la otra media —a qué paquete pertenece un documento— la contesta su ubicación bajo un `package.yaml`, que es lo que `workspace.members` ya declara.",
       "type": "string",
-      "pattern": "^[a-z][a-z0-9-]*$",
-      "maxLength": 64
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)*(/[a-z][a-z0-9-]*)*$",
+      "maxLength": 128
     },
 
     "qualifiedName": {
@@ -86,7 +86,7 @@
       "additionalProperties": false,
       "required": ["package", "version"],
       "properties": {
-        "package": { "type": "string", "maxLength": 256 },
+        "package": { "$ref": "#/$defs/packageName" },
         "version": { "$ref": "#/$defs/versionRange" }
       }
     },

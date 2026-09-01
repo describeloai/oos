@@ -1,7 +1,7 @@
 apiVersion: oos.dev/v1alpha1
 kind: Package
 metadata:
-  name: iso
+  name: oos.dev/types/iso
   version: 0.1.0
   status: draft
   domain: types
