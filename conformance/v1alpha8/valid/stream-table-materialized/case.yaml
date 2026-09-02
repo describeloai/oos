@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#5.1
+level: L0
+expects: accept
+summary: >
+  Una tabla con `reads: none` —un stream— consultada a traves de una copia: la vista lleva `materialized` y compila.

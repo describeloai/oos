@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/01-table.md#5
+level: L0
+expects: accept
+summary: >
+  Una tabla declara sus dos caras —lo que se le puede pedir y los cambios que emite— y compila sin que nadie la use.

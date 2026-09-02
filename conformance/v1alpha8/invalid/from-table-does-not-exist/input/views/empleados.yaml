@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: empleados, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: erp.employes }
+  fields:
+    employeeId: employee_id
+    pais: country

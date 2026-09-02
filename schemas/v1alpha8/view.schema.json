@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha8/view.schema.json",
+  "title": "View",
+  "description": "La vista, ADELGAZADA: que sale de una tabla o de otra vista, como se llama, que filas son suyas, y si se copia, donde.\n\nLo que v1alpha7 decia de su NATURALEZA sigue valiendo entero: no lleva significado, no decide quien ve, no es un motor, compone, y su copia lleva lo que llevan sus campos. Lo que cambia es DONDE VIVE LO FISICO: pierde `capabilities` —es `reads` de la tabla— y `version` —es `changes.witness` de la tabla—, y `from` nombra una TABLA o una vista.\n\nLa vista queda con lo que es suyo: quien responde, que sale y como se llama, que filas son suyas, si se copia y donde, y cuanto retraso se tolera. Todo lo demas era del objeto.\n\nDOS REGLAS NUEVAS, y las dos solo son comprobables desde que la tabla declara sus dos caras: OOS2020 —lo que no se puede leer se debe materializar— y OOS2021 —sin retractacion no se mantiene lo mutable.\n\nNormativo: spec/v1alpha8/02-view.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha8"
+    },
+    "kind": {
+      "const": "View"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "from",
+        "fields"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde de esta vista. La tabla no tiene dueno de negocio —tiene dueno tecnico por su datasource— y la vista si, porque decide dos cosas que un puntero no decide: que se expone y con que frescura. La misma forma que en Package: `team:` o `user:`.",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "from": {
+          "description": "De donde sale. EXACTAMENTE UNA de dos formas: una TABLA, u otra vista.\n\nUna sola y no una lista, y no es una limitacion provisional: el vocabulario de esta version no tiene junta, asi que una vista con dos fuentes no tendria forma de decir como se combinan. El dia que la tenga, `from` crecera con ella.\n\nLos dos admiten la forma corta dentro del mismo espacio de nombres (N1) y se resuelven con la regla de siempre. Deben existir (OOS2018), y la cadena no puede volver sobre si misma (OOS2019).",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "table"
+              ],
+              "properties": {
+                "table": {
+                  "description": "La tabla. Lo que esta vista lee son SUS COLUMNAS, con el nombre que tienen en el origen: cada valor de `fields` y cada clave de `where` DEBE estar en `columns` de esa tabla (OOS2018). Es la comprobacion que v1alpha7 no podia hacer.",
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "view"
+              ],
+              "properties": {
+                "view": {
+                  "description": "La vista de abajo. Lo que esta lee son SUS CAMPOS, con los nombres que ella les dio: `fields` y `where` de esta vista nombran campos de aquella, no columnas fisicas.",
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            }
+          ]
+        },
+        "freshness": {
+          "description": "Cuanto retraso se tolera respecto al origen. Una vista tiene UNA frescura, no una por eje.\n\nSuperado el umbral sin refresco, una implementacion DEBE declarar el estado degradado y NO DEBE servir lo viejo como fresco. Para un agente, saber que el contexto esta degradado es la diferencia entre abstenerse y alucinar.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+        },
+        "fields": {
+          "description": "Que sale y como se llama. La clave es EL NOMBRE DEL CAMPO EN ESTA VISTA y el valor, su nombre abajo: una COLUMNA de la tabla si `from` es una tabla, un campo de la vista de abajo si es una vista.\n\nPIERDE LA FORMA EXPANDIDA de v1alpha7. Aquella existia para llevar `physicalType`, y el tipo fisico es del objeto: lo dice `columns` de la tabla. Un documento v1alpha7 con la forma expandida migra tirando el tipo a la tabla, que es donde ya debia estar.\n\nUna entidad con `backedBy` nombra estos campos por su nombre: sus propiedades se llaman como los campos de su vista. La vista que respalda una entidad DEBE exponer su `primaryKey` y los `via` de sus relaciones (OOS2011).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "description": "El nombre abajo. Cadena OPACA; puede llevar puntos si el origen es anidado.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "where": {
+          "description": "Que FILAS son esta vista. Gramatica CERRADA —igualdad, pertenencia, ausencia— y sigue cerrada por lo mismo que en v1alpha7: un predicado no filtra, LEE. Que filas aparecen es observable, asi que un rango sobre una columna clasificada es un canal lateral. Igualdad y pertenencia expresan una PARTICION: cada fila cae en una clase, y lo unico que revelan es pertenencia — justo lo que la vista ya afirma en voz alta.\n\nLas claves son columnas de la tabla si `from` es una tabla, y campos de la vista de abajo si es una vista (OOS2018 si no existen). Una vista sobre otra hereda las filas que la de abajo ya recorto. La conjuncion es implicita.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": [
+                  "string",
+                  "integer",
+                  "boolean",
+                  "null"
+                ]
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": [
+                    "string",
+                    "integer",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "materialized": {
+          "description": "Donde vive la copia, SI se copia. Ausente, la vista es virtual y cada lectura va a su raiz de lectura.\n\nUna vista materializada instancia el conducto `materialization.payload`: cada campo de la vista fluye por el, y lleva lo que llevan sus campos — lo que el datasource raiz etiqueta y lo que cualquier entidad respaldada por esta vista, o por una de encima, declaro sobre ellos (OOS4001, OOS4002, OOS4011). Que esto NO cambie respecto a v1alpha7 es la afirmacion: la tabla movio el puntero de sitio, no la regla de flujo.\n\nDEJA DE SER OPCIONAL en dos casos, y son los dos codigos nuevos: si la raiz de lectura no se deja leer (OOS2020), y —si esta puesto— no basta para respaldar una entidad mutable cuando la raiz solo anexa (OOS2021).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "datasource",
+            "table"
+          ],
+          "properties": {
+            "datasource": {
+              "description": "La fuente en la que vive la copia, declarada en el manifiesto raiz (OOS2004). Es del cliente: ORE no opera ninguna base de datos.",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            },
+            "table": {
+              "description": "La tabla, opaca como cualquier nombre fisico. No es un `kind: Table`: es donde se escribe la copia.",
+              "type": "string",
+              "maxLength": 1024
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  }
+}

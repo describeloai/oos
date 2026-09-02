@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#5.2
+level: L0
+expects: OOS2021
+summary: >
+  Sin retractacion no se mantiene lo mutable: una entidad respaldada por una copia de un flujo que solo anexa.

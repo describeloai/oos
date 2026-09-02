@@ -203,10 +203,12 @@ spec/v1alpha4/     borrador de alcance — el significado
 spec/v1alpha5/     borrador de alcance — la emisión a GraphQL
 spec/v1alpha6/     borrador de alcance — la distribución
 spec/v1alpha7/     borrador de alcance — la vista
+spec/v1alpha8/     borrador de alcance — la tabla
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
 schemas/v1alpha7/  view, y entity con `backedBy`
+schemas/v1alpha8/  table, view adelgazada, entity
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia
@@ -323,13 +325,22 @@ categoría y no por nivel; y la herencia entre interfaces **se computa**, porque
 es una clase definida y su jerarquía es inferida por construcción
 ([`00-scope`](spec/v1alpha4/00-scope.md) §6). Ninguna añade un código nuevo.
 
+| | v1alpha8 · borrador de alcance, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha8/00-scope.md) · alcance, la dualidad como regla, y por qué el puntero físico no era de la vista | ✅ |
+| [`01-table`](spec/v1alpha8/01-table.md) · qué es una tabla, sus **dos caras**, y las tres codificaciones del cambio | ✅ |
+| [`02-view`](spec/v1alpha8/02-view.md) · la vista adelgazada, la raíz de lectura, y **las dos reglas nuevas** (§5) | ✅ |
+| [`schemas/v1alpha8/`](schemas/v1alpha8/) · `table`, `view` sin `capabilities` ni `version`, `entity` | ✅ |
+| [`conformance/v1alpha8/`](conformance/v1alpha8/README.md) · borrador | ✅ |
+| **listo para v1** | ⏳ **la migración del árbol y el retiro** — [`00-scope`](spec/v1alpha8/00-scope.md) §5 |
+
 | | v1alpha7 · borrador de alcance, no normativo |
 |---|---|
 | [`00-scope`](spec/v1alpha7/00-scope.md) · alcance, la tesis, y por qué la vista absorbe al binding | ✅ |
 | [`01-view`](spec/v1alpha7/01-view.md) · qué es una vista, su forma, la cadena, y qué significa que esto esté listo (§9) | ✅ |
 | [`schemas/v1alpha7/`](schemas/v1alpha7/) · `view`, y `entity` con `backedBy` | ✅ |
 | [`conformance/v1alpha7/`](conformance/v1alpha7/README.md) · borrador | ✅ |
-| **listo para v1** | ⏳ **la migración** — `Binding` sigue existiendo; [`01-view`](spec/v1alpha7/01-view.md) §9 |
+| **listo para v1** | ✅ **sustituida por v1alpha8**, que es su §9 ejecutado: el puntero físico sale de la vista y `Binding` se retira |
 
 | | v1alpha6 · borrador de alcance, no normativo |
 |---|---|

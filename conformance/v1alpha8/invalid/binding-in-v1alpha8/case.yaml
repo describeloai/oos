@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/00-scope.md#5.3
+level: L0
+expects: OOS1003
+summary: >
+  El kind retirado: un Binding que declara v1alpha8 no esta en la gramatica de esa version.

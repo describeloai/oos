@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: vistas, version: 0.1.0 }
+datasources:
+  - { name: bus, type: kafka, connectionEnv: BUS_URL }
+  - { name: lago, type: postgres, connectionEnv: LAGO_URL }

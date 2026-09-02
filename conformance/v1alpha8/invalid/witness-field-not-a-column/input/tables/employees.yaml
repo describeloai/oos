@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: employees, namespace: erp }
+spec:
+  datasource: erp
+  object: "public.employees"
+  columns:
+    employee_id: { physicalType: "varchar(16)" }
+    national_id: { physicalType: "varchar(16)" }
+    country:     { physicalType: "char(2)" }
+  reads:
+    predicatePushdown: [eq, in]
+    fullScan: cheap
+  changes:
+    mode: append
+    witness: field
+    field: updated_at

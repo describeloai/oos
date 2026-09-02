@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: orders, namespace: bus }
+spec:
+  datasource: bus
+  object: "orders.v2"
+  columns:
+    order_id:    {}
+    customer_id: {}
+    total:       { physicalType: "decimal(18,2)" }
+  reads: none
+  changes:
+    mode: upsert
+    key: [order_key]
+    witness: log

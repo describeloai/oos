@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: accounts, namespace: crm }
+spec:
+  datasource: salesforce
+  object: "Account"
+  columns:
+    Id: {}
+    Name: {}
+  reads:
+    predicatePushdown: [eq]
+    fullScan: forbidden
+    requiredFilters: [Id]
+  changes:
+    mode: none
+    witness: none

@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/00-scope.md#5.3
+level: L0
+expects: accept
+summary: >
+  Un binding v1alpha1 y una tabla v1alpha8 en el mismo paquete: el apiVersion es por documento y la migracion no roza.

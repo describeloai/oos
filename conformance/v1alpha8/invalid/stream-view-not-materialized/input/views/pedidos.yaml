@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: bus.orders }
+  freshness: 1m
+  fields:
+    id: order_id
+    cliente: customer_id
+    total: total

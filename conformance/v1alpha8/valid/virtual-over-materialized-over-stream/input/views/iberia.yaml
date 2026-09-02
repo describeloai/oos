@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: iberia, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { view: pedidos }
+  fields:
+    id: id
+    total: total
+  where:
+    pais: [ES, PT]

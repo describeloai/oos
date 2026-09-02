@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#4
+level: L0
+expects: accept
+summary: >
+  La vista renombra columnas reales de la tabla y recorta por otra; cada nombre se comprueba contra `columns`.

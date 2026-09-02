@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#5.2
+level: L0
+expects: accept
+summary: >
+  Una tabla que solo anexa respalda un `nature: event` materializado, que es su forma natural.

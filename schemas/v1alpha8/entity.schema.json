@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha8/entity.schema.json",
+  "title": "Entity",
+  "description": "La entidad. NO CAMBIA EN v1alpha8: solo su `apiVersion`. Conserva lo que v1alpha7 le anade —`backedBy`, la vista que la respalda; la flecha del binding al reves— y `backedBy` SIGUE NOMBRANDO UNA VISTA, NUNCA UNA TABLA: si nombrara una tabla, las propiedades de la entidad tendrian que llamarse como las columnas fisicas, y lo semantico volveria a saber de lo fisico. Exponer una tabla tal cual cuesta una vista de tres lineas, y esas tres lineas son las que dicen «esto se expone». Conserva tambien y lo que v1alpha4 le cambio: `is`, `confidence` e `implements`.\n\nEL NOMBRE ES SUYO, EL SIGNIFICADO ES DEL CONCEPTO. Una propiedad con `is` no declara qué es: lo hereda de un Property, y puede elevar la clasificación heredada pero no rebajarla (OOS4012, sin cambios). Una propiedad DECLARA LOCALMENTE O REFERENCIA UN CONCEPTO, NUNCA LAS DOS COSAS — y eso el esquema lo expresa entero, así que su incumplimiento es OOS1004 y no necesita código propio.\n\n`implements` declara la forma, y la satisfacción se comprueba EN CONCEPTOS, NO EN NOMBRES: `Customer.email`, `Supplier.contactEmail` y `Employee.workEmail` pueden satisfacer el mismo requisito sin renombrarse.\n\nY lo que v1alpha2 le cambió, intacto: `expression` PROMOVIDA.\n\nNo es un campo nuevo. Existe en v1alpha1 como prosa documental que no se interpreta; aquí pasa a ser CEL y a comprobarse. Añadir un `expr` al lado habrían sido DOS NOMBRES PARA UN CONCEPTO separados por tres letras.\n\n`quality` NO cuelga de la propiedad, y su ausencia es deliberada: el cuerpo de una aserción es `quality` de ODCS y su destino de emisión también, pero escribirla aquí sería una segunda superficie de autoría sin dueño propio. Vive en un `Ruleset` de v1alpha3, que admite objetivos por nombre además de por predicado.\n\nUn concepto de negocio: qué existe, qué significa, qué tan delicado es y cómo se relaciona.\n\nPrincipio que gobierna todo el documento:\n\n  Una propiedad declara exactamente lo que alguien necesita saber para usarla con seguridad, y nada sobre dónde vive.\n\nEl tipo, la etiqueta, la procedencia y la temporalidad dicen CÓMO USAR esto sin equivocarse. La columna física y el objeto de origen dicen DÓNDE ESTÁ, y pertenecen a la `Table` — que en v1alpha8 los registra UNA VEZ, con sus dos caras. Una entidad que supiera de columnas dejaría de ser estable en cuanto la empresa migrase de almacén.\n\nGramática propia: no perfila Apache Ossie. Entity + View + Table COMPILAN a Ossie (02-entity.md §9).\n\nNormativo: spec/v1alpha1/02-entity.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "description": "Hay un esquema por apiVersion: el valor no es una opción, es el discriminante. Un documento de v1alpha1 conserva su `expression` en prosa y sigue siendo válido — por eso promoverla no exige migración.",
+      "const": "oos.dev/v1alpha8"
+    },
+    "kind": {
+      "const": "Entity"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "description": "Nombre de la entidad. El nombre cualificado `<namespace>.<name>` es el que usan las relaciones, los bindings y las políticas Cedar.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "labels": {
+          "description": "Etiquetas heredadas por TODAS las propiedades de la entidad. Una propiedad puede elevarlas y no debe rebajarlas (OOS4012).\n\nSirve para lo que es cierto del conjunto: «nada de RRHH sale de la UE» se declara una vez aquí, no cincuenta veces abajo.",
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nature",
+        "properties"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "nature": {
+                "const": "entity"
+              }
+            },
+            "required": [
+              "nature"
+            ]
+          },
+          "then": {
+            "required": [
+              "primaryKey"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "nature": {
+                "const": "event"
+              }
+            },
+            "required": [
+              "nature"
+            ]
+          },
+          "then": {
+            "required": [
+              "timeKey"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "backedBy": {
+          "description": "La vista que respalda a esta entidad. Es `Binding.targetEntity` CON LA FLECHA AL REVES: lo fisico existe antes y no sabe de esto; la entidad elige de que vista salir.\n\nLas propiedades de la entidad se llaman como los campos de la vista, y la vista DEBE exponer la `primaryKey` y los `via` de las relaciones (OOS2011). Debe existir (OOS2018); admite la forma corta en el mismo espacio de nombres (N1).\n\nUna entidad puede seguir teniendo bindings mientras dure la migracion; el dia que `Binding` se retire, esta es la unica via.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+        },
+        "implements": {
+          "description": "Las formas que esta entidad declara satisfacer. Nombres cualificados de Interface.\n\nDeclararla y no satisfacerla es OOS9001: para cada concepto que la interfaz exige, alguna propiedad de la entidad tiene que mapear a él con `is`.\n\nY solo alcanza a lo que alguien DECLARÓ que importaba: una columna que ES un correo personal y que nadie mapeó sigue siendo invisible, porque detectarla exigiría adivinar significado desde un nombre. Lo declarado es decidible; lo omitido no lo es nunca.\n\nEs un CONJUNTO: el orden no significa nada y la forma canónica lo ordena.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "nature": {
+          "description": "SIN CAMBIOS en v1alpha4, y merece decirse porque el borrador anunció lo contrario. Se propuso disolver `entity` y `event` en dos interfaces incorporadas para que OOS2010 se absorbiera en OOS9001; no se sostiene, porque `requires` nombra CONCEPTOS y `primaryKey` no lo es. Una interfaz nombra una forma EN SIGNIFICADO, no en estructura, y admitir las dos clases de exigencia habría hecho que un documento dijera dos cosas con la misma palabra.\n\n`entity` tiene identidad estable y estado actual, y EXIGE `primaryKey`.\n`event` es append-only y ordenado en el tiempo, sin identidad estable por registro: EXIGE `timeKey` y la clave primaria es opcional.\n\nUn tema de Kafka o un log de clics no tienen clave estable, y exigírsela los excluiría del modelo. Toda la maquinaria de gobernanza es idéntica para ambos: solo cambia el requisito de identidad, y eso no justifica un tipo de documento aparte.",
+          "enum": [
+            "entity",
+            "event"
+          ]
+        },
+        "primaryKey": {
+          "description": "Propiedades que identifican una instancia. Es una SECUENCIA: en claves compuestas el orden es semántico y se preserva en la forma canónica.\n\nSin identidad no hay índice de topología, no hay recurso identificable en una política y no se puede responder a una solicitud de acceso de un interesado.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        },
+        "timeKey": {
+          "description": "Propiedad que ordena los registros de un `event`. Sustituye a la identidad estable: no identifica un sujeto, sitúa un hecho.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "uniqueKeys": {
+          "description": "Claves alternativas. Cada elemento es una clave, simple o compuesta.\n\nSon las que hacen posible la resolución DETERMINISTA de identidad entre fuentes: el mismo cliente es `SF-4471` en Salesforce y `0001234` en SAP, pero comparten NIF. Sin claves alternativas declaradas, esa unión no se puede computar y hay que caer en resolución probabilística, que exige materializar datos.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            }
+          }
+        },
+        "temporal": {
+          "description": "Historia del DATO. Es el tercer eje temporal del sistema, junto al commit del bundle y la marca de agua del índice; los tres responden a preguntas distintas.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "validTime"
+          ],
+          "properties": {
+            "validTime": {
+              "description": "Cuándo fue cierto EN EL MUNDO. Sin esto, un salario es un número en lugar de una función del tiempo.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from"
+              ],
+              "properties": {
+                "from": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                },
+                "to": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                }
+              }
+            },
+            "transactionTime": {
+              "description": "Cuándo lo SUPO EL SISTEMA DE ORIGEN. Opcional: responde a una pregunta distinta de «qué sabía el agente el martes», que se contesta con el commit y la marca de agua.",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            }
+          }
+        },
+        "properties": {
+          "description": "Los atributos de la entidad. Solo datos: las aristas del grafo van en `relations`.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/property"
+          }
+        },
+        "relations": {
+          "description": "Las aristas del grafo.\n\nVan separadas de `properties` a propósito: `managerId` es un DATO y `manager` es una ARISTA. Mezclarlos confunde dos cosas distintas y obliga a un esquema con unión discriminada, que produce mensajes de error peores.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "moved": {
+          "description": "Renombrados declarados. Permiten que los consumidores migren solos durante la ventana de deprecación en lugar de romperse. Es el bloque `moved` de Terraform.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "since"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "to": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "since": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "reserved": {
+          "description": "Nombres retirados que NO pueden reutilizarse. Es el campo reservado de Protobuf, y previene el fallo más silencioso y más caro de una ontología viva: una consulta antigua que devuelve una cifra correcta para la pregunta equivocada. Usar uno es OOS2006.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "until": {
+                "description": "Ausente significa para siempre, que es el caso normal.",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+  "$defs": {
+    "labelMap": {
+      "description": "Etiquetas de retículo. La clave es el nombre cualificado del retículo (`gdpr.sensitivity`); el valor, uno de sus niveles (`high`).\n\nQue ese nivel exista realmente en ese retículo es una relación entre documentos: el esquema comprueba la forma y el compilador emite OOS4003.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+      },
+      "additionalProperties": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    },
+    "aiContext": {
+      "description": "Contexto para herramientas de IA: qué otras palabras usa el negocio para esto.\n\nEl problema es real —un agente al que preguntan «¿cuánto facturamos?» necesita saber que eso es `netRevenue`— pero se adopta con tres condiciones:\n\n1. ESTRUCTURADO, no texto libre: lo libre no se valida ni se difunde bien.\n2. HEREDA LAS ETIQUETAS de la propiedad o entidad que lo contiene. Un sinónimo puede ser confidencial, y fluye por el conducto `contextSurface` como cualquier otra cosa.\n3. DESCRIPTIVO, NUNCA DIRECTIVO. Un motor conforme NO DEBE tratar su contenido como instrucciones: es la diferencia entre documentar un campo y abrir una superficie de inyección dentro de un artefacto gobernado.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "synonyms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "guidance": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "examples": {
+          "description": "Preguntas de ejemplo que esta propiedad responde. NO son valores de dato: para eso está `examples` de la propiedad, que sí está sujeto al análisis de flujo.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "dependentRequired": {
+        "confidence": [
+          "is"
+        ]
+      },
+      "oneOf": [
+        {
+          "title": "declara localmente",
+          "required": [
+            "type"
+          ],
+          "not": {
+            "required": [
+              "is"
+            ]
+          }
+        },
+        {
+          "title": "referencia un concepto",
+          "required": [
+            "is"
+          ],
+          "properties": {
+            "type": false
+          }
+        }
+      ],
+      "properties": {
+        "is": {
+          "description": "El concepto que esta propiedad ES. Nombre cualificado de un Property.\n\nDeclararlo junto a `type` está prohibido por construcción, y por eso el `oneOf`: el tipo lo pone el concepto, y si la copia deja de coincidir no hay nada a lo que apelar para decidir quién gana.\n\n`labels` NO está prohibida, y la asimetría es deliberada. `type` es una IGUALDAD; `labels` es un ORDEN, y redeclararlas tiene un significado definido —elevar— y un error definido —rebajar—, que es OOS4012 y existe desde v1alpha1. Prohibirlas habría dejado la elevación sin sintaxis: el correo de un menor puede ser `critical` donde el concepto dice `high`.\n\nQue el concepto exista es una relación entre documentos: el esquema comprueba la forma, el compilador emite OOS2001.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "confidence": {
+          "description": "Esto lo propuso una máquina.\n\nSin `is` no significa nada —sin inferencia no hay nada de lo que dudar— y `dependentRequired` lo impide. Y un documento cuya madurez EFECTIVA no es DRAFT no puede llevarlo: OOS9003, que es del compilador y no de este esquema porque la madurez se hereda de la entidad o del datasource y no está escrita aquí.\n\nLeída al revés, esa regla es la que hace el trabajo: UN DOCUMENTO QUE NO ESTÁ EN DRAFT NO PUEDE CONTENER UNA SOLA CONJETURA. Promover exige haber resuelto cada propuesta, una a una — y vale igual para un inductor ajeno que para el propio.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/confidence"
+        },
+        "type": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+        },
+        "labels": {
+          "$ref": "#/$defs/labelMap"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "required": {
+          "description": "Si la propiedad admite ausencia de valor. Endurecerla es un cambio rompedor.",
+          "type": "boolean"
+        },
+        "unique": {
+          "type": "boolean"
+        },
+        "temporal": {
+          "description": "Si esta propiedad se historiza según el `temporal` de la entidad. Un salario lo es; un identificador no.",
+          "type": "boolean"
+        },
+        "enum": {
+          "description": "Valores admitidos. Es una SECUENCIA: retirar un valor o reordenarlos es un cambio observable.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "derivedFrom": {
+          "description": "De qué propiedades procede esta.\n\nEn v1alpha1 es una DECLARACIÓN DE PROCEDENCIA, NO UNA COMPUTACIÓN: el compilador la usa para propagar etiquetas —join(critical, low) = critical— y para computar el linaje, pero no calcula el valor. Una propiedad derivada necesita binding como cualquier otra; el cálculo ocurre aguas arriba o en un `Rule`, que está aplazado.\n\nEs obligatoria y no se infiere porque un análisis de contaminación sólido no puede depender de parsear cadenas de expresión. ODCS tiene `transformSourceObjects`, pero su granularidad es de TABLAS, y eso es insuficiente para propagar a nivel de propiedad.\n\nUna propiedad con `derivedFrom` NO DEBE declarar `labels`: se computan (OOS4008).",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "expression": {
+          "description": "Cómo se calcula, en CEL.\n\nEn v1alpha1 era prosa y no se interpretaba. Aquí se comprueba, y la comprobación tiene UNA dirección: `derivedFrom` es normativo y la expresión se contrasta CONTRA él, nunca al revés. v1alpha1 ya dio el motivo —«un análisis de contaminación sólido no puede depender de parsear cadenas de expresión»— y eso no se reabre.\n\nToda propiedad que la expresión lee DEBE estar declarada en `derivedFrom` (OOS4015). Si no, el compilador propaga menos etiquetas de las que debe y la propiedad derivada queda clasificada por debajo de lo que le corresponde: es el modo de fallo de OOS4001 con la etiqueta escrita en la línea de al lado.\n\nEl análisis es conservador y solo puede APRETAR: lo que se le escape no afloja nada, porque la propagación no depende de él.\n\nUna propiedad con `expression` DEBE declarar `derivedFrom` (OOS1004). Y NO se evalúa: el compilador no calcula el valor, ni aquí ni después — eso exige datos, es L2, y rompería la pureza de la compilación.",
+          "type": "string",
+          "maxLength": 2048
+        },
+        "examples": {
+          "description": "Valores de ejemplo.\n\nSon útiles para un agente Y SON DATOS REALES: los ejemplos de una columna de salarios son salarios. Una propiedad con etiqueta por encima de ⊥ no debe declararlos salvo que estén marcados como sintéticos (OOS4014).\n\nNadie suele pensar en esto, y el análisis de flujo lo atrapa porque `examples` alcanza la superficie de contexto como cualquier otro texto.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "values"
+          ],
+          "properties": {
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "items": {}
+            },
+            "synthetic": {
+              "description": "Afirmación explícita de que estos valores no proceden de datos reales. Obligar a declararlo es intencionado: convierte un descuido silencioso en una decisión consciente.",
+              "type": "boolean"
+            }
+          }
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "cardinality",
+        "via"
+      ],
+      "properties": {
+        "target": {
+          "description": "Entidad al otro extremo, por nombre cualificado. Puede pertenecer a otro paquete: las etiquetas se propagan a través del enlace.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "cardinality": {
+          "description": "Explícita, y no inferida de la dirección.\n\n`ore diff` necesita detectar que endurecerla —de `0..n` a `1..n`— es un cambio rompedor (OOS5003), y eso no se puede saber si la cardinalidad es implícita.\n\nMany-to-many se modela como ENTIDAD PUENTE en v1alpha1: es honesto, porque una tabla puente casi siempre acaba teniendo atributos propios, y evita introducir un tipo de documento nuevo.",
+          "enum": [
+            "one_to_one",
+            "one_to_many",
+            "many_to_one"
+          ]
+        },
+        "via": {
+          "description": "Propiedad local que sostiene el enlace.\n\nLas relaciones unen PROPIEDADES, nunca columnas: el binding traduce a físico. Es el principio del documento aplicado al grafo, y es lo que permite migrar de almacén sin tocar una sola relación.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "aiContext": {
+          "$ref": "#/$defs/aiContext"
+        }
+      }
+    }
+  }
+}

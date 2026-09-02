@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/01-table.md#6
+level: L0
+expects: OOS2004
+summary: >
+  La tabla apunta a una fuente que el manifiesto raiz no declara.

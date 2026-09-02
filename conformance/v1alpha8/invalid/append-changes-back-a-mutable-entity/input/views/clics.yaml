@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: clics, namespace: app }
+spec:
+  owner: team:producto
+  from: { table: app.clicks }
+  freshness: 5m
+  fields:
+    clicId: click_id
+    url: url
+    ocurrioEn: ocurrio_en
+  materialized: { datasource: lago, table: "cache.clics" }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#4
+level: L0
+expects: accept
+summary: >
+  La cadena de tres: la entidad nombra a la vista, la vista nombra a la tabla, y la tabla nombra al objeto.

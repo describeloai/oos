@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#6
+level: L0
+expects: OOS4002
+summary: >
+  La vista de abajo se copia; la entidad, dos eslabones arriba, declara high sobre un campo que baja hasta ella, y el conducto admite low.

@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: clicks, namespace: app }
+spec:
+  datasource: app
+  object: "public.clicks"
+  columns:
+    click_id:   { physicalType: "varchar(36)" }
+    url:        { physicalType: text }
+    ocurrio_en: { physicalType: timestamptz }
+  reads:
+    predicatePushdown: [eq, range]
+    fullScan: expensive
+  changes:
+    mode: append
+    witness: field
+    field: ocurrio_en

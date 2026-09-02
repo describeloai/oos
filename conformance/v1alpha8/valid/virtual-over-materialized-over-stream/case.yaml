@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#3
+level: L0
+expects: accept
+summary: >
+  Una vista virtual sobre una materializada sobre un stream: la raiz no se deja leer, pero la raiz de lectura es la copia.

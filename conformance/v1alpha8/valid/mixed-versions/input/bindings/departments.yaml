@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: departments, namespace: hr }
+spec:
+  targetEntity: hr.Department
+  datasourceRef: erp
+  source: "public.departments"
+  properties:
+    departmentId: "dept_id"
+    name: "dept_name"

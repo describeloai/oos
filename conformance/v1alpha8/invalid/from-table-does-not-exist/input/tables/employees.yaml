@@ -1,0 +1,18 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: employees, namespace: erp }
+spec:
+  datasource: erp
+  object: "public.employees"
+  columns:
+    employee_id: { physicalType: "varchar(16)" }
+    national_id: { physicalType: "varchar(16)" }
+    country:     { physicalType: "char(2)" }
+    deleted:     { physicalType: boolean }
+  reads:
+    predicatePushdown: [eq, neq, in, range, isNull]
+    fullScan: cheap
+  changes:
+    mode: retract
+    witness: log
+    retention: 7d

@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/01-table.md#6
+level: L0
+expects: OOS2018
+summary: >
+  La marca de agua nombra una columna que la tabla no declara: nadie puede leerla.

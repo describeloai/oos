@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha8/table.schema.json",
+  "title": "Table",
+  "description": "La tabla: EL PUNTERO A UN OBJETO FISICO, REGISTRADO UNA VEZ, CON SUS DOS CARAS DECLARADAS — que se le puede pedir (`reads`) y que cambios produce (`changes`).\n\nEs lo que el sector llama foreign table (Databricks), virtual table (Foundry), shortcut (Fabric), external table (BigQuery, Snowflake) o connector table (Trino): una referencia a algo de fuera, registrada en el catalogo, de solo lectura, y sobre la que las vistas componen. El puntero NO EJECUTA: TRADUCE.\n\nEn v1alpha7 esto vivia dentro de la View —`from.datasource`, `capabilities`, `version`— porque el Binding lo tenia asi. Era el puente correcto y la forma equivocada para quedarse: el contrato es DEL OBJETO, no de quien lo consulta. Cada vista sobre una fuente repetia el contrato fisico, y una vista sobre otra vista no tenia ninguno.\n\nNO CONTIENE DATOS, NO LLEVA SIGNIFICADO —ni `labels`, ni `is`, ni conceptos (OOS1005)— Y NO DECIDE QUIEN VE: eso sigue siendo el ConduitPolicy y las politicas Cedar. No tiene logica: renombrar y recortar son de la vista. No se materializa: materializar es una decision sobre UNA CONSULTA, y la consulta es la vista.\n\nNO HAY `kind: Stream`. Un stream es el nombre corriente de una tabla cuya cara de lectura es `none`. Dos nombres para un concepto es el error que este proyecto persigue.\n\nNormativo: spec/v1alpha8/01-table.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha8"
+    },
+    "kind": {
+      "const": "Table"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "datasource",
+        "object",
+        "columns",
+        "reads",
+        "changes"
+      ],
+      "properties": {
+        "datasource": {
+          "description": "Fuente fisica, declarada en el manifiesto raiz (OOS2004). Es `datasourceRef` del binding y `from.datasource` de la vista de v1alpha7, mudado al sitio donde el objeto vive. De el hereda la tabla su dueno tecnico y sus etiquetas de ubicacion.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "object": {
+          "description": "El objeto fisico: tabla, vista del almacen, objeto de API, tema, coleccion. Cadena OPACA: sus reglas de nombrado son del origen y esta especificacion no las interpreta.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "columns": {
+          "description": "LAS COLUMNAS QUE HAY, tal cual estan. No las que usa una vista: las que el objeto tiene.\n\nEs lo unico verdaderamente nuevo de esta version, y lo que hace comprobable lo que antes no lo era: hasta aqui, una vista que nombraba `national_id` no se podia verificar contra nada, porque ningun documento decia que columnas tenia la tabla. Se comprobaba solo el eslabon vista→vista. Con esto, OOS2018 LLEGA HASTA EL SUELO.\n\nEl nombre es OPACO —puede llevar puntos si el origen es anidado, como `Worker_Reference.ID`— y por eso no es un identificador. El tipo es el vocabulario de ODCS, absorbido, y es opcional: un origen sin tipos declarados (un tema, un JSONL) tiene columnas y no tiene tipos.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "physicalType": {
+                "description": "Tipo tal como lo almacena el origen. Vocabulario de ODCS, absorbido. Es fisico, asi que vive aqui y no en la entidad ni en la vista.",
+                "type": "string",
+                "maxLength": 256
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 4096
+              }
+            }
+          }
+        },
+        "reads": {
+          "description": "LA CARA `I`: que se le puede pedir al origen, y con que filtros. Es `capabilities` del binding y de la vista de v1alpha7, mudado.\n\nSe DECLARA, no se sondea: sin ella el planificador no tiene con que rechazar un plan antes de abrir una conexion. La usan el planificador de empuje, la upquery del mantenedor y la fase de lectura del ejecutor.\n\n`none` es legal y significa NO SE LE PUEDE PEDIR NADA: un tema de Kafka se escribe, no se pregunta. Tiene una consecuencia sobre quien la consulte, y es un codigo: OOS2020, una vista cuya raiz de lectura no se deja leer DEBE materializar.",
+          "oneOf": [
+            {
+              "const": "none"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "predicatePushdown": {
+                  "description": "Operadores de filtro que el origen puede ejecutar. Vocabulario CERRADO: si un perfil pudiera inventar nombres, el planificador no podria razonar sobre ellos.",
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "eq",
+                      "neq",
+                      "in",
+                      "range",
+                      "like",
+                      "isNull",
+                      "fullText"
+                    ]
+                  }
+                },
+                "joinPushdown": {
+                  "type": "boolean"
+                },
+                "aggregatePushdown": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "count",
+                      "sum",
+                      "avg",
+                      "min",
+                      "max",
+                      "countDistinct"
+                    ]
+                  }
+                },
+                "fullScan": {
+                  "description": "`cheap` una tabla pequena · `expensive` el planificador lo evita salvo necesidad · `forbidden` una API con cuota que no admite recorrido completo.",
+                  "enum": [
+                    "cheap",
+                    "expensive",
+                    "forbidden"
+                  ]
+                },
+                "requiredFilters": {
+                  "description": "COLUMNAS sin las cuales el origen no acepta consulta. Muchas APIs no admiten «dame todo»: exigen al menos un identificador de cuenta.\n\nCambia de sujeto respecto al binding, donde eran PROPIEDADES: un filtro exigido lo exige el origen, y el origen habla de columnas. Cada nombre DEBE estar en `columns` (OOS2018), y por eso es una cadena opaca y no un identificador: `Worker_Reference.ID` es un filtro exigido legal, cosa que antes no cabia.",
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  }
+                },
+                "maxRowsPerRequest": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          ]
+        },
+        "changes": {
+          "description": "LA CARA `D`: que cambios emite el objeto, con que codificacion, y que los atestigua. Es lo que `version.witness` de v1alpha7 decia a medias — aquel decia QUE FECHA el cambio y no decia QUE LLEGA: si trae borrados, si trae la imagen previa, si exige clave. El mantenedor incremental necesita justo eso, y lo estaba adivinando.\n\nLa usan el mantenedor, el analizador de refresco y el modelo de coste.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "witness"
+          ],
+          "properties": {
+            "mode": {
+              "description": "COMO SE CODIFICA EL CAMBIO. Vocabulario CERRADO, y son exactamente las tres formas que Flink documenta de convertir una tabla dinamica en un flujo, mas la ausencia:\n\n`none` — el origen no emite cambios, o no se sabe si los emite.\n`append` — solo altas. Solo pesos +1.\n`retract` — un borrado retracta; una actualizacion retracta la vieja y anade la nueva. Pesos -1 y +1. El Change Data Feed de Delta —insert, update_preimage, update_postimage, delete— es esto con cuatro nombres.\n`upsert` — exige clave unica; un borrado es un tombstone. +1 por clave, -1 por tombstone.\n\nCerrado por lo mismo que `predicatePushdown`: si un perfil pudiera inventar una codificacion, el mantenedor no podria razonar sobre los pesos que le llegan, y un delta con un peso ilegal entraria sin que nadie lo notara. Un `append` que trajera un -1 se rechaza porque `append` significa algo.",
+              "enum": [
+                "none",
+                "append",
+                "retract",
+                "upsert"
+              ]
+            },
+            "witness": {
+              "description": "QUE PRUEBA QUE VERSION DE LOS DATOS SE LEYO. Es `version.witness` de v1alpha7, mudado al sitio donde el dato ocurre.\n\n`none` — nada. Legal, y tiene precio: sin testigo no hay marca, y sin marca lo materializado no puede decir hasta cuando era cierto.\n`snapshot` — la version nativa de un formato de tabla: snapshot-id de Iceberg, la version de Delta.\n`log` — una posicion en un flujo de cambios: LSN, SCN, offset.\n`field` — una columna de la propia tabla que ordena el avance, y entonces `field` es obligatorio.\n\nTodos son ORDINALES: el motor los compara, no los interpreta ni los convierte.\n\n`mode` y `witness` son INDEPENDIENTES —que llega y que lo fecha son dos preguntas—: {append, field} es una API con marca de agua, {retract, log} una replica logica, {retract, snapshot} un lago que resta dos instantaneas.",
+              "enum": [
+                "none",
+                "snapshot",
+                "log",
+                "field"
+              ]
+            },
+            "key": {
+              "description": "La clave unica del upsert. OBLIGATORIA con `mode: upsert` y prohibida con cualquier otro, porque sin clave un tombstone no dice que retira, y con otro modo no dice nada. Cada nombre DEBE ser una columna de `columns` (OOS2018).",
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "field": {
+              "description": "La columna que ordena el avance. OBLIGATORIA con `witness: field` y prohibida con cualquier otro. DEBE ser una columna de `columns` (OOS2018): una marca de agua que no es columna no la puede leer nadie.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            "retention": {
+              "description": "Cuanto guarda el origen su changelog, SI se sabe. Informativo: quien planifique un refresco lo usa para saber si puede llegar tarde. No se inventa — ausente significa que no se sabe.",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "upsert"
+                  }
+                },
+                "required": [
+                  "mode"
+                ]
+              },
+              "then": {
+                "required": [
+                  "key"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "key"
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "witness": {
+                    "const": "field"
+                  }
+                },
+                "required": [
+                  "witness"
+                ]
+              },
+              "then": {
+                "required": [
+                  "field"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "field"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  }
+}
