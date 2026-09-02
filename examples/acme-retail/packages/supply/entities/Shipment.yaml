@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha1
+apiVersion: oos.dev/v1alpha8
 kind: Entity
 metadata:
   name: Shipment
@@ -17,6 +17,10 @@ metadata:
 spec:
   nature: entity
   primaryKey: [shipmentId]
+
+  # La vista de la que sale. Nombra una vista y nunca la tabla: si nombrara
+  # `shipment_v2`, esta entidad tendría que llamar `SHP_UUID` a su clave.
+  backedBy: envios
 
   temporal:
     validTime: { from: validFrom, to: validTo }
@@ -47,6 +51,12 @@ spec:
 
     # Derivada. join() sobre orígenes sin etiqueta da ⊥ = none, así que no se
     # declara `labels`: se computa (OOS4008).
+    #
+    # Y desde v1alpha8 es derivada **y nada más**: el binding la traía además
+    # calculada por Snowflake con un `expression` físico, y una vista renombra
+    # pero no calcula. Lo que se conserva es la procedencia —que es lo que
+    # propaga las etiquetas—; lo que se pierde es que el origen la compute.
+    # `00-scope` §5.3 lo dice entero.
     delayDays:
       type: Integer
       derivedFrom: [supply.Shipment.promisedAt, supply.Shipment.deliveredAt]
@@ -56,20 +66,22 @@ spec:
       type: String
       enum: [pending, in_transit, delivered, delayed, cancelled]
 
-  # Las aristas del grafo, separadas de los datos. Son las dos que el binding
-  # materializa en `mode: index`: se copian las aristas, no la carga útil.
+  # Las aristas del grafo, separadas de los datos. Son las dos que se
+  # materializan como índice: se copian las aristas, no la carga útil — y ya no
+  # hace falta declararlo, porque el índice ES una vista de aristas y lo
+  # derivable no se declara (P2).
   relations:
 
     supplier:
       target: supply.Supplier
       cardinality: many_to_one
-      via: supplierId
+      via: [supplierId]
       required: true
 
     sku:
       target: supply.Sku
       cardinality: many_to_one
-      via: skuCode
+      via: [skuCode]
       required: true
 
   moved:

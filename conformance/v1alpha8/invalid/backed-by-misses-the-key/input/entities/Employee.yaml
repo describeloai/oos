@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [id]
+  backedBy: empleados
+  properties:
+    id: { type: String }
+    dni:
+      type: String
+      labels: { gdpr.sensitivity: high }

@@ -1,0 +1,64 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+
+metadata:
+  name: empleados
+  namespace: hr
+  description: >
+    Qué se expone del `Worker` de Workday, y con qué nombre. Sin materializar:
+    la compensación no puede salir del origen, y una vista virtual no copia
+    nada, así que no hay nada que gobernar aguas abajo.
+
+spec:
+  # La vista tiene dueño y la tabla no. No es un detalle de forma: la tabla es
+  # un hecho del origen y no la decide nadie; qué se expone y con qué frescura
+  # sí, y alguien responde de ello.
+  owner: team:people-data
+
+  from: { table: workday_worker }
+
+  fields:
+    employeeId:        "Worker_Reference.ID"
+    fullName:          "Personal_Data.Name_Data.Legal_Name.Full_Name"
+    email:             "Contact_Data.Email_Address_Data.Email_Address"
+    managerId:         "Management_Chain_Data.Manager_Reference"
+    departmentId:      "Organization_Data.Cost_Center_Reference"
+    grade:             "Compensation_Data.Grade_Reference"
+    baseSalary:        "Compensation_Data.Base_Pay.Amount"
+    bonus:             "Compensation_Data.Bonus_Plan.Target_Amount"
+    totalCompensation: "Compensation_Data.Total_Compensation.Amount"
+    validFrom:         "Worker_Status_Data.Hire_Date"
+    validTo:           "Worker_Status_Data.Termination_Date"
+
+  # ---------------------------------------------------------------------
+  # Por qué no hay `materialized`, y las DOS formas en que fallaría.
+  #
+  #   materialized: { datasource: …, table: … }  →  error[OOS4011]
+  #
+  #     Este repositorio declara `materialization.index` y
+  #     `materialization.cache`, y NO declara `materialization.payload`. Un
+  #     conducto que no se lista tiene autorización ⊥ (P4): omitirlo no es
+  #     dejarlo abierto, es cerrarlo.
+  #
+  # Y si alguien lo declarara al nivel de los otros dos:
+  #
+  #   materialization.payload: { gdpr.sensitivity: medium }  →  error[OOS4002]
+  #
+  #     hr.Employee.baseSalary  ──vista──▶  materialization.payload
+  #
+  #     etiqueta de la entidad   : gdpr.sensitivity = critical
+  #     autorización del conducto: gdpr.sensitivity = medium
+  #
+  #     La etiqueta la puso la ENTIDAD, dos capas más arriba, y baja hasta aquí
+  #     por el nombre del campo. Esta vista no lleva significado y aun así no
+  #     puede copiarse: es el sello de v1alpha7 §5.2, intacto con una tabla
+  #     debajo.
+  #
+  # Las dos se detectan al compilar: sin conexión a Workday, sin credenciales,
+  # sin haber leído el registro de un solo empleado.
+  #
+  # Y hay un tercer motivo, que solo v1alpha8 sabe decir: `workday_worker`
+  # declara `changes: { mode: none }`. Copiar algo que no emite cambios se
+  # puede, pero no se puede REFRESCAR sin volver a leerlo entero — y `ore view`
+  # lo dice antes de que nadie lo intente.
+  # ---------------------------------------------------------------------

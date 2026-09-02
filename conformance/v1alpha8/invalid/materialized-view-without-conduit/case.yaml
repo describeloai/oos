@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#6
+level: L0
+expects: OOS4011
+summary: >
+  Una vista sobre una tabla se materializa sin que materialization.payload tenga autorización declarada.

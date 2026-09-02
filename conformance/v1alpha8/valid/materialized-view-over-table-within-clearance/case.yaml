@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#6
+level: L0
+expects: accept
+summary: >
+  La copia lleva la etiqueta que puso una entidad dos eslabones arriba, y el conducto la admite.

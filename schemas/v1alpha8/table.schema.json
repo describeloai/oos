@@ -59,6 +59,11 @@
           "minLength": 1,
           "maxLength": 1024
         },
+        "profile": {
+          "description": "El PERFIL DE CONECTOR que mapea este objeto: `oos.dev/connectors/workday`, `oos.dev/connectors/gs1`. Es `Binding.profile`, mudado.\n\nVa en la tabla y no en el manifiesto porque es del OBJETO: dos objetos de la misma fuente pueden seguir perfiles distintos —el `Worker` estandar de Workday y un informe a medida no se mapean igual— y ponerlo en el datasource obligaria a elegir uno para todos.\n\nSe resuelve por `dependencies` y se fija en `ontology.lock`, como cualquier otra referencia a un paquete publicado: sin el, veinte lineas de mapeo serian doscientas.\n\nEs una CADENA y no un nombre cualificado: `oos.dev/connectors/workday` lleva barras, y un identificador de OOS no. Es exactamente el tipo que tenia `Binding.profile`.",
+          "type": "string",
+          "maxLength": 256
+        },
         "columns": {
           "description": "LAS COLUMNAS QUE HAY, tal cual estan. No las que usa una vista: las que el objeto tiene.\n\nEs lo unico verdaderamente nuevo de esta version, y lo que hace comprobable lo que antes no lo era: hasta aqui, una vista que nombraba `national_id` no se podia verificar contra nada, porque ningun documento decia que columnas tenia la tabla. Se comprobaba solo el eslabon vista→vista. Con esto, OOS2018 LLEGA HASTA EL SUELO.\n\nEl nombre es OPACO —puede llevar puntos si el origen es anidado, como `Worker_Reference.ID`— y por eso no es un identificador. El tipo es el vocabulario de ODCS, absorbido, y es opcional: un origen sin tipos declarados (un tema, un JSONL) tiene columnas y no tiene tipos.",
           "type": "object",

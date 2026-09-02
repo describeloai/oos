@@ -1,6 +1,6 @@
 # v1alpha8 / invalid / binding-in-v1alpha8
 
-**Regla:** [`00-scope.md` §5.3](../../../../spec/v1alpha8/00-scope.md#53) · **Código:** `OOS1003` · **Nivel:** L0
+**Regla:** [`00-scope.md` §5.4](../../../../spec/v1alpha8/00-scope.md#54) · **Código:** `OOS1003` · **Nivel:** L0
 
 ---
 

@@ -55,5 +55,5 @@ spec:
     customer:
       target: customers.Customer
       cardinality: many_to_one
-      via: customerId
+      via: [customerId]
       required: true

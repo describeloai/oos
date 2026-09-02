@@ -1,0 +1,65 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+
+metadata:
+  name: workday_worker
+  namespace: hr
+  description: >
+    El objeto `Worker` de Workday, registrado una vez. Esto es lo que EXISTE ahí
+    fuera: sus columnas, qué se le puede pedir y qué cambios emite. No dice qué
+    se expone ni qué significa — eso es de la vista y de la entidad.
+
+spec:
+  datasource: hr_workday
+
+  # Solo el nombre: la versión se resuelve desde `dependencies` y se fija en
+  # ontology.lock. El perfil ya mapea los objetos estándar de Workday — sin él,
+  # estas veinte líneas serían doscientas.
+  #
+  # Está aquí y no en el manifiesto porque es del OBJETO: el `Worker` estándar y
+  # un informe a medida de la misma fuente no se mapean igual.
+  profile: oos.dev/connectors/workday
+
+  object: "Worker"
+
+  # Las columnas del objeto, con su nombre ENTERO y opaco. Los puntos son de
+  # Workday: la tabla no los interpreta, y renombrarlas es de la vista.
+  columns:
+    "Worker_Reference.ID": {}
+    "Personal_Data.Name_Data.Legal_Name.Full_Name": {}
+    "Contact_Data.Email_Address_Data.Email_Address": {}
+    "Management_Chain_Data.Manager_Reference": {}
+    "Organization_Data.Cost_Center_Reference": {}
+    "Compensation_Data.Grade_Reference": {}
+
+    # El tipo físico vive aquí, que es donde siempre debió estar: una propiedad
+    # `Money<EUR,2>` sobre un FLOAT sería un error esperando a ocurrir.
+    "Compensation_Data.Base_Pay.Amount":          { physicalType: "decimal(18,2)" }
+    "Compensation_Data.Bonus_Plan.Target_Amount": { physicalType: "decimal(18,2)" }
+
+    # El cálculo ya viene hecho de Workday, así que es una columna como otra
+    # cualquiera. `derivedFrom` en la entidad declara PROCEDENCIA para propagar
+    # etiquetas, no computación.
+    "Compensation_Data.Total_Compensation.Amount": { physicalType: "decimal(18,2)" }
+
+    "Worker_Status_Data.Hire_Date":        {}
+    "Worker_Status_Data.Termination_Date": {}
+
+  # La cara I. Vienen del perfil de conector; se repiten aquí solo para que el
+  # ejemplo se lea completo. Workday es una API con cuota: no admite recorrido
+  # completo, y **exige un identificador** — que ahora se dice en nombres de
+  # columna, porque quien lo exige es el origen y el origen habla de columnas.
+  reads:
+    predicatePushdown: [eq, in]
+    joinPushdown: false
+    aggregatePushdown: []
+    fullScan: forbidden
+    requiredFilters: ["Worker_Reference.ID"]
+    maxRowsPerRequest: 200
+
+  # La cara D, que el binding no tenía. Workday no publica un changelog: se
+  # pregunta por clave y punto. Decirlo es lo que impide que alguien crea que
+  # esto se puede mantener incrementalmente.
+  changes:
+    mode: none
+    witness: none

@@ -123,6 +123,7 @@ metadata:
 spec:
   datasource: erp                    # declarado en el manifiesto raíz (OOS2004)
   object: "public.employees"         # opaco: las reglas de nombrado son del origen
+  # profile: oos.dev/connectors/workday   # el perfil que mapea este objeto, si lo hay
 
   # Las columnas físicas, tal cual están. Nombre opaco; tipo en vocabulario de ODCS.
   columns:
@@ -189,6 +190,7 @@ spec:
 |---|---|---|
 | `from.datasource` | `datasource` | nada |
 | `from.object` | `object` | nada |
+| `Binding.profile` | `profile` | el sitio: es del objeto, no de quien lo consulta. v1alpha7 lo había perdido, y migrar `acme-retail` lo destapó |
 | `capabilities` | `reads` | el nombre; que admite `none`; y que `requiredFilters` nombra **columnas**, no propiedades — §6 |
 | `version.witness` | `changes.witness` | el sitio: es del objeto, no de quien lo consulta |
 | — | `columns` | **nuevo**: qué columnas hay, no cuáles usa una vista |
@@ -203,6 +205,9 @@ spec:
   `datasourceRef` y que `from.datasource`, porque es el mismo defecto.
 - `columns` **DEBE** tener al menos una columna. Una tabla sin columnas no es un puntero a nada:
   es un nombre.
+- `profile` es opcional, y cuando está **DEBE** resolver como cualquier referencia a un paquete
+  publicado. Es del objeto y no del manifiesto: dos objetos de la misma fuente pueden seguir
+  perfiles distintos, y elegir uno para toda la fuente sería decidir por ellos.
 - `reads` es **o** el objeto de capacidades **o** el literal `none`. `none` significa *no se le
   puede pedir nada*, y tiene una consecuencia sobre quien la consulte: `OOS2020`, en
   [`02-view` §5](02-view.md#5).

@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#3
+level: L0
+expects: OOS4002
+summary: >
+  El datasource de la tabla lleva low; la vista de arriba, dos eslabones después, se copia por un conducto que admite none.

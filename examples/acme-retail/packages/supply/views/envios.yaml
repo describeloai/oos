@@ -1,0 +1,52 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+
+metadata:
+  name: envios
+  namespace: supply
+  description: >
+    Qué se expone de la tabla de envíos, y con qué nombre. Virtual: lo que se
+    materializaba aquí eran las ARISTAS del grafo, y eso es derivable — se
+    computa, no se declara.
+
+spec:
+  owner: team:supply-chain
+
+  from: { table: shipment_v2 }
+
+  fields:
+    shipmentId:  "SHP_UUID"
+    supplierId:  "FK_SUPPLIER_ID"
+    skuCode:     "FK_SKU_CODE"
+    quantity:    "QTY_UNITS"
+    promisedAt:  "DT_PROMISED_UTC"
+    status:      "CD_STATUS"
+    deliveredAt: "DT_DELIVERED_UTC"
+    validFrom:   "DT_ROW_VALID_FROM"
+    validTo:     "DT_ROW_VALID_TO"
+
+  # ---------------------------------------------------------------------
+  # Dos cosas que el binding tenía y esto no. Están dichas porque una
+  # migración que solo enumera lo que conserva promete que no se pierde nada.
+  #
+  # 1 · `materialization: { mode: index }`
+  #
+  #     No se migra, y no es un olvido: el índice de topología es UNA VISTA DE
+  #     ARISTAS —la clave primaria y las propiedades `via` de las relaciones— y
+  #     lo derivable no se declara (P2). Se sigue materializando; lo que ya no
+  #     se escribe es que se materializa.
+  #
+  # 2 · `delayDays`, calculado por el ORIGEN
+  #
+  #     El binding traía
+  #       delayDays:
+  #         expression: "DATEDIFF(day, DT_PROMISED_UTC, COALESCE(...))"
+  #     y eso **no cabe aquí**: `fields` renombra, y nada más. No es una
+  #     limitación de v1alpha8 — v1alpha7 ya la causó al absorber el binding, y
+  #     no se notó porque nada se había migrado todavía. `00-scope` §5.3.
+  #
+  #     `supply.Shipment.delayDays` sigue existiendo como propiedad DERIVADA:
+  #     conserva su `derivedFrom`, que es lo que propaga las etiquetas, y pierde
+  #     que Snowflake la calcule. Quien la quiera calculada en el origen, hoy,
+  #     declara una vista del almacén y la registra como otra `Table`.
+  # ---------------------------------------------------------------------

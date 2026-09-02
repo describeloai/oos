@@ -1,6 +1,6 @@
 # v1alpha8 / valid / mixed-versions
 
-**Regla:** [`00-scope.md` §5.3](../../../../spec/v1alpha8/00-scope.md#53) · **Nivel:** L0
+**Regla:** [`00-scope.md` §5.4](../../../../spec/v1alpha8/00-scope.md#54) · **Nivel:** L0
 
 ---
 

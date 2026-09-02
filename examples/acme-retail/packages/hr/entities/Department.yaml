@@ -54,6 +54,6 @@ spec:
     parent:
       target: hr.Department          # autorreferencia: el árbol organizativo
       cardinality: many_to_one
-      via: parentDepartmentId
+      via: [parentDepartmentId]
       required: false
       description: Departamento superior. Ausente solo en la raíz.

@@ -61,7 +61,7 @@ spec:
     accountManager:
       target: hr.Employee
       cardinality: many_to_one
-      via: accountManagerId
+      via: [accountManagerId]
       required: false
 
     # `orders` NO se declara aquí. Un uno-a-muchos vive en el lado que sostiene

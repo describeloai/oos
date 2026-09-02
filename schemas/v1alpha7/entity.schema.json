@@ -111,6 +111,10 @@
             "event"
           ]
         },
+        "principal": {
+          "description": "Esta entidad puede ser el SUJETO de una peticion. Sus propiedades son la forma que la capa de identidad tiene que rellenar.\n\nSin esto el principal de una politica era `Role`, una bolsa sin atributos, y `principal.department` no era expresable: lo que se emitia era RBAC, no ABAC. Y la proyeccion de la autorreferencia a jerarquia —`Employee in [Employee]`— no la podia usar nadie, porque `resource in principal` era un error de tipos.\n\nNORMATIVO: los VALORES de esos atributos llegan CON LA PETICION. Un motor NO DEBE resolverlos contra un binding — lo que decide el acceso no puede estar sujeto al acceso que decide. Aqui se declara la forma; la capa de identidad la rellena.\n\nLos atributos se proyectan SOLO en un principal. El recurso se posiciona por PERTENENCIA —`resource in Label::\"...\"`, `resource in principal`— y no por atributos: describirlo con atributos obligaria al motor a leer el recurso para autorizarlo.\n\nUn `nature: event` NO puede ser principal: no tiene identidad estable, asi que no hay sujeto que nombrar.\n\nNormativo: spec/v1alpha1/02-entity.md §2.2",
+          "type": "boolean"
+        },
         "primaryKey": {
           "description": "Propiedades que identifican una instancia. Es una SECUENCIA: en claves compuestas el orden es semántico y se preserva en la forma canónica.\n\nSin identidad no hay índice de topología, no hay recurso identificable en una política y no se puede responder a una solicitud de acceso de un interesado.",
           "type": "array",
@@ -407,8 +411,20 @@
           ]
         },
         "via": {
-          "description": "Propiedad local que sostiene el enlace.\n\nLas relaciones unen PROPIEDADES, nunca columnas: el binding traduce a físico. Es el principio del documento aplicado al grafo, y es lo que permite migrar de almacén sin tocar una sola relación.",
-          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          "description": "Las propiedades LOCALES que sostienen el enlace.\n\nLas relaciones unen PROPIEDADES, nunca columnas: el binding traduce a físico. Es el principio del documento aplicado al grafo, y es lo que permite migrar de almacén sin tocar una sola relación.\n\nEs una SECUENCIA y su orden es semántico: se empareja posición a posición con la `primaryKey` de `target`. Secuencia siempre, también para una sola propiedad — `via: [managerId]`. Igual que `primaryKey`, y por el mismo motivo: un escalar admitido como atajo obligaría a la forma canónica a normalizarlo, y la forma canónica es el cimiento del digest.\n\nEl lado del padre NO se declara: `target` ya publica su `primaryKey`, y escribirlo sería declarar lo derivable (P2). Es la misma razón por la que `one_to_many` no existe. R2RML nombra los dos lados porque no sabe cuál es la clave del padre; aquí se sabe.\n\nQue la aridad y los tipos casen posición a posición es `OOS3006`, y ningún esquema JSON lo alcanza: exige resolver `target` y leer OTRO documento.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        },
+        "toKey": {
+          "description": "La clave del DESTINO contra la que se empareja `via`. Se omite cuando es su `primaryKey`, que es el caso normal: lo derivable no se declara (P2).\n\nExiste porque SQL no obliga a referenciar la clave primaria. Una foranea puede apuntar a cualquier restriccion UNIQUE, y asi es como enlazan los sistemas heredados — por NIF, por DUNS, por codigo de articulo. `REFERENCES clientes (nif)` es legal, y sin este campo esa relacion no se podia decir.\n\nComo CONJUNTO debe ser exactamente una clave declarada del destino: su `primaryKey` o una entrada de sus `uniqueKeys`. Si no lo es, el enlace no identifica una instancia y es `OOS3006`.\n\nComo SECUENCIA su orden es el que empareja con `via`, posicion a posicion, y por eso no se ordena en la forma canonica. `REFERENCES t (b, a)` es legal y no es lo mismo que `(a, b)`.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
         },
         "required": {
           "type": "boolean"

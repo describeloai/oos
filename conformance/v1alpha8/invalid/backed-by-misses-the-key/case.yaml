@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#4
+level: L0
+expects: OOS2011
+summary: >
+  La vista que respalda una entidad no expone su clave primaria.

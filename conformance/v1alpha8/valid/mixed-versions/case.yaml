@@ -1,4 +1,4 @@
-rule: spec/v1alpha8/00-scope.md#5.3
+rule: spec/v1alpha8/00-scope.md#5.4
 level: L0
 expects: accept
 summary: >

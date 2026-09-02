@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#3
+level: L0
+expects: accept
+summary: >
+  Una vista sobre otra sobre una tabla: la cadena compone renombres y filtros hasta la columna física.

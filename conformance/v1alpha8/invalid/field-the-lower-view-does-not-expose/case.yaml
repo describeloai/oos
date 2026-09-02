@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#4
+level: L0
+expects: OOS2018
+summary: >
+  La vista de arriba lee un campo que la de abajo no expone.

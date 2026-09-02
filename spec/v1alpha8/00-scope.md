@@ -81,7 +81,7 @@ tiene sentido inventar un nombre para lo que todo el mundo llama igual.
 | **adelgaza** | `kind: View` — pierde `capabilities` y `version`; `from` nombra una tabla o una vista |
 | **se reutiliza** | `OOS2004` para `datasource` · `OOS2018` para lo que no resuelve o no es columna · `OOS2019` para el ciclo · `OOS2011` para la clave que la vista no expone · `OOS4001`, `OOS4002` y `OOS4011` para la copia |
 | **no se toca** | el retículo, el conducto, el concepto, `is`, la interfaz, `Entity` salvo su `apiVersion`, la forma canónica, el digest, la firma, el log, `ore diff` |
-| **se retira** | `kind: Binding` — §5.3 |
+| **se retira** | `kind: Binding` — §5.4 |
 
 Que los códigos se **reutilicen** en vez de duplicarse vuelve a ser la prueba de que la tabla no
 cambia la regla, cambia el sujeto. Un `OOS2018` sobre un campo que no es columna de la tabla
@@ -123,8 +123,9 @@ escribir en ninguna parte porque se siguen:
 |---|---|
 | `View` v1alpha7 con `from: {datasource, object}` | una **`Table`** con ese `datasource` y `object`, `columns` = los valores de `fields` más las claves de `where`, `reads` = `capabilities`, `changes.witness` = `version.witness`, `changes.mode` = §5.2 — **más** la misma `View` con `from: {table}` y sin `capabilities` ni `version` |
 | `View` v1alpha7 con `from: {view}` | la misma, con el `apiVersion` nuevo |
-| `Binding` | una **`Table`** con `datasourceRef`→`datasource` y `source`→`object`, `columns` = los valores de `properties` más las claves de `selector`, `reads` = `capabilities`, `changes` = §5.2 — **más** una **`View`** con `fields` = `properties`, `where` = `selector`, y `materialized`/`freshness` de `materialization.payload` si lo había — **más** `backedBy` en la entidad |
+| `Binding` | una **`Table`** con `datasourceRef`→`datasource`, `source`→`object` y `profile`, `columns` = los valores de `properties` más las claves de `selector`, `reads` = `capabilities`, `changes` = §5.2 — **más** una **`View`** con `fields` = `properties`, `where` = `selector`, y `materialized`/`freshness` de `materialization.payload` si lo había — **más** `backedBy` en la entidad |
 | `materialization.topology` | **no se migra**: es derivable —el índice es una vista de aristas— y se computa (P2) |
+| `Binding.properties.<x>.expression` | **no se migra, y se pierde.** Un cálculo físico —`DATEDIFF(...)` sobre el origen— no cabe en `fields`, que solo renombra. No es un olvido de esta versión: v1alpha7 ya lo había dejado fuera al absorber el binding, y migrar el escaparate es lo que lo destapó. §5.5 |
 | `Entity` | sin cambios salvo `apiVersion` y `backedBy` |
 
 Dos bindings sobre el mismo objeto con selectores disjuntos —lo que `OOS2014` vigilaba— pasan a
@@ -143,7 +144,32 @@ de lo que sí declaraba, **y lo deja escrito como deducción**:
 | `strategy: poll` o `witness: field` | `append` | una marca de agua no ve borrados |
 | nada | `none` | no se sabe, y no se inventa |
 
-### 5.3 · El `Binding` se retira, no se borra
+### 5.3 · Lo que la migración **pierde**, y por qué se dice en vez de taparse
+
+Una migración que solo enumera lo que se conserva es una migración que promete
+que no se pierde nada. Esta pierde una cosa, y es mejor tenerla escrita aquí que
+descubrirla en el repositorio de alguien:
+
+> **`Binding.properties.<x>.expression`** —un cálculo que el ORIGEN ejecuta— no
+> tiene dónde ir.
+
+`fields` de una vista **renombra**, y nada más. Una expresión libre no entra en el
+vocabulario, y no por falta de sitio: `v1alpha7/01-view` §8 lo decide y esta
+versión no lo reabre — *«lo que no quepa en el vocabulario no entra como
+expresión libre; entra, cuando entre, como opaca declarada, y cuesta la garantía
+de análisis»*.
+
+Así que una propiedad calculada en el origen se convierte en una propiedad
+**derivada de la entidad**, con su `derivedFrom` y su `expression` documental, y
+deja de tener columna. Lo que se pierde es que el origen la calcule; lo que se
+conserva es la procedencia, que es lo que propaga las etiquetas.
+
+No es una pérdida de v1alpha8: **v1alpha7 ya la había causado** al absorber el
+binding en la vista, y nadie lo notó porque nada se había migrado todavía.
+Migrar el escaparate es lo que la destapó, que es exactamente para lo que sirve
+migrar el escaparate.
+
+### 5.4 · El `Binding` se retira, no se borra
 
 `kind: Binding` **deja de estar en la gramática a partir de v1alpha8**. Un documento que declare
 `apiVersion: oos.dev/v1alpha8` y sea un `Binding` falla con `OOS1003`.

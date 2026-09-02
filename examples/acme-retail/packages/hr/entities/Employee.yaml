@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha1
+apiVersion: oos.dev/v1alpha8
 kind: Entity
 
 metadata:
@@ -23,6 +23,15 @@ metadata:
 spec:
   nature: entity
   primaryKey: [employeeId]
+
+  # La flecha, invertida. El binding nombraba a la entidad; ahora la entidad
+  # nombra a la vista de la que sale, y sus propiedades se llaman como los
+  # campos de ESA vista. Así una vista existe antes de que nadie modele nada, y
+  # dos entidades pueden respaldarse de la misma sin duplicar el mapeo.
+  #
+  # Nombra una VISTA y nunca la tabla: si nombrara `workday_worker`, esta
+  # entidad tendría que llamar `Worker_Reference.ID` a su clave.
+  backedBy: empleados
 
   # Un empleado es SUJETO de peticiones, no solo objeto de ellas: es quien
   # pregunta. Sin esto el unico principal era `Role` —una bolsa sin atributos—
@@ -78,8 +87,8 @@ spec:
 
     # Procedencia, no computación. El compilador propaga
     #   join(critical, critical) = critical
-    # y NO calcula el valor: esta propiedad necesita binding como cualquier otra.
-    # Declarar `labels` aquí sería OOS4008.
+    # y NO calcula el valor: esta propiedad necesita un campo en su vista como
+    # cualquier otra. Declarar `labels` aquí sería OOS4008.
     totalCompensation:
       type: Money<EUR, 2>
       temporal: true
@@ -112,14 +121,14 @@ spec:
     manager:
       target: hr.Employee            # autorreferencia: Cedar la proyecta como jerarquía
       cardinality: many_to_one
-      via: managerId
+      via: [managerId]
       required: false
       description: Responsable jerárquico directo.
 
     department:
       target: hr.Department
       cardinality: many_to_one
-      via: departmentId
+      via: [departmentId]
       required: true
 
   moved:

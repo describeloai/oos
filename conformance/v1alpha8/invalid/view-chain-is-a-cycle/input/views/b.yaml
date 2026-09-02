@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: b, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: a }
+  fields:
+    y: x

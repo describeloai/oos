@@ -1,0 +1,43 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+
+metadata:
+  name: shipment_v2
+  namespace: supply
+  description: >
+    La tabla de envíos del ERP, registrada una vez. Snowflake versiona sus
+    tablas, así que esta sí sabe decir qué cambió entre dos lecturas — que es
+    exactamente lo que el binding no podía expresar.
+
+spec:
+  datasource: erp_snowflake
+  profile: oos.dev/connectors/gs1
+  object: "LOGISTICS.PUBLIC.TB_SHIPMENT_V2"
+
+  columns:
+    SHP_UUID:          {}
+    FK_SUPPLIER_ID:    {}
+    FK_SKU_CODE:       {}
+    QTY_UNITS:         {}
+    DT_PROMISED_UTC:   {}
+    CD_STATUS:         {}
+    DT_DELIVERED_UTC:  { physicalType: "timestamp_ntz" }
+    DT_ROW_VALID_FROM: {}
+    DT_ROW_VALID_TO:   {}
+
+  # La cara I. Un almacén analítico sabe hacer casi todo, y decirlo es lo que
+  # permite que el planificador baje trabajo en vez de traérselo.
+  reads:
+    predicatePushdown: [eq, neq, in, range, like, isNull]
+    joinPushdown: true
+    aggregatePushdown: [count, sum, avg, min, max, countDistinct]
+    fullScan: expensive
+    maxRowsPerRequest: 100000
+
+  # La cara D. El binding decía `strategy: table_version`, que hablaba de CÓMO
+  # se sondea; esto dice QUÉ LLEGA: restar dos versiones de una tabla da altas y
+  # bajas, y la resta tiene signo. Con eso, lo que se copie de aquí se puede
+  # mantener incrementalmente, y `OOS2021` no tiene nada que objetar.
+  changes:
+    mode: retract
+    witness: snapshot

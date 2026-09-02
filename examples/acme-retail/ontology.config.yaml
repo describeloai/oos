@@ -69,7 +69,7 @@ datasources:
     labels:
       acme.residency: global
 
-# Tampoco hay `defaults`. Si el modo de materialización por defecto fuese
-# configurable por repositorio, cambiarlo materializaría todos los bindings en
-# silencio. `passthrough` es EL valor por defecto de la especificación, no una
-# preferencia (P4).
+# Tampoco hay `defaults`. Si materializar por defecto fuese configurable por
+# repositorio, cambiarlo copiaría todas las vistas en silencio. La ausencia de
+# `materialized` es EL valor por defecto de la especificación —una vista es
+# virtual mientras nadie diga lo contrario—, no una preferencia (P4).
