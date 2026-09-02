@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#4
+level: L0
+expects: OOS2004
+summary: >
+  from.datasource nombra una fuente que el manifiesto no declara.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#4
+level: L0
+expects: OOS2011
+summary: >
+  La vista que respalda a la entidad no expone su primaryKey.

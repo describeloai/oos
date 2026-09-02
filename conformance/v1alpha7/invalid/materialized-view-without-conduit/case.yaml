@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#5.2
+level: L0
+expects: OOS4011
+summary: >
+  Una vista materializada sin que materialization.payload tenga autorizacion declarada.

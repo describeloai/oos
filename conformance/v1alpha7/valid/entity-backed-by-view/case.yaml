@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#3.1
+level: L0
+expects: accept
+summary: >
+  La entidad nombra a su vista con backedBy, en forma corta, y la vista expone su clave.

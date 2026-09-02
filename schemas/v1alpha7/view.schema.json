@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha7/view.schema.json",
+  "title": "View",
+  "description": "La vista: QUE EXISTE FISICAMENTE Y COMO SE LLAMA. De donde sale —una fuente declarada, u OTRA VISTA—, que campos expone, que filas son suyas, que sabe hacer el origen y, si se copia, donde.\n\nAbsorbe al Binding entero y le invierte la flecha: el binding nombraba a la entidad; ahora la entidad nombra a la vista con `backedBy`. Una vista existe antes de que nadie modele nada, varias entidades pueden respaldarse de la misma, y lo fisico deja de saber de significado.\n\nNO LLEVA SIGNIFICADO: ni `labels`, ni `is`, ni conceptos. Eso sigue en la entidad. Si la vista supiera que significa una columna habria dos sitios diciendolo.\n\nNormativo: spec/v1alpha7/01-view.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha7"
+    },
+    "kind": {
+      "const": "View"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "from",
+        "version",
+        "fields"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde de esta vista. Un binding no tenia dueno y la vista si, porque decide dos cosas que un binding no decidia: que se expone y con que frescura. La misma forma que en Package: `team:` o `user:`.",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "from": {
+          "description": "De donde sale. EXACTAMENTE UNA de dos formas: una fuente declarada y un objeto suyo, u otra vista.\n\nUna sola fuente y no una lista, y no es una limitacion provisional: el vocabulario de esta version no tiene junta, asi que una vista con dos fuentes no tendria forma de decir como se combinan. El dia que la tenga, `from` crecera con ella.\n\n`view` admite la forma corta dentro del mismo espacio de nombres (N1) y se resuelve con la regla de siempre. Debe existir (OOS2018), y la cadena no puede volver sobre si misma (OOS2019).",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "datasource",
+                "object"
+              ],
+              "properties": {
+                "datasource": {
+                  "description": "Fuente fisica, declarada en el manifiesto raiz (OOS2004). Es `datasourceRef`, mudado.",
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+                },
+                "object": {
+                  "description": "El objeto fisico: tabla, vista del almacen, objeto de API, tema, coleccion. Cadena OPACA, como `source` del binding: sus reglas son del origen.",
+                  "type": "string",
+                  "maxLength": 1024
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "view"
+              ],
+              "properties": {
+                "view": {
+                  "description": "La vista de abajo. Lo que esta lee son SUS CAMPOS, con los nombres que ella les dio: `fields` y `where` de esta vista nombran campos de aquella, no columnas fisicas.",
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            }
+          ]
+        },
+        "version": {
+          "description": "EL TESTIGO: que prueba que version de los datos se leyo. Obligatorio, y `none` es legal y tiene precio — sin testigo no hay marca, y sin marca lo materializado no puede decir hasta cuando era cierto.\n\n`snapshot` es la version nativa de un formato de tabla (Iceberg, Delta); `log` es una posicion en un flujo de cambios (LSN, SCN, offset); `field` es un campo de la propia vista que ordena el avance, y entonces `field` es obligatorio y debe estar en `fields` (OOS2018). Todos son ordinales: el motor los compara, no los interpreta.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness"
+          ],
+          "properties": {
+            "witness": {
+              "enum": [
+                "none",
+                "snapshot",
+                "log",
+                "field"
+              ]
+            },
+            "field": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            }
+          },
+          "if": {
+            "properties": {
+              "witness": {
+                "const": "field"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field"
+            ]
+          }
+        },
+        "freshness": {
+          "description": "Cuanto retraso se tolera respecto al origen. Es `freshnessSLA`, mudado y subido a la vista entera: una vista tiene UNA frescura, no una por eje.\n\nSuperado el umbral sin refresco, una implementacion DEBE declarar el estado degradado y NO DEBE servir lo viejo como fresco. Para un agente, saber que el contexto esta degradado es la diferencia entre abstenerse y alucinar.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+        },
+        "fields": {
+          "description": "Que sale y como se llama. Es `Binding.properties`, mudado, y con el sujeto cambiado: la clave es EL NOMBRE DEL CAMPO EN ESTA VISTA y el valor, su nombre en la fuente — una columna fisica si `from` es una fuente, un campo de la vista de abajo si es una vista.\n\nUna entidad con `backedBy` nombra estos campos por su nombre: sus propiedades se llaman como los campos de su vista. La vista que respalda una entidad DEBE exponer su `primaryKey` y los `via` de sus relaciones (OOS2011).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "where": {
+          "description": "Que FILAS de la fuente son esta vista. Es el `selector` del binding, con la misma gramatica cerrada —igualdad, pertenencia, ausencia— y por la misma razon: un predicado no filtra, lee, y un rango sobre una columna clasificada es un canal lateral. Una particion solo revela pertenencia.\n\nLas claves son columnas fisicas si `from` es una fuente, y campos de la vista de abajo si es una vista (OOS2018 si no los expone). Una vista sobre otra hereda las filas que la de abajo ya recorto. La conjuncion es implicita.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": [
+                  "string",
+                  "integer",
+                  "boolean",
+                  "null"
+                ]
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": [
+                    "string",
+                    "integer",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "capabilities": {
+          "description": "Que sabe hacer el origen. Es `Binding.capabilities`, mudado sin cambios: se DECLARAN, no se sondean, y sin ellas el planificador no tiene con que rechazar un plan antes de abrir una conexion.",
+          "$ref": "../v1alpha1/binding.schema.json#/$defs/capabilities"
+        },
+        "materialized": {
+          "description": "Donde vive la copia, SI se copia. Ausente, la vista es virtual y cada lectura va al origen.\n\nUna vista materializada instancia el conducto `materialization.payload`, el mismo que el eje `payload` del binding, porque es la misma cosa con otro dueno: cada campo de la vista fluye por el, y lleva lo que llevan sus campos — lo que el datasource raiz etiqueta y lo que cualquier entidad respaldada por esta vista, o por una de encima, declaro sobre ellos (OOS4001, OOS4002, OOS4011).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "datasource",
+            "table"
+          ],
+          "properties": {
+            "datasource": {
+              "description": "La fuente en la que vive la copia, declarada en el manifiesto raiz (OOS2004). Es del cliente: ORE no opera ninguna base de datos.",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            },
+            "table": {
+              "description": "La tabla, opaca como cualquier nombre fisico.",
+              "type": "string",
+              "maxLength": 1024
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+  "$defs": {
+    "field": {
+      "description": "Dos formas, como en el binding: la breve —el nombre en la fuente— y la expandida. La canonica es la expandida.",
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 1024,
+          "description": "El nombre en la fuente. Equivale a `{ column: <valor> }`."
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "column"
+          ],
+          "properties": {
+            "column": {
+              "description": "El nombre en la fuente: una columna fisica, o un campo de la vista de abajo. Cadena OPACA; puede llevar puntos si el origen es anidado.",
+              "type": "string",
+              "maxLength": 1024
+            },
+            "physicalType": {
+              "description": "Tipo tal como lo almacena el origen. Vocabulario de ODCS, absorbido. Es fisico, asi que vive aqui y no en la entidad.",
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        }
+      ]
+    }
+  }
+}

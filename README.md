@@ -202,9 +202,11 @@ spec/v1alpha3/     alcance cerrado — la capa de gobierno
 spec/v1alpha4/     borrador de alcance — el significado
 spec/v1alpha5/     borrador de alcance — la emisión a GraphQL
 spec/v1alpha6/     borrador de alcance — la distribución
+spec/v1alpha7/     borrador de alcance — la vista
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
+schemas/v1alpha7/  view, y entity con `backedBy`
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia
@@ -320,6 +322,14 @@ en otra parte; un concepto **sí** puede exigir gobierno porque la regulación c
 categoría y no por nivel; y la herencia entre interfaces **se computa**, porque un `Interface`
 es una clase definida y su jerarquía es inferida por construcción
 ([`00-scope`](spec/v1alpha4/00-scope.md) §6). Ninguna añade un código nuevo.
+
+| | v1alpha7 · borrador de alcance, no normativo |
+|---|---|
+| [`00-scope`](spec/v1alpha7/00-scope.md) · alcance, la tesis, y por qué la vista absorbe al binding | ✅ |
+| [`01-view`](spec/v1alpha7/01-view.md) · qué es una vista, su forma, la cadena, y qué significa que esto esté listo (§9) | ✅ |
+| [`schemas/v1alpha7/`](schemas/v1alpha7/) · `view`, y `entity` con `backedBy` | ✅ |
+| [`conformance/v1alpha7/`](conformance/v1alpha7/README.md) · borrador | ✅ |
+| **listo para v1** | ⏳ **la migración** — `Binding` sigue existiendo; [`01-view`](spec/v1alpha7/01-view.md) §9 |
 
 | | v1alpha6 · borrador de alcance, no normativo |
 |---|---|

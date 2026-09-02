@@ -1,0 +1,20 @@
+apiVersion: oos.dev/v1alpha7
+kind: View
+metadata: { name: empleados, namespace: hr }
+spec:
+  owner: team:hr
+  from: { datasource: erp, object: public.employees }
+  version: { witness: log }
+  freshness: 15m
+  fields:
+    employeeId: employee_id
+    nationalId:
+      column: national_id
+      physicalType: varchar(16)
+    pais: country
+  where:
+    deleted: "false"
+  materialized: { datasource: lago, table: cache.hr_employees }
+  capabilities:
+    predicatePushdown: [eq, in]
+    fullScan: cheap

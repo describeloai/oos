@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#4
+level: L0
+expects: OOS2018
+summary: >
+  from.view nombra una vista que no esta en el paquete.

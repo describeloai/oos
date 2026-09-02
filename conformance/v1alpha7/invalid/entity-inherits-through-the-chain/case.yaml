@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#5.1
+level: L0
+expects: OOS4002
+summary: >
+  El datasource raiz lleva low; la vista de arriba, dos eslabones despues, se materializa en un conducto que admite none.

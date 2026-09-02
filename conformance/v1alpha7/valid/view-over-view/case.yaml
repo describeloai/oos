@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#5
+level: L0
+expects: accept
+summary: >
+  Una vista sobre otra renombra sus campos y recorta por uno de ellos; la entidad se respalda en la de arriba.

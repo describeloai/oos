@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#5.2
+level: L0
+expects: OOS4002
+summary: >
+  La vista de abajo se materializa; la entidad, dos eslabones arriba, declara high sobre un campo que baja hasta ella; el conducto admite low.

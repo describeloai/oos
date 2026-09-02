@@ -1,0 +1,5 @@
+rule: spec/v1alpha7/01-view.md#4
+level: L0
+expects: OOS2019
+summary: >
+  Dos vistas que salen una de la otra. Ninguna tiene raiz.

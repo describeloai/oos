@@ -86,6 +86,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar u `ontology.lock` | 00 §5 |
 | `OOS2016` | la firma de un paquete importado no verifica, o falta la que el lock afirma | v1alpha6 02 §5 |
 | `OOS2017` | la prueba de transparencia de un paquete no verifica, o falta la que el lock afirma | v1alpha6 03 §5 |
+| `OOS2018` | una vista, `backedBy`, un campo o un filtro nombran una vista o un campo que no existe | v1alpha7 01 §4 |
+| `OOS2019` | la cadena de vistas vuelve sobre sí misma | v1alpha7 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
