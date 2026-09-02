@@ -208,7 +208,7 @@ dos entidades con una relación**, o son **una copia declarada**. Las dos son ex
 ninguna mueve un byte que nadie haya mandado mover. Lo que desaparece es que la ontología finja
 que dos registros son un solo objeto sin que nadie lo declare.
 
-### 6.1 · Por qué las cinco exclusiones son **una**
+### 6.1 · Y la segunda razón: por qué las cinco exclusiones son **una**
 
 Las cuatro operaciones de arriba y la federación se excluyeron una a una, cada una por su precio.
 Miradas juntas son la misma frontera vista desde el otro lado.
@@ -228,7 +228,14 @@ en algún sitio— escribir es `Q⁻¹`, y una vista solo se deja escribir si `Q
 | limitar | **no**: qué filas están es un hecho del orden, no del dato | no |
 
 Lo que la vista sabe hacer es **exactamente el fragmento invertible**, y eso no se buscó: se
-descubrió al migrar el árbol. Admitir cualquiera de las cuatro haría el sustrato de solo lectura
+descubrió al migrar el árbol.
+
+Y hay una corroboración que no venía de aquí. Las *materialized views* de Snowflake **solo pueden
+consultar una tabla** y **no admiten juntas, ni siquiera auto-juntas** —tampoco UDFs, ni funciones
+de ventana, ni `HAVING`, ni `ORDER BY`, ni `LIMIT`—. Es casi este mismo fragmento, y llegaron por
+otro camino: ellos lo restringen por **mantenibilidad incremental**, esta versión lo cerró por **el
+precio en la regla de flujo**, y resultó ser **el fragmento invertible**. Tres razones
+independientes, la misma frontera. Admitir cualquiera de las cuatro haría el sustrato de solo lectura
 para siempre, y esa es una decisión demasiado grande para tomarla por comodidad al migrar un
 caso.
 
@@ -244,6 +251,29 @@ en Workday y `Employee.alias` en un fichero no es un hecho sobre qué es un empl
 sobre cómo está montada una empresa hoy, y mañana no. Escribirlo en la capa física convertía esa
 circunstancia en parte de la ontología, y la hacía invisible: el plan se abría en dos lecturas y
 ningún documento decía que eso iba a pasar.
+
+Y hay una razón más honda, que es la que Foundry y Cognite **sí** pueden saltarse.
+
+Federar une por una clave que alguien **afirma** compartida. En sus arquitecturas esa afirmación
+ya ocurrió aguas arriba: Cognite direcciona cada instancia por `space` + `externalId`, y ese
+identificador lo pone quien ingiere; un objeto multi-fuente de Foundry une sus fuentes por la
+clave primaria que la tubería dejó consistente. El modelo la da por hecha porque **hubo una
+ingesta donde ocurrió**.
+
+Aquí no hay ingesta, así que no hay ningún sitio donde haya ocurrido. Y **materializar no la
+crea**: copiar filas no reconcilia identidades. Dos copias con una clave que colisiona siguen
+siendo dos copias, y la afirmación *«estas dos filas son la misma cosa»* es exactamente la misma
+antes y después de copiar.
+
+Por eso no es del sustrato. Es de [`v1alpha2/03-resolution`](../v1alpha2/03-resolution.md), cuya
+estrategia `deterministic` está descrita allí, literalmente, como **«un `join`»**, con su `match`
+entre fuentes, su `normalize` y su conducto. El binding hacía eso mismo **sin declarar ninguna de
+las tres cosas**: la resolución de identidad más difícil de los datos empresariales, escondida
+dentro de un documento físico.
+
+Y el día que haya un almacén propio —una copia en casa— reconciliar pasa a ser **posible**, y
+sigue sin ser del sustrato: pasa a ser un **acto declarado**, con el documento que ya existe. Lo
+que cambia entonces es quién responde de la reconciliación, no dónde se escribe.
 
 Sin ella hay dos formas de decir lo mismo, y las dos son más honestas que la que se va:
 
