@@ -7,7 +7,7 @@
 |---|---|
 | `00-scope` | **este documento** — qué entra, qué no, y por qué lo físico se registra una vez |
 | [`01-table`](01-table.md) | la tabla: naturaleza, las dos caras, la forma y las reglas |
-| [`02-view`](02-view.md) | la vista, adelgazada: qué pierde, qué conserva, y **las dos reglas nuevas** (§5) |
+| [`02-view`](02-view.md) | la vista, adelgazada: qué pierde, qué conserva, y **las tres reglas nuevas** (§5) |
 
 Esta versión **añade un `kind`** —`Table`—, **adelgaza otro** —`View` pierde `capabilities` y
 `version`— y **retira un tercero** —`Binding` deja de estar en la gramática. Añade dos códigos
@@ -192,7 +192,71 @@ documento, y **ningún día es el día en que todo se rompe**.
 
 **Unir, agregar, deduplicar, limitar.** Siguen fuera del vocabulario de la vista, y por la misma
 razón que en v1alpha7: cada una tiene un precio en la regla de flujo, y el precio se decide
-antes de admitir la operación. La tabla no cambia ese cálculo.
+antes de admitir la operación. La tabla no cambia ese cálculo — y le añade una segunda razón,
+§6.1.
+
+**Una entidad servida desde varios objetos.** `03-binding` §2.1 lo admitía —*«una entidad PUEDE
+tener varios bindings; cada uno cubre un subconjunto de sus propiedades»*— y esta versión **no**.
+Una entidad tiene un `backedBy`, una vista sale de un sitio, y componer dos objetos por su clave
+es una junta.
+
+No es lo mismo que *«un objeto físico PUEDE sostener varias entidades»*, que sí se migra sin
+pérdida: es una tabla y N vistas, y está en §5.1.
+
+Lo que se pierde tiene sustituto, y el sustituto dice la verdad sobre el mundo: **dos sistemas son
+dos entidades con una relación**, o son **una copia declarada**. Las dos son expresables, y
+ninguna mueve un byte que nadie haya mandado mover. Lo que desaparece es que la ontología finja
+que dos registros son un solo objeto sin que nadie lo declare.
+
+### 6.1 · Por qué las cinco exclusiones son **una**
+
+Las cuatro operaciones de arriba y la federación se excluyeron una a una, cada una por su precio.
+Miradas juntas son la misma frontera vista desde el otro lado.
+
+La regla de esta versión dice `View = Q(Table)`. El día que se escriba **a través** de una vista
+—y ese día está en la dirección del proyecto: una función sobre la ontología tiene que aterrizar
+en algún sitio— escribir es `Q⁻¹`, y una vista solo se deja escribir si `Q` es invertible.
+
+| operación | ¿invertible? | ¿está? |
+|---|---|---|
+| renombrar | sí, es una biyección | **sí** |
+| recortar por partición | sí: la fila escrita cumple el predicado o se cae de la vista | **sí** |
+| proyectar | parcialmente — faltan columnas, así que la escritura es *parcial*, no ambigua | **sí** |
+| unir *(incluida la federación por clave)* | **no**: no se sabe a cuál de las bases escribir | no |
+| agregar | **no**: una fila del resultado no corresponde a una fila de la base | no |
+| deduplicar | **no**: la inversa no es una función | no |
+| limitar | **no**: qué filas están es un hecho del orden, no del dato | no |
+
+Lo que la vista sabe hacer es **exactamente el fragmento invertible**, y eso no se buscó: se
+descubrió al migrar el árbol. Admitir cualquiera de las cuatro haría el sustrato de solo lectura
+para siempre, y esa es una decisión demasiado grande para tomarla por comodidad al migrar un
+caso.
+
+El razonamiento largo, y lo que se construye encima, está en `docs/sustrato.md` de la
+implementación de referencia. No es normativo; esto sí.
+
+**Una entidad servida desde varios objetos.** `03-binding` §2.1 lo admitía —*«una entidad PUEDE
+tener varios bindings; cada uno cubre un subconjunto de sus propiedades»*— y aquí **no entra**.
+Es la única cosa que v1alpha1 sabe decir y v1alpha8 no, así que conviene decir por qué.
+
+Federar no es una decisión de modelado: es una de **operación**. Que `Employee.baseSalary` viva
+en Workday y `Employee.alias` en un fichero no es un hecho sobre qué es un empleado — es un hecho
+sobre cómo está montada una empresa hoy, y mañana no. Escribirlo en la capa física convertía esa
+circunstancia en parte de la ontología, y la hacía invisible: el plan se abría en dos lecturas y
+ningún documento decía que eso iba a pasar.
+
+Sin ella hay dos formas de decir lo mismo, y las dos son más honestas que la que se va:
+
+- **dos entidades y una relación** por la clave que comparten. Son dos sistemas y dos registros;
+  el modelo lo dice y el consumidor recorre. Nada se mueve;
+- **una copia declarada**: se materializa lo que haga falta en un sitio y se registra como una
+  `Table`. El coste se escribe donde se paga.
+
+Lo que desaparece es que la ontología finja que son un solo objeto sin que nadie lo declare.
+
+La consecuencia hay que vigilarla, y por eso esta exclusión **tiene un código**: quitada la
+federación, una cobertura parcial deja de ser legal, porque ya no hay otro documento que cubra
+el resto. Es `OOS2022`, en [`02-view` §5.3](02-view.md#53).
 
 **`UNNEST`.** Un documento con un array no se aplana sin un operador que la gramática no tiene.
 `columns` lo hace **visible** —dice qué hay, con el tipo que el origen le da— sin resolverlo.

@@ -118,6 +118,8 @@ donde decía `from.datasource`:
 - La cadena **NO DEBE** volver sobre sí misma — `OOS2019`.
 - La vista que respalda una entidad **DEBE** exponer su `primaryKey` y los `via` de sus
   relaciones — `OOS2011`.
+- Y **DEBE** exponer un campo por cada propiedad de esa entidad que no declare `derivedFrom` —
+  `OOS2022`, §5.3.
 - La vista **NO** admite `labels`. Estructural: `OOS1005`.
 
 Y cambian dos:
@@ -130,9 +132,10 @@ Y cambian dos:
 
 ---
 
-## 5. Las dos reglas nuevas
+## 5. Las reglas nuevas
 
-Las dos eran, hasta aquí, prosa en la documentación de quien las sufrió. Aquí son compilación.
+Tres. Las dos primeras eran, hasta aquí, prosa en la documentación de quien las sufrió; la
+tercera no existía porque hasta aquí no hacía falta. Las tres son compilación.
 
 ### 5.1 · `OOS2020` — lo que no se puede leer se debe materializar
 
@@ -166,14 +169,43 @@ anexado— como una nota en su documentación. **Es el peor modo de fallo de tod
 produce ningún síntoma. La vista se materializa, la consulta responde, los números salen, y son
 los de antes. Convertirlo en un código es la diferencia entre un compilador y un manual.
 
-### 5.3 · Lo que las dos tienen en común
+### 5.3 · `OOS2022` — una propiedad sin campo no tiene de dónde salir
 
-Las dos son la regla de la versión leída al revés:
+> Cada propiedad de una entidad **DEBE** ser un campo de la vista que la respalda, salvo que
+> declare `derivedFrom`.
+
+Esta regla es **la otra cara de una exclusión**, y solo se entiende junto a ella.
+
+`03-binding` §2.1 admitía que *«una entidad PUEDE tener varios bindings; cada uno cubre un
+subconjunto de sus propiedades»*. Con eso, una cobertura parcial no solo era legal: era **el
+mecanismo**. Preguntar *«¿de dónde sale esta propiedad?»* no tenía respuesta local, porque la
+respuesta podía estar en otro documento.
+
+[`00-scope` §6](00-scope.md#6-lo-que-no-entra) retira esa posibilidad: una entidad sale de **una**
+vista. Y en cuanto no hay otro documento donde mirar, la pregunta vuelve a tener respuesta local
+— y una propiedad sin campo pasa de *«la cubre otro»* a *«no la cubre nadie»*.
+
+Sin esta regla, la migración que esta versión pide produciría exactamente el fallo que este
+proyecto persigue: se escribe una vista con la mitad de los campos, la entidad sigue declarando
+el doble, **compila en verde**, y las propiedades huérfanas responden vacío para siempre.
+
+**`derivedFrom` es la excepción, y es la única.** Una propiedad derivada declara de qué otras
+propiedades sale, y eso *es* su origen: pedirle además una columna sería exigirle que esté
+calculada en la fuente. Es justo lo que la migración de `Binding.properties.<x>.expression` deja
+de poder hacer ([`00-scope` §5.3](00-scope.md#53)), así que negarle el hueco sería cerrar la
+única salida que le queda.
+
+### 5.4 · Lo que las tres tienen en común
+
+Las dos primeras son la regla de la versión leída al revés:
 
 > `Table = I(changes)` — sin `I` no hay lectura, y sin `-1` no hay `I` de una cosa que cambia.
 
 Y las dos son comprobables **solo** desde que la tabla declara sus dos caras. Ese es el precio
 que paga esta versión, y lo que compra.
+
+La tercera no sale del álgebra: sale de haber **quitado** algo. Las reglas que aparecen al retirar
+una pieza son las que más fácil se olvidan, porque no las pide nadie — las pide la ausencia.
 
 ---
 

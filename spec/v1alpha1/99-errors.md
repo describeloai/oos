@@ -90,6 +90,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2019` | la cadena de vistas vuelve sobre sí misma | v1alpha7 01 §4 |
 | `OOS2020` | una vista cuya raíz de lectura no se deja leer —`reads: none`— no lleva `materialized` | v1alpha8 02 §5.1 |
 | `OOS2021` | una vista materializada cuya raíz solo anexa —`changes.mode: append`— respalda una entidad `nature: entity` | v1alpha8 02 §5.2 |
+| `OOS2022` | una propiedad de una entidad no es campo de su vista, y no declara `derivedFrom` | v1alpha8 02 §5.3 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
