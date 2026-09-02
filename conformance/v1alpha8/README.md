@@ -48,6 +48,18 @@ comprobaba el eslabón vista→vista y creía el último tramo, porque ningún d
 columnas tenía la tabla. `field-not-a-column` es el caso que mide ese peldaño, y en v1alpha7 no
 se podía escribir.
 
+## Lo que la primera medición corrigió
+
+Los tres casos válidos que **copian** —`stream-table-materialized`,
+`virtual-over-materialized-over-stream` y `append-changes-back-an-event`— se escribieron sin
+`ConduitPolicy`, y el compilador los rechazó con `OOS4011`. Tenía razón: una vista con
+`materialized` instancia el conducto `materialization.payload`, y **omitir un conducto no es
+dejarlo abierto, es cerrarlo**. Los tres declaran el suyo.
+
+El cuarto que copia y no lo declaraba era `invalid/append-changes-back-a-mutable-entity`, que
+pasaba igual porque `OOS2021` sale antes. También lo declara ahora: un caso que pasa por un
+código distinto del que afirma es un caso que un día cambia de significado sin que nadie lo vea.
+
 ## Una desviación del plan, y por qué
 
 El plan de trabajo llamaba a un caso `upsert-without-key`, esperando `OOS2018`. Al escribir el
