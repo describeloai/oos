@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#5.3
+level: L0
+expects: accept
+summary: >
+  Una propiedad derivada declara de qué otras sale, y eso ES su origen: no necesita campo.

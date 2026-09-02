@@ -21,6 +21,7 @@ spec:
     employeeId:        "Worker_Reference.ID"
     fullName:          "Personal_Data.Name_Data.Legal_Name.Full_Name"
     email:             "Contact_Data.Email_Address_Data.Email_Address"
+    nationalId:        "Personal_Data.National_ID"
     managerId:         "Management_Chain_Data.Manager_Reference"
     departmentId:      "Organization_Data.Cost_Center_Reference"
     grade:             "Compensation_Data.Grade_Reference"
@@ -53,6 +54,11 @@ spec:
   #     por el nombre del campo. Esta vista no lleva significado y aun así no
   #     puede copiarse: es el sello de v1alpha7 §5.2, intacto con una tabla
   #     debajo.
+  #
+  #     Y no es un campo: son ONCE. `baseSalary` sale el primero por orden
+  #     alfabético, y entre los once está `nationalId` — que es exactamente el
+  #     campo con el que el binding original enseñaba esto, cuando ni siquiera
+  #     lo mapeaba. Ahora lo mapea, y la traza es cierta en vez de hipotética.
   #
   # Las dos se detectan al compilar: sin conexión a Workday, sin credenciales,
   # sin haber leído el registro de un solo empleado.

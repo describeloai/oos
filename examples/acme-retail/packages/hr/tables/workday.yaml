@@ -28,6 +28,7 @@ spec:
     "Worker_Reference.ID": {}
     "Personal_Data.Name_Data.Legal_Name.Full_Name": {}
     "Contact_Data.Email_Address_Data.Email_Address": {}
+    "Personal_Data.National_ID": { physicalType: "varchar(16)" }
     "Management_Chain_Data.Manager_Reference": {}
     "Organization_Data.Cost_Center_Reference": {}
     "Compensation_Data.Grade_Reference": {}

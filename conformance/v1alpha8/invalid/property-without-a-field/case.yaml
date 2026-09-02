@@ -1,0 +1,5 @@
+rule: spec/v1alpha8/02-view.md#5.3
+level: L0
+expects: OOS2022
+summary: >
+  La entidad declara una propiedad que su vista no expone: no tiene de dónde salir, y respondería vacía.

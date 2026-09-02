@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  backedBy: empleados
+  properties:
+    employeeId: { type: String }
+    baseSalary: { type: Decimal }
+    bonus:      { type: Decimal }
+    totalCompensation:
+      type: Decimal
+      derivedFrom: [hr.Employee.baseSalary, hr.Employee.bonus]
