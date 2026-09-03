@@ -225,7 +225,7 @@ de esquemas es consecuencia de haber añadido un `kind`, no un requisito de tene
 | [`00-overview`](spec/v1alpha1/00-overview.md) · alcance, conformidad, principios, absorción | ✅ |
 | [`01-package`](spec/v1alpha1/01-package.md) · el perfil de ODCS: quién responde y desde cuándo | ✅ |
 | [`02-entity`](spec/v1alpha1/02-entity.md) · qué existe, y qué convierte a una entidad en principal | ✅ |
-| [`03-binding`](spec/v1alpha1/03-binding.md) · dónde está el dato y qué se copia | ✅ |
+| [`03-binding`](spec/v1alpha1/03-binding.md) · dónde está el dato y qué se copia | ✅ · **histórico** desde v1alpha8 |
 | [`04-flow`](spec/v1alpha1/04-flow.md) · retículos, conductos, desclasificadores | ✅ |
 | [`05-ejecutor`](spec/v1alpha1/05-ejecutor.md) · qué puede hacer quien **sí** toca el dato | ✅ |
 | [`06-request`](spec/v1alpha1/06-request.md) · qué entra con una petición, y quién responde | ✅ |

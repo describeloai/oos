@@ -1,8 +1,40 @@
 # 03 · Binding — perfil de ODCS
 
-**Estado:** normativo. Parte de OOS v1alpha1.
+**Estado:** **histórico** — sustituido por [`Table`](../v1alpha8/01-table.md) y
+[`View`](../v1alpha8/02-view.md) en v1alpha8. Parte de OOS v1alpha1.
 **Anfitrión:** Open Data Contract Standard v3.1 — Infrastructures & Servers, y los tipos
 físicos a nivel de propiedad.
+
+> ### Qué significa «histórico» aquí, y qué no
+>
+> **Este documento sigue siendo normativo para los documentos que lo declaran.** `apiVersion` es
+> por documento y v1alpha1 no caduca —[`91-versioning`](91-versioning.md)—, así que un `Binding`
+> que diga `apiVersion: oos.dev/v1alpha1` compila hoy, compilará mañana, y lo que dice esta
+> página es lo que significa.
+>
+> Lo que cambia es que **no se escriben nuevos**. Declararlo bajo `oos.dev/v1alpha8` o posterior
+> es `OOS1003`, y el mensaje dice qué poner en su lugar.
+>
+> **En qué se convirtió, y por qué en dos documentos y no en uno.** Un `Binding` decía tres cosas
+> a la vez: dónde vive el objeto, qué columnas tiene, y qué sale de él con qué nombre. Las dos
+> primeras son del **objeto** y valen para todos sus consumidores; la tercera es de **quien
+> pregunta**. Juntas obligaban a repetir el contrato físico en cada binding que tocara la misma
+> tabla.
+>
+> | lo que decía un `Binding` | dónde vive ahora |
+> |---|---|
+> | `datasourceRef`, `source`, tipos físicos | `Table` — el objeto, registrado **una vez** |
+> | `capabilities` | `Table.reads` — la cara `I` |
+> | *(no lo decía)* | `Table.changes` — la cara `D`, que no existía |
+> | `properties` — propiedad → columna | `View.fields` |
+> | `selector` | `View.where` |
+> | `materialized` | `View.materialized` |
+> | `targetEntity` | al revés: `Entity.backedBy` nombra la vista |
+>
+> Y una que **no** se convirtió, dicha porque es la que costó: `Binding` admitía que **varios**
+> cubrieran una entidad, cada uno con un subconjunto de sus propiedades —§2.1—. Una `View` no.
+> [`v1alpha8/00-scope`](../v1alpha8/00-scope.md) §6 retira esa posibilidad y §6.1 dice por qué:
+> no es una limitación provisional, es la frontera de la invertibilidad.
 
 ---
 
