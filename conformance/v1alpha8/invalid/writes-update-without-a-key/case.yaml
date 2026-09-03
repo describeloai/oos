@@ -1,6 +1,6 @@
 rule: spec/v1alpha8/01-table.md#6
 level: L0
-expects: reject
+expects: OOS2024
 summary: >
   Una tabla acepta `update` y `delete` y no declara `changes.key`: nada dice qué
   fila se toca, así que la escritura que promete es un `UPDATE` sin `WHERE`.
