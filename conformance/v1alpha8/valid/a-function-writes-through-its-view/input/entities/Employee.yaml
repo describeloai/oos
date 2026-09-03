@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  backedBy: hr.empleados
+  properties:
+    employeeId: { type: String }
+    pais: { type: String }
+    estado: { type: String }

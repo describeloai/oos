@@ -1,0 +1,7 @@
+rule: spec/v1alpha8/01-table.md#3.1
+level: L1
+expects: accept
+summary: >
+  Una tabla declara sus tres caras, una vista la recorta, una entidad la
+  respalda y una función escribe una de sus propiedades. Nadie declara la
+  fuente: se deriva.

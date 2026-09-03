@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: Function
+metadata: { name: activar, namespace: hr }
+spec:
+  runtime: wasm
+  entrypoint: dist/activar.wasm
+  effects:
+    - writes: hr.Employee.estado
+      datasourceRef: erp
+      to: "ACTIVO"

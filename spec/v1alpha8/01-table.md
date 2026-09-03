@@ -35,11 +35,15 @@ descubrimiento puede emitirla mecánicamente y sin inventar.
 - **No es una vista.** No se materializa, no tiene frescura y no tiene dueño de negocio: tiene
   dueño técnico por su `datasource`. **Materializar es una decisión sobre una consulta**, y la
   consulta es la vista.
-- **No se escribe.** El puntero es de solo lectura.
+- **`ore` no la escribe.** Ni una fila, por ningún camino. La cara `W` de §3 es una
+  **declaración** —qué acepta el origen—, y declarar no es abrir una conexión: sirve para
+  rechazar al compilar, y aplicar es de un programa delegado. La frase que esto **no** contradice
+  es la de Databricks —*«Unity Catalog will not issue write credentials under any
+  circumstance»*—, que va de credenciales y sigue valiendo entera.
 
 ---
 
-## 3. Las dos caras
+## 3. Las tres caras
 
 Nadie tiene *«foreign stream»*. Lo que todos tienen es el puntero de lectura y, aparte, un
 **changelog** que nunca se lee por clave y que solo se convierte en tabla materializándolo — la
@@ -58,11 +62,43 @@ por separado:
 |---|---|---|
 | **`reads`** — la cara `I` | ¿qué se le puede pedir, y con qué filtros? | el planificador de empuje, la *upquery*, la fase de lectura del ejecutor |
 | **`changes`** — la cara `D` | ¿qué cambios emite, con qué codificación y con qué testigo? | el mantenedor incremental, el analizador de refresco, el modelo de coste |
+| **`writes`** — la cara `W` | ¿qué se le puede aplicar, y con qué identifica la fila? | el compilador de efectos, y el programa delegado que aplica |
 
 Un tema de Kafka es una tabla cuya cara de lectura es `none`. Una API con `modified_since` es una
 tabla cuya cara de cambio es `append`. Un PostgreSQL con ranura de replicación tiene las dos.
 **Un «stream» es el nombre corriente de una tabla sin cara de lectura**, y por eso no hace falta
 un `kind` para él.
+
+### 3.1 · Y la tercera, que es un conjunto y no un modo
+
+`reads` dice **qué se puede pedir**; `changes`, **qué sale**; `writes`, **qué entra**. Las tres
+tienen el mismo dueño —el objeto— y la misma consecuencia: **la ausencia es una negativa.** Una
+tabla que no declara `writes` no se escribe, igual que una con `reads: none` no se consulta.
+
+Lo que separa a `writes` de las otras dos es su forma, y no se eligió: **estaba estandarizada.**
+`changes.mode` es un valor único porque un changelog codifica el cambio de **una** manera. Un
+objeto, en cambio, puede aceptar altas y no borrados, y eso hay que poder decirlo. SQL ya lo
+dice, y lo dice separado:
+
+> `information_schema.views` expone **tres columnas distintas** —`is_insertable_into`,
+> `is_updatable` y `is_trigger_deletable`— y no un modo.
+
+Así que la cara `W` es un **conjunto** sobre un vocabulario cerrado de tres:
+
+| operación | qué significa | ¿necesita identificar una fila? |
+|---|---|---|
+| `insert` | acepta filas nuevas | **no** |
+| `update` | acepta cambiar columnas de una fila que ya está | **sí** |
+| `delete` | acepta retirar una fila | **sí** |
+
+No hay `upsert`, y no por olvido: `upsert` es `insert` más `update`, y el conjunto ya lo dice sin
+una cuarta palabra. `changes.mode` sí lo tiene porque allí **no** es una suma — es una
+codificación distinta de la retractación.
+
+**Y la fila se identifica con `changes.key`, que ya existe.** No hay `writes.key`: sería un
+segundo sitio diciendo lo mismo, y es exactamente el defecto que la tabla vino a corregir. Lo que
+sí cambia es cuándo `key` es legal —§6—, porque hasta ahora solo lo era con `mode: upsert` y
+ahora también la exige la cara `W`.
 
 ---
 
@@ -142,9 +178,12 @@ spec:
   changes:
     mode: retract                    # none | append | retract | upsert
     witness: log                     # none | snapshot | log | field
-    # key: [employee_id]             # obligatorio con `mode: upsert`
+    key: [employee_id]               # aquí la exige `writes`, no el modo
     # field: updated_at              # obligatorio con `witness: field`
     # retention: 7d                  # cuánto guarda el origen el changelog, si se sabe
+
+  # La cara W. Qué acepta el objeto. Ausente significa que no acepta nada.
+  writes: [insert, update, delete]   # subconjunto no vacío, o el literal `none`
 ```
 
 Un tema, una API y un lago, en la misma forma:
@@ -184,6 +223,24 @@ spec:
   changes: { mode: retract, witness: snapshot }
 ```
 
+Y las tres formas que toma la cara `W`, que son todas las que hay:
+
+```yaml
+# Un catálogo de solo lectura: no dice nada, y eso ya es la respuesta.
+spec: { datasource: erp, object: "public.paises", columns: { iso: {} },
+        reads: { fullScan: cheap }, changes: { mode: none, witness: none } }
+
+# Un log de auditoría: se le añade, nunca se corrige. Sin `key`, y no le hace falta.
+spec: { datasource: erp, object: "public.auditoria", columns: { id: {}, quien: {} },
+        reads: { fullScan: expensive }, changes: { mode: append, witness: none },
+        writes: [insert] }
+
+# Una tabla operativa: las tres, y por eso `changes.key` es obligatoria.
+spec: { datasource: erp, object: "public.employees", columns: { employee_id: {} },
+        reads: { fullScan: cheap }, changes: { mode: retract, witness: log,
+        key: [employee_id] }, writes: [insert, update, delete] }
+```
+
 ### 5.1 · Lo que muda de la vista de v1alpha7, campo a campo
 
 | `View` v1alpha7 | `Table` v1alpha8 | Qué cambia |
@@ -215,13 +272,22 @@ spec:
   Cambia de sujeto respecto al binding, donde eran **propiedades**: un filtro exigido lo exige
   el origen, y el origen habla de columnas. Es lo que deja que un nombre anidado
   —`"Worker_Reference.ID"`— sea un filtro exigido legal, cosa que con un identificador no cabía.
+- `writes` es **o** una lista no vacía **o** el literal `none`, y su vocabulario es cerrado:
+  `insert`, `update`, `delete`, sin repetir. Cualquier otra palabra es `OOS1004`. **Ausente
+  significa `none`** — la ausencia es una negativa, y decirlo en voz alta también vale.
+- Con `writes` que contenga `update` o `delete`, `changes.key` **DEBE** estar presente —
+  `OOS2024`. Sin ella, *«actualiza esta fila»* no nombra ninguna: un `update` sin clave es un
+  `UPDATE` sin `WHERE`, y eso no es una escritura parcial, es un accidente. `insert` no la
+  necesita, porque no señala a nada que ya esté.
 - Con `changes.mode: upsert`, `changes.key` **DEBE** estar presente y **cada uno de sus nombres
   DEBE ser una columna de `columns`** — `OOS2018`. Sin clave, un *tombstone* no dice qué retira.
 - Con `changes.witness: field`, `changes.field` **DEBE** estar presente y **DEBE ser una columna
   de `columns`** — `OOS2018`. Una marca de agua que no es columna no la puede leer nadie.
-- `changes.key` y `changes.field` **NO DEBEN** aparecer donde no significan nada: `key` solo con
-  `upsert`, `field` solo con `witness: field`. Un campo que se ignora es peor que uno que no
-  existe, porque promete algo.
+- `changes.key` y `changes.field` **NO DEBEN** aparecer donde no significan nada: `key` con
+  `mode: upsert` **o** con un `writes` que actualice o borre, `field` solo con `witness: field`.
+  Un campo que se ignora es peor que uno que no existe, porque promete algo. La disyunción es de
+  v1alpha8 y es lo único que la cara `W` cambia de la cara `D`: la clave la puede necesitar
+  cualquiera de las dos, y sigue habiendo **una**.
 - `retention` es informativo y opcional. Dice cuánto guarda el origen su changelog; quien
   planifique un refresco lo usa para saber si puede llegar tarde.
 - La tabla **NO** admite `labels`. Estructural: `OOS1005`.

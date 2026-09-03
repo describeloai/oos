@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: purchaseOrderErp, namespace: scm }
+spec:
+  targetEntity: scm.PurchaseOrder
+  datasourceRef: postgres_erp
+  source: public.purchase_orders
+  properties:
+    orderId: { column: order_id, physicalType: "varchar(16)" }
+    status:  { column: status,   physicalType: "varchar(16)" }
+  capabilities:
+    predicatePushdown: [eq]
+    fullScan: cheap

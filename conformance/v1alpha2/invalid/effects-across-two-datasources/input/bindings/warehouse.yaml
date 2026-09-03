@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Binding
+metadata: { name: purchaseOrderWarehouse, namespace: scm }
+spec:
+  targetEntity: scm.PurchaseOrder
+  datasourceRef: warehouse
+  source: SCM.PURCHASE_ORDER_AUDIT
+  properties:
+    orderId:   { column: ORDER_ID,   physicalType: "varchar(16)" }
+    auditedAt: { column: AUDITED_AT, physicalType: "varchar(32)" }
+  capabilities:
+    predicatePushdown: [eq]
+    fullScan: expensive

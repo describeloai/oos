@@ -77,19 +77,42 @@ tiene sentido inventar un nombre para lo que todo el mundo llama igual.
 
 | | |
 |---|---|
-| **se crea** | `kind: Table` · `schemas/v1alpha8/` · `OOS2020` y `OOS2021` · `conformance/v1alpha8/` |
+| **se crea** | `kind: Table` —con sus tres caras— · `schemas/v1alpha8/` · `OOS2020`, `OOS2021`, `OOS2022`, `OOS2023`, `OOS2024` y `OOS7012` · `conformance/v1alpha8/` |
 | **adelgaza** | `kind: View` — pierde `capabilities` y `version`; `from` nombra una tabla o una vista |
 | **se reutiliza** | `OOS2004` para `datasource` · `OOS2018` para lo que no resuelve o no es columna · `OOS2019` para el ciclo · `OOS2011` para la clave que la vista no expone · `OOS4001`, `OOS4002` y `OOS4011` para la copia |
 | **no se toca** | el retículo, el conducto, el concepto, `is`, la interfaz, `Entity` salvo su `apiVersion`, la forma canónica, el digest, la firma, el log, `ore diff` |
-| **se retira** | `kind: Binding` — §5.4 |
+| **se retira** | `kind: Binding` — §5.4 · `effects[].datasourceRef` — §3.1 |
 
 Que los códigos se **reutilicen** en vez de duplicarse vuelve a ser la prueba de que la tabla no
 cambia la regla, cambia el sujeto. Un `OOS2018` sobre un campo que no es columna de la tabla
 significa exactamente lo que significaba sobre un campo que la vista de abajo no exponía.
 
-Los dos que **sí** son nuevos lo son porque antes ni siquiera eran comprobables: hasta que la
-tabla no declara sus dos caras, no hay con qué preguntar *«¿esto se puede leer?»* ni *«¿esto
-retracta?»*.
+Los que **sí** son nuevos lo son porque antes ni siquiera eran comprobables: hasta que la tabla
+no declara sus caras, no hay con qué preguntar *«¿esto se puede leer?»*, *«¿esto retracta?»* ni
+*«¿esto se puede escribir?»*.
+
+### 3.1 · Y el efecto pierde su `datasourceRef`
+
+Un `effect` declaraba dos cosas: `writes`, la **propiedad** que toca, y `datasourceRef`, la
+**fuente** donde cae. En v1alpha8 la segunda sobra, porque el camino ya existe y es el mismo que
+recorre la lectura:
+
+```text
+entidad  →  backedBy  →  vista  →  raíz  →  tabla  →  datasource
+```
+
+Declararlo sería un segundo sitio que puede discrepar del primero, y esta versión entera existe
+porque había N sitios describiendo lo físico y pasó a haber uno. `writes` **se queda tal cual**:
+nombrar la propiedad es correcto, porque es el idioma de la ontología y la ontología no debe
+saber en qué columna cae.
+
+La regla que se apoyaba en él —`OOS7008`, *una función, una fuente*— **no cambia de significado**:
+cambia de dónde saca la fuente. Antes la leía del efecto; ahora la deriva por ese camino. Un
+paquete que la violaba la sigue violando.
+
+Bajo `oos.dev/v1alpha8` un `datasourceRef` dentro de un `effect` es `OOS1005` —clave desconocida—,
+y bajo v1alpha2 sigue siendo obligatorio. Es el mismo trato que recibe el `Binding` en §5.4, por
+la misma razón: un documento no caduca por haber sido escrito antes.
 
 ---
 

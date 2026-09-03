@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: employees, namespace: erp }
+spec:
+  datasource: erp
+  object: "public.employees"
+  columns:
+    employee_id: { physicalType: "varchar(16)" }
+    status:      { physicalType: "varchar(16)" }
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: retract, witness: log }
+  writes: [insert, update, delete]

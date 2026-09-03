@@ -257,6 +257,27 @@
               }
             }
           ]
+        },
+        "writes": {
+          "description": "LA CARA `W`: que se le puede aplicar al objeto. Se DECLARA, no se sondea, igual que las otras dos, y por el mismo motivo: el compilador de efectos rechaza antes de que nadie abra una conexion.\n\nAUSENTE SIGNIFICA `none`. La ausencia es una negativa: una tabla que no declara `writes` no se escribe, igual que una con `reads: none` no se consulta.\n\nEs un CONJUNTO y no un modo, y eso no se eligio aqui: `information_schema.views` de SQL expone tres columnas distintas —`is_insertable_into`, `is_updatable`, `is_trigger_deletable`— y no un modo. Un objeto puede aceptar altas y no borrados.\n\nNo hay `upsert`: es `insert` mas `update`, y el conjunto ya lo dice sin una cuarta palabra.\n\nLa fila se identifica con `changes.key`, que ya existe; no hay `writes.key`, que seria un segundo sitio diciendo lo mismo. Que `update` y `delete` la EXIJAN cruza dos secciones, asi que no se comprueba aqui: es `OOS2024`, que ademas puede explicarlo.",
+          "oneOf": [
+            {
+              "const": "none",
+              "description": "No acepta nada. Es lo mismo que callarse, dicho en voz alta."
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "insert",
+                  "update",
+                  "delete"
+                ]
+              }
+            }
+          ]
         }
       }
     }

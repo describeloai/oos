@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/00-scope.md#3.1
+level: L0
+expects: reject
+summary: >
+  Un efecto declara `datasourceRef` bajo v1alpha8, donde el destino se deriva.
+  Aceptarlo dejaría un campo que nadie lee prometiendo algo.
