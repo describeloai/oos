@@ -77,7 +77,7 @@ tiene sentido inventar un nombre para lo que todo el mundo llama igual.
 
 | | |
 |---|---|
-| **se crea** | `kind: Table` —con sus tres caras— · `schemas/v1alpha8/` · `OOS2020`, `OOS2021`, `OOS2022`, `OOS2023`, `OOS2024` y `OOS7012` · `conformance/v1alpha8/` |
+| **se crea** | `kind: Table` —con sus tres caras— · `schemas/v1alpha8/` · `OOS2020`, `OOS2021`, `OOS2022`, `OOS2023`, `OOS2024`, `OOS7012` y `OOS7013` · `conformance/v1alpha8/` |
 | **adelgaza** | `kind: View` — pierde `capabilities` y `version`; `from` nombra una tabla o una vista |
 | **se reutiliza** | `OOS2004` para `datasource` · `OOS2018` para lo que no resuelve o no es columna · `OOS2019` para el ciclo · `OOS2011` para la clave que la vista no expone · `OOS4001`, `OOS4002` y `OOS4011` para la copia |
 | **no se toca** | el retículo, el conducto, el concepto, `is`, la interfaz, `Entity` salvo su `apiVersion`, la forma canónica, el digest, la firma, el log, `ore diff` |

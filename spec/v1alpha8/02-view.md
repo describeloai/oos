@@ -233,7 +233,46 @@ than or equal to itself»*— y además se pueden **perder** filas si la columna
 modificar una. El fallo no da ningún síntoma: la copia responde, los números salen, y son de más
 o de menos.
 
-### 5.5 · Lo que las cuatro tienen en común
+### 5.5 · `OOS7013` — escribir es `Q⁻¹`, y no toda `Q` se invierte
+
+Una vista es una pregunta. Escribir **a través** de ella es deshacer la pregunta: dada la fila que
+se quiere ver, averiguar qué fila del objeto la produce. Y no toda pregunta se deshace.
+
+| lo que hace la vista | ¿se deshace? | por qué |
+|---|---|---|
+| renombrar | **sí** | es una biyección |
+| recortar —`where`— | **sí** | la fila escrita cumple el predicado, o se cae de la vista |
+| proyectar —`fields`— | **sí, parcialmente** | faltan columnas, así que la escritura es *parcial*; no es ambigua |
+| juntar, agregar, deduplicar, limitar | **no** | de una agregación no se vuelve |
+
+Un efecto cuya entidad se respalde de una vista **no invertible** no compila. Se mira **la cadena
+entera** y no solo la vista que `backedBy` nombra: componer no diluye, y si un eslabón de abajo
+agrega, lo que sale de arriba tampoco se deshace.
+
+#### Y hoy esta regla no puede fallar
+
+Se dice porque callarlo sería peor. **El vocabulario de la vista de §2 es exactamente el fragmento
+invertible** —`owner`, `from`, `freshness`, `fields`, `where`, `materialized`— y eso no se buscó:
+[`00-scope`](00-scope.md) §6.1 cuenta que se descubrió al migrar. No hay junta, ni agregado, ni
+`distinct`, ni límite, así que ningún documento conforme puede violar `OOS7013`.
+
+Y hay una corroboración que salió del propio repositorio, sin buscarla. Lo **único** que la
+migración del binding perdió —[`00-scope`](00-scope.md) §5.5— fue `properties.<x>.expression`, un
+cálculo físico al modo de `DATEDIFF(...)`, *«que no cabe en `fields`, que solo renombra»*. Lo único
+que se cayó es exactamente lo único que habría roto la invertibilidad.
+
+No es una corroboración de andar por casa: es **la misma frontera que SQL trazó**. Las condiciones
+de PostgreSQL para que una vista sea auto-actualizable —una sola entrada en el `FROM`, sin
+`GROUP BY`, `HAVING`, `DISTINCT`, `LIMIT`, `OFFSET` ni operaciones de conjunto— son, término a
+término, lo que la vista de aquí **no puede escribir**. Y `information_schema.views.is_updatable`
+es literalmente esta pregunta, estandarizada.
+
+> **Entonces, ¿para qué está la regla?** Para que el día que la gramática crezca, el constructor
+> nuevo tenga que **decidir** si se invierte, en vez de heredar un «sí» que nadie escribió. Una
+> implementación conforme clasifica cada clave del vocabulario, y lo que no clasifique **no es
+> invertible**: el defecto es la negativa, como en todo lo demás de esta especificación.
+
+### 5.6 · Lo que las cuatro tienen en común
 
 Las dos primeras son la regla de la versión leída al revés:
 
