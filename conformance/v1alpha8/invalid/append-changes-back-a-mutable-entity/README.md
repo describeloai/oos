@@ -20,3 +20,9 @@ un compilador y un manual.
 
 El gemelo `valid/append-changes-back-an-event` es la mitad que **si** compila: un hecho ocurrido
 no se retira.
+
+**Y por qué su tabla fecha por `log`.** El testigo de este caso no es lo que afirma: lo que afirma
+es de `mode`. Fechaba por `ocurrio_en` —una columna— y esa pareja con `append` pasa a estar
+prohibida por [`OOS2023`](../../../../spec/v1alpha8/02-view.md#54), que es otra regla y otro caso.
+Se le pone `witness: log`, que es ademas lo que un topico de eventos declara de verdad, y la
+afirmacion no se mueve ni una coma.

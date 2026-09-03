@@ -195,7 +195,47 @@ calculada en la fuente. Es justo lo que la migración de `Binding.properties.<x>
 de poder hacer ([`00-scope` §5.3](00-scope.md#53)), así que negarle el hueco sería cerrar la
 única salida que le queda.
 
-### 5.4 · Lo que las tres tienen en común
+### 5.4 · `OOS2023` — fechar por columna sin clave no se mantiene
+
+> Una vista con `materialized` cuya raíz de lectura declare `changes: { mode: append, witness:
+> field }` **NO DEBE** compilar.
+
+Las otras tres reglas de esta versión salen del álgebra o de una exclusión. Esta sale de una
+propiedad de los ordinales, y es la única que se puede enunciar sin mirar el modelo:
+
+> **`witness: field` no es un orden total: una columna puede tener empates.**
+
+Y ahí está todo. Refrescar una copia significa pedir *«lo que hay después de `T`»*, y con empates
+en `T` no hay forma buena de escribirlo:
+
+| se pide | qué pasa |
+|---|---|
+| `columna > T` | las filas que comparten `T` y llegaron después **se pierden, para siempre** |
+| `columna >= T` | el borde **se re-entrega** en cada refresco |
+
+`snapshot` y `log` no tienen ese problema: nombran una **posición de confirmación**, que es un
+orden total sin empates. Retomar desde una posición es exacto.
+
+Con `upsert` o `retract` tampoco lo hay, aunque el testigo sea una columna: hay **clave**, así que
+re-entregar el borde es idempotente. Se pide `>=`, llegan repetidas, y la clave las absorbe.
+
+Queda una sola combinación sin salida, y es la que la regla rechaza: **`append` y `field`**. No
+hay clave que absorba la re-entrega, y la alternativa es perder filas en silencio.
+
+**Es una regla sobre la copia, no sobre la tabla.** Un registro de eventos fechado por una columna
+de tiempo es legítimo, frecuente y a veces lo único que el origen sabe ofrecer. Lo que no se puede
+es **mantener una copia suya**: quien la quiera, que declare una clave o que fije un testigo
+posicional.
+
+**Y no es teoría.** Es el modo que la industria llama *cursor field*, y su documentación lo dice
+con estas palabras: la entrega es **at-least-once** —*«the cursor field will always be greater
+than or equal to itself»*— y además se pueden **perder** filas si la columna no se mantiene al
+modificar una. El fallo no da ningún síntoma: la copia responde, los números salen, y son de más
+o de menos.
+
+### 5.5 · Lo que las cuatro tienen en común
+
+Las dos primeras son la regla de la versión leída al revés:
 
 Las dos primeras son la regla de la versión leída al revés:
 
@@ -206,6 +246,11 @@ que paga esta versión, y lo que compra.
 
 La tercera no sale del álgebra: sale de haber **quitado** algo. Las reglas que aparecen al retirar
 una pieza son las que más fácil se olvidan, porque no las pide nadie — las pide la ausencia.
+
+Y la cuarta sale de mirar la **pareja**. `mode` y `witness` se declaran por separado porque son
+preguntas independientes —qué llega, y qué lo fecha— pero la garantía de entrega no la decide
+ninguna de las dos: la deciden **las dos juntas**. Tres de las cuatro combinaciones se mantienen;
+la que no, no da ningún aviso.
 
 ---
 

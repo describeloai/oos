@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.4
+level: L0
+expects: OOS2023
+summary: >
+  Fechar por columna sin clave no se mantiene: una copia de un flujo que solo anexa,
+  con el testigo en una columna que puede tener empates.

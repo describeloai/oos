@@ -13,4 +13,5 @@ spec:
     fullScan: expensive
   changes:
     mode: append
-    witness: log
+    witness: field
+    field: ocurrio_en
