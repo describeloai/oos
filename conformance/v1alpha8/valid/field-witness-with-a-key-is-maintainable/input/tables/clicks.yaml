@@ -16,3 +16,4 @@ spec:
     key: [click_id]
     witness: field
     field: ocurrio_en
+    retention: 7d

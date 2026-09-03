@@ -26,3 +26,10 @@ frecuente, y a veces lo unico que el origen sabe ofrecer.
 
 Que la **marca** del registro sale de `changes.witness` de la tabla y trae **que columna** ordena
 el avance. Es la unica forma valida que queda de ver un `Marca::Campo` en la suite.
+
+## Y declara `retention`
+
+Porque este caso va de **mantenerse**, y cuanto guarda el origen su changelog es
+la otra mitad de esa pregunta: la clave dice que la re-entrega no duele, y la
+retencion dice cuanto se puede tardar en volver. Es ademas el unico caso valido
+de la suite que la declara, asi que es el que ejerce esa linea.
