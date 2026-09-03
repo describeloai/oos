@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.4
+level: L0
+expects: accept
+summary: >
+  Fechar por columna SI se mantiene cuando hay clave: la re-entrega del borde es
+  idempotente, asi que los empates del testigo dejan de importar.

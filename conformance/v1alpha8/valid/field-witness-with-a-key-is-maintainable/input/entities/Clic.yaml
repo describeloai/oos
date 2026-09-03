@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Clic, namespace: app }
+spec:
+  nature: event
+  timeKey: ocurrioEn
+  backedBy: clics
+  properties:
+    clicId:    { type: String }
+    url:       { type: String }
+    ocurrioEn: { type: DateTimeTz }
