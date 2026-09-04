@@ -206,6 +206,12 @@
           "description": "LA ÚNICA EXTENSIÓN DE ESTE PERFIL (P7).\n\nNi ODCS ni Apache Ossie tienen mecanismo de dependencia entre artefactos: un contrato ODCS no referencia a otro contrato ODCS. Sin este campo son imposibles el retículo importable, el perfil de conector, la ontología sectorial y el registry.\n\nY lo que hace no es reutilizar: es TRANSFERIR AUTORIDAD. Declarar `gdpr@^2.1` es afirmar que la definición de dato personal no es tuya, y acogerte a un enunciado concreto y auditable de esa autoridad.\n\nCriterio: si la respuesta a «¿quién decide si esto es correcto?» no es «nosotros», es una dependencia.\n\nSe emite a ODCS bajo `customProperties` como `x-oos-dependencies`. La resolución se fija en ontology.lock.",
           "type": "array",
           "items": { "$ref": "type/basic.schema.json#/$defs/packageRef" }
+        },
+
+        "exports": {
+          "description": "Lo que este paquete deja usar a OTRO. Es VISIBILIDAD, no membresía.\n\nDe qué se compone el paquete ya lo dice el directorio, y redeclararlo sería declarar lo derivable (P2). Lo que no está escrito en ninguna parte del árbol es «esto lo expongo a propósito»: desde dentro del paquete, una vista publicada y una muerta se ven igual.\n\nCada nombre DEBE resolver a un documento de ESTE paquete —OOS2027—; lo de una dependencia lo exporta ella. Y una referencia de otro paquete a algo que no está aquí es OOS2028, que NO es OOS2018: existe, y no es público.\n\nAUSENTE SIGNIFICA NADA, no todo. Es P4, la misma regla con la que un conducto no listado no autoriza y `reads` ausente es una negativa. Java exporta nada sin `exports`, Rust es privado por defecto y dbt es `protected`.\n\nSin versión, a diferencia de `dependencies`: se nombra lo propio, y lo propio no cruza el límite del artefacto.",
+          "type": "array",
+          "items": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" }
         }
       }
     }

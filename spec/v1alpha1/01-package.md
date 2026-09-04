@@ -110,8 +110,9 @@ contrato importado, se conserva literalmente.
 
 ## 3. Extensión
 
-**Una sola.** Que un perfil necesite una sola extensión es la mejor señal de que está bien
-cortado.
+**Dos, y la segunda llega con v1alpha8.** Que un perfil necesitara una sola extensión durante
+siete versiones es la señal de que está bien cortado; que la segunda aparezca al hacerse el
+paquete direccionable desde otro paquete dice de qué es la extensión, y no del corte.
 
 ### 3.1 · `dependencies`
 
@@ -135,7 +136,61 @@ Requisitos: rango semver · resolución determinista fijada en `ontology.lock` �
 v1alpha1, pero el campo **DEBE** existir en la gramática para que activarla después no sea
 un cambio rompedor.
 
-### 3.2 · Lo que se consideró extender y no se extiende
+### 3.2 · `exports` — lo público, y llega con v1alpha8
+
+```yaml
+spec:
+  owner: team:rrhh
+  exports: [hr.empleados]
+```
+
+> **`exports` declara lo que este paquete deja usar a OTRO. Es visibilidad, no membresía.**
+
+#### Por qué no es la lista de lo que hay dentro
+
+La primera formulación pedía que el manifiesto dijera **de qué se compone** el paquete, como el
+*data model* de Cognite lista sus `views`. Medido sobre el corpus, eso ya lo dice el directorio, y
+redeclararlo sería declarar lo derivable —**P2**—.
+
+Lo que **no** está escrito en ninguna parte del árbol es otra cosa: *«esto lo expongo a
+propósito»*. Se comprobó con tres reglas candidatas, y la que parecía derivarlo —*público = lo que
+nadie del paquete usa*— publicaba **catorce documentos de casos inválidos**: desde dentro del
+paquete, algo publicado y algo muerto se ven igual. No es que derivar la lista sea caro; es que
+**la información no existe**.
+
+Por eso el nombre es el de Java —`module-info` · `exports`— y el de Node —`package.json` ·
+`"exports"`—, que declaran visibilidad, y no el de Cognite, que declara membresía.
+
+#### Normativo
+
+- Cada nombre **DEBE** resolver a un documento de **este** paquete — `OOS2027`. Lo de una
+  dependencia lo exporta ella; aquí se declara `dependencies`.
+- Una referencia de otro paquete a algo que este no exporta **NO DEBE** compilar — `OOS2028`. Y
+  **no es `OOS2018`**: el nombre existe, y decir *«no existe»* manda a mirar el fichero
+  equivocado.
+- **Ausente significa NADA, no todo.** Es P4, la misma regla con la que un conducto no listado no
+  autoriza y `reads` ausente es una negativa. Java exporta nada sin `exports`; Rust es privado por
+  defecto; dbt es `protected`. El único con defecto abierto es Node, y lo documenta como
+  compatibilidad hacia atrás.
+- **Sin versión**, a diferencia de `dependencies`: se nombra lo propio, y `packageRef` lleva
+  versión *«porque es la única referencia que cruza el límite del artefacto»*.
+- `OOS2028` se aplica **solo a documentos que declaran v1alpha8 o posterior**. Un documento
+  anterior se escribió cuando un paquete no tenía superficie pública, y aplicárselo cambiaría lo
+  que significa algo ya escrito. Es el mismo razonamiento —y la misma puerta— que `OOS2022`.
+
+#### Y dónde vive, que no es una preferencia
+
+En `package.yaml` y no en el manifiesto del *workspace*: `ontology.config.yaml` **no viaja dentro
+del `.oob`**, y la declaración existe justo para que la lea quien consume el paquete.
+
+No toca el digest más de lo que lo toca cualquier contenido: nombra documentos por su nombre
+cualificado, no por su ruta, así que la equivalencia de disposición de
+[`90-canonical-form`](90-canonical-form.md) §5.2 se conserva — las dos disposiciones del mismo
+paquete siguen convergiendo con la lista puesta.
+
+---
+
+### 3.3 · Lo que se consideró extender y no se extiende
 
 Registro explícito, para que la disciplina de P7 sea auditable.
 
@@ -200,5 +255,7 @@ literalmente y **NO DEBEN** interpretarse ni validarse.
 | `OOS2007` | `version` no es semver válido |
 | `OOS2008` | `status` fuera del vocabulario de ODCS |
 | `OOS2009` | `owner` ausente o mal formado |
+| `OOS2027` | `exports` nombra algo que el paquete no contiene |
+| `OOS2028` | una referencia cruza a un paquete que no la exporta |
 | `OOS5021` | la versión declarada no corresponde a los cambios detectados |
 | `OOS5022` | cambio rompedor sin el periodo de aviso que exige `sla.breakingChangePolicy` |

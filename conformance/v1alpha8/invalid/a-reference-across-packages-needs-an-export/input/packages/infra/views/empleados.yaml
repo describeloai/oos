@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: empleados, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: erp.employees }
+  freshness: 15m
+  fields:
+    employeeId: employee_id
+    nationalId: national_id
+    pais: country
+  where:
+    deleted: "false"
+  materialized: { datasource: lago, table: "cache.hr_employees" }

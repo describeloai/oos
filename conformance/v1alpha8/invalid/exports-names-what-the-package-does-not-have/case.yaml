@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/01-package.md#3.2
+level: L0
+expects: OOS2027
+summary: >
+  La lista nombra `hr.no_existe`. Exportar lo que no se tiene no es un aviso: es una promesa
+  que nadie puede cumplir.

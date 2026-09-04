@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/01-package.md#3.2
+level: L0
+expects: OOS2028
+summary: >
+  El mismo arbol sin la lista. `exports` ausente no significa «todo»: significa nada, y la
+  referencia que cruza deja de compilar.

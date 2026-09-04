@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/01-package.md#3.2
+level: L0
+expects: accept
+summary: >
+  Dos miembros: `infra` tiene la tabla y las vistas y EXPORTA `hr.iberia`; `rrhh` tiene la
+  entidad que se respalda de ella. Con la declaracion puesta, el cruce compila.
