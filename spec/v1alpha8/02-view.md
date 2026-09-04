@@ -10,7 +10,8 @@ documentos v1alpha7 y sigue siendo válido para ellos.
 
 Lo que [`v1alpha7/01-view`](../v1alpha7/01-view.md) dice de la **naturaleza** de una vista sigue
 valiendo entero: no lleva significado, no decide quién ve, no es un motor, compone, y su copia
-lleva lo que llevan sus campos. Nada de eso se repite aquí.
+lleva lo que llevan sus campos. Nada de eso se repite aquí. *Sigue sin llevar significado, y por
+eso `oos.maturity` cabe: no es significado del dato, es el estado del documento — §4.1.*
 
 Lo que cambia es **dónde vive lo físico**:
 
@@ -20,6 +21,7 @@ Lo que cambia es **dónde vive lo físico**:
 | `capabilities` | en la vista | **fuera**: es `reads` de la tabla |
 | `version` | en la vista | **fuera**: es `changes.witness` de la tabla |
 | `fields` | forma breve o `{column, physicalType}` | **solo la breve**: `physicalType` era lo único que la expandida añadía, y ahora lo dice la columna de la tabla |
+| `labels` | prohibidas | **`oos.maturity`, y solo esa** — §4.1 |
 | `owner`, `where`, `materialized`, `freshness` | en la vista | igual |
 
 La vista queda con **lo que es suyo**: quién responde, qué sale y cómo se llama, qué filas son
@@ -120,15 +122,58 @@ donde decía `from.datasource`:
   relaciones — `OOS2011`.
 - Y **DEBE** exponer un campo por cada propiedad de esa entidad que no declare `derivedFrom` —
   `OOS2022`, §5.3.
-- La vista **NO** admite `labels`. Estructural: `OOS1005`.
+- La vista admite `labels` en `metadata`, y **la única clave admitida es `oos.maturity`** —
+  cualquier otra es una clave desconocida, `OOS1005`. Es §4.1.
 
-Y cambian dos:
+Y cambian tres:
 
 - desaparece la de `version.witness: field`, que ahora es de la tabla;
 - `fields` pierde la forma expandida. Cada valor es **una cadena**: el nombre en la fuente. La
   expandida existía para llevar `physicalType`, y el tipo físico es del objeto — lo dice
   `columns`. Un documento v1alpha7 con la forma expandida migra tirando el tipo a la tabla, que
   es donde ya debía estar.
+- y la vista deja de tener **prohibidas** las `labels`: pasa a admitir exactamente una — §4.1. Un
+  documento que no las escriba no cambia de significado, así que la migración no roza.
+
+### 4.1 · `oos.maturity`, y solo `oos.maturity`
+
+> La vista **PUEDE** declarar `metadata.labels`, y la **única** clave admitida es `oos.maturity`.
+> Cualquier otra es una clave desconocida — `OOS1005`.
+
+La prohibición anterior era correcta en su sujeto y demasiado ancha en su alcance. Lo que protege
+es esto:
+
+> *«Si la vista pudiera declararlas habría dos sitios diciendo qué es una columna, y el día que
+> discrepen ninguno diría cuál manda.»*
+
+Y eso es un argumento sobre **el dato**. `oos.maturity` no dice nada de una columna: dice si esta
+pregunta está acordada. Son dos sujetos, y la especificación ya los distingue en otro documento —
+`metadata.labels` clasifica **el documento**; las de dentro de una propiedad, **el dato**.
+
+**El precedente es `Concept`, y llegó por el mismo camino.** A `Concept` se le negaron las
+etiquetas por miedo a esta misma duplicación, y se le devolvieron al ver que un concepto acuñado
+por inferencia tiene que poder declararse `DRAFT` — es `OOS9003`. La vista está en esa situación
+exacta desde que existe el descubrimiento: **`ore discover` propone vistas, y hasta aquí no podía
+marcarlas.** Una vista adivinada de un catálogo y una que una organización acordó preguntarse eran
+el mismo documento.
+
+Tres consecuencias, y las tres son de la unidad, no del dato:
+
+- **una pregunta se puede retirar.** `DEPRECATED` es un nivel de `oos.maturity`, y sin esta clave
+  la unidad del paquete era lo único que no se podía deprecar;
+- **el defecto no se escribe.** Como en la entidad, una vista que no declara nada toma lo que su
+  paquete diga en `status`. En el corpus eso son 55 de 56 vistas sin escribir una línea;
+- **no abre la puerta a otro retículo.** La restricción es de clave única y su incumplimiento es
+  `OOS1005`, el mismo código con el que la prohibición se hacía cumplir antes. No hay código nuevo.
+
+Lo que esta versión **no** decide es si la etiqueta de una vista **fluye** —si `oos.maturity:
+DRAFT` sobre una vista clasifica lo que sale de ella, como ya hace la de una entidad—. Se dice
+aquí para que no se suponga: hoy no fluye, y `OOS4002` no la ve.
+
+Y **la tabla no la admite**, ni siquiera esta. Una tabla es un hecho del origen —`01-table` §1:
+*«ninguna de las cuatro cosas es una conjetura»*— y los cuatro niveles de `oos.maturity` son
+verbos de acuerdo. Nadie acuerda un hecho. Lo que le puede pasar a una tabla es dejar de ser
+cierta, y eso es otro eje.
 
 ---
 

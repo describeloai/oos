@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#4.1
+level: L0
+expects: OOS1005
+summary: >
+  Una vista no clasifica el dato: `oos.maturity` es la única clave admitida en sus
+  `labels`, y cualquier otro retículo es una clave desconocida.

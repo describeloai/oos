@@ -25,9 +25,17 @@ descubrimiento puede emitirla mecánicamente y sin inventar.
 
 ## 2. Qué **no** es
 
-- **No lleva significado.** No admite `labels`, ni `is`, ni conceptos: lo mismo que la vista, y
-  por lo mismo — si la tabla supiera qué significa una columna habría dos sitios diciéndolo, y
-  el día que discrepen ninguno diría cuál manda. Su incumplimiento es `OOS1005`.
+- **No lleva significado.** No admite `labels`, ni `is`, ni conceptos — si la tabla supiera qué
+  significa una columna habría dos sitios diciéndolo, y el día que discrepen ninguno diría cuál
+  manda. Su incumplimiento es `OOS1005`.
+
+  > **Y aquí deja de ser «lo mismo que la vista».** La vista admite `oos.maturity`
+  > —[`02-view` §4.1](02-view.md#41--oosmaturity-y-solo-oosmaturity)— y la tabla no admite ni esa.
+  > Una vista es una **decisión**: exponer esto, con estos nombres, con este recorte, y una
+  > decisión se acuerda por etapas. Una tabla es un **hecho** —§1: *«ninguna de las cuatro cosas
+  > es una conjetura»*—, y los cuatro niveles de `oos.maturity` son verbos de acuerdo. **Nadie
+  > acuerda un hecho.** Lo que le puede pasar a una tabla es dejar de ser cierta, y eso no es
+  > madurar: es otro eje.
 - **No decide quién ve qué.** El `ConduitPolicy` y las políticas Cedar siguen decidiendo.
 - **No tiene lógica.** Ni renombre, ni `where`. Recortar y renombrar son de la vista; la tabla
   es el objeto tal cual está. Es la diferencia entre el *shortcut* de Fabric —la referencia— y

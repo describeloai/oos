@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#4.1
+level: L0
+expects: accept
+summary: >
+  Una vista declara `oos.maturity`, que es el estado de ESTE DOCUMENTO: la pregunta
+  está propuesta y todavía no acordada.

@@ -32,6 +32,16 @@
         "namespace": {
           "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
         },
+        "labels": {
+          "description": "Ciclo de vida de ESTE DOCUMENTO, y nada más. La única clave admitida es `oos.maturity`.\n\nLa vista no lleva significado: si pudiera declarar `gdpr.sensitivity` habría dos sitios diciendo qué es una columna, y el día que discrepen ninguno diría cuál manda. Pero la madurez no dice nada de una columna: dice si esta pregunta está acordada. `discover` propone vistas y hasta aquí no podía marcarlas, así que una vista adivinada de un catálogo era indistinguible de una que alguien acordó preguntarse.\n\nEs el mismo corte que ya lleva `Concept`, y por el mismo motivo: lo acuñado por inferencia tiene que poder decir que todavía no es verdad.",
+          "type": "object",
+          "propertyNames": {
+            "const": "oos.maturity"
+          },
+          "additionalProperties": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        },
         "description": {
           "type": "string",
           "maxLength": 4096
