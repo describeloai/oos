@@ -92,7 +92,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2021` | una vista materializada cuya raíz solo anexa —`changes.mode: append`— respalda una entidad `nature: entity` | v1alpha8 02 §5.2 |
 | `OOS2022` | una propiedad de una entidad no es campo de su vista, y no declara `derivedFrom` | v1alpha8 02 §5.3 |
 | `OOS2023` | una copia fechada por columna sin clave con la que deduplicar no se mantiene | v1alpha8 02 §5.4 |
-| `OOS2024` | una tabla que acepta `update` o `delete` no declara `changes.key` | v1alpha8 01 §6 |
+| `OOS2024` | la raíz de una vista por la que la ontología escribe no declara `changes.key` | v1alpha8 02 §5.5 |
+| `OOS2025` | una vista por la que la ontología escribe no declara `materialized` | v1alpha8 02 §5.5 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

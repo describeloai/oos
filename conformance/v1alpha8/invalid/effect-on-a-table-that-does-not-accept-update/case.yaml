@@ -1,7 +1,0 @@
-rule: spec/v1alpha8/01-table.md#3.1
-level: L1
-expects: OOS7012
-summary: >
-  Una función escribe una propiedad cuya tabla no declara `writes`. La ausencia
-  es una negativa, así que el paquete promete una escritura que el origen
-  rechazaría — en producción, y no al compilar.

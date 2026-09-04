@@ -1,12 +1,13 @@
-# Las tres caras, y una función que entra por ellas
+# Una función escribe, y la vista sostiene la escritura
 
-El gemelo en verde de los tres casos inválidos de al lado, y lo que hace que la cara `W` sea una
-pieza y no una prohibición.
+El gemelo en verde de los dos inválidos de al lado, y lo que hace que la regla sea una pieza y no
+una prohibición.
 
-La tabla declara las tres: qué se le puede pedir, qué cambios emite y **qué acepta**. Como acepta
-`update` y `delete`, declara también `changes.key` —`OOS2024`—, que es lo que dice qué fila se
-toca. La vista recorta y renombra; la entidad la nombra con `backedBy`; la función escribe
-`hr.Employee.estado` **sin decir dónde cae**, porque el camino ya lo dice.
+La vista declara `materialized` —tiene dónde sostener la edición— y la tabla de su raíz declara
+`changes.key` —hay con qué identificar la fila—. La entidad la nombra con `backedBy` y la función
+escribe `hr.Employee.estado` **sin decir dónde cae**, porque el camino ya lo dice.
 
-Lo que este caso afirma, y que ningún otro afirma: que quitar `datasourceRef` no dejó a `OOS7008`
-sin fuente. La sigue teniendo, derivada.
+**Y fíjate en lo que la tabla NO dice:** nada sobre escrituras. No hace falta, y es la afirmación
+entera de este caso — el puntero es de solo lectura y la escritura aterriza en la copia. Una
+versión anterior de esta especificación le daba a la tabla una tercera cara para declarar qué
+aceptaba; se retiró cuando se decidió que nunca se le iba a pedir nada.

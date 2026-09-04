@@ -1,7 +1,6 @@
-rule: spec/v1alpha8/01-table.md#3.1
+rule: spec/v1alpha8/02-view.md#5.5
 level: L1
 expects: accept
 summary: >
-  Una tabla declara sus tres caras, una vista la recorta, una entidad la
-  respalda y una función escribe una de sus propiedades. Nadie declara la
-  fuente: se deriva.
+  La vista por la que se escribe se materializa y su raíz declara clave. La
+  tabla no dice nada de escrituras, y no tiene por qué: no se la toca.

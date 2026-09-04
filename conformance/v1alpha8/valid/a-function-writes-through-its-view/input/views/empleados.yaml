@@ -8,3 +8,4 @@ spec:
     employeeId: employee_id
     pais: country
     estado: status
+  materialized: { datasource: lago, table: "cache.hr_empleados" }

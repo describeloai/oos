@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.5
+level: L1
+expects: OOS2025
+summary: >
+  Una función escribe una propiedad cuya vista es virtual. Una vista virtual no
+  tiene dónde sostener una edición.

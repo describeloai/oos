@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.5
+level: L1
+expects: OOS2024
+summary: >
+  Una vista escribible se materializa, pero la tabla de su raíz no declara
+  `changes.key`: nada dice qué fila toca un edit.

@@ -9,4 +9,6 @@ spec:
     country:     { physicalType: "char(2)" }
     status:      { physicalType: "varchar(16)" }
   reads: { predicatePushdown: [eq], fullScan: cheap }
-  changes: { mode: retract, witness: log }
+  changes:
+    mode: retract
+    witness: log

@@ -3,3 +3,4 @@ kind: OntologyConfig
 metadata: { name: vistas, version: 0.1.0 }
 datasources:
   - { name: erp, type: postgres, connectionEnv: ERP_URL }
+  - { name: lago, type: iceberg, connectionEnv: LAGO_URL }

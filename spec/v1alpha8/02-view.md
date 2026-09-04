@@ -233,7 +233,36 @@ than or equal to itself»*— y además se pueden **perder** filas si la columna
 modificar una. El fallo no da ningún síntoma: la copia responde, los números salen, y son de más
 o de menos.
 
-### 5.5 · `OOS7013` — escribir es `Q⁻¹`, y no toda `Q` se invierte
+### 5.5 · `OOS2025` — lo que se escribe se debe materializar
+
+El gemelo exacto de [§5.1](#51--oos2020--lo-que-no-se-puede-leer-se-debe-materializar), y por eso
+comparte su forma: una condición sobre la vista, comprobada **al compilar**, sin abrir nada.
+
+> **Una vista por la que la ontología escribe DEBE declarar `materialized`.** Una vista virtual no
+> tiene dónde sostener una edición.
+
+«Por la que la ontología escribe» es derivable y no se declara: existe una `Function` con un
+`effect` sobre una propiedad de una entidad que se respalda de esta vista. El mismo camino que
+recorre la lectura.
+
+Y con él va su compañera: **esa vista necesita saber qué fila toca un edit**, así que la tabla de
+su raíz **DEBE** declarar `changes.key` — `OOS2024`. Las dos condiciones tienen remedios distintos
+—una se arregla en la vista, la otra en la tabla— y por eso son dos códigos y no uno.
+
+#### Lo que esta pareja decide, y es lo que más se nota
+
+Que una vista sea **espejo** o **registro** no es una propiedad del producto: se decide **por
+vista**, y el compilador dice cuál es cuál.
+
+| la vista | qué es |
+|---|---|
+| sin escrituras desde la ontología | **un espejo** — puede quedarse virtual, y cada lectura va al origen |
+| con escrituras | **un registro** — se materializa, y la copia es el estado |
+
+Las dos clases conviven en el mismo paquete. **Ser un registro íntegro no impide ser un buen
+espejo**, mientras no haya ediciones; y en cuanto las hay, hay materialización.
+
+### 5.6 · `OOS7013` — la invertibilidad, que es de otro producto
 
 Una vista es una pregunta. Escribir **a través** de ella es deshacer la pregunta: dada la fila que
 se quiere ver, averiguar qué fila del objeto la produce. Y no toda pregunta se deshace.
@@ -245,9 +274,17 @@ se quiere ver, averiguar qué fila del objeto la produce. Y no toda pregunta se 
 | proyectar —`fields`— | **sí, parcialmente** | faltan columnas, así que la escritura es *parcial*; no es ambigua |
 | juntar, agregar, deduplicar, limitar | **no** | de una agregación no se vuelve |
 
-Un efecto cuya entidad se respalde de una vista **no invertible** no compila. Se mira **la cadena
-entera** y no solo la vista que `backedBy` nombra: componer no diluye, y si un eslabón de abajo
-agrega, lo que sale de arriba tampoco se deshace.
+> **Reservado, y no comprobado en esta versión.** Escribir desde la ontología aterriza en la copia
+> —§5.5— y la copia guarda **el vocabulario de la vista**, así que un edit cae *dentro* de `Q` y no
+> hay nada que invertir. Esta regla es la primera del producto que escribe **de vuelta en los
+> sistemas de origen**, que es otro y no está aquí.
+>
+> Se deja escrita y con código propio porque el análisis vale y la máquina existe; el precedente es
+> `OOS2001`, que v1alpha1 reservó sin poder alcanzarlo.
+
+Un efecto cuya entidad se respalde de una vista **no invertible** no podría llevarse hasta el
+origen. Se miraría **la cadena entera** y no solo la vista que `backedBy` nombra: componer no
+diluye, y si un eslabón de abajo agrega, lo que sale de arriba tampoco se deshace.
 
 #### Y hoy esta regla no puede fallar
 
@@ -272,7 +309,7 @@ es literalmente esta pregunta, estandarizada.
 > implementación conforme clasifica cada clave del vocabulario, y lo que no clasifique **no es
 > invertible**: el defecto es la negativa, como en todo lo demás de esta especificación.
 
-### 5.6 · Lo que las cuatro tienen en común
+### 5.7 · Lo que las cuatro tienen en común
 
 Las dos primeras son la regla de la versión leída al revés:
 

@@ -8,11 +8,8 @@ spec:
     employee_id: { physicalType: "varchar(16)" }
     country:     { physicalType: "char(2)" }
     status:      { physicalType: "varchar(16)" }
-  reads:
-    predicatePushdown: [eq]
-    fullScan: cheap
+  reads: { predicatePushdown: [eq], fullScan: cheap }
   changes:
     mode: retract
     witness: log
     key: [employee_id]
-  writes: [insert, update, delete]

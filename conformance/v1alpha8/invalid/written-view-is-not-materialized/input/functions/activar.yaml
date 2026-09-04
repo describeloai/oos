@@ -7,3 +7,6 @@ spec:
   effects:
     - writes: hr.Employee.estado
       to: "ACTIVO"
+  endorsements:
+    - endorser: attested
+      attestation: attestations/activar.intoto.jsonl

@@ -8,4 +8,6 @@ spec:
   properties:
     employeeId: { type: String }
     pais: { type: String }
-    estado: { type: String }
+    estado:
+      type: String
+      labels: { acme.assurance: reviewed }
