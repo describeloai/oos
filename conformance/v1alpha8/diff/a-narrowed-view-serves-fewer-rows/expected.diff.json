@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "code": "OOS5028",
+      "axis": "CONSUMER",
+      "subject": "hr.iberia.country",
+      "from": "ES,PT",
+      "to": "ES"
+    }
+  ],
+  "requiredBump": "major"
+}

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5028
+summary: >
+  El recorte de una vista se estrecha: `pais: [ES, PT]` pasa a `[ES]`. Filas que estaban
+  dejan de estar, y quien leia se queda sin ellas.

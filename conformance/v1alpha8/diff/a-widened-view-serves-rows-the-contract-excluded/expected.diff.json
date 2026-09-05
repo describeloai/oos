@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "code": "OOS5029",
+      "axis": "POLICY",
+      "subject": "hr.iberia.country",
+      "from": "ES,PT",
+      "to": "ES,FR,PT"
+    }
+  ],
+  "requiredBump": "major"
+}

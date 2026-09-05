@@ -89,6 +89,24 @@ retrocompatible.
 Por eso los cambios del eje `POLICY` **DEBEN** tratarse como rompedores **aunque amplíen
 capacidades**, y **DEBEN** exigir revisión de los propietarios declarados en el paquete.
 
+### 4.2 · Y una tercera clase que no tiene dirección: la **sustitución**
+
+Las dos direcciones son movimientos en un **orden**, y por eso admiten espejo: cada dirección le
+duele a otro, y una sola comparación elige a la vez el código y el eje. Es lo que hacen
+`OOS5009`/`OOS5011` sobre una etiqueta, `OOS5012`/`OOS5026` sobre un conducto y
+`OOS5028`/`OOS5029` sobre el recorte de una vista.
+
+Hay una tercera clase que **no es un movimiento sino una sustitución de identidad**: cambiar
+`primaryKey`, el `via` de una relación, la unidad de un tipo, el objeto del que salen las filas o
+el sitio donde está la copia. No hay «más» ni «menos»: **cambió o no cambió**.
+
+> **Una sustitución no tiene dirección, así que tiene UN eje — y el eje lo decide de quién era la
+> identidad sustituida.** La que el consumidor nombra es `CONSUMER` —`OOS5006`, `OOS5010`,
+> `OOS5027`—; la que produce el artefacto materializado es `INDEX` —`OOS5018`, `OOS5019`,
+> `OOS5020`—.
+
+Por eso ninguno de esos seis tiene espejo, y no es una omisión: **no hay nadie al otro lado.**
+
 ### 4.1 · El caso que demuestra que los ejes no son académicos
 
 **Elevar** la etiqueta de una propiedad — de `high` a `critical`:
@@ -121,6 +139,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | **elevar** la etiqueta de una propiedad | `OOS5009` |
 | cambiar la unidad o la precisión de un tipo paramétrico | `OOS5010` |
 | **rebajar** la autorización de un conducto | `OOS5026` |
+| **estrechar el recorte de una vista** — sirve menos filas | `OOS5028` |
 
 ### 5.2 · Rompedor en `POLICY` — la dirección invertida
 
@@ -133,14 +152,25 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | ampliar el conjunto de finalidades de una política | `OOS5015` |
 | **aflojar un parámetro de seguridad** — `minGroupSize`, un umbral, una cota, un `quorum` | `OOS5016` |
 | añadir un desclasificador donde no lo había | `OOS5017` |
+| **ensanchar el recorte de una vista** — sirve filas que el contrato excluía | `OOS5029` |
 
 ### 5.3 · Rompedor en `INDEX`
 
 | Cambio | Código |
 |---|---|
 | cambiar `primaryKey` o una clave de join materializada | `OOS5018` |
-| cambiar el binding físico de una propiedad indexada | `OOS5019` |
-| cambiar el modo de materialización | `OOS5020` |
+| cambiar **de qué objeto físico salen las filas** de una vista | `OOS5019` |
+| cambiar **de dónde se leen** las filas de una vista — la copia aparece, se muda o desaparece | `OOS5020` |
+
+> **`OOS5019` y `OOS5020` cambiaron de sujeto en v1alpha8, no de regla.** Se predicaban del
+> `Binding`, que llevaba dentro `source` y `materialization`; al partirse en `Table` + `View`, el
+> eje `INDEX` se quedó **sin sujeto** y los dos códigos siguieron vivos en el paradigma anterior y
+> ciegos en este.
+>
+> Ahora se predican de la **vista**, y de su raíz **resuelta por la cadena**: repuntar la tabla de
+> debajo y repuntar la vista son, para quien consume, el mismo hecho. Por lo mismo, `OOS5020` mira
+> la *raíz de lectura* y no el `materialized` declarado — una vista que no se toca puede cambiar de
+> sitio porque lo hizo la de abajo.
 
 Los cambios de este eje **NO DEBEN** bloquear el merge por sí solos, pero una
 implementación **DEBE** señalar que el índice requiere reconstrucción.

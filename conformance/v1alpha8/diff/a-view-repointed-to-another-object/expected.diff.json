@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "code": "OOS5019",
+      "axis": "INDEX",
+      "subject": "hr.empleados",
+      "from": "erp·public.employees",
+      "to": "erp·public.workers"
+    },
+    {
+      "code": "OOS5019",
+      "axis": "INDEX",
+      "subject": "hr.iberia",
+      "from": "erp·public.employees",
+      "to": "erp·public.workers"
+    }
+  ],
+  "requiredBump": "minor"
+}

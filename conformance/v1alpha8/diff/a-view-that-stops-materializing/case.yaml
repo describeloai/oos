@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5020
+summary: >
+  La copia desaparece y las filas pasan a salir del origen. `OOS5020` con el sujeto
+  devuelto: la regla es de v1alpha1 y hablaba del binding.

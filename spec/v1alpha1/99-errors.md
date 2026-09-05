@@ -162,6 +162,8 @@ contra los cuatro por separado, y **puede ser compatible en uno y rompedor en ot
 | `OOS5003` | endurecer cardinalidad |
 | `OOS5006` | cambiar `primaryKey` |
 | `OOS5027` | cambiar el `via` de una relación |
+| `OOS5028` | estrechar el recorte de una vista: sirve menos filas | v1alpha8 91 §5.1 |
+| `OOS5029` | ensanchar el recorte de una vista: sirve filas que el contrato excluía | v1alpha8 91 §5.2 |
 | `OOS5007` | eliminar una entidad o una relación |
 | `OOS5008` | rebajar `oos.maturity` de una entidad `STABLE` |
 | `OOS5009` | **elevar** la etiqueta de una propiedad |

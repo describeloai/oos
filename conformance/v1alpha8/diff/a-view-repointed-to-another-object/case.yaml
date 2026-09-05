@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5019
+summary: >
+  La TABLA apunta a otro objeto fisico, y las dos vistas de la cadena cambian de raiz.
+  `OOS5019` con el sujeto devuelto.

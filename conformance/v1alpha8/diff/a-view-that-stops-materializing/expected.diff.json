@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "code": "OOS5020",
+      "axis": "INDEX",
+      "subject": "hr.empleados",
+      "from": "lago·cache.hr_employees",
+      "to": "erp·public.employees"
+    },
+    {
+      "code": "OOS5020",
+      "axis": "INDEX",
+      "subject": "hr.iberia",
+      "from": "lago·cache.hr_employees",
+      "to": "erp·public.employees"
+    }
+  ],
+  "requiredBump": "minor"
+}
