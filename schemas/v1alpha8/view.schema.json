@@ -160,6 +160,54 @@
               "maxLength": 1024
             }
           }
+        },
+        "moved": {
+          "description": "Campos renombrados. Es el ALCANCE ESTRECHO de la disciplina de renombrado, y la casa la elige una sola regla: lo dice el que sobrevive —y aquí sobrevive la vista—.\n\nUn nombre anunciado no desaparece en silencio: desaparece con instrucciones, y `OOS5001` deja de tratarlo como una supresión.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "since"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "to": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "since": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "reserved": {
+          "description": "Nombres de campo retirados que NO pueden reutilizarse. Usar uno es OOS2006.\n\nEs el campo reservado de Protobuf un piso más abajo que en la entidad, y previene lo mismo: que una consulta antigua devuelva una cifra correcta para la pregunta equivocada.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "until": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
         }
       }
     }

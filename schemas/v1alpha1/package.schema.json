@@ -208,6 +208,36 @@
           "items": { "$ref": "type/basic.schema.json#/$defs/packageRef" }
         },
 
+        "moved": {
+          "description": "Documentos renombrados. Es el ALCANCE ANCHO de la disciplina de renombrado, y vive aquí por la misma regla que la pone en la entidad y en la vista, leída al revés: **lo dice el que sobrevive, y si no sobrevive nadie lo dice el paquete**.\n\nUn `moved` de documento sí tendría superviviente —el que se queda con el nombre nuevo, que es la forma de los `aliases` de Avro— pero `reserved` NO: un nombre retirado para siempre no deja documento donde vivir. Y los dos son un mecanismo, así que partirlos en dos casas sería peor que cualquiera de las dos.\n\nSin esto, renombrar un documento se lee como OOS5007 —desapareció— y lo que aparece con el nombre nuevo no se reporta: nadie relaciona los dos hechos.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "since"],
+            "properties": {
+              "from": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" },
+              "to": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" },
+              "since": { "$ref": "type/basic.schema.json#/$defs/semver" }
+            }
+          }
+        },
+
+        "reserved": {
+          "description": "Nombres de documento retirados que NO pueden reutilizarse. Usar uno es OOS2006.\n\nEs el único sitio posible para el alcance ancho: un nombre retirado para siempre no tiene documento donde declararse.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "reason"],
+            "properties": {
+              "name": { "$ref": "type/basic.schema.json#/$defs/qualifiedName" },
+              "reason": { "type": "string", "maxLength": 1024 },
+              "until": { "$ref": "type/basic.schema.json#/$defs/semver" }
+            }
+          }
+        },
+
         "exports": {
           "description": "Lo que este paquete deja usar a OTRO. Es VISIBILIDAD, no membresía.\n\nDe qué se compone el paquete ya lo dice el directorio, y redeclararlo sería declarar lo derivable (P2). Lo que no está escrito en ninguna parte del árbol es «esto lo expongo a propósito»: desde dentro del paquete, una vista publicada y una muerta se ven igual.\n\nCada nombre DEBE resolver a un documento de ESTE paquete —OOS2027—; lo de una dependencia lo exporta ella. Y una referencia de otro paquete a algo que no está aquí es OOS2028, que NO es OOS2018: existe, y no es público.\n\nAUSENTE SIGNIFICA NADA, no todo. Es P4, la misma regla con la que un conducto no listado no autoriza y `reads` ausente es una negativa. Java exporta nada sin `exports`, Rust es privado por defecto y dbt es `protected`.\n\nSin versión, a diferencia de `dependencies`: se nombra lo propio, y lo propio no cruza el límite del artefacto.",
           "type": "array",

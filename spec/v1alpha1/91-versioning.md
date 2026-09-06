@@ -129,12 +129,12 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 
 | Cambio | Código |
 |---|---|
-| eliminar una propiedad sin `moved` ni `reserved` | `OOS5001` |
+| eliminar una propiedad **o un campo de vista** sin `moved` ni `reserved` | `OOS5001` |
 | estrechar un tipo (`string` → `enum`; retirar valores de un `enum`) | `OOS5002` |
 | endurecer cardinalidad (`0..n` → `1..n`) | `OOS5003` |
 | cambiar `primaryKey` | `OOS5006` |
 | cambiar el `via` de una relación | `OOS5027` |
-| eliminar una entidad o una relación | `OOS5007` |
+| eliminar una entidad, una vista o una relación **sin anunciarlo en el manifiesto** | `OOS5007` |
 | rebajar `oos.maturity` de una entidad `STABLE` | `OOS5008` |
 | **elevar** la etiqueta de una propiedad | `OOS5009` |
 | cambiar la unidad o la precisión de un tipo paramétrico | `OOS5010` |
@@ -174,6 +174,13 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 
 Los cambios de este eje **NO DEBEN** bloquear el merge por sí solos, pero una
 implementación **DEBE** señalar que el índice requiere reconstrucción.
+
+> **Renombrar no es eliminar, y hasta v1alpha8 lo parecía.** `moved` y `reserved` existían solo
+> sobre los MIEMBROS de un documento —sus `from`/`to` son `identifier`—, así que renombrar el
+> documento se leía como `OOS5007`, *«desapareció»*, sin una línea que lo relacionara con el que
+> aparece. El alcance ancho vive en el manifiesto —[`01-package` §3.4](01-package.md)— y el de
+> campo, en la vista —[`v1alpha8/02-view` §4.2](../v1alpha8/02-view.md)—. Un nombre anunciado en
+> cualquiera de los tres deja de contar como supresión.
 
 ### 5.4 · Compatible
 

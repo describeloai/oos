@@ -1,0 +1,7 @@
+rule: spec/v1alpha1/01-package.md#3.4
+level: L0
+expects: OOS2006
+summary: >
+  El manifiesto retira `hr.iberia` y el paquete sigue teniendo una vista con ese nombre. Un
+  nombre retirado no vuelve: una consulta antigua devolveria una cifra correcta para la
+  pregunta equivocada.

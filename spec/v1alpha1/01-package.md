@@ -190,7 +190,57 @@ paquete siguen convergiendo con la lista puesta.
 
 ---
 
-### 3.3 · Lo que se consideró extender y no se extiende
+### 3.4 · `moved` y `reserved` — el nombre de un documento
+
+```yaml
+spec:
+  moved:
+    - { from: hr.iberia, to: hr.iberica, since: 2.0.0 }
+  reserved:
+    - { name: hr.antigua, reason: se fusionó en hr.empleados }
+```
+
+> El manifiesto **PUEDE** declarar `moved` y `reserved` sobre **nombres cualificados de documento**
+> de su propio paquete. Reutilizar uno reservado es `OOS2006`; un documento que desaparece
+> anunciado **no** es `OOS5007`.
+
+#### Por qué aquí, y no en el documento que se queda
+
+Es la misma disciplina que la entidad tiene sobre sus propiedades y la vista sobre sus campos, y la
+regla que elige la casa es una:
+
+> ### Lo dice el que sobrevive. Si no sobrevive nadie, lo dice el paquete.
+
+Un `moved` de documento **sí** tendría superviviente —el que se queda con el nombre nuevo, que es
+la forma de los `aliases` de Avro—. **`reserved` no**: un nombre retirado para siempre no deja
+documento donde vivir. Y los dos son un mecanismo —`ore diff` los une, y `OOS5001` no distingue de
+cuál vino un nombre—, así que partirlos en dos casas sería peor que cualquiera de las dos.
+
+De paso resuelve lo que la forma de Avro no puede: que un nombre **se mude de paquete**. El que lo
+pierde puede decir a dónde fue; el que lo recibe no le sirve a quien solo tiene al primero.
+
+#### Y esto completa una decisión de §2.2, no abre una nueva
+
+[§2.2](#22--id--divergencia-consciente) ya eligió, frente al `id` estable de ODCS:
+
+> *«un consumidor que siguiera por id sobreviviría a un renombrado sin hacer nada; **uno que sigue
+> por nombre necesita leer el `moved`**.»*
+
+La decisión estaba tomada y razonada. Lo que faltaba es que, **para un documento, no había ningún
+`moved` que leer**: `Entity.spec.moved` nombra `identifier`, no `qualifiedName`, así que renombrar
+un documento se leía como una supresión —y en una `Table`, como nada—. Terraform, la fuente que
+§2.2 cita, renombra precisamente **direcciones de recurso**: teníamos media importación.
+
+#### Lo que NO comprueba
+
+Lo mismo que en la entidad: ni que `from` haya dejado de existir, ni que `to` exista. `moved` no se
+comprueba en el enlazado — alimenta a `ore diff`. Y `to` **NO** admite todavía nombrar otro
+paquete: el tipo lo permitiría, la regla no, y se dice para que el día que se abra sea una decisión
+y no un descuido.
+
+---
+
+### 3.5 · Lo que se consideró extender y no se extiende
 
 Registro explícito, para que la disciplina de P7 sea auditable.
 

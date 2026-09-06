@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5001
+summary: >
+  Una vista deja de exponer un campo y nadie lo anuncia. Es «propiedad eliminada» un piso mas
+  abajo, y hasta que la vista tuvo `moved` no se podia decir sin condenar todo renombrado.

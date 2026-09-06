@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: accept
+summary: >
+  `hr.iberia` pasa a `hr.iberica` y el manifiesto lo anuncia. NO es una supresion: `diff` no
+  reporta nada, y el salto exigido baja a `patch`.

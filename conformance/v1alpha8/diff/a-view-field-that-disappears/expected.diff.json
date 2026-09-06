@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "code": "OOS5001",
+      "axis": "CONSUMER",
+      "subject": "hr.empleados.borrado"
+    }
+  ],
+  "requiredBump": "major"
+}

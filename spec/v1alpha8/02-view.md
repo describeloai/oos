@@ -124,6 +124,8 @@ donde decía `from.datasource`:
   `OOS2022`, §5.3.
 - La vista admite `labels` en `metadata`, y **la única clave admitida es `oos.maturity`** —
   cualquier otra es una clave desconocida, `OOS1005`. Es §4.1.
+- La vista admite `moved` y `reserved` sobre **sus campos**, y un campo **NO DEBE** reutilizar un
+  nombre reservado — `OOS2006`. Es §4.2.
 
 Y cambian tres:
 
@@ -174,6 +176,46 @@ Y **la tabla no la admite**, ni siquiera esta. Una tabla es un hecho del origen 
 *«ninguna de las cuatro cosas es una conjetura»*— y los cuatro niveles de `oos.maturity` son
 verbos de acuerdo. Nadie acuerda un hecho. Lo que le puede pasar a una tabla es dejar de ser
 cierta, y eso es otro eje.
+
+### 4.2 · `moved` y `reserved` — un nombre de campo que se retira
+
+```yaml
+spec:
+  fields: { id: employee_id }
+  moved:
+    - { from: employeeId, to: id, since: 2.0.0 }
+  reserved:
+    - { name: dni, reason: se retiró con el nationalId de la tabla }
+```
+
+> La vista **PUEDE** declarar `moved` y `reserved` sobre **sus campos**. Reutilizar un nombre
+> reservado es `OOS2006`; retirar un campo anunciado **no** es `OOS5001`.
+
+**Es el alcance estrecho de una sola disciplina, y la casa la elige una sola regla:**
+
+> ### Lo dice el que sobrevive. Si no sobrevive nadie, lo dice el paquete.
+
+Renombrar una propiedad deja viva a la entidad, y por eso `moved` vive ahí desde v1alpha1.
+Renombrar un campo deja viva a la vista. Renombrar un **documento** no deja vivo a nadie con ese
+nombre, y por eso el alcance ancho está en el manifiesto —
+[`01-package` §3.4](../v1alpha1/01-package.md).
+
+No es una convención: **se deriva**, y explica de paso por qué `Entity.spec.moved` estaba bien
+donde estaba. No era media importación por descuido — era la casa correcta **para su alcance**.
+
+#### Lo que NO comprueba, y es deliberado
+
+Ni que `moved.from` haya dejado de existir, ni que `moved.to` exista. **Es exactamente el rigor
+que ya tenía la entidad**, medido: el enlazado solo comprueba `OOS2006`, y `moved` únicamente
+alimenta a `ore diff`. Subirlo aquí cambiaría la regla de la entidad de paso, y eso es otra
+decisión.
+
+#### Y la tabla no
+
+Las columnas de una tabla no las renombra nadie de aquí: **las renombra el origen**, y eso no se
+anuncia — se **detecta**. Es la misma asimetría que con `oos.maturity`: la vista **decide** su
+nombre, la tabla lo **espeja**. (Su *documento* sí entra, y por el manifiesto, porque el nombre de
+una `Table` lo elegimos nosotros.)
 
 ---
 
