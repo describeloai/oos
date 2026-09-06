@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#2
+level: L0
+expects: OOS4002
+summary: >
+  Una copia de una vista DERIVADA de la que respalda a la entidad lleva las
+  etiquetas de esa entidad: la direccion de la cadena no cambia de quien es el dato.

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: copia, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: empleados }
+  fields:
+    employeeId: employeeId
+    pais: pais
+  materialized: { datasource: erp, table: "cache.copia", key: [employeeId] }

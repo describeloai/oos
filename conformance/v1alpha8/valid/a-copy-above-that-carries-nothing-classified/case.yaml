@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#2
+level: L0
+expects: accept
+summary: >
+  Una copia por encima que no expone ninguna propiedad clasificada compila: el sello
+  mira los campos que viajan, no de donde cuelga la vista.
