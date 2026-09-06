@@ -122,7 +122,7 @@ credenciales, sin tocar un solo dato.
 | `OOS4006` | desclasificador fuera del conjunto cerrado | 04 §5 |
 | `OOS4007` | `aggregate` sin `minGroupSize`, o por debajo del umbral del retículo | 04 §5 |
 | `OOS4008` | propiedad derivada que declara etiqueta en lugar de computarla | 02 §5 |
-| `OOS4011` | conducto sin autorización declarada, usado por un binding o una función | 04 §4 |
+| `OOS4011` | conducto sin autorización declarada — lo usa un binding, una función, una vista `materialized`, o **la travesía de una relación con `via`**, que lo instancia sin declararlo (04 §4.2) | 04 §4 |
 | `OOS4012` | propiedad que rebaja la etiqueta heredada de su entidad | 02 §4.1 |
 | `OOS4014` | `examples` no marcados como sintéticos en propiedad etiquetada por encima de `⊥` | 02 §4.2 |
 

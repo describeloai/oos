@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#4.2
+level: L0
+expects: OOS4002
+summary: >
+  La clave de la entidad esta etiquetada por encima de lo que el conducto del indice
+  admite, y la clave SI viaja en la arista.

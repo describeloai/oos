@@ -1,0 +1,21 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  backedBy: empleados
+  properties:
+    employeeId: { type: String, labels: { gdpr.sensitivity: high } }
+    managerId:  { type: String }
+
+    # Critica, y NO viaja: la travesia copia la clave y el enlace, y nada mas.
+    nationalId:
+      type: String
+      labels: { gdpr.sensitivity: high }
+
+  relations:
+    manager:
+      target: hr.Employee
+      cardinality: many_to_one
+      via: [managerId]

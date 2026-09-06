@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#4.2
+level: L0
+expects: accept
+summary: >
+  Una entidad con una propiedad `high` se puede atravesar por un conducto que solo
+  admite `low`: por la arista viajan la clave y el enlace, y nada mas.

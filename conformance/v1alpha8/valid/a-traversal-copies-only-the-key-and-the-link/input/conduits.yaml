@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata: { name: acme }
+spec:
+  owner: team:security
+  conduits:
+    materialization.topology:
+      gdpr.sensitivity: low

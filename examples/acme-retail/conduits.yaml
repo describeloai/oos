@@ -22,8 +22,23 @@ spec:
   conduits:
 
     # --- Materialización ----------------------------------------------------
-    materialization.index:
-      gdpr.sensitivity: medium
+    # El índice de topología: las aristas del grafo. Se llamaba
+    # `materialization.index` aquí, y ese nombre no lo conocía nadie —ni la
+    # especificación ni el motor—, así que este conducto era decoración y el de
+    # verdad estaba sin declarar. Un conducto sin declarar es ⊥ y no admite
+    # nada, o sea que las aristas se copiaban por un sitio cerrado sin que
+    # nadie mirara. Ahora se mira, y por eso el nombre importa.
+    #
+    # Y admite `high`, que es una elevación deliberada: por aquí viajan DOS
+    # COLUMNAS —`employeeId` y `managerId`— y las dos heredan el suelo `high`
+    # de `hr_workday`. No viaja la compensación, ni el DNI, ni el correo: la
+    # travesía copia la clave y el enlace, y nada más. Que la entidad tenga
+    # campos `critical` no impide atravesarla, y esa es toda la tesis.
+    #
+    # Sube a `high` y no más: `nationalId` y `baseSalary` son `critical` y
+    # seguirían sin caber aquí si alguien intentara meterlas.
+    materialization.topology:
+      gdpr.sensitivity: high
       acme.residency:   eu_only
       oos.maturity:     REVIEWED
 

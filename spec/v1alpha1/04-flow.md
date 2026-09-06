@@ -104,7 +104,7 @@ Un **conducto** es cualquier salida de información. OOS v1alpha1 define estos:
 
 | Conducto | Aparece en | Ejemplo de autorización |
 |---|---|---|
-| `materialization` | `Binding` — ejes `topology` y `payload` | qué puede escribirse en disco |
+| `materialization` | `Binding` — ejes `topology` y `payload`; `View` — `materialized`; y **derivado**, la travesía de una relación con `via` (§4.2) | qué puede escribirse en disco |
 | `datasource` | capacidades de `Function` | qué fuentes puede tocar una función |
 | `export` | `ore export` | qué puede salir del paquete |
 | `contextSurface` | superficie servida a consumidores (MCP, GraphQL, SDK) | qué puede ver un agente |
@@ -175,6 +175,37 @@ un cambio rompedor ([`91-versioning`](91-versioning.md) §4).
 > **La unificación que esto produce:** los sumideros de datos y las capacidades de una
 > función eran, en borradores anteriores, dos conceptos. Son el mismo: *un conducto con
 > autorización*. La especificación pierde un concepto y no pierde ninguna capacidad.
+
+### 4.2 · El conducto que se instancia sin declararse
+
+Un conducto se instancia porque **algo sale de su origen**, y eso no siempre está escrito.
+
+Una relación con `via` **se atraviesa**, y atravesarla es una búsqueda por clave sobre las
+filas de este lado: copia **la propiedad de la clave primaria y la propiedad del enlace**, y
+nada más. Esa copia es una materialización como cualquier otra, y su conducto es
+`materialization.topology` — el mismo que el eje del `Binding`, porque es la misma cosa.
+
+Lo que cambia es **quién la declara: nadie**. Cuando la entidad llega a lo físico por un
+`Binding`, su eje `topology` está escrito y la regla de flujo corre sobre la declaración.
+Cuando llega por una vista (`backedBy`), no hay nada que declarar: la copia es derivable de
+`primaryKey` y de `relations`, y **lo derivable no se declara** (principio P2).
+
+**Normativo.**
+
+- Una relación con `via` cuya entidad tenga clave simple **DEBE** tratarse como un flujo
+  hacia `materialization.topology`, se declare o no. Sin autorización, ese conducto es `⊥`
+  (§4) y la travesía **NO DEBE** compilar: `OOS4011`.
+- Lo que fluye por él **ES** exactamente la propiedad de `primaryKey` y la propiedad
+  nombrada en `via`. Una implementación **NO DEBE** hacer fluir ninguna otra propiedad de la
+  entidad por este conducto, ni siquiera cuando la vista que la respalda las exponga.
+- Si la etiqueta efectiva de cualquiera de esas dos propiedades excede la autorización, la
+  travesía **NO DEBE** compilar: `OOS4002`, o `OOS4001` si la etiqueta es computada.
+
+> **La consecuencia que hay que leer al derecho.** Una entidad con propiedades `critical`
+> **se puede atravesar** por un conducto que solo admite `low`, porque lo crítico no viaja.
+> Esta sección no restringe el grafo: dice por dónde pasa, y separa dos decisiones que sin
+> ella se confunden — *copiar la carga* y *copiar las aristas* tienen conductos distintos
+> con autorizaciones distintas, y una puede estar cerrada con la otra abierta.
 
 ---
 
