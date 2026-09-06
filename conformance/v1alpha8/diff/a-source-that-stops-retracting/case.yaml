@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5032
+summary: >
+  La tabla deja de retractar. No hay plan que valga: la copia hay que rehacerla, y por eso es
+  un codigo distinto del anterior aunque compartan eje.

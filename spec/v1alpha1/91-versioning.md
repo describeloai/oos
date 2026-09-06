@@ -140,6 +140,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | cambiar la unidad o la precisión de un tipo paramétrico | `OOS5010` |
 | **rebajar** la autorización de un conducto | `OOS5026` |
 | **estrechar el recorte de una vista** — sirve menos filas | `OOS5028` |
+| **aflojar o retirar la `freshness`** de una vista | `OOS5030` |
 
 ### 5.2 · Rompedor en `POLICY` — la dirección invertida
 
@@ -161,6 +162,24 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | cambiar `primaryKey` o una clave de join materializada | `OOS5018` |
 | cambiar **de qué objeto físico salen las filas** de una vista | `OOS5019` |
 | cambiar **de dónde se leen** las filas de una vista — la copia aparece, se muda o desaparece | `OOS5020` |
+
+| **la fuente de una vista admite menos** — se empuja menos, o el escaneo se encarece | `OOS5031` |
+| **lo que la fuente emite deja de sostener la copia** — menos mantenible, o peor fechada | `OOS5032` |
+
+> **Y `OOS5030` no está aquí a propósito, aunque hable de lo mismo.** La `freshness` es una
+> **promesa** —`ore discover` no la propone porque *«sería exactamente inventar»*— y las dos caras
+> de la tabla son un **hecho del origen**: *«ninguna de las cuatro cosas es una conjetura»*. Quien
+> publica no afloja `reads` porque quiera, así que cobrarle un `major` sería cobrarle el clima.
+> Aflojar lo que se prometió rompe a quien lee —`CONSUMER`—; encoger lo que la fuente da obliga a
+> replanificar o a rehacer la copia —`INDEX`, que **informa sin bloquear**.
+>
+> Y son dos y no uno por el criterio de `OOS2024`/`OOS2025`: **los remedios son distintos.**
+> `OOS5031` se arregla replanificando —empujar menos, o materializar para dejar de depender—;
+> `OOS5032` no tiene plan que valga, hay que rehacer la copia o cambiar el testigo.
+>
+> Los tres son órdenes de **una sola dirección**: ensanchar, abaratar o prometer donde no se
+> prometía es seguro, y por eso ninguno tiene espejo. `upsert` y `retract` **empatan** —las dos
+> retractan—, y `snapshot` con `log` también: pasar de una a otra no degrada nada.
 
 > **`OOS5019` y `OOS5020` cambiaron de sujeto en v1alpha8, no de regla.** Se predicaban del
 > `Binding`, que llevaba dentro `source` y `materialization`; al partirse en `Table` + `View`, el

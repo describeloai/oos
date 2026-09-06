@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "code": "OOS5032",
+      "axis": "INDEX",
+      "subject": "hr.empleados",
+      "from": "retract·log",
+      "to": "append·log"
+    },
+    {
+      "code": "OOS5032",
+      "axis": "INDEX",
+      "subject": "hr.iberia",
+      "from": "retract·log",
+      "to": "append·log"
+    }
+  ],
+  "requiredBump": "minor"
+}

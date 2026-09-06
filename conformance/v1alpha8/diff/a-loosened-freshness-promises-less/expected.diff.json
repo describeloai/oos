@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "code": "OOS5030",
+      "axis": "CONSUMER",
+      "subject": "hr.empleados",
+      "from": "900s",
+      "to": "86400s"
+    }
+  ],
+  "requiredBump": "major"
+}

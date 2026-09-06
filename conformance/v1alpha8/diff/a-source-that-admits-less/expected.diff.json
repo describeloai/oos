@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {
+      "code": "OOS5031",
+      "axis": "INDEX",
+      "subject": "hr.empleados",
+      "from": "eq,in·fullScan:cheap",
+      "to": "eq,in·fullScan:expensive"
+    },
+    {
+      "code": "OOS5031",
+      "axis": "INDEX",
+      "subject": "hr.iberia",
+      "from": "eq,in·fullScan:cheap",
+      "to": "eq,in·fullScan:expensive"
+    }
+  ],
+  "requiredBump": "minor"
+}

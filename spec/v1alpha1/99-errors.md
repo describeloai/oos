@@ -164,6 +164,9 @@ contra los cuatro por separado, y **puede ser compatible en uno y rompedor en ot
 | `OOS5027` | cambiar el `via` de una relación |
 | `OOS5028` | estrechar el recorte de una vista: sirve menos filas | v1alpha8 91 §5.1 |
 | `OOS5029` | ensanchar el recorte de una vista: sirve filas que el contrato excluía | v1alpha8 91 §5.2 |
+| `OOS5030` | la frescura que una vista promete se afloja, o se retira | v1alpha8 91 §5.1 |
+| `OOS5031` | la fuente de una vista admite menos: se empuja menos, o el escaneo se encarece | v1alpha8 91 §5.3 |
+| `OOS5032` | lo que la fuente emite deja de sostener la copia: menos mantenible, o peor fechada | v1alpha8 91 §5.3 |
 | `OOS5007` | eliminar una entidad o una relación |
 | `OOS5008` | rebajar `oos.maturity` de una entidad `STABLE` |
 | `OOS5009` | **elevar** la etiqueta de una propiedad |

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.3
+level: L0
+expects: OOS5031
+summary: >
+  El escaneo completo pasa de barato a caro. Ninguna consulta se rompe: el PLAN cuesta mas.
+  Informa en INDEX y no bloquea — nadie decidio esto, lo decidio el origen.
