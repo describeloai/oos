@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  backedBy: nomina
+  properties:
+    employeeId: { type: String }
+
+    # El origen ya lo calcula, asi que es una columna como otra cualquiera.
+    # `derivedFrom` declara PROCEDENCIA, no computacion — y declarar `labels`
+    # aqui seria `OOS4008`: la etiqueta se computa, no se escribe.
+    total:
+      type: String
+      derivedFrom: [hr.Comp.baseSalary, hr.Comp.bonus]

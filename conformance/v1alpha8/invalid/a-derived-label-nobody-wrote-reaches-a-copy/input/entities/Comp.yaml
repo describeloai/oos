@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Comp, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  backedBy: comp
+  properties:
+    employeeId: { type: String }
+    baseSalary:
+      type: String
+      labels: { gdpr.sensitivity: critical }
+    bonus:
+      type: String
+      labels: { gdpr.sensitivity: critical }

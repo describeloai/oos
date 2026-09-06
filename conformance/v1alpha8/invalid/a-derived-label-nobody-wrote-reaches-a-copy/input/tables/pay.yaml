@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: pay, namespace: erp }
+spec:
+  datasource: erp
+  object: "public.pay"
+  columns:
+    employee_id: {}
+    base_pay:    {}
+    bonus_amt:   {}
+    total_amt:   {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: retract, witness: log }

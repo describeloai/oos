@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: nomina, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: erp.pay }
+  fields:
+    employeeId: employee_id
+    total:      total_amt
+  materialized: { datasource: erp, table: "cache.nomina", key: [employeeId] }

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#3.1
+level: L0
+expects: OOS4001
+summary: >
+  La etiqueta que ninguna linea declara: `total` deriva de dos propiedades
+  `critical` y su `join` alcanza una copia autorizada solo hasta `high`.
