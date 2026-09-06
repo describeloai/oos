@@ -82,16 +82,41 @@ un fichero YAML esté dentro de la raíz no lo convierte en un documento OOS.
 
 ### 3.2 Implementación conforme: niveles
 
-"Ejecutar una ontología" abarca capacidades muy distintas. La conformidad se declara por
-**niveles acumulativos**: una implementación de nivel N **DEBE** satisfacer todos los
-niveles inferiores.
+"Ejecutar una ontología" abarca capacidades muy distintas, y **no todas se pueden
+certificar**. Por eso son dos tablas y no una.
+
+#### Niveles de conformidad
+
+Son **acumulativos** —una implementación de nivel N **DEBE** satisfacer los inferiores— y
+tienen la propiedad que los hace niveles: **se comprueban con una suite de ficheros**, así
+que se declaran y se verifican.
 
 | Nivel | Nombre | Qué hace | ¿Necesita acceso a datos? |
 |:---:|---|---|:---:|
 | **L0** | **Validador** | analiza, normaliza, valida esquema e integridad referencial, **ejecuta la comprobación de flujo `OOS4xxx`**, emite el digest | **no** |
 | **L1** | **Servidor de contexto** | sirve el plano de contexto: entidades, relaciones, tipos, políticas, linaje | **no** |
-| **L2** | **Ejecutor** | resuelve bindings contra fuentes reales, aplica políticas y obligaciones en lectura, federa consultas | sí |
-| **L3** | **Actor** | ejecuta funciones con capacidades y **verifica el acto que un endoso declara** | sí, con escritura |
+
+#### Capacidades
+
+Todo lo que ocurre **cuando el dato se mueve**. Una implementación las anuncia y las
+demuestra; la especificación **NO** las certifica, y no por falta de trabajo: una
+comprobación sobre datos no cabe en una suite de ficheros, que es un árbol de entrada y una
+salida esperada. Está decidido desde v1alpha2 —[`00-scope`](../v1alpha2/00-scope.md) §5— y
+esta tabla lo dice donde se lee.
+
+| Capacidad | Qué hace | Escribe |
+|---|---|:---:|
+| **lectura** | resuelve una vista contra fuentes reales, empuja lo que el origen admite y federa el resto | no |
+| **materialización** | puebla una vista `materialized` y sella lo que copia | no en el origen |
+| **mantenimiento** | refresca esa copia incrementalmente y sabe hasta cuándo fue cierta | no en el origen |
+| **actuación** | ejecuta funciones con capacidades y **verifica el acto que un endoso declara** | **sí** |
+
+> **Por qué son cuatro y no una.** Eran una —`L2` más `L3`— y no viajan juntas: leer,
+> materializar y mantener tienen requisitos, fallos y estados distintos, y una implementación
+> puede tener la primera y no las otras. Un solo nombre para las tres no describe a nadie.
+>
+> **`L2` y `L3` eran sus nombres**, y se retiran como niveles. Donde el resto de la
+> especificación dice *«eso es L2»* está diciendo *«eso exige datos»*, y sigue siendo cierto.
 
 **L0 es el nivel que hace que OOS sea un estándar.** Es completamente hermético: sin red,
 sin credenciales, sin tocar un dato. Es implementable en cualquier lenguaje en un fin de
@@ -230,7 +255,7 @@ en la gramática desde v1alpha1 ([04 · §6](04-flow.md)).
 
 > De esa lista, v1alpha2 cierra alcance con `Function` y `Resolution`. **`Rule` quedó
 > retirado como documento** —`constraint` es `quality` de ODCS e `inference` es un campo de
-> `Entity`— y `Test` sigue aplazado, por ser L2
+> `Entity`— y `Test` sigue aplazado, por exigir datos
 > ([`spec/v1alpha2/00-scope.md`](../v1alpha2/00-scope.md) §3.1).
 
 ---
@@ -445,7 +470,7 @@ justificación:
 | [`02-entity.md`](02-entity.md) | **gramática propia** | propiedades, tipos, temporalidad, unidades, etiquetas, derivación, `moved`/`reserved` |
 | [`03-binding.md`](03-binding.md) | perfil de **ODCS** | mapeo físico, `materialization`, `freshnessSLA`, perfil de conector |
 | [`04-flow.md`](04-flow.md) | **gramática propia** | retículos, conductos, desclasificadores, la regla de flujo |
-| [`05-ejecutor.md`](05-ejecutor.md) | **gramática propia** | qué debe hacer un L2: la ley del ejecutor, las dos aplicaciones, credenciales, marca de agua |
+| [`05-ejecutor.md`](05-ejecutor.md) · **histórico** | **gramática propia** | la ley del ejecutor, las dos aplicaciones, credenciales, marca de agua. Describe **capacidades**, no un nivel |
 | [`90-canonical-form.md`](90-canonical-form.md) | — | normalización, serialización determinista, digest |
 | `91-versioning.md` | — | versionado de la especificación y de los paquetes |
 | [`99-errors.md`](99-errors.md) | — | registro de códigos de error |

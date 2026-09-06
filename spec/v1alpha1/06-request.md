@@ -89,8 +89,9 @@ spec:
 - `owner` **DEBE** declararse. Es otro equipo: quien opera la identidad no es quien modela
   el dominio ni quien escribe las políticas — la misma razón que hace de
   [`Ruleset`](../v1alpha3/02-ruleset.md) un documento aparte.
-- `issuer.url` e `issuer.audience` **DEBEN** declararse. Una implementación L2 **DEBE**
-  rechazar una petición cuyo emisor o cuya audiencia no casen.
+- `issuer.url` e `issuer.audience` **DEBEN** declararse. Quien sirva la capacidad de
+  **lectura** ([`00-overview`](00-overview.md) §3.2) **DEBE** rechazar una petición cuyo
+  emisor o cuya audiencia no casen.
 - `subject.entity` **DEBE** resolver a una entidad `principal: true`; si no, `OOS2005`.
 - `subject.roles` **PUEDE** declararse, y nombra la reclamación que trae las pertenencias a
   rol. Sin ella, **un principal no pertenece a ningún rol** y toda política escrita como

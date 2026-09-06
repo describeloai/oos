@@ -1,7 +1,10 @@
-# 05 · Ejecutor — el nivel L2
+# 05 · Ejecutor — las capacidades sobre el dato
 
 **Estado:** **histórico** — su sujeto, el ejecutor de bindings, se retiró. Parte de OOS v1alpha1.
-**Gobierna:** qué **DEBE** hacer una implementación L2 cuando el dato se mueve de verdad.
+**Gobierna:** qué **DEBE** hacer una implementación **cuando el dato se mueve de verdad** — la
+**lectura**, la **materialización** y el **mantenimiento** de
+[`00-overview`](00-overview.md) §3.2. No es un nivel de conformidad: no se certifica con una
+suite de ficheros, y por eso se anuncia y se demuestra en vez de declararse.
 
 > ### Qué significa «histórico» aquí, y qué no
 >
@@ -40,7 +43,10 @@ credencial y una respuesta que puede llegar tarde.
 
 Y una diferencia de fondo que conviene fijar antes que nada:
 
-> **L0 y L1 fallan al compilar. L2 falla al responder.**
+> **Un nivel de conformidad falla al compilar. Una capacidad falla al responder.**
+>
+> Esa es la frontera, y es la razón de que sean dos tablas: lo primero cabe en un árbol de
+> ficheros con una salida esperada, y lo segundo no.
 
 Por eso este documento casi no añade códigos de error. Un rechazo en tiempo de consulta no es
 un defecto de un documento: es una **condición nombrada** que la implementación **DEBE**
@@ -66,7 +72,7 @@ que ha pasado por él: han pasado todas. Y el coste real no está en la red ni e
 está en que el ejecutor **asume trabajo de cómputo y transferencia que pertenece a la capa de
 almacenamiento**.
 
-> **LEY DEL EJECUTOR.** Una implementación L2 **NO DEBE** compensar lo que la fuente no sabe
+> **LEY DEL EJECUTOR.** Quien sirva la **lectura** **NO DEBE** compensar lo que la fuente no sabe
 > hacer. O empuja la operación al origen, o la rechaza. **NO DEBE** traer filas para
 > filtrarlas, ordenarlas o agregarlas localmente salvo que el binding lo autorice (§5).
 
@@ -139,7 +145,7 @@ Y la regla que se deriva:
 > **El contrato ya pasó por el conducto. El ejecutor sirve lo que el contrato contiene, y
 > nunca más de eso.**
 
-**Normativo.** Una implementación L2 **NO DEBE** volver a filtrar por clasificación ni por
+**Normativo.** Quien sirva la **lectura** **NO DEBE** volver a filtrar por clasificación ni por
 madurez. Esa decisión ya la tomó la emisión, contra `contextSurface`, y **dos puntos de
 aplicación se aplican en el más débil de los dos**. Lo que L2 aplica —y solo él— es lo que
 depende de quién pregunta.
@@ -187,7 +193,7 @@ funciona sin declarar nada, y las capacidades solo desbloquean lo demás.**
 segundo sitio de donde leer, y ese sitio **no tiene las capacidades del origen: tiene las del
 formato en que se materializó**.
 
-**Normativo.** Una implementación L2 **PUEDE** planificar contra lo materializado usando las
+**Normativo.** Quien sirva la **lectura** **PUEDE** planificar contra lo materializado usando las
 capacidades del formato en que lo guarda, y **NO DEBE** exigir que se declaren: son derivables
 de una decisión que ya tomó el motor (P2). Lo que **DEBE** es no atribuirlas al origen —
 `capabilities` sigue describiendo la fuente, y si lo materializado desaparece, el plan que
@@ -222,7 +228,7 @@ postura.
 ### 6.1 · Los atributos del principal no se leen: llegan
 
 **Normativo.** Los atributos que la política evalúa sobre el principal **DEBEN** llegar con la
-petición, firmados por la capa de identidad, y **DEBEN** verificarse. Una implementación L2
+petición, firmados por la capa de identidad, y **DEBEN** verificarse. Quien sirva la **lectura**
 **NO DEBE** resolverlos contra un binding, y **DEBE** rechazar —con condiciones distintas—
 una petición que no los traiga y una cuya firma no valide.
 
@@ -263,7 +269,7 @@ lleve la cadena del principal, que es el índice de topología — y por eso es 
 
 ### 6.2 · Credenciales de la fuente
 
-**Normativo.** Una implementación L2 **DEBE** preferir, en este orden, la primera forma que la
+**Normativo.** Quien sirva la **lectura** **DEBE** preferir, en este orden, la primera forma que la
 fuente admita:
 
 | | Forma | Qué ve la fuente |
@@ -287,9 +293,9 @@ además de `connectionEnv`. Omitirlo es legal —el refresco usa la misma— per
 implementación **DEBERÍA** avisar, porque colapsar las dos identidades es una decisión y una
 decisión en silencio no es una decisión.
 
-**Normativo.** L2 es **solo lectura**. Escribir es L3 y exige una `Function`
-([`v1alpha2/02-function`](../v1alpha2/02-function.md)). Una implementación L2 **NO DEBE**
-abrir una conexión con permiso de escritura.
+**Normativo.** La **lectura** es solo lectura. Escribir es **actuación** y exige una `Function`
+([`v1alpha2/02-function`](../v1alpha2/02-function.md)). Quien sirva la lectura **NO DEBE** abrir
+una conexión con permiso de escritura — y esa frontera es la que separa las dos capacidades.
 
 > Y conviene decir el argumento completo, porque suele leerse al revés: **la superficie de
 > credenciales baja, no sube.** Sin un motor, cada agente, cada aplicación y cada cuaderno
