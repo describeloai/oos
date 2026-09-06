@@ -1,7 +1,32 @@
 # 05 · Ejecutor — el nivel L2
 
-**Estado:** normativo. Parte de OOS v1alpha1.
+**Estado:** **histórico** — su sujeto, el ejecutor de bindings, se retiró. Parte de OOS v1alpha1.
 **Gobierna:** qué **DEBE** hacer una implementación L2 cuando el dato se mueve de verdad.
+
+> ### Qué significa «histórico» aquí, y qué no
+>
+> **Lo que este documento dice sigue siendo cierto de lo que gobierna.** Un `Binding` que declare
+> `apiVersion: oos.dev/v1alpha1` compila hoy y compilará mañana —`apiVersion` es por documento y
+> v1alpha1 no caduca ([`91-versioning`](91-versioning.md))— y su ejecución es la que esta página
+> describe.
+>
+> Lo que cambió es **quién la ejecuta**. El programa que lo hacía —`ore-exec`, 4.529 líneas— se
+> retiró con el paradigma de bindings, y sus reglas no murieron con él: **se mudaron al motor de
+> vistas**, con otro sujeto. Esta página se queda porque es donde están escritas y por qué.
+>
+> | lo que dice | dónde vive ahora |
+> |---|---|
+> | §2 · el ejecutor **no compensa** | `ore-view::view_matcher` — decide si una copia contesta un plan, y **qué compensación** haría falta. La ley no cambió: cambió de tener un solo lector a tenerlo dentro del cotejo |
+> | §3 · las fases del plan | el plan es del motor de vistas, y su forma la fija `02-view` — `Proyecta(Filtra(Lee \| Referencia))` |
+> | §5 · `fullScan` es una **autorización**, no una descripción | `01-table` §4, la cara `reads` de la tabla. Y con dientes: **`OOS2020`** —*una vista cuya raíz de lectura no se deja leer no se materializa*— es esta sección convertida en regla de compilación |
+> | §6 · credenciales | `connectionEnv` y `refreshEnv` en `ontology.config.yaml`: la identidad del refresco separada de la que responde |
+> | §7 · la marca de agua | `changes.witness` de la tabla, y `registro::marca_de`, que la deriva de la gramática en vez de guardarla |
+>
+> **Lo que NO se mudó es la definición del propio nivel `L2`**, y esa es la deuda que esta página
+> deja abierta: se enuncia aquí —*«resuelve bindings contra fuentes reales»*— sobre un `kind` que
+> ya es histórico. Un nivel de conformidad que nombra un vocabulario retirado no se puede
+> reclamar: una implementación no sabe contra qué se mide. Redefinirlo es un peldaño propio, y
+> está medido en `pruebas-de-fuego/medida-l2.py`.
 
 ---
 
