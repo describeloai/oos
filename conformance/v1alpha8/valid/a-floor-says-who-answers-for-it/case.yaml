@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#3.3
+level: L0
+expects: accept
+summary: >
+  Una configuracion que fija el suelo de una fuente declara quien responde de el,
+  igual que la politica de conductos declara quien responde del techo.

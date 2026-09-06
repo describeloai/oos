@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/04-flow.md#3.3
+level: L0
+expects: OOS2009
+summary: >
+  Fijar el suelo de una fuente sin declarar quien responde de el.

@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/04-flow.md#3.3
+level: L0
+expects: accept
+summary: >
+  Una configuracion que no clasifica nada no tiene de que responder: sin suelo no
+  hay regla.

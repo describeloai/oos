@@ -96,6 +96,32 @@ Un paquete **PUEDE** declarar retículos adicionales —residencia de datos, con
 exportación, nivel de habilitación— sin que la especificación ni el motor cambien. **El
 análisis de flujo es genérico sobre retículos.**
 
+### 3.3 · Quién responde del suelo
+
+Una `ConduitPolicy` **DEBE** declarar `owner` porque un **techo** del que nadie responde es
+un hueco (§4). Por abajo se decide lo mismo, y en dos sitios:
+
+| dónde | qué fija | qué pasa si baja |
+|---|---|---|
+| `datasources[].labels` | la clasificación **mínima** de todo lo que sale de esa fuente | desclasifica en cascada todo lo que la hereda |
+| `Lattice.requiresGovernance` | desde qué nivel la cobertura es obligatoria | apaga `OOS8001` para un nivel entero |
+
+**Normativo.** Un `OntologyConfig` en el que algún `datasource` declare `labels`, y un
+`Lattice` que declare `requiresGovernance`, **DEBEN** declarar `owner` con la forma de handle
+de [`01-package` §3](01-package.md) — `team:` o `user:`. Sin él: `OOS2009`.
+
+- La exigencia es **solo donde hay algo que bajar**: una configuración sin suelos no clasifica
+  nada, y un retículo que solo declara una escala no impone cobertura a nadie. Sin sujeto no
+  hay regla, y exigirlo a todo documento sería un peaje y no una salvaguarda.
+- Y **solo desde v1alpha8**, que es cuando el campo existe. Declararlo mal, en cambio, es un
+  error en cualquier versión: escribir `owner` afirma que alguien responde.
+
+> **Por qué el suelo y no la etiqueta.** Pasarse de etiqueta ya arrastra un responsable:
+> `requiresGovernance` obliga a que una regla cubra la propiedad, y toda regla declara `owner`
+> (`OOS8001`). La dirección sin cubrir era la contraria — **quedarse corto** —, y quedarse
+> corto no produce ningún síntoma. Es la misma forma que `⊥` por omisión (§4, P4): lo que falta
+> y lo que está bajo se parecen demasiado a lo que está bien.
+
 ---
 
 ## 4. Conductos

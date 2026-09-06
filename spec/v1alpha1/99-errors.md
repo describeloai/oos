@@ -77,7 +77,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2006` | uso de un nombre declarado en `reserved` | 02 §8 |
 | `OOS2007` | `version` no es semver 2.0.0 válido | 01 §2.1 |
 | `OOS2008` | `status` fuera del vocabulario de ODCS | 01 §2.3 |
-| `OOS2009` | `owner` ausente o mal formado | 01 §3.2 |
+| `OOS2009` | `owner` ausente o mal formado — en `Package` y `ConduitPolicy`, y desde v1alpha8 también en quien fija el **suelo**: un `OntologyConfig` con `labels` de datasource o un `Lattice` con `requiresGovernance` (04 §3.3) | 01 §3.2 |
 | `OOS2010` | `nature: entity` sin `primaryKey`, o `nature: event` sin `timeKey` | 02 §2 |
 | `OOS2011` | el mapeo no cubre lo que necesita columna: clave, `via` o `payload` | 03 §2.1 |
 | `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila | 03 §3.5 |

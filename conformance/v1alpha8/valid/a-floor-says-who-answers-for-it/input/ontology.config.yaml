@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: OntologyConfig
+metadata: { name: vistas, version: 0.1.0 }
+owner: team:acme-security
+datasources:
+  - name: erp
+    type: postgres
+    connectionEnv: ERP_URL
+    labels:
+      gdpr.sensitivity: high

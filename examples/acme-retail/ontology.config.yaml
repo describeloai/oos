@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha1
+apiVersion: oos.dev/v1alpha8
 kind: OntologyConfig
 metadata:
   name: acme-retail
@@ -39,6 +39,20 @@ dependencies:
 # `residency` etiqueta la ubicación física de cada fuente. El compilador la
 # usa para propagar la etiqueta acme.residency a todo lo que se enlace ahí.
 # ---------------------------------------------------------------------------
+# Quien responde del SUELO de las fuentes.
+#
+# Cada `labels` de aqui abajo fija la clasificacion MINIMA de todo lo que sale
+# de esa fuente, y bajarla desclasifica en cascada: quitarle una palabra a
+# `hr_workday` lleva este repositorio de once propiedades gobernadas a siete, y
+# compila igual. Ninguna de las cuatro decisiones de seguridad que hay en el
+# arbol —el techo de un conducto, un `permit` de Cedar, una mascara, y esto—
+# puede quedarse sin alguien que responda.
+#
+# Es el mismo equipo que responde de `conduits.yaml`, y a proposito: el techo y
+# el suelo de una misma escala no los puede mover gente distinta sin que uno de
+# los dos se quede sin sentido.
+owner: team:acme-security
+
 datasources:
   - name: crm_prod
     type: postgres

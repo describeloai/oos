@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha3
+apiVersion: oos.dev/v1alpha8
 kind: Lattice
 metadata:
   name: sensitivity
@@ -20,6 +20,20 @@ metadata:
     Cuando la resolución exista, este fichero se borra y no cambia nada más.
 
 spec:
+  # Quien responde de ESTA ESCALA, y no de los datos que clasifica.
+  #
+  # `requiresGovernance` decide desde que nivel la cobertura es obligatoria:
+  # subir `high` a `critical` apagaria `OOS8001` para un nivel entero y ninguna
+  # propiedad `high` volveria a exigir una regla. Es la misma clase de decision
+  # que elevar la autorizacion de un conducto, y aquella lleva dueno desde que
+  # se midio que un techo sin el es un hueco.
+  #
+  # No es `team:acme-security`, que responde de los conductos: quien responde de
+  # una escala regulatoria es quien responde del cumplimiento. Y el dia que este
+  # fichero se borre —cuando la resolucion de dependencias exista— este campo se
+  # va con el, porque la autoridad real la tiene el regulador que lo publica.
+  owner: team:compliance
+
   # Secuencia ascendente por sensibilidad.
   #   none ⊑ low ⊑ medium ⊑ high ⊑ critical
   levels: [none, low, medium, high, critical]
