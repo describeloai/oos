@@ -224,6 +224,22 @@ spec:
 - `reads` es **o** el objeto de capacidades **o** el literal `none`. `none` significa *no se le
   puede pedir nada*, y tiene una consecuencia sobre quien la consulte: `OOS2020`, en
   [`02-view` §5](02-view.md#5).
+- `reads.projectionPushdown` es opcional y su valor por defecto es **`true`**, y eso **no** es
+  una excepción a P4. Cerrar aquí sería `false`, y `false` no es una opción que se ejerza: el
+  protocolo del driver **exige** que la petición lleve una proyección y que solo esas columnas
+  se pidan al origen. Un lector que no lo haga está incumpliendo el contrato, así que declararlo
+  es una **confesión**, y una confesión se escribe.
+
+  Importa porque decide si la máscara es **estructural**. Lo que no está en el plan no está en la
+  petición y no puede estar en la consulta: no hay ningún punto donde alguien pueda olvidarse de
+  aplicarla, **porque no hay nada que aplicar**. Con `false` eso se rompe — la columna
+  enmascarada sale del origen y alguien la descarta después, que es *otra* garantía y no la misma
+  más lenta.
+
+  Una tabla con `projectionPushdown: false` **NO DEBE** estar bajo una vista materializada —
+  `OOS2029`. La lectura virtual sí se admite: mueve la fila al proceso del lector y ahí se acaba.
+  Una copia queda, y queda **sellada con la clasificación de los campos de la vista**, que no es
+  lo que se movió para hacerla.
 - Cada nombre de `reads.requiredFilters` **DEBE** ser una columna de `columns` — `OOS2018`.
   Cambia de sujeto respecto al binding, donde eran **propiedades**: un filtro exigido lo exige
   el origen, y el origen habla de columnas. Es lo que deja que un nombre anidado

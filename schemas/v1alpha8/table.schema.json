@@ -115,6 +115,11 @@
                     ]
                   }
                 },
+                "projectionPushdown": {
+                  "description": "Si el origen recorta LAS COLUMNAS que se le piden. Por defecto SI, y no por optimismo: el protocolo del driver lo exige, asi que declarar `false` es una CONFESION y no una opcion.\n\nImporta porque decide si la mascara es estructural. Lo que no esta en el plan no esta en la peticion y no puede estar en la consulta: no hay ningun punto donde alguien pueda olvidarse de aplicarla, porque no hay nada que aplicar. Con `false` eso se rompe — la columna enmascarada SALE del origen y alguien la descarta despues, que es otra garantia y no la misma mas lenta.\n\nConsecuencia: OOS2029, una tabla asi no sostiene una copia. Una lectura virtual mueve la fila al proceso del lector y ahi se acaba; una copia queda, sellada con la clasificacion de los campos de la vista, y esa cuenta seria falsa.",
+                  "type": "boolean",
+                  "default": true
+                },
                 "joinPushdown": {
                   "type": "boolean"
                 },

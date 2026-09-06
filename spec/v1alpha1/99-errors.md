@@ -96,6 +96,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2025` | una vista por la que la ontología escribe no declara `materialized` | v1alpha8 02 §5.5 |
 | `OOS2027` | `exports` nombra algo que el paquete no contiene | v1alpha8 01 §3.2 |
 | `OOS2028` | una referencia cruza a un paquete que no la exporta | v1alpha8 01 §3.2 |
+| `OOS2029` | una tabla que no empuja la proyección no sostiene una copia | v1alpha8 01 §4.1 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
