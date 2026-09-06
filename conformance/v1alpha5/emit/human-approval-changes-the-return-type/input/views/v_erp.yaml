@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_erp, namespace: scm }
+spec:
+  owner: team:x
+  from: { table: scm.tb_order }
+  fields:
+    orderId: order_id
+    status: status
+    total: total
+  materialized: { datasource: postgres_erp, table: "cache.v_erp", key: [orderId] }

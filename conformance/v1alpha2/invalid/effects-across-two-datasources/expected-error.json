@@ -1,8 +1,0 @@
-{
-  "code": "OOS7008",
-  "function": "scm.approvePurchaseOrder",
-  "datasources": [
-    "postgres_erp",
-    "warehouse"
-  ]
-}

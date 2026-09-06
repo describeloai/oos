@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: orders, namespace: sales }
+spec:
+  datasource: erp
+  object: "public.orders"
+  columns:
+    col_currency: {}
+    col_locale: {}
+    col_orderid: {}
+    col_status: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

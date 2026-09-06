@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: tb_order, namespace: hr }
+spec:
+  datasource: hr_db
+  object: "public.tb_order"
+  columns:
+    order_id: {}
+    patient_id: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

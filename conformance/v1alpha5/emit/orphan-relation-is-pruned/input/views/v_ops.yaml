@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_ops, namespace: hr }
+spec:
+  owner: team:x
+  from: { table: hr.tb_order }
+  fields:
+    orderId: order_id
+    patientId: patient_id

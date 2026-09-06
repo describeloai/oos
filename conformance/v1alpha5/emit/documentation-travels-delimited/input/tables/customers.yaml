@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: customers, namespace: crm }
+spec:
+  datasource: crm
+  object: "public.customers"
+  columns:
+    email: {}
+    id: {}
+    nick: {}
+    vat: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

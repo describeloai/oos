@@ -4,6 +4,7 @@ metadata: { name: Customer, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [customerId]
+  backedBy: v_crm
   properties:
     customerId: { type: String }
     country:    { type: String, labels: { gdpr.sensitivity: none } }

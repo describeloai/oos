@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: tb_customer, namespace: hr }
+spec:
+  datasource: hr_db
+  object: "public.tb_customer"
+  columns:
+    country: {}
+    cust_id: {}
+    email: {}
+    national_id: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

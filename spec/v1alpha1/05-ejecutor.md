@@ -1,6 +1,6 @@
 # 05 · Ejecutor — las capacidades sobre el dato
 
-**Estado:** **histórico** — su sujeto, el ejecutor de bindings, se retiró. Parte de OOS v1alpha1.
+**Estado:** **retirado** — el ejecutor de bindings ya no se lee. Parte de OOS v1alpha1.
 **Gobierna:** qué **DEBE** hacer una implementación **cuando el dato se mueve de verdad** — la
 **lectura**, la **materialización** y el **mantenimiento** de
 [`00-overview`](00-overview.md) §3.2. No es un nivel de conformidad: no se certifica con una
@@ -30,6 +30,24 @@ suite de ficheros, y por eso se anuncia y se demuestra en vez de declararse.
 > ya es histórico. Un nivel de conformidad que nombra un vocabulario retirado no se puede
 > reclamar: una implementación no sabe contra qué se mide. Redefinirlo es un peldaño propio, y
 > está medido en `pruebas-de-fuego/medida-l2.py`.
+
+
+> ## ⚠️ Retirado, y esta vez de la lectura
+>
+> Esto era **histórico**: no se escribían nuevos, y uno viejo seguía compilando porque
+> `apiVersion` es por documento. Ya no. **`kind: Binding` se rechaza en cualquier versión**, y
+> este documento se queda como registro de qué decía y en qué se convirtió — no como norma que
+> alguien pueda cumplir.
+>
+> **Por qué.** Sostener la lectura costaba dos paradigmas vivos en el motor, y se midió a quién
+> beneficiaba: a nadie. No hay un solo artefacto firmado cuya verificación dependa de leer un
+> `Binding` — los únicos `.oob` del árbol son fixtures, y el registro contra el que resuelven los
+> `ontology.lock` no existe. `pruebas-de-fuego/medida-retirar-binding.py`.
+>
+> **Lo que esto cuesta, dicho aquí y no en un commit.** [`91-versioning`](91-versioning.md)
+> prometía que un documento no caduca por haber sido escrito antes, y **esa frase deja de ser
+> cierta para este `kind`**. Se dice en vez de dejarla en pie: una promesa que la implementación
+> no cumple es peor que una promesa que no se hizo.
 
 ---
 

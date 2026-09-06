@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: tb_diagnosis, namespace: hr }
+spec:
+  datasource: hr_db
+  object: "public.tb_diagnosis"
+  columns:
+    code: {}
+    diag_id: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

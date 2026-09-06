@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_clinical, namespace: hr }
+spec:
+  owner: team:x
+  from: { table: hr.tb_diagnosis }
+  fields:
+    code: code
+    diagnosisId: diag_id

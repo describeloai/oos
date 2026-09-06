@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: clientes, namespace: hr }
+spec:
+  owner: team:people
+  from: { table: hr.tb_customer }
+  fields:
+    country: country
+    customerId: cust_id
+    email: email
+    externalId: ext_id

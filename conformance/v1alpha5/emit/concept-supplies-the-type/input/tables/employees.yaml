@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: employees, namespace: hr }
+spec:
+  datasource: crm
+  object: "public.employees"
+  columns:
+    birth_date: {}
+    employee_id: {}
+    n_reports: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

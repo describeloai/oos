@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_crm, namespace: hr }
+spec:
+  owner: team:x
+  from: { table: hr.employees }
+  fields:
+    born: birth_date
+    employeeId: employee_id
+    reports: n_reports

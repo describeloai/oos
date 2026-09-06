@@ -4,6 +4,7 @@ metadata: { name: Employee, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [employeeId]
+  backedBy: v_erp
   uniqueKeys: [[nationalId]]
   properties:
     employeeId: { type: String }

@@ -1,11 +1,10 @@
 # 03 · Binding — perfil de ODCS
 
-**Estado:** **histórico** — sustituido por [`Table`](../v1alpha8/01-table.md) y
-[`View`](../v1alpha8/02-view.md) en v1alpha8. Parte de OOS v1alpha1.
+**Estado:** **retirado** — el `Binding` ya no se lee. Parte de OOS v1alpha1.
 **Anfitrión:** Open Data Contract Standard v3.1 — Infrastructures & Servers, y los tipos
 físicos a nivel de propiedad.
 
-> ### Qué significa «histórico» aquí, y qué no
+> ### Qué decía «histórico», antes de que se retirara de la lectura
 >
 > **Este documento sigue siendo normativo para los documentos que lo declaran.** `apiVersion` es
 > por documento y v1alpha1 no caduca —[`91-versioning`](91-versioning.md)—, así que un `Binding`
@@ -35,6 +34,24 @@ físicos a nivel de propiedad.
 > cubrieran una entidad, cada uno con un subconjunto de sus propiedades —§2.1—. Una `View` no.
 > [`v1alpha8/00-scope`](../v1alpha8/00-scope.md) §6 retira esa posibilidad y §6.1 dice por qué:
 > no es una limitación provisional, es la frontera de la invertibilidad.
+
+
+> ## ⚠️ Retirado, y esta vez de la lectura
+>
+> Esto era **histórico**: no se escribían nuevos, y uno viejo seguía compilando porque
+> `apiVersion` es por documento. Ya no. **`kind: Binding` se rechaza en cualquier versión**, y
+> este documento se queda como registro de qué decía y en qué se convirtió — no como norma que
+> alguien pueda cumplir.
+>
+> **Por qué.** Sostener la lectura costaba dos paradigmas vivos en el motor, y se midió a quién
+> beneficiaba: a nadie. No hay un solo artefacto firmado cuya verificación dependa de leer un
+> `Binding` — los únicos `.oob` del árbol son fixtures, y el registro contra el que resuelven los
+> `ontology.lock` no existe. `pruebas-de-fuego/medida-retirar-binding.py`.
+>
+> **Lo que esto cuesta, dicho aquí y no en un commit.** [`91-versioning`](91-versioning.md)
+> prometía que un documento no caduca por haber sido escrito antes, y **esa frase deja de ser
+> cierta para este `kind`**. Se dice en vez de dejarla en pie: una promesa que la implementación
+> no cumple es peor que una promesa que no se hizo.
 
 ---
 

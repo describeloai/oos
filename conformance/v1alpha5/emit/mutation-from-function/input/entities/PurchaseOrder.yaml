@@ -4,6 +4,7 @@ metadata: { name: PurchaseOrder, namespace: scm, labels: { oos.maturity: STABLE 
 spec:
   nature: entity
   primaryKey: [orderId]
+  backedBy: v_erp
   properties:
     orderId: { type: String }
     status:

@@ -4,6 +4,10 @@ metadata: { name: default }
 spec:
   owner: team:security
   conduits:
+    materialization.payload:
+      gdpr.sensitivity: medium
+      oos.maturity: REVIEWED
+    materialization.topology: {}
     contextSurface:
       gdpr.sensitivity: medium
       oos.maturity: REVIEWED

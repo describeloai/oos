@@ -4,6 +4,7 @@ metadata: { name: Employee, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [employeeId]
+  backedBy: v_crm
   properties:
     employeeId: { type: String }
     # El tipo lo pone el concepto, y son de tres familias distintas a proposito:

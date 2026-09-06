@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_crm, namespace: crm }
+spec:
+  owner: team:x
+  from: { table: crm.customers }
+  fields:
+    customerId: id
+    email: email
+    nickname: nick
+    vatId: vat

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_crm, namespace: hr }
+spec:
+  owner: team:x
+  from: { table: hr.tb_customer }
+  fields:
+    country: country
+    customerId: cust_id
+    email: email
+    nationalId: national_id

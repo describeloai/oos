@@ -4,6 +4,7 @@ metadata: { name: Order, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [orderId]
+  backedBy: v_ops
   properties:
     orderId:   { type: String }
     patientId: { type: String }

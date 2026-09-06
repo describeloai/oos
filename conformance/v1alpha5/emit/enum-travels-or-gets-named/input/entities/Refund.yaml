@@ -4,6 +4,7 @@ metadata: { name: Refund, namespace: sales }
 spec:
   nature: entity
   primaryKey: [refundId]
+  backedBy: v_refunds
   properties:
     refundId: { type: String }
     # El MISMO concepto que `Order.currency`: tienen que salir con el mismo

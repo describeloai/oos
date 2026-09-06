@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: tb_order, namespace: scm }
+spec:
+  datasource: postgres_erp
+  object: "public.tb_order"
+  columns:
+    order_id: {}
+    status: {}
+    total: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: upsert, witness: log, key: [order_id] }

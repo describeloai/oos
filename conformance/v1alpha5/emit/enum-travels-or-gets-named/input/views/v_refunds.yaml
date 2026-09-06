@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_refunds, namespace: sales }
+spec:
+  owner: team:x
+  from: { table: sales.refunds }
+  fields:
+    refundId: col_refundid
+    currency: col_currency

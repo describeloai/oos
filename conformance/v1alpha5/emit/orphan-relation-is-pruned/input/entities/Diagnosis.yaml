@@ -4,6 +4,7 @@ metadata: { name: Diagnosis, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [diagnosisId]
+  backedBy: v_clinical
   properties:
     diagnosisId: { type: String, labels: { gdpr.sensitivity: critical } }
     code:        { type: String, labels: { gdpr.sensitivity: critical } }

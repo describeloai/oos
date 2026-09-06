@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: tb_employee, namespace: hr_db }
+spec:
+  datasource: hr_db
+  object: "public.tb_employee"
+  columns:
+    emp_id: {}
+    country: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

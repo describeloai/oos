@@ -4,6 +4,7 @@ metadata: { name: Customer, namespace: hr, labels: { oos.maturity: STABLE } }
 spec:
   nature: entity
   primaryKey: [customerId]
+  backedBy: clientes
   uniqueKeys: [[externalId], [email]]
   properties:
     email:      { type: String, labels: { gdpr.sensitivity: low } }

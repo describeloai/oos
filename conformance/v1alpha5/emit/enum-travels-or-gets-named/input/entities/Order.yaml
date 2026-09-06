@@ -4,6 +4,7 @@ metadata: { name: Order, namespace: sales }
 spec:
   nature: entity
   primaryKey: [orderId]
+  backedBy: v_erp
   properties:
     orderId:  { type: String }
     currency: { is: iso.currencyCode }

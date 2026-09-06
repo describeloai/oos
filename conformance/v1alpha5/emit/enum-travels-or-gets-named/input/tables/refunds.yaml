@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: refunds, namespace: sales }
+spec:
+  datasource: erp
+  object: "public.refunds"
+  columns:
+    col_refundid: {}
+    col_currency: {}
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: none }

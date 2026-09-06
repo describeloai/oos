@@ -1,7 +1,0 @@
-{
-  "changes": [
-    { "code": "OOS5020", "axis": "INDEX", "subject": "hr.Employee",
-      "from": "index", "to": "passthrough" }
-  ],
-  "requiredBump": "minor"
-}

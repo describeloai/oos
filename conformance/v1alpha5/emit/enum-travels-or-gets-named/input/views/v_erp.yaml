@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: v_erp, namespace: sales }
+spec:
+  owner: team:x
+  from: { table: sales.orders }
+  fields:
+    currency: col_currency
+    locale: col_locale
+    orderId: col_orderid
+    status: col_status
