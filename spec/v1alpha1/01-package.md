@@ -240,22 +240,6 @@ y no un descuido.
 
 ---
 
-### 3.5 · Lo que se consideró extender y no se extiende
-
-Registro explícito, para que la disciplina de P7 sea auditable.
-
-| Candidato | Resolución |
-|---|---|
-| `reviewers` | **No.** ODCS ya tiene `roles[].firstLevelApprovers` y `secondLevelApprovers`. La aplicación corresponde al control de versiones —`CODEOWNERS`—, no a la especificación |
-| `lifecycle` | **No.** Es `status` |
-| `contactChannels` | **No.** Es la sección Support |
-| `sla.availability`, `sla.freshness` | **No se tipan.** OOS no las evalúa: viajan en `sla.properties` como `slaProperties` genéricas. Solo `breakingChangePolicy.noticePeriod` es normativo (`91-versioning` §6), y por eso es el único tipado |
-| `owner` | **No es extensión**, es restricción más azúcar: ODCS lo expresa como miembro de `team` con `role: Owner`. OOS exige **exactamente uno** y lo escribe como handle `team:` o `user:`, que es lo que se alinea con `CODEOWNERS`. La emisión traduce |
-
----
-
----
-
 ### 3.5 · La pertenencia — `OOS2030`
 
 > Un documento que vive **dentro del directorio de un paquete** DEBE declarar como `namespace`
@@ -302,7 +286,7 @@ nombrarlo y una referencia de fuera no lo alcanza. Es la misma regla, no una seg
 
 #### Solo de v1alpha8 en adelante
 
-El mismo razonamiento —y la misma puerta— que [`OOS2028`](#33--exports--lo-publico-de-un-paquete):
+El mismo razonamiento —y la misma puerta— que [`OOS2028`](#32--exports--lo-público-y-llega-con-v1alpha8):
 un documento anterior se escribió cuando el `namespace` no significaba pertenencia, y aplicárselo
 cambiaría lo que significa algo ya publicado.
 
@@ -340,6 +324,22 @@ documento a dónde se fue cada uno.
 La regla alcanza a lo que está **en el árbol**. Una dependencia de otro artefacto se resuelve por
 el lock, y su estado es del registro: decirlo aquí exigiría red, y la compilación dejaría de ser
 hermética.
+
+---
+
+### 3.7 · Lo que se consideró extender y no se extiende
+
+Registro explícito, para que la disciplina de P7 sea auditable.
+
+| Candidato | Resolución |
+|---|---|
+| `reviewers` | **No.** ODCS ya tiene `roles[].firstLevelApprovers` y `secondLevelApprovers`. La aplicación corresponde al control de versiones —`CODEOWNERS`—, no a la especificación |
+| `lifecycle` | **No.** Es `status` |
+| `contactChannels` | **No.** Es la sección Support |
+| `sla.availability`, `sla.freshness` | **No se tipan.** OOS no las evalúa: viajan en `sla.properties` como `slaProperties` genéricas. Solo `breakingChangePolicy.noticePeriod` es normativo (`91-versioning` §6), y por eso es el único tipado |
+| `owner` | **No es extensión**, es restricción más azúcar: ODCS lo expresa como miembro de `team` con `role: Owner`. OOS exige **exactamente uno** y lo escribe como handle `team:` o `user:`, que es lo que se alinea con `CODEOWNERS`. La emisión traduce |
+
+---
 
 ## 4. Traducción
 
