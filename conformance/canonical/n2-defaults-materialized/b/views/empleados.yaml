@@ -3,5 +3,5 @@ kind: View
 metadata: { name: empleados, namespace: hr }
 spec:
   owner: team:people
-  from: { table: hr_db.tb_employee }
+  from: { table: hr.tb_employee }
   fields: { employeeId: emp_id }

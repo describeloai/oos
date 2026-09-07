@@ -1,10 +1,10 @@
 apiVersion: oos.dev/v1alpha8
 kind: Entity
-metadata: { name: Employee, namespace: hr }
+metadata: { name: Employee, namespace: rrhh }
 spec:
   nature: entity
   primaryKey: [id]
-  backedBy: iberia
+  backedBy: infra.iberia
   properties:
     id: { type: String }
     dni:

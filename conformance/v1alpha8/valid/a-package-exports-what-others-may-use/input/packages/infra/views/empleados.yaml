@@ -1,9 +1,9 @@
 apiVersion: oos.dev/v1alpha8
 kind: View
-metadata: { name: empleados, namespace: hr }
+metadata: { name: empleados, namespace: infra }
 spec:
   owner: team:hr
-  from: { table: erp.employees }
+  from: { table: infra.employees }
   freshness: 15m
   fields:
     employeeId: employee_id

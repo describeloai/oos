@@ -7,4 +7,4 @@ datasources:
     type: postgres
     connectionEnv: ERP_URL
     labels:
-      gdpr.sensitivity: high
+      hr.sensitivity: high

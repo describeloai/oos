@@ -3,7 +3,7 @@ kind: View
 metadata: { name: comp, namespace: hr }
 spec:
   owner: team:hr
-  from: { table: erp.pay }
+  from: { table: hr.pay }
   fields:
     employeeId: employee_id
     baseSalary: base_pay

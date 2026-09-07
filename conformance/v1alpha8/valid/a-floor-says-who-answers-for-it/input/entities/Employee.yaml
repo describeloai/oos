@@ -9,5 +9,5 @@ spec:
     employeeId: { type: String }
     nationalId:
       type: String
-      labels: { gdpr.sensitivity: high }
+      labels: { hr.sensitivity: high }
     pais: { type: String }

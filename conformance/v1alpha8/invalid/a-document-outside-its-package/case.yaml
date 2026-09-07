@@ -1,0 +1,8 @@
+rule: spec/v1alpha1/01-package.md#3.5
+level: L0
+expects: OOS2030
+summary: >
+  La tabla vive en el paquete `hr` y se llama `erp.employees`. La pertenencia la
+  dice el directorio y la identidad el `namespace`, y hasta v1alpha8 nada ataba
+  las dos: el documento compilaba, y ese mismo paquete exportandolo fallaba con
+  `OOS2027` por un nombre que no existe.

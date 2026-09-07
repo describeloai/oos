@@ -97,6 +97,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2027` | `exports` nombra algo que el paquete no contiene | v1alpha8 01 §3.2 |
 | `OOS2028` | una referencia cruza a un paquete que no la exporta | v1alpha8 01 §3.2 |
 | `OOS2029` | una tabla que no empuja la proyección no sostiene una copia | v1alpha8 01 §4.1 |
+| `OOS2030` | el `namespace` no es el del paquete que contiene al documento | v1alpha1 01 §3.5 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

@@ -3,7 +3,7 @@ kind: View
 metadata: { name: empleados, namespace: hr }
 spec:
   owner: team:hr
-  from: { table: erp.employes }
+  from: { table: hr.employes }
   fields:
     employeeId: employee_id
     pais: country

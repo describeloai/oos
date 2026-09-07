@@ -254,6 +254,47 @@ Registro explícito, para que la disciplina de P7 sea auditable.
 
 ---
 
+---
+
+### 3.5 · La pertenencia — `OOS2030`
+
+> Un documento que vive **dentro del directorio de un paquete** DEBE declarar como `namespace`
+> el nombre de ese paquete.
+
+La pertenencia la dice el directorio —§3.3— y la identidad la dice `metadata.namespace`, que es
+con lo que `backedBy`, `from` y `exports` se refieren a todo. **Hasta aquí nada ataba las dos**, y
+las dos mitades de la pinza se ven en un ejemplo: un documento en `packages/ventas` llamado
+`otro.E` compilaba limpio, y ese mismo paquete declarando `exports: [ventas.E]` fallaba con
+`OOS2027` — porque `exports` habla en nombre cualificado y el documento se llama otra cosa.
+
+La consecuencia es que *«mover un documento a otro paquete»* no tenía un significado único: eran
+dos cosas —el fichero y el nombre— que se movían por separado sin que nada protestara.
+
+#### Alcanza al contenido gobernado, no al vocabulario compartido
+
+`Entity`, `View`, `Table`, `Function` y `Resolution` son contenido que alguien **posee** y que se
+mueve entre paquetes: su nombre es el del paquete.
+
+`Lattice`, `Ruleset`, `Concept`, `Interface` y las políticas son **vocabulario compartido**: su
+nombre es el del vocabulario y tiene que ser el mismo desde todos los paquetes, o deja de
+compartirse. `gdpr.sensitivity` significa lo mismo en `hr` y en `crm`, y eso es justo la propiedad
+que lo hace útil.
+
+La distinción es por `kind` y **no por dónde esté el fichero**: en un árbol plano —con el
+manifiesto en la raíz— todo está dentro del paquete, y no habría un «fuera» al que mover un
+retículo.
+
+#### Ausente no es una forma de estar de acuerdo
+
+Sin `namespace`, el nombre cualificado del documento no lleva el del paquete: `exports` no puede
+nombrarlo y una referencia de fuera no lo alcanza. Es la misma regla, no una segunda.
+
+#### Solo de v1alpha8 en adelante
+
+El mismo razonamiento —y la misma puerta— que [`OOS2028`](#33--exports--lo-publico-de-un-paquete):
+un documento anterior se escribió cuando el `namespace` no significaba pertenencia, y aplicárselo
+cambiaría lo que significa algo ya publicado.
+
 ## 4. Traducción
 
 Un perfil que solo restringe es una limitación. **Uno que hace ida y vuelta es

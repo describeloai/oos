@@ -3,7 +3,7 @@ kind: View
 metadata: { name: pedidos, namespace: ventas }
 spec:
   owner: team:ventas
-  from: { table: bus.orders }
+  from: { table: ventas.orders }
   freshness: 1m
   fields:
     id: order_id

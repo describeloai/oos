@@ -1,6 +1,6 @@
 apiVersion: oos.dev/v1alpha8
 kind: Table
-metadata: { name: orders, namespace: bus }
+metadata: { name: orders, namespace: ventas }
 spec:
   datasource: bus
   object: "orders.v2"

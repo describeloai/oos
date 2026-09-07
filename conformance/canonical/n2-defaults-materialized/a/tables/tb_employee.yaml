@@ -1,6 +1,6 @@
 apiVersion: oos.dev/v1alpha8
 kind: Table
-metadata: { name: tb_employee, namespace: hr_db }
+metadata: { name: tb_employee, namespace: hr }
 spec:
   datasource: hr_db
   object: "public.tb_employee"

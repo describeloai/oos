@@ -1,6 +1,6 @@
 apiVersion: oos.dev/v1alpha8
 kind: Table
-metadata: { name: pay, namespace: erp }
+metadata: { name: pay, namespace: hr }
 spec:
   datasource: erp
   object: "public.pay"

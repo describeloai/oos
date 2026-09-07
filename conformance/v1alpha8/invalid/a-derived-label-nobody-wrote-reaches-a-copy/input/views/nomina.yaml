@@ -3,7 +3,7 @@ kind: View
 metadata: { name: nomina, namespace: hr }
 spec:
   owner: team:hr
-  from: { table: erp.pay }
+  from: { table: hr.pay }
   fields:
     employeeId: employee_id
     total:      total_amt

@@ -6,7 +6,7 @@ metadata:
   labels: { oos.maturity: DRAFT }
 spec:
   owner: team:hr
-  from: { table: erp.employees }
+  from: { table: hr.employees }
   freshness: 15m
   fields:
     employeeId: employee_id

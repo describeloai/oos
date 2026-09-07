@@ -1,6 +1,6 @@
 apiVersion: oos.dev/v1alpha8
 kind: Table
-metadata: { name: accounts, namespace: crm }
+metadata: { name: accounts, namespace: hr }
 spec:
   datasource: salesforce
   object: "Account"

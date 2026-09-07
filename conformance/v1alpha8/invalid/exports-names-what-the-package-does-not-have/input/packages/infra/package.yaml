@@ -1,4 +1,4 @@
 apiVersion: oos.dev/v1alpha1
 kind: Package
 metadata: { name: infra, version: 1.0.0, status: active, domain: people }
-spec: { owner: team:data, exports: [hr.iberia, hr.no_existe] }
+spec: { owner: team:data, exports: [infra.iberia, infra.no_existe] }
