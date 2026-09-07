@@ -284,6 +284,17 @@ La distinción es por `kind` y **no por dónde esté el fichero**: en un árbol 
 manifiesto en la raíz— todo está dentro del paquete, y no habría un «fuera» al que mover un
 retículo.
 
+#### Y un nombre de paquete no siempre puede ser un espacio de nombres
+
+`packageName` admite puntos, guiones y barras —§2.1: el nombre **es también la coordenada con la
+que otro lo importa**— y un `namespace` es un `identifier`, que no admite ninguno de los tres. Así
+que hay nombres de paquete para los que esta regla es **insatisfacible**: un paquete llamado
+`oos.dev` o `mi-paquete` **no puede contener contenido gobernado**.
+
+No se arregla aflojando la regla —el `namespace` es lo que es—, se dice: ese paquete puede
+contener vocabulario compartido, y para contenido gobernado hay que renombrarlo. El diagnóstico lo
+explica en vez de pedir un `namespace` que el esquema rechazaría.
+
 #### Ausente no es una forma de estar de acuerdo
 
 Sin `namespace`, el nombre cualificado del documento no lleva el del paquete: `exports` no puede
