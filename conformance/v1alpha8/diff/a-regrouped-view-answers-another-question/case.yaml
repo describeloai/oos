@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5033
+summary: >
+  La agrupacion se refina: `[country]` pasa a `[country, deleted]`. Ningun campo desaparece y
+  `count()` devuelve otro numero — el consumidor lee la misma columna y recibe otra respuesta.

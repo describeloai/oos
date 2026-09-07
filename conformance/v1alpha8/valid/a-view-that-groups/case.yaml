@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: accept
+summary: >
+  La vista agrupa por una columna real y cuenta las filas de cada grupo; el campo proyectado esta
+  agrupado y el agregado va con `groupBy`.

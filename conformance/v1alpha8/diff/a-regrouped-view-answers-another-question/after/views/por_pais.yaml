@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: por_pais, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: hr.employees }
+  freshness: 15m
+  fields:
+    pais: country
+    borrado: deleted
+    n: "count()"
+  groupBy: [country, deleted]

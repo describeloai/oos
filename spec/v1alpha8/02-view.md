@@ -67,6 +67,21 @@ spec:
     table: "cache.hr_iberia"
 ```
 
+Una vista que **agrupa**, que es lo que v1alpha8 añade al vocabulario:
+
+```yaml
+kind: View
+metadata: { name: ventas_por_pais, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: erp.orders }
+  fields:
+    pais: country                    # una columna, y DEBE estar en groupBy
+    n: "count()"                     # un agregado: el paréntesis lo distingue
+    total: "sum(amount)"
+  groupBy: [country]
+```
+
 Una vista **sobre un stream** — una tabla con `reads: none`. Sin `materialized` no compila:
 
 ```yaml
@@ -373,12 +388,28 @@ Un efecto cuya entidad se respalde de una vista **no invertible** no podría lle
 origen. Se miraría **la cadena entera** y no solo la vista que `backedBy` nombra: componer no
 diluye, y si un eslabón de abajo agrega, lo que sale de arriba tampoco se deshace.
 
-#### Y hoy esta regla no puede fallar
+#### Y hasta `groupBy` esta regla no podía fallar
 
-Se dice porque callarlo sería peor. **El vocabulario de la vista de §2 es exactamente el fragmento
-invertible** —`owner`, `from`, `freshness`, `fields`, `where`, `materialized`— y eso no se buscó:
-[`00-scope`](00-scope.md) §6.1 cuenta que se descubrió al migrar. No hay junta, ni agregado, ni
-`distinct`, ni límite, así que ningún documento conforme puede violar `OOS7013`.
+Se decía porque callarlo habría sido peor. **El vocabulario de la vista era exactamente el
+fragmento invertible** —`owner`, `from`, `freshness`, `fields`, `where`, `materialized`— y eso no
+se buscó: [`00-scope`](00-scope.md) §6.1 cuenta que se descubrió al migrar. No había junta, ni
+agregado, ni `distinct`, ni límite.
+
+**`groupBy` lo rompe, y a propósito** — [§5.8](#58--la-agrupación--oos2032-y-oos2033). Un documento
+conforme puede ya escribir una vista que no se deshace, y por eso la guarda deja de ser una
+puerta cerrada por falta de llaves y pasa a tener tres respuestas y no dos:
+
+| | cuándo |
+|---|---|
+| `NoSeDeshace` | la clave está clasificada y su respuesta es no — hoy, `groupBy` |
+| `CampoCalculado` | el campo no sale de una columna: sale de un conjunto de filas |
+| `ConstruccionDesconocida` | **el defecto**, para lo que nadie clasificó |
+
+Que la tercera siga siendo el defecto es lo único que no cambia: una clave nueva que nadie mire
+niega la escritura en vez de heredar un «sí».
+
+`OOS7013` **sigue reservado**, y no por falta de sujetos: por lo de arriba —escribir aterriza en la
+copia—. Lo que se acabó es la coartada de que ningún documento pudiera violarlo.
 
 Y hay una corroboración que salió del propio repositorio, sin buscarla. Lo **único** que la
 migración del binding perdió —[`00-scope`](00-scope.md) §5.5— fue `properties.<x>.expression`, un
@@ -414,6 +445,63 @@ Y la cuarta sale de mirar la **pareja**. `mode` y `witness` se declaran por sepa
 preguntas independientes —qué llega, y qué lo fecha— pero la garantía de entrega no la decide
 ninguna de las dos: la deciden **las dos juntas**. Tres de las cuatro combinaciones se mantienen;
 la que no, no da ningún aviso.
+
+---
+
+### 5.8 · La agrupación — `OOS2032` y `OOS2033`
+
+Una vista agrupa declarando `groupBy`, y agrega escribiendo una llamada como valor de un campo.
+No hay una clave aparte para los agregados: **la salida de una vista es una sola lista de
+columnas**, y repartirla en dos mapas obligaría a juntarlos para saber qué sale, dejaría a `moved`
+y `reserved` sin decir a cuál alcanzan, y admitiría que los dos reclamasen el mismo nombre.
+
+El vocabulario de agregados es **cerrado** —`count` · `sum` · `min` · `max` · `avg`— por lo mismo
+que `changes.mode`: si un documento pudiera inventar una función, el motor no sabría qué estado
+hace falta por grupo para mantenerla. Y el discriminante es el paréntesis de cierre, que no es una
+heurística: un nombre de columna no lleva paréntesis. Una llamada mal escrita **no se degrada a
+columna** — es un error de forma, no un `OOS2018` disfrazado de *«la tabla no tiene esa columna»*.
+
+`count(<col>)` se niega: en SQL cuenta los no nulos, este motor no distingue, y admitirlo daría
+otro número sin decirlo.
+
+> **`OOS2032`** — con `groupBy`, toda columna que `fields` proyecte y no agregue DEBE estar
+> agrupada.
+
+Es la regla de SQL y por su misma razón: en un grupo, una columna que no agrupa tiene varios
+valores, y elegir uno sería inventárselo.
+
+> **`OOS2033`** — un agregado DEBE ir con `groupBy`.
+
+Y esta **no** es la regla de SQL, que admite `SELECT count(*) FROM t`. Se midió: el linaje de un
+agregado global sale **vacío** —no viene de ninguna columna raíz— así que la regla de flujo no
+tiene nada que comprobar y el número de filas se publicaría sin gobierno. Con `groupBy`, el mismo
+agregado gana una arista **INDIRECT** por cada clave, que es la que ve el flujo implícito.
+
+| lo que se escribe | linaje de la salida | ¿se mantiene? |
+|---|---|---|
+| `groupBy` sin agregados | `IDENTITY` — es un `SELECT DISTINCT` | sí |
+| `count()` | `GROUP_BY` | sí |
+| `sum(c)` · `min(c)` · `max(c)` | `GROUP_BY` + `AGGREGATION` | sí |
+| `avg(c)` | `GROUP_BY` + `AGGREGATION` | **no**, y dice por qué |
+
+La última fila es la que conviene leer despacio: `avg` **no se incrementaliza**, y el motor lo dice
+en vez de mantenerlo mal. Un promedio no se actualiza con un acumulador —hace falta la suma y la
+cuenta por separado— y esa es una decisión de quien escribe la vista, no una reescritura que
+ocurra a sus espaldas.
+
+#### Y cambiar la agrupación rompe — `OOS5033`
+
+> Cambiar el conjunto de claves de `groupBy` es un cambio **CONSUMER breaking**.
+
+Se midió antes de escribirlo, y el resultado fue el equivocado: añadir una clave salía
+*compatible · patch*. No lo es. Refinar la agrupación parte cada grupo, así que un `count()` que
+valía 400 pasa a valer 250 y 150 — **ningún campo aparece ni desaparece**, y todo consumidor que
+leyera esa columna recibe otra respuesta.
+
+Por eso `OOS5033` no se parte en *estrecha* y *ensancha* como el recorte
+—[`91-versioning`](../v1alpha1/91-versioning.md) §5.1, `OOS5028` y `OOS5029`—: allí las dos
+direcciones tienen consecuencias distintas, una rompe al lector y la otra a la política. Aquí las
+dos rompen lo mismo, porque lo que cambia no es qué filas salen sino **qué pregunta se contesta**.
 
 ---
 

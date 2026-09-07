@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "code": "OOS5033",
+      "axis": "CONSUMER",
+      "subject": "hr.por_pais",
+      "from": "country",
+      "to": "country,deleted"
+    }
+  ],
+  "requiredBump": "major"
+}

@@ -99,7 +99,7 @@
           "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
         },
         "fields": {
-          "description": "Que sale y como se llama. La clave es EL NOMBRE DEL CAMPO EN ESTA VISTA y el valor, su nombre abajo: una COLUMNA de la tabla si `from` es una tabla, un campo de la vista de abajo si es una vista.\n\nPIERDE LA FORMA EXPANDIDA de v1alpha7. Aquella existia para llevar `physicalType`, y el tipo fisico es del objeto: lo dice `columns` de la tabla. Un documento v1alpha7 con la forma expandida migra tirando el tipo a la tabla, que es donde ya debia estar.\n\nUna entidad con `backedBy` nombra estos campos por su nombre: sus propiedades se llaman como los campos de su vista. La vista que respalda una entidad DEBE exponer su `primaryKey` y los `via` de sus relaciones (OOS2011).",
+          "description": "Que sale y como se llama. La clave es EL NOMBRE DEL CAMPO EN ESTA VISTA y el valor, su nombre abajo: una COLUMNA de la tabla si `from` es una tabla, un campo de la vista de abajo si es una vista.\n\nPIERDE LA FORMA EXPANDIDA de v1alpha7. Aquella existia para llevar `physicalType`, y el tipo fisico es del objeto: lo dice `columns` de la tabla. Un documento v1alpha7 con la forma expandida migra tirando el tipo a la tabla, que es donde ya debia estar.\n\nUna entidad con `backedBy` nombra estos campos por su nombre: sus propiedades se llaman como los campos de su vista. La vista que respalda una entidad DEBE exponer su `primaryKey` y los `via` de sus relaciones (OOS2011).\n\nY DESDE v1alpha8 el valor puede ser un AGREGADO en vez de una columna: `count()`, `sum(<col>)`, `min(<col>)`, `max(<col>)`, `avg(<col>)`. El vocabulario es CERRADO por lo mismo que `changes.mode`: si un documento pudiera inventar una funcion, el motor no sabria que estado hace falta por grupo para mantenerla, y una copia se quedaria vieja sin que nadie lo notase.\n\nEl discriminante es el parentesis de cierre, y no es una heuristica: un nombre de columna no lleva parentesis. Asi que una llamada mal escrita NO se degrada a columna — es un error de forma, no un `OOS2018` disfrazado de «la tabla no tiene esa columna».\n\n`count(<col>)` se NIEGA: en SQL cuenta los no nulos y este motor no distingue, asi que daria otro numero sin decirlo.\n\nUn agregado exige `groupBy` (OOS2033), y con `groupBy` toda columna que no se agregue DEBE agruparse (OOS2032).",
           "type": "object",
           "minProperties": 1,
           "propertyNames": {
@@ -109,7 +109,8 @@
             "description": "El nombre abajo. Cadena OPACA; puede llevar puntos si el origen es anidado.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 1024
+            "maxLength": 1024,
+            "pattern": "^([A-Za-z_][A-Za-z0-9_]*|count\\(\\)|(sum|min|max|avg)\\([A-Za-z_][A-Za-z0-9_]*\\))$"
           }
         },
         "where": {
@@ -207,6 +208,15 @@
                 "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
               }
             }
+          }
+        },
+        "groupBy": {
+          "description": "POR QUE COLUMNAS se agrupa. Cada una es una columna de la tabla, o un campo de la vista de abajo, igual que `fields`.\n\nEs la primera clave que saca a la vista del FRAGMENTO INVERTIBLE. Hasta v1alpha8 el vocabulario de `View` era, termino a termino, lo que PostgreSQL admite como vista auto-actualizable, y eso no se busco: se descubrio al migrar (`00-scope` §6.1). Con `groupBy` deja de serlo A PROPOSITO, y `OOS7013` —reservado— gana por fin documentos que lo violarian si estuviera vivo.\n\nToda columna proyectada por `fields` que no sea un agregado DEBE estar aqui (OOS2032): en un grupo, una columna que no agrupa tiene varios valores, y elegir uno seria inventarselo. Es la regla de SQL y por la misma razon.\n\nAgrupar SIN agregados es deduplicar, y es legal: `SELECT DISTINCT`.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
           }
         }
       }

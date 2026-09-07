@@ -99,6 +99,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2029` | una tabla que no empuja la proyección no sostiene una copia | v1alpha8 01 §4.1 |
 | `OOS2030` | el `namespace` no es el del paquete que contiene al documento | v1alpha1 01 §3.5 |
 | `OOS2031` | se depende de un paquete retirado | v1alpha1 01 §3.6 |
+| `OOS2032` | un campo que no se agrupa ni se agrega | v1alpha8 02 §5.8 |
+| `OOS2033` | un agregado sin agrupación no tiene linaje | v1alpha8 02 §5.8 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
@@ -170,6 +172,7 @@ contra los cuatro por separado, y **puede ser compatible en uno y rompedor en ot
 | `OOS5030` | la frescura que una vista promete se afloja, o se retira | v1alpha8 91 §5.1 |
 | `OOS5031` | la fuente de una vista admite menos: se empuja menos, o el escaneo se encarece | v1alpha8 91 §5.3 |
 | `OOS5032` | lo que la fuente emite deja de sostener la copia: menos mantenible, o peor fechada | v1alpha8 91 §5.3 |
+| `OOS5033` | la agrupación de una vista cambia: los mismos campos contestan otra pregunta | v1alpha8 02 §5.8 |
 | `OOS5007` | eliminar una entidad o una relación |
 | `OOS5008` | rebajar `oos.maturity` de una entidad `STABLE` |
 | `OOS5009` | **elevar** la etiqueta de una propiedad |

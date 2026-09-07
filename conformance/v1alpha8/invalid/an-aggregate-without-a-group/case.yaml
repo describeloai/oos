@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: OOS2033
+summary: >
+  Un agregado global no sale de ninguna columna, asi que su linaje es vacio y la regla de flujo no
+  tiene nada que comprobar.
