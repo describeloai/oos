@@ -306,6 +306,41 @@ El mismo razonamiento —y la misma puerta— que [`OOS2028`](#33--exports--lo-p
 un documento anterior se escribió cuando el `namespace` no significaba pertenencia, y aplicárselo
 cambiaría lo que significa algo ya publicado.
 
+---
+
+### 3.6 · La lápida — `OOS2031`
+
+Un paquete que se funde en otro **no tiene por qué desaparecer**, y no debe: se queda como
+**lápida** —`status: retired`, sin documentos, y un `moved` de §3.4 por cada uno de los que se
+fueron—. `moved.to` es un `qualifiedName` y **cruza de paquete**, así que el nombre viejo sigue
+diciendo en qué se convirtió.
+
+Se midió, con su control:
+
+| cómo se deja el origen | qué dice `ore diff` |
+|---|---|
+| **lápida** | sin cambios · compatible en los cuatro ejes |
+| vacío y retirado, **sin** el anuncio | `OOS5007` · rompedor en `CONSUMER` |
+| el manifiesto **borrado** | `OOS5007` + `OOS5021` |
+
+Y el estado no es vocabulario nuevo: §2.3 adopta el enum de ODCS verbatim, y `retired` es uno de
+los cinco.
+
+#### Lo que la lápida no cuenta, y por eso hay código
+
+`ore diff` compara **dos versiones del mismo paquete**, así que la lápida le vale. A quien la
+importa desde fuera no le decía nada: resolvía, compilaba, y nadie le contaba que lo que
+importaba era una piedra con un nombre.
+
+> Un paquete **NO DEBE** declarar en `dependencies` otro cuyo `status` sea `retired` — `OOS2031`.
+
+Y el diagnóstico nombra el destino, porque la lápida lo sabe: su `moved` dice documento a
+documento a dónde se fue cada uno.
+
+La regla alcanza a lo que está **en el árbol**. Una dependencia de otro artefacto se resuelve por
+el lock, y su estado es del registro: decirlo aquí exigiría red, y la compilación dejaría de ser
+hermética.
+
 ## 4. Traducción
 
 Un perfil que solo restringe es una limitación. **Uno que hace ida y vuelta es
