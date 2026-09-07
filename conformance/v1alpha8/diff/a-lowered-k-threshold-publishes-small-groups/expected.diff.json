@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "code": "OOS5029",
+      "axis": "POLICY",
+      "subject": "hr.por_pais.n",
+      "from": ">= 8",
+      "to": ">= 2"
+    }
+  ],
+  "requiredBump": "major"
+}

@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: accept
+summary: >
+  La vista recorta por su propio agregado: solo salen los grupos de ocho o mas. El comparador va
+  delante y el sujeto es un campo agregado de la misma vista.

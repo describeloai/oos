@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: OOS2034
+summary: >
+  `having` sobre una clave de grupo. Ese predicado es un `where`, que ademas baja al origen:
+  escribirlo aqui da el mismo resultado leyendo la tabla entera.

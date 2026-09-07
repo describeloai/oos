@@ -218,6 +218,18 @@
           "items": {
             "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
           }
+        },
+        "having": {
+          "description": "RECORTA POR LO QUE SOLO SE SABE DESPUES DE AGRUPAR. La clave es un campo AGREGADO de esta misma vista (OOS2034) y el valor, una condicion con su comparador delante: `\">= 8\"`.\n\nEl comparador va delante y no se sobreentiende: sin el, el umbral `>= 8` se escribiria igual que la igualdad `== 8`, que es otra pregunta. El vocabulario es cerrado — `>=` `<=` `!=` `==` `>` `<`.\n\nAQUI HAY RANGOS Y EN `where` NO, y no es una incoherencia. El `where` recorta por una COLUMNA, y un rango sobre una columna clasificada ordena en vez de particionar: ahi empieza la fuga, y por eso su gramatica es igualdad, pertenencia y ausencia. `having` recorta por un AGREGADO, y entonces el rango es justo lo que hace falta — `count() >= 8` es un umbral de k-anonimidad, no un canal lateral. Lo que el agregado lea sigue gobernado: el linaje deja una arista INDIRECT desde la clave de grupo.\n\nY por eso NO admite una clave de grupo como sujeto: ese predicado es un `where`, que ademas BAJA AL ORIGEN. Escribirlo aqui no da otro resultado, da el mismo mas caro.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^\\s*(>=|<=|!=|==|>|<)\\s*\\S.*$"
+          }
         }
       }
     }

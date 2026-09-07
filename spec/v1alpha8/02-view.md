@@ -80,6 +80,8 @@ spec:
     n: "count()"                     # un agregado: el paréntesis lo distingue
     total: "sum(amount)"
   groupBy: [country]
+  having:
+    n: ">= 8"                        # el comparador va delante, siempre
 ```
 
 Una vista **sobre un stream** — una tabla con `reads: none`. Sin `materialized` no compila:
@@ -488,6 +490,40 @@ La última fila es la que conviene leer despacio: `avg` **no se incrementaliza**
 en vez de mantenerlo mal. Un promedio no se actualiza con un acumulador —hace falta la suma y la
 cuenta por separado— y esa es una decisión de quien escribe la vista, no una reescritura que
 ocurra a sus espaldas.
+
+#### `having` — `OOS2034`, y el umbral que faltaba dónde escribir
+
+> **`having` recorta por lo que sólo se sabe después de agrupar, y su sujeto DEBE ser un campo
+> agregado de la misma vista.**
+
+Nombrar una clave de grupo no está prohibido por gusto: ese predicado es un `where`, y un `where`
+**baja al origen** mientras que un `having` no puede — se aplica encima del grupo. Escribirlo en el
+sitio equivocado no da otro resultado: da el mismo, más caro, y en silencio.
+
+El comparador va delante y no se sobreentiende —`n: ">= 8"`, no `n: 8`—, y el vocabulario es
+cerrado: `>=` `<=` `!=` `==` `>` `<`.
+
+**Aquí hay rangos y en [`where`](#2-forma) no**, y no es una incoherencia. El `where` recorta por
+una **columna**, y un rango sobre una columna clasificada ordena en vez de particionar: ahí empieza
+la fuga, y por eso su gramática es igualdad, pertenencia y ausencia —la misma del `selector` del
+binding, `01-binding` §3.5—. `having` recorta por un **agregado**, y entonces el rango es justo lo
+que hace falta. Lo que el agregado lea sigue gobernado: el linaje deja una arista `INDIRECT` desde
+la clave de grupo, así que un `having` sobre `sum(salary)` arrastra la etiqueta de `salary` igual
+que la arrastraba la suma.
+
+Y de ahí sale lo que este constructor cierra de verdad. `OOS4007` exige un `minGroupSize` al
+desclasificador `aggregate` desde v1alpha3 — *«agregar quita la etiqueta **si el grupo es bastante
+grande**»* — y hasta ahora ese umbral sólo podía vivir en una política y comprobarse en ejecución.
+`having: { n: ">= 8" }` es el mismo umbral **dentro del plan**: la diferencia entre una promesa y
+una consulta. Sin él, `groupBy: [pais, enfermedad]` con `count()` puede devolver grupos de uno, que
+no son una estadística sino una reidentificación.
+
+Cambiarlo son los **mismos dos códigos que el recorte** —`OOS5028` al estrechar, `OOS5029` al
+ensanchar— con el sujeto cambiado, porque es la misma regla sobre otra cosa. Y ensanchar aquí
+tiene nombre propio: **bajar un umbral de k-anonimidad** no puede salir en `patch`. Cuando la
+dirección no se puede demostrar —se quita la condición, cambia el operador, el valor no es un
+número— se afirman **las dos**: no poder probar que un cambio es seguro no es lo mismo que poder
+probar que lo es.
 
 #### Una entidad puede salir de una vista que agrupa
 
