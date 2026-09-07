@@ -131,6 +131,7 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 |---|---|
 | eliminar una propiedad **o un campo de vista** sin `moved` ni `reserved` | `OOS5001` |
 | estrechar un tipo (`string` → `enum`; retirar valores de un `enum`) | `OOS5002` |
+| **ensanchar** un tipo — `Integer` → `Decimal`, añadir valores a un `enum` | **ninguno** |
 | endurecer cardinalidad (`0..n` → `1..n`) | `OOS5003` |
 | cambiar `primaryKey` | `OOS5006` |
 | cambiar el `via` de una relación | `OOS5027` |
@@ -141,6 +142,14 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 | **rebajar** la autorización de un conducto | `OOS5026` |
 | **estrechar el recorte de una vista** — sirve menos filas | `OOS5028` |
 | **aflojar o retirar la `freshness`** de una vista | `OOS5030` |
+
+> **Y `OOS5002` es solo una dirección, que es lo que su nombre dice.** Retirar un valor deja al
+> consumidor sin un caso que manejaba; añadirlo **no rompe a quien lee**. Sobre los escalares de
+> [`02-entity`](02-entity.md) §3.4 esa relación tiene **un par** —`Integer` → `Decimal`— y lo que
+> importa de ella es lo que deja fuera: `→ Float` pierde exactitud, `Date` → `DateTime` inventa
+> la hora, `→ String` cambia el contrato de lectura entero y `→ Opaque` **retira el gobierno** en
+> vez de ampliar el dominio. Una implementación conforme **NO DEBE** emitir `OOS5002` sobre un
+> ensanche.
 
 ### 5.2 · Rompedor en `POLICY` — la dirección invertida
 

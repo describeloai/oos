@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: accept
+summary: >
+  Ensanchar un escalar no es estrecharlo. `Integer` a `Decimal` no retira ningun
+  valor, asi que no es OOS5002 - que dice literalmente "tipo estrechado".

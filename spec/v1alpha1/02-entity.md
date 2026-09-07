@@ -205,6 +205,30 @@ Su serialización canónica es **cadena**, no número JSON
 
 ---
 
+### 3.4 · El ensanche
+
+Un escalar **ensancha** a otro cuando todo valor del primero es un valor del
+segundo, sin perder información. Sobre este conjunto la relación tiene **un par**:
+
+| de | a | por qué |
+|---|---|---|
+| `Integer` | `Decimal` | todo entero cabe exacto, y aquí el decimal es exacto |
+
+Lo normativo es lo que **no** está, porque son los pares que parecen serlo:
+
+| par | por qué no |
+|---|---|
+| `Integer`/`Decimal` → `Float` | pierde exactitud: `68400.50` no tiene representación exacta en binario |
+| `Date` → `DateTime` | una fecha no es un instante. Ponerle una hora es inventarla |
+| `DateTime` → `DateTimeTz` | ídem con la zona |
+| cualquiera → `String` | una cadena **representa** el valor, no lo contiene |
+| cualquiera → `Opaque` | `Opaque` es *«no lo modelamos»*: ir ahí **retira el gobierno** |
+| `Boolean` → `Integer` | eso es elegir una codificación, no ampliar un dominio |
+
+Un `enum` ensancha cuando **gana** valores y estrecha cuando los pierde. Lo usa
+[`91-versioning`](91-versioning.md) §5.1 para no cobrar `OOS5002` por un ensanche.
+
+
 ## 4. Propiedades
 
 ### 4.1 · Etiquetas
