@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: accept
+summary: >
+  Una entidad se respalda de una vista que agrupa, y una de sus propiedades sale de un agregado.
+  La clave de la entidad es la clave del grupo.

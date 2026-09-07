@@ -489,6 +489,29 @@ en vez de mantenerlo mal. Un promedio no se actualiza con un acumulador —hace 
 cuenta por separado— y esa es una decisión de quien escribe la vista, no una reescritura que
 ocurra a sus espaldas.
 
+#### Una entidad puede salir de una vista que agrupa
+
+Y una de sus propiedades puede salir de un agregado: `ConteoPais.n` es el `count()` de su vista, y
+la clave de la entidad es la clave del grupo — una fila por grupo, que es lo que la identifica.
+
+Lo que **no** cambia es la regla de flujo, y conviene decir por dónde pasa:
+
+> **La etiqueta de una columna sobrevive a agregarla.** La suma de un sueldo clasificado sigue
+> clasificada mientras nadie desclasifique.
+
+El linaje ya lo dice —`AGGREGATION` es una arista **DIRECT**, no una frontera— y de ahí sale el
+diagnóstico entero: una copia de `sum(salary)` en un conducto que solo admite `low` no compila, y
+el motivo nombra la derivación y la columna, no el campo.
+
+Desclasificar agregando es exactamente lo que el desclasificador `aggregate` de
+[`04-flow`](../v1alpha1/04-flow.md) existe para decir, y **exige un `minGroupSize`** (`OOS4007`):
+un grupo de uno no es una estadística, es una reidentificación.
+
+Y el tipo baja por el mismo camino, con una restricción: `sum`, `min` y `max` devuelven el tipo de
+lo que agregan, así que declarar la propiedad tipa la columna. `count` y `avg` **no** — uno cuenta
+filas y el otro devuelve `Decimal` sobre una entrada que puede no serlo, y de la salida no se
+deduce la entrada.
+
 #### Y cambiar la agrupación rompe — `OOS5033`
 
 > Cambiar el conjunto de claves de `groupBy` es un cambio **CONSUMER breaking**.

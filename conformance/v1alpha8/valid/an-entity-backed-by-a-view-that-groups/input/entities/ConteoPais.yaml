@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: ConteoPais, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [pais]
+  backedBy: por_pais
+  properties:
+    pais: { type: String }
+    n: { type: Integer }
