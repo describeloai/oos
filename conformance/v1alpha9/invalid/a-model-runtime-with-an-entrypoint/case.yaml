@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#4
+level: L0
+expects: OOS1004
+summary: >
+  Con runtime: model el modelo es lo que se ejecuta; entrypoint es de wasm.

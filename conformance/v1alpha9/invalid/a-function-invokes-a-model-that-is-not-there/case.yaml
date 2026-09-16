@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#4
+level: L0
+expects: OOS2005
+summary: >
+  model nombra un nodo del arbol, y el nodo tiene que estar.

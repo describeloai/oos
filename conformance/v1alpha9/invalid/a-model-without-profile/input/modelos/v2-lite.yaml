@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha9
+kind: Model
+metadata: { name: v2-lite, description: DeepSeek-V2-Lite bf16 en un g1 }
+spec:
+  tier: shared
+  task: chat

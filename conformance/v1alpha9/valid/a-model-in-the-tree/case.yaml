@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#3
+level: L0
+expects: accept
+summary: >
+  Un modelo nombra un perfil y un tier, y compila sin que nadie lo invoque.

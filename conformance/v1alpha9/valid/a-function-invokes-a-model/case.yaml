@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#4
+level: L0
+expects: accept
+summary: >
+  Una funcion con runtime: model nombra un modelo del arbol y escribe una propiedad untrusted: es lo que E0 de ORE 0027 midio.

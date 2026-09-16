@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha9
+kind: Function
+metadata: { name: segmentar, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/segmentar.wasm
+  prompt: "Clasifica…"
+  effects:
+    - writes: ventas.Cliente.segmento

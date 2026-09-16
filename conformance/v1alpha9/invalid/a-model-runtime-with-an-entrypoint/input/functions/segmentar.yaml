@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha9
+kind: Function
+metadata: { name: segmentar, namespace: ventas }
+spec:
+  runtime: model
+  model: modelo/v2-lite
+  entrypoint: dist/segmentar.wasm
+  prompt: "Clasifica la actividad de este cliente en un segmento de una palabra: pyme, corporativo, publico o particular. Contesta solo con la palabra."
+  effects:
+    - writes: ventas.Cliente.segmento

@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#5
+level: L0
+expects: OOS1003
+summary: >
+  kind: Model no existe en v1alpha8: es un documento de v1alpha9, y el error lo dice.

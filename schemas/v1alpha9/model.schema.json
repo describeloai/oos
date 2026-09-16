@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha9/model.schema.json",
+  "title": "Model",
+  "description": "El modelo: un documento del arbol que nombra UN PERFIL CERTIFICADO —maquina × modelo, con sus numeros medidos— y UN TIER. No lleva runtime, ni recursos, ni pesos: todo eso es del perfil, y el perfil lo certifica quien lo mide.\n\nEs un operador dentro del grafo: una Function con runtime: model lo invoca como modelo/<nombre>, y su salida aterriza en la ontologia como cualquier efecto. No lleva labels: lo que produce llega al reticulo por los endosos de la funcion, y sin ellos es el minimo (OOS7002).\n\nQue el perfil exista en la lista de certificacion NO lo comprueba la gramatica: lo comprueba quien escribe el documento.\n\nNormativo: spec/v1alpha9/01-model.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha9"
+    },
+    "kind": {
+      "const": "Model"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*$",
+          "description": "Lo que una Function nombra: modelo/<name>. Sin namespace: se direcciona desde cualquier paquete."
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "tier",
+        "task"
+      ],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*/[a-z0-9][a-z0-9.-]*$",
+          "description": "<maquina>/<modelo>: un perfil certificado, con sus numeros. Un perfil sin numero no existe."
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Los pesos que el perfil sirve. Lo que corre es esto, o no corre. Opcional hasta que el perfil publique el suyo."
+        },
+        "tier": {
+          "enum": [
+            "shared",
+            "dedicated"
+          ],
+          "description": "shared: un pod por modelo, se cobra por token. dedicated: una maquina para esta celda, precio fijo."
+        },
+        "task": {
+          "enum": [
+            "chat",
+            "embed",
+            "rerank"
+          ],
+          "description": "Lo que una funcion puede pedirle."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha9/function.schema.json",
+  "title": "Function",
+  "description": "La funcion de v1alpha2 con un SEGUNDO RUNTIME: `model`. Con el, `model` nombra un documento del arbol (modelo/<nombre>) y `prompt` lo que se le dice; `entrypoint` es de `wasm` y sobra. Todo lo demas vale entero: los effects son la superficie, los endosos deciden la integridad, y una funcion no aplica: propone.\n\nEl único canal por el que la ontología puede causar algo, y por tanto el único punto donde termina la pureza del compilador.\n\nNo es un endpoint ni un paso de un flujo de trabajo: es una AUTORIDAD ENUMERADA. Lo que un actor puede causar es exactamente la unión de las funciones que puede invocar, y esa unión se lee en un pull request.\n\nNormativo: spec/v1alpha2/02-function.md\n\nNormativo: spec/v1alpha9/01-model.md §4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha9"
+    },
+    "kind": {
+      "const": "Function"
+    },
+    "metadata": {
+      "description": "Sin `labels`, y la ausencia es normativa.\n\nLa integridad de una función SE COMPUTA de sus endosos (02-function §6). Admitir una etiqueta aquí permitiría que una función escribiera `attested` sobre sí misma sin que exista atestación alguna — una afirmación sobre uno mismo no es una garantía. Es P2 en el eje de integridad, y al no existir el campo el error es estructural (OOS1005) en vez de semántico.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "effects"
+      ],
+      "properties": {
+        "runtime": {
+          "enum": [
+            "wasm",
+            "model"
+          ],
+          "description": "wasm: un modulo sin red (v1alpha2). model: un modelo del arbol (v1alpha9)."
+        },
+        "entrypoint": {
+          "description": "El binario que se ejecuta.",
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "description": "Procedencia declarada, y NO una garantía por sí sola: nada ata este fichero a ese binario. Lo que sí lo ata es una atestación de procedencia, y por eso `attested` es a la vez el endosante de integridad y la única razón por la que este campo significa algo.",
+          "type": "string"
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "timeout": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^[0-9]+(Ki|Mi|Gi)$"
+            }
+          }
+        },
+        "input": {
+          "$ref": "#/$defs/parameters"
+        },
+        "output": {
+          "$ref": "#/$defs/parameters"
+        },
+        "preconditions": {
+          "description": "Parte del CONTRATO, no validación dentro del código. La diferencia no es de estilo: si la comprobación vive dentro de la función, quien invoca tiene que INTENTARLO PARA SABER; si vive aquí, sabe qué puede intentar antes de intentarlo.\n\nUna precondición LEE, y su expresión está sujeta a la regla de flujo de 04-flow sin ninguna extensión.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "expr"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "expr": {
+                "$ref": "#/$defs/cel"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 512
+              }
+            }
+          }
+        },
+        "effects": {
+          "description": "Se declaran, no se descubren — y hay un mecanismo detrás: LA FUNCIÓN NO ESCRIBE. El motor escribe en su nombre lo que ella declaró. Si pudiera escribir por su cuenta, esta sección sería documentación.\n\nTodos los efectos DEBEN apuntar al mismo `datasourceRef` (OOS7008): escribir atómicamente en dos fuentes no es algo que este motor pueda prometer.\n\nN4 · CONJUNTO: el orden no es semántico y la forma canónica lo ordena. Todos se cumplen y ninguno gana.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "writes",
+              "datasourceRef"
+            ],
+            "properties": {
+              "writes": {
+                "description": "La propiedad destino, cualificada. NO DEBE tener `derivedFrom` (OOS7006), y DEBE llevar etiqueta en un retículo de eje `integrity` (OOS7005).",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "datasourceRef": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "from": {
+                "description": "Acota la transición. Vive aquí y NO se repite como precondición: `from` y `to` no son una comprobación más, acotan LO QUE LA FUNCIÓN PUEDE CAUSAR, que es exactamente lo que la regla de integridad razona.",
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "endorsements": {
+          "description": "El endoso vive en `type/endorsement.schema.json`: `Function` y `Resolution` usan el mismo mecanismo y ahora tambien la misma definicion.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "type/endorsement.schema.json#/$defs/endorsement"
+          }
+        },
+        "authorization": {
+          "description": "La política Cedar que decide si un principal puede invocar. OOS no define un lenguaje de autorización y esta versión no reabre esa decisión.\n\nEste documento decide si la función PUEDE EXISTIR con los efectos que declara (L0, al compilar). Cedar decide si ESTE principal puede invocarla AHORA (L3, al invocar).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "idempotency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "window": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            }
+          }
+        },
+        "model": {
+          "type": "string",
+          "pattern": "^modelo/[a-z0-9][a-z0-9.-]*$",
+          "description": "El nodo del arbol que invoca: modelo/<nombre>. Tiene que resolver a un kind: Model (OOS2005)."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Lo que se le dice al modelo. Solo con runtime: model."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "model"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "model"
+            ],
+            "not": {
+              "required": [
+                "entrypoint"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "wasm"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "entrypoint"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "model"
+                  ]
+                },
+                {
+                  "required": [
+                    "prompt"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "cel": {
+      "description": "Expresión CEL: total, terminante y sin efectos. P3 prohíbe el cómputo arbitrario en un documento que gobierna — una expresión que pueda no terminar, o llamar a la red, deja de ser dato inerte revisable.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      },
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    }
+  }
+}

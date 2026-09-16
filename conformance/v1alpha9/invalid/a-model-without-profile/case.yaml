@@ -1,0 +1,5 @@
+rule: spec/v1alpha9/01-model.md#5
+level: L0
+expects: OOS1004
+summary: >
+  Un modelo sin profile no nombra nada que alguien haya medido.
