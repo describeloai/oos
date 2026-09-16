@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: accept
+summary: >
+  Una vista agrupa sobre OTRA vista: el agregado y la clave de grupo se resuelven contra lo que
+  la de abajo expone, no contra las columnas de la tabla.

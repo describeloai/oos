@@ -133,6 +133,12 @@ donde decía `from.datasource`:
   `columns` de esa tabla** — `OOS2018`. Es lo que v1alpha7 no podía comprobar.
 - Con `from: {view}`, cada valor de `fields` y cada clave de `where` **DEBE** ser un campo que la
   de abajo expone — `OOS2018`, sin cambios.
+- Y **el argumento de un agregado y cada clave de `groupBy`** se resuelven donde se resuelve
+  todo lo demás: contra las columnas de la tabla con `from: {table}`, contra lo que la de abajo
+  expone con `from: {view}` — `OOS2018`. Se midió que faltaba la mitad vista→vista: nueve
+  casos agrupaban sobre tabla y ninguno sobre vista, y la implementación de referencia rechazaba
+  el segundo con un `OOS2018` que nombraba un campo vacío. Y un agregado sobre un campo que
+  abajo **ya es un agregado** no llega a ninguna columna — `OOS2018`, §5.8.
 - `materialized.datasource` **DEBE** estar declarado en el manifiesto raíz — `OOS2004`.
 - La cadena **NO DEBE** volver sobre sí misma — `OOS2019`.
 - La vista que respalda una entidad **DEBE** exponer su `primaryKey` y los `via` de sus
@@ -524,6 +530,15 @@ tiene nombre propio: **bajar un umbral de k-anonimidad** no puede salir en `patc
 dirección no se puede demostrar —se quita la condición, cambia el operador, el valor no es un
 número— se afirman **las dos**: no poder probar que un cambio es seguro no es lo mismo que poder
 probar que lo es.
+
+#### Y se agrupa sobre una vista igual que sobre una tabla
+
+`from: {view}` no cambia nada de lo anterior: `pais` es un campo de la de abajo en vez de una
+columna, y el agregado se baja por la cadena hasta la columna física de la que sale ese campo.
+Lo que **no** cabe es agregar lo que abajo ya es un agregado —`sum(n)` con `n: count()`—: un
+agregado se baja a la columna de la que sale, y de un agregado no sale ninguna. Sumar cuentas es
+volver a contar, y contar ya tiene su forma. Es `OOS2018`, porque es un nombre que no llega al
+suelo.
 
 #### Una entidad puede salir de una vista que agrupa
 

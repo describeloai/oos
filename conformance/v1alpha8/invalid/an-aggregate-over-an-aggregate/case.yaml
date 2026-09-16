@@ -1,0 +1,6 @@
+rule: spec/v1alpha8/02-view.md#5.8
+level: L0
+expects: OOS2018
+summary: >
+  Un agregado sobre un campo que en la vista de abajo ya es un agregado no llega a ninguna
+  columna.

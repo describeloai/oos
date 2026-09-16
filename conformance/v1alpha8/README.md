@@ -24,6 +24,7 @@ Siete casos que aceptan y nueve que rechazan. Se agrupan en cuatro cosas que afi
 |---|---|
 | **la tabla se sostiene sola** | `table-compiles` · `table-datasource-undeclared` · `upsert-key-not-a-column` · `witness-field-not-a-column` |
 | **la vista compone encima, y ahora contra columnas reales** | `view-over-table` · `entity-backed-by-view-over-table` · `field-not-a-column` · `from-table-does-not-exist` |
+| **y agrupa encima, sobre una tabla o sobre otra vista** | `a-view-that-groups` · **`an-aggregate-over-a-view`** · **`an-aggregate-over-a-field-the-lower-view-does-not-expose`** · **`a-group-key-the-lower-view-does-not-expose`** · **`an-aggregate-over-an-aggregate`** |
 | **las dos caras deciden qué compila** | `stream-table-materialized` · `virtual-over-materialized-over-stream` · `append-changes-back-an-event` · **`stream-view-not-materialized`** · **`append-changes-back-a-mutable-entity`** |
 | **el binding se retira sin romper nada** | `mixed-versions` · `binding-in-v1alpha8` · `materialized-view-leaks-entity-label` |
 
@@ -47,6 +48,14 @@ Y uno cambia de alcance sin cambiar de código: `OOS2018` **llega hasta el suelo
 comprobaba el eslabón vista→vista y creía el último tramo, porque ningún documento decía qué
 columnas tenía la tabla. `field-not-a-column` es el caso que mide ese peldaño, y en v1alpha7 no
 se podía escribir.
+
+## Lo que la medición de 2026-09-16 corrigió
+
+Nueve casos agrupaban **sobre una tabla** y ninguno **sobre una vista**, y la implementación de
+referencia rechazaba lo segundo con un `OOS2018` que nombraba un campo vacío —*«lee ``, que
+`empleados` no expone»*—: la rama vista→vista resolvía los campos con la función que excluye
+los agregados a propósito. Cuatro casos lo fijan: uno que acepta y tres que rechazan con el
+nombre puesto, incluido el agregado sobre un agregado, que no llega a ninguna columna.
 
 ## Lo que la primera medición corrigió
 

@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: por_pais, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: empleados }
+  fields:
+    pais: pais
+    n: "count()"
+    ultimo: "max(employeeId)"
+  groupBy: [pais]
+  having:
+    n: ">= 8"

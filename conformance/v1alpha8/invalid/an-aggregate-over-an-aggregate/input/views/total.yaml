@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: total, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: por_pais }
+  fields:
+    pais: pais
+    personas: "sum(n)"
+  groupBy: [pais]
