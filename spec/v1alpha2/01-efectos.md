@@ -327,6 +327,7 @@ de un documento normativo; hasta entonces vive donde se define.
 | `OOS7009` | estrategia `probabilistic` sin conducto declarado | [`03-resolution`](03-resolution.md) §2 |
 | `OOS7011` | integridad por encima del techo que la estrategia puede producir | §3 |
 | `OOS7013` | efecto a través de una vista que no se puede invertir · **reservado** | v1alpha8 [`02-view`](../v1alpha8/02-view.md) §5.6 |
+| `OOS7014` | la función lee lo que no declara: `over` o un `reads` que no resuelve a una vista, o una precondición sobre un campo que `over` no expone | v1alpha10 [`01-function`](../v1alpha10/01-function.md) §5.3 |
 
 `OOS7010` fue registrado y **retirado** al escribir el esquema de `Resolution`: existía para
 un campo, `confidence`, que resultó no significar nada en ninguna estrategia.

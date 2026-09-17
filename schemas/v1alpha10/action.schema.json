@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha10/action.schema.json",
+  "title": "Action",
+  "description": "La invocacion como documento: que parametros pide, sobre que filas (`over`), con que criterios, que causa, y quien puede. Sin codigo. Exactamente una de dos formas: declara lo que causa (`sets`, valores fijos o de un parametro) o llama a una Function (`call`). No tiene codigo que atestar: la carencia la cierra quien la aplica (humanApproval) o la funcion que llama.\n\nNormativo: spec/v1alpha10/02-action.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "oos.dev/v1alpha10" },
+    "kind": { "const": "Action" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string", "maxLength": 4096 }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["over"],
+      "properties": {
+        "over": {
+          "description": "La vista cuyas filas son la unidad; `target` en las precondiciones es la fila. Tiene que resolver a una View (OOS7014).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "input": { "$ref": "function.schema.json#/$defs/parameters" },
+        "preconditions": {
+          "description": "Los criterios de envio: una accion cuya precondicion falla NO SE OFRECE.\n\nN4 · CONJUNTO.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "expr"],
+            "properties": {
+              "id": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+              "expr": { "$ref": "function.schema.json#/$defs/cel" },
+              "message": { "type": "string", "maxLength": 512 }
+            }
+          }
+        },
+        "sets": {
+          "description": "La superficie de efecto de una accion declarativa: cada entrada es un efecto de v1alpha2 y el valor viene de `to` (fijo) o de `from: input.<x>` (un parametro). No hay tercera fuente: una accion no computa.\n\nN4 · CONJUNTO.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["writes"],
+            "properties": {
+              "writes": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName" },
+              "to": { "type": "string" },
+              "from": { "type": "string", "pattern": "^input\\.[A-Za-z_][A-Za-z0-9_]*$" }
+            },
+            "oneOf": [ { "required": ["to"] }, { "required": ["from"] } ]
+          }
+        },
+        "call": {
+          "description": "La Function que lo hace (OOS2001 si no resuelve). Los `input` de la accion son los de la funcion.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "endorsements": {
+          "description": "`attested` no significa nada sobre una tabla de valores: en una accion declarativa es OOS1004.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "../v1alpha2/type/endorsement.schema.json#/$defs/endorsement" }
+        },
+        "authorization": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName" }
+      },
+      "oneOf": [ { "required": ["sets"] }, { "required": ["call"] } ]
+    }
+  }
+}

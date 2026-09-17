@@ -204,11 +204,15 @@ spec/v1alpha5/     borrador de alcance — la emisión a GraphQL
 spec/v1alpha6/     borrador de alcance — la distribución
 spec/v1alpha7/     borrador de alcance — la vista
 spec/v1alpha8/     borrador de alcance — la tabla
+spec/v1alpha9/     borrador de alcance — el modelo
+spec/v1alpha10/    borrador de alcance — actuar: la función como lógica sobre la copia, y la acción
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
 schemas/v1alpha7/  view, y entity con `backedBy`
 schemas/v1alpha8/  table, view adelgazada, entity
+schemas/v1alpha9/  model, y function con `runtime: model`
+schemas/v1alpha10/ function con `over`/`reads` y `effects` opcional, y action
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia
