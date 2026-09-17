@@ -221,6 +221,12 @@ ordenadas = ordenar entradas por docId, byte a byte
 pkgDigest = SHA-256( concatenación de ( docId || 0x00 || docDigest ) )
 ```
 
+Y esa lista es una lista de **identidades**, luego cada una aparece **una vez**: un paquete con
+dos documentos del mismo `kind` y el mismo nombre cualificado no tiene un digest, tiene dos
+verdades bajo un nombre, y ninguna referencia sabría cuál resolver — `OOS2035`. Se midió que
+faltaba: dos ficheros con la misma `Entity` compilaban limpios y cada referencia resolvía la
+primera que encontraba. El mismo nombre en dos `kind` distintos no choca: son dos identidades.
+
 **El nombre del fichero es incidental**, igual que los comentarios y la indentación (§N7).
 La identidad de un documento vive **dentro** de él, no en dónde alguien decidió guardarlo:
 renombrar `Employee.yaml` a `emp.yaml`, o mover un paquete de la forma plana a

@@ -102,6 +102,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2032` | un campo que no se agrupa ni se agrega | v1alpha8 02 §5.8 |
 | `OOS2033` | un agregado sin agrupación no tiene linaje | v1alpha8 02 §5.8 |
 | `OOS2034` | `having` sobre algo que no es un agregado | v1alpha8 02 §5.8 |
+| `OOS2035` | dos documentos con la misma identidad (`kind` y nombre cualificado) | 90 §5.2 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

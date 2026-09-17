@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/90-canonical-form.md#5.2
+level: L0
+expects: OOS2035
+summary: >
+  Dos ficheros declaran la misma identidad de documento (kind y nombre cualificado). El
+  fichero es incidental, asi que son dos verdades bajo el mismo nombre.
