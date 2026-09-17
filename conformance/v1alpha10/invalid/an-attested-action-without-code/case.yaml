@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#4
+level: L0
+expects: OOS1004
+summary: >
+  Una accion declarativa con un endoso attested: no hay codigo que atestar.

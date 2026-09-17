@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5
+level: L0
+expects: accept
+summary: >
+  Una funcion que lee (over y reads son vistas) y devuelve, sin effects: leer y devolver es legitimo.

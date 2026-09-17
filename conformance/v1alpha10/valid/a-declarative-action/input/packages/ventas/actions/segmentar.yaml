@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha10
+kind: Action
+metadata: { name: segmentar, namespace: ventas }
+spec:
+  over: ventas.clientes
+  input:
+    segmento: { type: String, required: true }
+  preconditions:
+    - id: sin-segmento
+      expr: 'target.segmento == ""'
+      message: "Solo se segmenta lo que no tiene segmento"
+  sets:
+    - writes: ventas.Cliente.segmento
+      from: input.segmento
+  endorsements:
+    - endorser: humanApproval

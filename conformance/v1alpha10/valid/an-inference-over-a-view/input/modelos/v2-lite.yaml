@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha9
+kind: Model
+metadata: { name: v2-lite }
+spec:
+  profile: l4/qwen-7b
+  tier: shared
+  task: chat

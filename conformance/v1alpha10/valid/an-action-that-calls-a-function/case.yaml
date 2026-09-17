@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#2
+level: L0
+expects: accept
+summary: >
+  Una accion que llama a una funcion: pide lo que la funcion exige, y la superficie de efecto es la de la funcion.

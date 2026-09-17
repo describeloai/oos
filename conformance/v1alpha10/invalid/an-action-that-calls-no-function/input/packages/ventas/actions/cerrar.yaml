@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha10
+kind: Action
+metadata: { name: cerrar, namespace: ventas }
+spec:
+  over: ventas.clientes
+  call: ventas.cerrar

@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#5
+level: L0
+expects: OOS1004
+summary: >
+  sets y call a la vez: exactamente una forma.

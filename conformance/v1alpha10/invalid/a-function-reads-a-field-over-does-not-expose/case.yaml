@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5.3
+level: L0
+expects: OOS7014
+summary: >
+  Una precondicion mira target.nombre, y la vista de over no expone nombre.

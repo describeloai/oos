@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha10
+kind: Function
+metadata: { name: contar, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/contar.wasm
+  over: ventas.clientes
+  reads: [ventas.Cliente]
+  output:
+    pedidos: { type: Integer }
+  preconditions:
+    - id: con-segmento
+      expr: 'target.segmento != ""'

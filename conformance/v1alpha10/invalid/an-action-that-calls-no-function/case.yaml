@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#5
+level: L0
+expects: OOS2001
+summary: >
+  call: ventas.cerrar, y no hay ninguna Function ventas.cerrar.

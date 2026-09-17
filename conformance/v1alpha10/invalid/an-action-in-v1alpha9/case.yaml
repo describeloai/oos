@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#5
+level: L0
+expects: OOS1003
+summary: >
+  kind: Action con apiVersion v1alpha9: es un documento de v1alpha10.

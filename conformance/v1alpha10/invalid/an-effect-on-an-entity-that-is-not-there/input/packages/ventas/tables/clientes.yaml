@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: clientes, namespace: ventas }
+spec:
+  datasource: erp
+  object: 'public.clientes'
+  columns:
+    cliente_id: { physicalType: 'varchar(16)' }
+    actividad: { physicalType: 'text' }
+    segmento: { physicalType: 'varchar(32)' }
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: retract, witness: log, key: [cliente_id] }

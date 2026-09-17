@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha10
+kind: Function
+metadata: { name: nada, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/nada.wasm
+  output:
+    ok: { type: Boolean }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5.4
+level: L0
+expects: OOS2005
+summary: >
+  writes ventas.Cliente.noExiste: la entidad esta, la propiedad no.

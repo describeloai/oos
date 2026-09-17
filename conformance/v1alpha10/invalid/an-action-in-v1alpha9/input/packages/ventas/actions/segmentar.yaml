@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha9
+kind: Action
+metadata: { name: segmentar, namespace: ventas }
+spec:
+  over: ventas.clientes
+  sets:
+    - writes: ventas.Cliente.segmento
+      to: pyme

@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5.1
+level: L0
+expects: OOS1004
+summary: >
+  Sin over, sin reads y sin effects: un documento que no toca nada no es una funcion.

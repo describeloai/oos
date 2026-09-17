@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha10
+kind: Function
+metadata: { name: clasificar, namespace: ventas }
+spec:
+  runtime: model
+  model: modelo/v2-lite
+  over: ventas.clientes
+  prompt: "Clasifica la actividad en un segmento de una palabra: pyme, corporativo, publico o particular."
+  effects:
+    - writes: ventas.Cliente.segmento

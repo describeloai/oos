@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha10
+kind: Function
+metadata: { name: editar, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/editar.wasm
+  over: ventas.clientes
+  input:
+    segmento: { type: String, required: true }
+  effects:
+    - writes: ventas.Proveedor.nombre
+  endorsements:
+    - endorser: humanApproval

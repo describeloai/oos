@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/02-action.md#2
+level: L0
+expects: accept
+summary: >
+  Una accion sin codigo: sobre una vista, un parametro, un criterio, y sets con un valor fijo y otro de un parametro.

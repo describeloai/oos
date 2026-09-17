@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha9
+kind: Function
+metadata: { name: contar, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/contar.wasm
+  over: ventas.clientes
+  effects:
+    - writes: ventas.Cliente.segmento

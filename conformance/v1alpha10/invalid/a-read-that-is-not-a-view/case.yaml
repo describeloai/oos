@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5.3
+level: L0
+expects: OOS7014
+summary: >
+  reads nombra ventas.Cliente, que es una entidad, no una vista.

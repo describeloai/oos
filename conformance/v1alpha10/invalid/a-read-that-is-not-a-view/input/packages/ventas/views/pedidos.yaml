@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: ventas.pedidos }
+  fields:
+    pedidoId: pedido_id
+    clienteId: cliente_id
+    importe: importe

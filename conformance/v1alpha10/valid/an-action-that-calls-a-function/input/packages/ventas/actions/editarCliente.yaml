@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha10
+kind: Action
+metadata: { name: editarCliente, namespace: ventas }
+spec:
+  over: ventas.clientes
+  input:
+    segmento: { type: String, required: true }
+  call: ventas.editar

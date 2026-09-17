@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: View
+metadata: { name: clientes, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: ventas.clientes }
+  fields:
+    clienteId: cliente_id
+    actividad: actividad
+    segmento: segmento
+  materialized: { datasource: lago, table: 'cache.ventas_clientes' }

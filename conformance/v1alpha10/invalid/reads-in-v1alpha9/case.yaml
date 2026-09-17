@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/00-scope.md#6
+level: L0
+expects: OOS1005
+summary: >
+  over y reads son claves de v1alpha10; bajo v1alpha9 son claves que no son de aqui.

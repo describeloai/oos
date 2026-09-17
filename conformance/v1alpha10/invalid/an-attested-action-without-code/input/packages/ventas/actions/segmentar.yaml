@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha10
+kind: Action
+metadata: { name: segmentar, namespace: ventas }
+spec:
+  over: ventas.clientes
+  sets:
+    - writes: ventas.Cliente.segmento
+      to: pyme
+  endorsements:
+    - endorser: attested
+      attestation: attestations/segmentar.intoto.jsonl

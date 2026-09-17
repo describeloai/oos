@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#5.4
+level: L0
+expects: OOS2005
+summary: >
+  writes ventas.Proveedor.nombre, y no hay ninguna entidad ventas.Proveedor.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha10/01-function.md#2
+level: L0
+expects: accept
+summary: >
+  Una funcion de edicion sobre la copia: over, effects sobre una propiedad untrusted, y un humano firmando.
