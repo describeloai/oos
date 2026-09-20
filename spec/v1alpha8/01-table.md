@@ -138,12 +138,17 @@ spec:
   object: "public.employees"         # opaco: las reglas de nombrado son del origen
   # profile: oos.dev/connectors/workday   # el perfil que mapea este objeto, si lo hay
 
-  # Las columnas físicas, tal cual están. Nombre opaco; tipo en vocabulario de ODCS.
+  # Las columnas físicas, tal cual están. Nombre opaco. `physicalType` es el tipo del
+  # origen CITADO (vocabulario de ODCS); `type` es su traducción al vocabulario de OOS,
+  # hecha por el conector al descubrir el objeto (lo que ODCS llama `logicalType`).
   columns:
-    employee_id: { physicalType: "varchar(16)" }
-    national_id: { physicalType: "varchar(16)" }
-    country:     { physicalType: "char(2)" }
-    deleted:     { physicalType: boolean }
+    employee_id: { type: String,  physicalType: "varchar(16)" }
+    national_id: { type: String,  physicalType: "varchar(16)" }
+    country:     { type: String,  physicalType: "char(2)" }
+    hired_on:    { type: Date,    physicalType: date }
+    salary:      { type: Decimal, physicalType: "numeric(12,2)" }
+    deleted:     { type: Boolean, physicalType: boolean }
+    address:     { physicalType: address_t }   # un compuesto: el conector no lo tradujo, y lo cita
 
   # La cara I. Es `capabilities` de v1alpha7, mudado sin cambios — o `none`.
   reads:
@@ -159,6 +164,24 @@ spec:
     # field: updated_at              # obligatorio con `witness: field`
     # retention: 7d                  # cuánto guarda el origen el changelog, si se sabe
 ```
+
+### 5.0 · El tipo vive en la tabla
+
+`type` es **la única fuente del tipo** para todo lo que cuelga de la tabla. La vista no tipa —es
+física: renombra y recorta—, así que el tipo de un campo de vista es el de su columna, y el de un
+agregado se deriva: `count()` es `Integer`, `avg()` es `Decimal`, `sum`/`min`/`max` son el tipo de
+lo que agregan. Una entidad puede **afinar** el tipo en su propiedad (`Money<EUR, 2>` sobre un
+`Decimal`, un `enum` sobre un `String`), no contradecirlo.
+
+`type` es opcional, y su ausencia significa algo: el conector **no supo** traducir el tipo del
+origen —un compuesto, un tipo de extensión, un tema sin esquema— y `physicalType` lo cita para que
+alguien decida. No se rellena con `String` ni con `Opaque`: una columna sin `type` es texto para
+quien la lea, y se sabe que lo es porque nadie dijo otra cosa. Un motor que copie la tabla
+estrecha cada columna a su `type` y deja como texto las que no lo tienen —y las que, teniéndolo,
+traigan un valor que no lo sea; eso lo dice el informe de la copia, no el documento.
+
+`physicalType` y `type` **conviven** cuando el conector tradujo: la cita es el hecho (y lleva la
+precisión y la escala, que el escalar no lleva), la traducción es lo que el árbol entiende.
 
 Un tema, una API y un lago, en la misma forma:
 
@@ -179,7 +202,7 @@ spec:
   object: "Worker"
   columns:
     "Worker_Reference.ID": {}
-    "Last_Modified": { physicalType: timestamp }
+    "Last_Modified": { type: DateTime, physicalType: timestamp }
   reads:
     predicatePushdown: [eq]
     fullScan: forbidden
@@ -192,7 +215,7 @@ spec:
 spec:
   datasource: lago
   object: "ventas.pedidos"
-  columns: { id: {}, pais: {}, total: { physicalType: "decimal(18,2)" } }
+  columns: { id: { type: Integer }, pais: { type: String }, total: { type: Decimal, physicalType: "decimal(18,2)" } }
   reads: { predicatePushdown: [eq, in, range], fullScan: cheap }
   changes: { mode: retract, witness: snapshot }
 ```

@@ -78,9 +78,13 @@
             "additionalProperties": false,
             "properties": {
               "physicalType": {
-                "description": "Tipo tal como lo almacena el origen. Vocabulario de ODCS, absorbido. Es fisico, asi que vive aqui y no en la entidad ni en la vista.",
+                "description": "Tipo tal como lo almacena el origen, CITADO: `numeric(10,2)`, `timestamptz`, `INT64`. Vocabulario de ODCS, absorbido. Es fisico, asi que vive aqui y no en la entidad ni en la vista. Es el hecho; `type` es su traduccion.",
                 "type": "string",
                 "maxLength": 256
+              },
+              "type": {
+                "description": "El tipo de la columna en el vocabulario de OOS —el escalar de `Entity.property.type`, o `Money<>`/`Quantity<>`/`list<>`—, tal como el conector lo tradujo al descubrir el objeto. Es lo que ODCS llama `logicalType`, con nuestro vocabulario.\n\nOPCIONAL, y su ausencia significa algo: el conector NO SUPO traducir el tipo del origen (un compuesto, un tipo de extension, un tema sin esquema), y entonces `physicalType` lo cita para que alguien decida. No se rellena con `String` ni con `Opaque`: una columna sin `type` es texto para quien la lea, y se sabe que lo es porque nadie dijo otra cosa.\n\nEs LA UNICA FUENTE DEL TIPO para todo lo que cuelga de la tabla: la vista no tipa (es fisica), asi que el tipo de un campo de vista es el de su columna, y el de un agregado se deriva (`count()` es Integer, `avg()` es Decimal, `sum`/`min`/`max` son el de lo que agregan). Una entidad puede AFINARLO en su propiedad —`Money<EUR, 2>` sobre un `Decimal`— pero no contradecirlo (OOS3xxx).",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
               },
               "description": {
                 "type": "string",

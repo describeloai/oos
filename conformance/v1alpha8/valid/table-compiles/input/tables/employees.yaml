@@ -5,10 +5,13 @@ spec:
   datasource: erp
   object: "public.employees"
   columns:
-    employee_id: { physicalType: "varchar(16)" }
-    national_id: { physicalType: "varchar(16)" }
-    country:     { physicalType: "char(2)" }
-    deleted:     { physicalType: boolean }
+    employee_id: { type: String, physicalType: "varchar(16)" }
+    national_id: { type: String, physicalType: "varchar(16)" }
+    country:     { type: String, physicalType: "char(2)" }
+    hired_on:    { type: Date, physicalType: date }
+    salary:      { type: Decimal, physicalType: "numeric(12,2)" }
+    deleted:     { type: Boolean, physicalType: boolean }
+    address:     { physicalType: address_t }
   reads:
     predicatePushdown: [eq, neq, in, range, isNull]
     fullScan: cheap

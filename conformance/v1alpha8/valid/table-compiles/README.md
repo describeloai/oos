@@ -13,3 +13,8 @@ creado es exactamente esto y nada mas.
 
 Y `columns`, que es lo unico nuevo de verdad: hasta aqui ningun documento decia que columnas
 tenia `public.employees`, y por eso `OOS2018` sobre una vista de fuente no era comprobable.
+
+Cada columna lleva `type` —el escalar de OOS que el conector tradujo— junto a `physicalType`,
+la cita del origen. `address` no lleva `type`: el conector no supo traducir `address_t`, lo cita,
+y la columna es texto para quien la lea hasta que alguien decida. Los dos casos son validos y
+son distintos, y por eso estan los dos.
