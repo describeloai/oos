@@ -1,6 +1,9 @@
 apiVersion: oos.dev/v1alpha12
 kind: Dataset
-metadata: { name: clics, namespace: hr, description: lo que el colector escribe, solo altas }
+metadata:
+  name: clics
+  namespace: hr
+  description: "lo que el colector escribe, solo altas"
 spec:
   owner: team:hr
   columns:

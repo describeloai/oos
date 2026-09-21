@@ -1,6 +1,9 @@
 apiVersion: oos.dev/v1alpha12
 kind: Dataset
-metadata: { name: iberia_copia, namespace: hr, description: las filas de la pregunta iberia, guardadas }
+metadata:
+  name: iberia_copia
+  namespace: hr
+  description: "las filas de la pregunta iberia, guardadas"
 spec:
   owner: team:hr
   from: { view: hr.iberia }

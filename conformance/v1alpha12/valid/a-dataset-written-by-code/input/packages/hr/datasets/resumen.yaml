@@ -1,6 +1,9 @@
 apiVersion: oos.dev/v1alpha12
 kind: Dataset
-metadata: { name: resumen, namespace: hr, description: empleados por país, lo escribe un transform }
+metadata:
+  name: resumen
+  namespace: hr
+  description: "empleados por país, lo escribe un transform"
 spec:
   owner: team:hr
   columns:
