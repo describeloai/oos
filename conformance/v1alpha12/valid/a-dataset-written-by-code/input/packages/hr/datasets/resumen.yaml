@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: resumen, namespace: hr, description: empleados por país, lo escribe un transform }
+spec:
+  owner: team:hr
+  columns:
+    pais: { type: String }
+    n: { type: Integer }
+    ultimo: { type: DateTimeTz, description: la última alta vista }
+  changes: { mode: upsert, key: [pais] }
+  history: { maxAge: 7d }

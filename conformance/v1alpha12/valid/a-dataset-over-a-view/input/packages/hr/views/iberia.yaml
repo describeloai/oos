@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha12
+kind: View
+metadata: { name: iberia, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: hr.employees }
+  fields:
+    id: employee_id
+    dni: national_id
+    pais: country
+  where:
+    country: [ES, PT]
+    deleted: "false"

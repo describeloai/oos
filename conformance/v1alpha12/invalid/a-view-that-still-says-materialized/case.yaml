@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/02-la-vista-y-la-entidad.md#3
+level: L0
+expects: OOS1005
+summary: >
+  Una vista de v1alpha12 declara materialized: la clave se retiró, y el remedio es un Dataset.

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Entity
+metadata: { name: Resumen, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [pais]
+  backedBy: resumen
+  properties:
+    pais: { type: String }
+    n: { type: Integer }
+    ultimo: { type: DateTimeTz }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#5
+level: L0
+expects: OOS2021
+summary: >
+  Sin retractación no se mantiene lo mutable: una entidad respaldada por un dataset escrito que sólo admite altas.

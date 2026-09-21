@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#5
+level: L0
+expects: OOS4011
+summary: >
+  Un dataset mantenido copia datos, y nadie autorizó materialization.payload.

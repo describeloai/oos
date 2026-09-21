@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: bucle, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: hr.eco }

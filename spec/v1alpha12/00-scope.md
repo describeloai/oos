@@ -84,8 +84,8 @@ como lo que se admite— y comparten todo lo demás.
 
 - `kind: Dataset` — [`01-dataset`](01-dataset.md).
 - `View.from: { dataset }` y `Entity.backedBy` sobre un dataset — [`02-la-vista-y-la-entidad`](02-la-vista-y-la-entidad.md).
-- **Se retira `View.materialized`.** Una `View` es la pregunta; si alguien quiere sus filas
-  guardadas, escribe un `Dataset` con `from: { view }`. §6.
+- **Se retiran `View.materialized` y `View.freshness`.** Una `View` es la pregunta; si alguien
+  quiere sus filas guardadas, y con qué retraso, escribe un `Dataset` con `from: { view }`. §6.
 
 ## 5. Qué no entra, y por qué
 
@@ -114,16 +114,16 @@ como lo que se admite— y comparten todo lo demás.
 Ningún documento de v1alpha1 a v1alpha11 cambia de resultado. `kind: Dataset` en una versión
 anterior es `OOS1003`.
 
-**`View.materialized` se retira como se retiró `Binding`** (v1alpha8 §5.4): una `View` de
-v1alpha12 que la declare es `OOS1005` —una clave que no es de aquí— con el remedio en el
-mensaje: *«esto es un `Dataset` con `from: { view: <ésta> }`»*. En v1alpha8–v1alpha11 sigue
-compilando, y sigue significando lo mismo.
+**`View.materialized` y `View.freshness` se retiran como se retiró `Binding`** (v1alpha8
+§5.4): una `View` de v1alpha12 que las declare es `OOS1005` —una clave que no es de aquí— con
+el remedio en el mensaje: *«esto es un `Dataset` con `from: { view: <ésta> }`»*. En
+v1alpha8–v1alpha11 siguen compilando, y siguen significando lo mismo.
 
 La migración es mecánica y **conserva el plan**:
 
 | antes | después |
 |---|---|
-| `View v` con `from`, `fields`, `where`, `freshness` y `materialized: { datasource, table }` | la misma `View v` **sin** `materialized` (sigue siendo la pregunta) **más** `Dataset v` con `from: { view: v }` y su `freshness`. O, si nadie pregunta por `v` sin copiarla, **sólo** el `Dataset` con el plan de `v` dentro |
+| `View v` con `from`, `fields`, `where`, `freshness` y `materialized: { datasource, table }` | la misma `View v` **sin** `materialized` ni `freshness` (sigue siendo la pregunta) **más** `Dataset v` con `from: { view: v }` y la `freshness`. O, si nadie pregunta por `v` sin copiarla, **sólo** el `Dataset` con el plan de `v` dentro |
 | `Table t` con `datasource: lago`, `object`, `columns`, `reads`, `changes` | `Dataset t` con `columns` y `changes: { mode, key? }`; `datasource`, `object` y `reads` se van (son del lago, y se derivan) |
 | `View x` con `from: { view: v }` donde `v` era la copia | igual, o `from: { dataset: v }` si `v` pasó a ser sólo dataset |
 | `Entity e` con `backedBy: v` donde `v` era la copia | igual: `backedBy` resuelve a la `View` o al `Dataset` que quede con ese nombre |

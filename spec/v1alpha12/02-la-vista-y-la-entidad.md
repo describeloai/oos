@@ -53,16 +53,18 @@ que una `Function` toca en `effects` DEBE estar respaldada por un dataset**, dir
 una vista cuya raíz de lectura sea un dataset. Una vista virtual sobre una tabla no tiene dónde
 sostener una edición.
 
-## 3. `View.materialized` se retira
+## 3. `View.materialized` y `View.freshness` se retiran
 
-> Una `View` de v1alpha12 **NO DEBE** declarar `materialized`. Es `OOS1005`, y el mensaje dice
-> el remedio: *un `Dataset` con `from: { view: <ésta> }`*.
+> Una `View` de v1alpha12 **NO DEBE** declarar `materialized` ni `freshness`. Es `OOS1005`, y
+> el mensaje dice el remedio: *un `Dataset` con `from: { view: <ésta> }`*, que es donde van
+> las dos.
 
-Lo que la clave decía —«esta pregunta, además, se guarda, en el lago»— lo dice ahora un
-documento propio, que es lo que el registro lista. La vista queda con **lo que es suyo**:
+Lo que `materialized` decía —«esta pregunta, además, se guarda, en el lago»— lo dice ahora un
+documento propio, que es lo que el registro lista. Y `freshness` se va con ella porque era
+suya: una vista virtual lee en el momento y no tiene retraso que tolerar; la frescura es una
+decisión sobre **la copia**, y la copia es el dataset. La vista queda con **lo que es suyo**:
 quién responde, de qué sale, qué sale y cómo se llama, qué filas son suyas, y —si es un
-agregado— por qué se agrupa. `freshness` se queda en la vista sólo como **lo que se le pide**
-a su raíz de lectura; la frecuencia con la que un dataset se cumple es del dataset.
+agregado— por qué se agrupa.
 
 **«La copia más cercana bajando por la cadena»** (`02-view` §3), que el enlazado, el flujo y el
 ejecutor comparten, pasa a ser **«el primer dataset bajando por la cadena»**. Es la misma

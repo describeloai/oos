@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: empleados, namespace: hr, description: la copia de employees, sin los borrados }
+spec:
+  owner: team:hr
+  from: { table: hr.employees }
+  fields:
+    employeeId: employee_id
+    nationalId: national_id
+    pais: country
+  where:
+    deleted: "false"
+  freshness: 15m
+  columns:
+    employeeId: { type: String }
+  changes: { mode: append }
+  history: { maxAge: 30d, minSnapshots: 3 }

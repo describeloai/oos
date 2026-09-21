@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: vacio, namespace: hr }
+spec:
+  owner: team:hr

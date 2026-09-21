@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#3.1
+level: L0
+expects: accept
+summary: >
+  Un dataset guarda las filas de una vista: la pregunta sigue siendo la vista, y se puede hacer sin él.

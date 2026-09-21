@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/02-la-vista-y-la-entidad.md#1
+level: L0
+expects: accept
+summary: >
+  Una vista pregunta sobre un dataset escrito, y una entidad se respalda en él directamente.

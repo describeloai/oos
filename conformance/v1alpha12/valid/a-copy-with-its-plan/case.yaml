@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#3.1
+level: L0
+expects: accept
+summary: >
+  Un dataset mantenido: la copia de una tabla con su plan (fields, where), su frescura y su historia, con el conducto que la admite.

@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha12
+kind: View
+metadata: { name: grandes, namespace: hr }
+spec:
+  owner: team:hr
+  from: { dataset: hr.resumen }
+  fields:
+    pais: pais
+    empleados: n
+  where:
+    pais: [ES, PT]

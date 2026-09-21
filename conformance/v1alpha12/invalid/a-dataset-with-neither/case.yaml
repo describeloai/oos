@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#7
+level: L0
+expects: OOS1004
+summary: >
+  Un dataset sin from y sin columns: no dice de qué sale ni qué tiene.

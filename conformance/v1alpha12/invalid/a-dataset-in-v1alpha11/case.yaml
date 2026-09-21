@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/00-scope.md#6
+level: L0
+expects: OOS1003
+summary: >
+  kind Dataset en v1alpha11: es un documento de v1alpha12.

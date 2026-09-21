@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#7
+level: L0
+expects: OOS2019
+summary: >
+  Un dataset que sale de una vista que sale del mismo dataset: la cadena vuelve sobre sí.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#7
+level: L0
+expects: OOS1004
+summary: >
+  Un dataset con from y con columns a la vez: o el sistema cumple un plan, o código lo escribe.

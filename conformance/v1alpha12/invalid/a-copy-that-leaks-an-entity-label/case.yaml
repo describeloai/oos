@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#5
+level: L0
+expects: OOS4002
+summary: >
+  El dataset de abajo copia; la entidad, dos eslabones arriba, declara high sobre un campo que baja hasta él, y el conducto admite low.

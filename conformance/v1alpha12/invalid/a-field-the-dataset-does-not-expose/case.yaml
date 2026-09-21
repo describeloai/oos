@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/02-la-vista-y-la-entidad.md#1
+level: L0
+expects: OOS2018
+summary: >
+  Una vista sobre un dataset nombra un campo que el dataset no tiene.

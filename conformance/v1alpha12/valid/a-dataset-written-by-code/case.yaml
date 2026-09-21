@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#3.2
+level: L0
+expects: accept
+summary: >
+  Un dataset escrito: columnas que siguen a Iceberg y qué escrituras admite (upsert por país).
