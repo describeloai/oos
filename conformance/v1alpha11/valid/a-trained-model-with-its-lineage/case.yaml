@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/01-trained-model.md#3
+level: L0
+expects: accept
+summary: >
+  Un modelo entrenado en un paquete: dueño, framework, versión, artefactos, digest y de qué vista salió.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/00-scope.md#6
+level: L0
+expects: OOS1003
+summary: >
+  kind TrainedModel en v1alpha10: es un documento de v1alpha11.

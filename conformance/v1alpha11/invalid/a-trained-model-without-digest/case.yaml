@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/01-trained-model.md#4
+level: L0
+expects: OOS1004
+summary: >
+  Sin digest el documento no nombra nada que se pueda cargar.

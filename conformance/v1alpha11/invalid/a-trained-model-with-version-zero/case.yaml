@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/01-trained-model.md#4
+level: L0
+expects: OOS1004
+summary: >
+  La versión es un entero mayor o igual que 1.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/01-trained-model.md#4
+level: L0
+expects: OOS2005
+summary: >
+  trainedFrom nombra ventas.clientes, que no existe.

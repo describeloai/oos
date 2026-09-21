@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: publicar, version: 0.1.0 }
+datasources:
+  - { name: erp, type: postgres, connectionEnv: ERP_URL }
+  - { name: lago, type: lago, connectionEnv: LAGO_URL }

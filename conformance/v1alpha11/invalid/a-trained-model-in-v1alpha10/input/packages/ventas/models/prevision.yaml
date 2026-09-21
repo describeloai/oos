@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha10
+kind: TrainedModel
+metadata:
+  name: prevision
+  namespace: ventas
+  description: la previsión de ventas por semana, entrenada desde la sesión de ana
+spec:
+  owner: team:ventas
+  framework: sklearn
+  task: forecast
+  version: 3
+  artifacts: models/ventas_prevision/v3
+  digest: sha256:abababababababababababababababababababababababababababababababab
+  trainedFrom: [ventas.pedidos]

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha11/trained-model.schema.json",
+  "title": "TrainedModel",
+  "description": "El modelo entrenado: un documento de un paquete que nombra unos ficheros del lago por su prefijo y su digest, dice con que se cargan y que version son, y de que vistas salieron.\n\nEs un asset del registro, como la Table que write() deja: tiene dueno, esta en un paquete, se lista, se gobierna y tiene linaje. No es el Model de v1alpha9 —aquel nombra un perfil servido, sin namespace y en la raiz; este nombra pesos, en un paquete— y no se invoca: lo carga codigo.\n\nNo lleva labels (lo que produce llega al reticulo por los endosos de la funcion que lo use), ni metricas ni hiperparametros (sin vocabulario comparable, un campo libre adquiere un significado que nadie escribio). Que los artefactos esten y que el digest sea el suyo no lo comprueba la gramatica: lo comprueba quien publica.\n\nNormativo: spec/v1alpha11/01-trained-model.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha11"
+    },
+    "kind": {
+      "const": "TrainedModel"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "framework",
+        "version",
+        "artifacts",
+        "digest"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde por el modelo. La misma forma que en View y Package: `team:` o `user:`.",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "framework": {
+          "description": "Con que se carga: el nombre de la libreria que el codigo importa (`sklearn`, `xgboost`, `torch`, `statsmodels`...). Texto: no hay vocabulario que valga la pena cerrar todavia.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "task": {
+          "description": "Que hace (`forecast`, `classify`, `embed`...). Texto, opcional.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "version": {
+          "description": "Entero >= 1. Publicar otra version es cambiar este numero, `artifacts` y `digest` en el mismo commit.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "artifacts": {
+          "description": "El prefijo, relativo a la raiz del lago del inquilino, bajo el que estan los ficheros del modelo. Sin barra inicial ni final.",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_.-]*(/[a-z0-9][a-z0-9_.-]*)*$",
+          "maxLength": 512
+        },
+        "digest": {
+          "description": "El digest del manifiesto de los artefactos (la lista de ficheros con su tamano y su digest, en forma canonica). Lo que se carga es esto, o no se carga.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/digest"
+        },
+        "trainedFrom": {
+          "description": "De que vistas salio: nombres cualificados de View del arbol. Es el linaje, y por aqui baja la gobernanza. Cada una tiene que resolver (OOS2005).\n\nEs un CONJUNTO: el orden no significa nada y la forma canonica lo ordena.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        }
+      }
+    }
+  }
+}

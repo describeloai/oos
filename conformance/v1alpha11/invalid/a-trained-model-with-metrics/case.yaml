@@ -1,0 +1,5 @@
+rule: spec/v1alpha11/01-trained-model.md#4
+level: L0
+expects: OOS1005
+summary: >
+  metrics no es una clave de aquí: sin vocabulario comparable, un campo libre adquiere un significado que nadie escribió.
