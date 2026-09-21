@@ -207,6 +207,7 @@ spec/v1alpha8/     borrador de alcance — la tabla
 spec/v1alpha9/     borrador de alcance — el modelo
 spec/v1alpha10/    borrador de alcance — actuar: la función como lógica sobre la copia, y la acción
 spec/v1alpha11/    borrador de alcance — publicar: el modelo entrenado como asset del registro
+spec/v1alpha12/    borrador de alcance — tener: el dataset, lo que se tiene, como un documento y no dos disfraces
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
@@ -215,6 +216,7 @@ schemas/v1alpha8/  table, view adelgazada, entity
 schemas/v1alpha9/  model, y function con `runtime: model`
 schemas/v1alpha10/ function con `over`/`reads` y `effects` opcional, y action
 schemas/v1alpha11/ trained-model
+schemas/v1alpha12/ dataset
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia

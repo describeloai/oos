@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha12/dataset.schema.json",
+  "title": "Dataset",
+  "description": "El dataset: LO QUE UN INQUILINO TIENE. Una tabla en su lago, con historia, nombrada por un documento de su paquete. Tiene dueno y columnas, y se llena de una de dos maneras: el sistema cumple el plan que el documento declara (MANTENIDO: `from`), o codigo la escribe y el sistema registra lo que llego (ESCRITO: `columns`). Exactamente una de las dos.\n\nEs el asset primario del registro: lo que el catalogo lista, lo que una vista lee cuando no lee de fuera, lo que una entidad respalda cuando sus filas son nuestras, lo que un transform produce. Sus versiones son sus snapshots; su ESTADO —el vigente, donde esta, cuantas filas, quien y de que— es el puntero, que no esta aqui.\n\nHasta v1alpha11 esto eran dos disfraces: la View con `materialized` (la copia) y la Table con `datasource: lago` (lo que write() dejaba). La costura del gobierno y el motor del refresco cuelgan DEL PLAN, no del nombre del documento, y por eso se mueven aqui sin cambiar una regla: un dataset mantenido instancia `materialization.payload` como lo instanciaba la vista (OOS4002, OOS4011), y OOS2021/2023/2024 se leen sobre el igual.\n\nNo es una Table (el puntero a lo que es de otro, con caras declaradas porque nadie de aqui las controla: las de un dataset se SABEN y se derivan). No es una View (la pregunta, sin bytes; un dataset puede nacer de una con `from: { view }`). No lleva labels (la clasificacion la declara la Entity y baja por el plan), ni calidad (un Ruleset lo nombra), ni el puntero.\n\nNormativo: spec/v1alpha12/01-dataset.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha12"
+    },
+    "kind": {
+      "const": "Dataset"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde por el dataset. La misma forma que en View, Package y TrainedModel: `team:` o `user:` (OOS2009 si no lo es).",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "from": {
+          "description": "MANTENIDO: de que sale. EXACTAMENTE UNA de tres formas: una tabla (la copia de lo que es de otro), una vista (sus filas guardadas: la pregunta sigue siendo la vista) o otro dataset (una copia derivada de una copia, que es lo que un transform hace). Una sola y no una lista, por lo mismo que en la vista: el vocabulario no tiene junta.\n\nForma corta en el mismo espacio de nombres (N1). Debe resolver (OOS2018), y la cadena no puede volver sobre si misma (OOS2019). Lo que este dataset lee son los nombres que `from` EXPONE: las columnas de la tabla, los campos de la vista, lo que el dataset de abajo expone (spec 01-dataset §6).",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["table"],
+              "properties": {
+                "table": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["view"],
+              "properties": {
+                "view": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["dataset"],
+              "properties": {
+                "dataset": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/reference"
+                }
+              }
+            }
+          ]
+        },
+        "fields": {
+          "description": "MANTENIDO, opcional: que sale y como se llama. La gramatica de View v1alpha8 sin cambio alguno: la clave es el nombre en este dataset y el valor, su nombre abajo (o un agregado). Sin `fields`, el dataset expone todo lo que `from` expone, con sus nombres: la copia identidad.",
+          "$ref": "../v1alpha8/view.schema.json#/properties/spec/properties/fields"
+        },
+        "where": {
+          "description": "MANTENIDO, opcional: que filas son este dataset. La gramatica CERRADA de View v1alpha8 —igualdad, pertenencia, ausencia—, y por lo mismo: un predicado no filtra, LEE, y un rango sobre una columna clasificada es un canal lateral.",
+          "$ref": "../v1alpha8/view.schema.json#/properties/spec/properties/where"
+        },
+        "groupBy": {
+          "description": "MANTENIDO, opcional: por que columnas se agrupa. Un agregado guardado. Las reglas de View v1alpha8 (OOS2032-OOS2034).",
+          "$ref": "../v1alpha8/view.schema.json#/properties/spec/properties/groupBy"
+        },
+        "having": {
+          "description": "MANTENIDO, opcional: recorta por lo que solo se sabe despues de agrupar. Como en View v1alpha8.",
+          "$ref": "../v1alpha8/view.schema.json#/properties/spec/properties/having"
+        },
+        "freshness": {
+          "description": "MANTENIDO, opcional: cuanto retraso se tolera respecto a `from`. Es el target lag de una dynamic table. Superado el umbral sin refresco, una implementacion DEBE declarar el dataset degradado y NO DEBE servir lo viejo como fresco. Quien refresca, con que testigo y en que orden, es del mantenedor.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+        },
+        "columns": {
+          "description": "ESCRITO: las columnas que tiene, tal cual estan en la tabla Iceberg. SIGUE A LOS BYTES: el documento nace con la primera escritura, sus columnas cambian cuando la tabla cambia, y lo que se le anada a mano (`description`, un `type` afinado) se conserva. Como `Table.columns` sin `physicalType`: el fisico es Iceberg y no se cita.\n\nEs lo que este dataset EXPONE a quien lo lea (una vista con `from: { dataset }`, una entidad con `backedBy`, `changes.key`). No lleva `labels`: la clasificacion la declara la Entity que lo respalda.\n\nQue una escritura se NIEGUE por no cuadrar con esto es un contrato, y es otra decision (00-scope §5).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "description": "El tipo en el vocabulario de OOS, tal como Iceberg lo tradujo al escribir. Opcional: sin el, la columna es texto para quien la lea.",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 4096
+              }
+            }
+          }
+        },
+        "changes": {
+          "description": "ESCRITO: QUE ESCRITURAS ADMITE. No es la cara D de la Table (que dice que llega de un origen que no controlamos): es la costura de la escritura desde codigo, que la Table del lago no tenia.\n\n`append`: solo altas; una escritura que funda por clave se niega. `upsert`: exige `key` (cada nombre una columna, OOS2018), y es por lo que se funde. Sin `witness`: es `snapshot`, siempre, porque es Iceberg. El mantenido no lo lleva: lo DERIVA de su raiz (mode y key los de la raiz, witness snapshot).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": {
+              "enum": ["append", "upsert"]
+            },
+            "key": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            }
+          },
+          "if": {
+            "properties": { "mode": { "const": "upsert" } },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["key"]
+          },
+          "else": {
+            "not": { "required": ["key"] }
+          }
+        },
+        "history": {
+          "description": "LAS DOS FORMAS, opcional: cuanta historia se conserva. Los dos ejes de Iceberg (`history.expire.max-snapshot-age`, `history.expire.min-snapshots-to-keep`), con nombre de decision y no de propiedad fisica. Sin ella, la que el inquilino tenga por defecto. Es del documento por lo mismo que `freshness`: es una decision, no un estado.",
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "maxAge": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            },
+            "minSnapshots": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "description": "MANTENIDO: con `from`; sin `columns` ni `changes`.",
+          "required": ["from"],
+          "not": {
+            "anyOf": [
+              { "required": ["columns"] },
+              { "required": ["changes"] }
+            ]
+          }
+        },
+        {
+          "description": "ESCRITO: con `columns` y `changes`; sin nada del plan.",
+          "required": ["columns", "changes"],
+          "not": {
+            "anyOf": [
+              { "required": ["from"] },
+              { "required": ["fields"] },
+              { "required": ["where"] },
+              { "required": ["groupBy"] },
+              { "required": ["having"] },
+              { "required": ["freshness"] }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
