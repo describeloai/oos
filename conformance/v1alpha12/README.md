@@ -23,6 +23,7 @@ Cuatro casos que aceptan y nueve que rechazan:
 | **las dos formas** | `a-copy-with-its-plan` · `a-dataset-written-by-code` · `a-dataset-with-both-forms` · `a-dataset-with-neither` |
 | **compone** | `a-view-over-a-dataset` · `a-dataset-over-a-view` · `a-field-the-dataset-does-not-expose` · `a-chain-that-comes-back` |
 | **la costura no se pierde** | `a-copy-without-a-conduit` · `a-copy-that-leaks-an-entity-label` · `an-append-dataset-backing-an-entity` |
+| **lo escrito lleva lo que leyó** (`derivedFrom`) | `what-code-wrote-says-what-it-read` · `what-code-wrote-carries-what-it-read` · `a-copy-that-says-derived-from` |
 | **lo que se retira / nada anterior cambia** | `a-view-that-still-says-materialized` · `a-dataset-in-v1alpha11` |
 
 Los tres de **la costura no se pierde** son los que importan: son los mismos tres casos de

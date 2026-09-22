@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#5
+level: L0
+expects: accept
+summary: >
+  El mismo árbol con un conducto que admite high: lo escrito dice lo que leyó, lleva high, y la copia sale por donde puede.

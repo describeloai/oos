@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#7
+level: L0
+expects: OOS1004
+summary: >
+  Un dataset mantenido que dice `derivedFrom`: su linaje es `from`, y lo demás es del escrito.

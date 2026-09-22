@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata:
+  name: empleados
+  namespace: hr
+spec:
+  owner: team:hr
+  from: { table: hr.employees }
+  derivedFrom: [hr.iberia]

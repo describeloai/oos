@@ -1,0 +1,5 @@
+rule: spec/v1alpha12/01-dataset.md#5
+level: L0
+expects: OOS4002
+summary: >
+  El transform leyó `iberia` (que expone `dni`, high) y escribió `resumen` con dos columnas que no se llaman `dni`; la copia de `resumen` sale por un conducto de low. Lo escrito lleva lo que leyó.

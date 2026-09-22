@@ -78,13 +78,19 @@ spec:
     n: { type: Integer }
     total: { type: Decimal, description: en euros }
   changes: { mode: upsert, key: [pais] }  # qué escrituras admite
+  derivedFrom: [ventas.pedidos]           # lo que el código leyó para escribirlo
   history: { maxAge: 7d }                 # opcional
 ```
 
 Es **lo que hasta v1alpha11 era una `Table` con `datasource: lago`**. Su esquema **sigue a los
 bytes**: el documento nace con la primera escritura, sus columnas cambian cuando la tabla
 cambia, y lo que se le añada a mano —`description`, un `type` afinado— se conserva. Su linaje
-no está aquí: está **en el puntero**, por snapshot (§8).
+por snapshot está **en el puntero** (§8); lo que **lleva puesto** está aquí: `derivedFrom`
+nombra lo que el código leyó para escribirlo (vistas o datasets), y por ahí baja la
+clasificación (§5). Lo escribe el sistema en el mismo acto que `columns` —de la procedencia de
+la escritura: los `inputs` del transform, o lo que la sesión leyó—, y una persona puede
+corregirlo. Un escrito sin `derivedFrom` es un dataset que dice no haber leído nada: lleva lo
+que sus columnas digan, y nada más.
 
 ## 4. Las claves
 
@@ -95,6 +101,7 @@ no está aquí: está **en el puntero**, por snapshot (§8).
 | `fields`, `where`, `groupBy`, `having` | mantenido | opcionales | **la gramática de `v1alpha8/02-view`** §2 y §4, sin cambio alguno: los valores de `fields` y las claves de `where` son lo que `from` expone (§6), `OOS2018` si no. Sin `fields`, el dataset expone todo lo que `from` expone, con sus nombres |
 | `freshness` | mantenido | opcional | duración: cuánto retraso se tolera respecto a `from`. Es el *target lag*. Superado sin refresco, el dataset está degradado y no se sirve como fresco |
 | `columns` | escrito | **obligatoria** | `<nombre>: { type?, description? }`, como `Table.columns` sin `physicalType` (el físico es Iceberg y no se cita). Al menos una |
+| `derivedFrom` | escrito | opcional | lista de `<paquete>.<nombre>` de vistas o datasets, **lo que el código leyó para escribirlo**. Cada nombre resuelve (`OOS2018`); no se nombra a sí mismo (`OOS2019`). Por aquí baja la clasificación (§5) |
 | `changes` | escrito | **obligatoria** | `{ mode: append \| upsert, key? }`: **qué escrituras admite**. `append`: sólo altas; una escritura que funda por clave se niega. `upsert`: exige `key` (`OOS1004` sin ella), cada nombre una columna (`OOS2018`), y es por lo que se funde. No lleva `witness`: es `snapshot`, siempre, porque es Iceberg |
 | `history` | las dos | opcional | `{ maxAge?: duración, minSnapshots?: entero ≥ 1 }`, al menos una: cuánta historia se conserva. Sin ella, la que el inquilino tenga por defecto |
 | `metadata.namespace` | las dos | **obligatoria** | vive en un paquete |
@@ -112,6 +119,14 @@ respaldada por la cadena declaró sobre ellos— (`OOS4001`, `OOS4002`, `OOS4011
 cambie es la afirmación de esta versión**: la clave se movió de documento; la regla de flujo,
 no. La forma más fuerte de aplicar una máscara sigue siendo no pedir la columna, y la
 proyección del dataset es donde una tabla copiada pierde una.
+
+**Y lo escrito lleva lo que leyó.** Un dataset escrito con `derivedFrom` lleva, en **cada**
+columna, el join de lo que llevan **todos** los campos de lo que leyó: el código no declara qué
+columna salió de cuál, y quedarse corto no produce ningún síntoma (P4). Es lo que hace que la
+etiqueta no muera en la escritura: un mantenido sobre el escrito, una vista encima, una entidad
+que lo respalda o una función que lo lee ven esa carga como ven la de una raíz. La máscara sigue
+siendo la de siempre —no leer el campo—, y aquí se declara en `derivedFrom`: leer una vista que
+no expone `dni` es no llevar `dni`.
 
 Y por lo mismo, **las reglas del mantenimiento** que v1alpha8 escribió sobre «una vista
 `materialized`» se leen ahora sobre «un dataset mantenido», sin cambiar de código:
@@ -153,7 +168,8 @@ implementación ya sabe mejor que él.
 | `owner` que no es `team:` ni `user:` | `OOS2009` | |
 | ni `from` ni `columns`, o los dos | `OOS1004` | una forma o la otra |
 | `fields`, `where`, `groupBy`, `having` o `freshness` sin `from` | `OOS1004` | son del plan |
-| `changes` sin `columns` | `OOS1004` | el mantenido lo deriva |
+| `changes` o `derivedFrom` sin `columns` | `OOS1004` | son del escrito: el mantenido lo deriva y su linaje es `from` |
+| un nombre de `derivedFrom` que no resuelve a una vista o un dataset; el propio nombre | `OOS2018`, `OOS2019` | |
 | `columns` vacío; `changes` sin `mode`; `mode` fuera de `append`/`upsert` | `OOS1004` | |
 | `changes.mode: upsert` sin `key`; `key` con `append` | `OOS1004` | como en `Table` |
 | un nombre de `key` que no es una columna | `OOS2018` | |
@@ -161,7 +177,7 @@ implementación ya sabe mejor que él.
 | `from` que no resuelve a una tabla, una vista o un dataset | `OOS2018` | |
 | un valor de `fields`, una clave de `where` o de `groupBy` que `from` no expone | `OOS2018` | |
 | la cadena vuelve sobre sí (`from` que llega a este mismo documento) | `OOS2019` | |
-| un mantenido sin conducto que lo admita, o cuyo plan lleve lo que el conducto niega | `OOS4011`, `OOS4002` | §5 |
+| un mantenido sin conducto que lo admita, o cuyo plan lleve lo que el conducto niega —también lo que llega por `derivedFrom` de un escrito de su cadena— | `OOS4011`, `OOS4002` | §5 |
 | respalda una entidad `nature: entity` con `mode: append` | `OOS2021` | §5 |
 | mantenido sobre raíz `append` + `witness: field` | `OOS2023` | §5 |
 | una clave que no es de aquí (`materialized`, `datasource`, `object`, `reads`, `labels`, `quality`…) | `OOS1005` | |

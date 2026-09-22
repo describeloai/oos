@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata:
+  name: resumen
+  namespace: hr
+  description: "cuántos por país, lo escribe un transform que leyó iberia"
+spec:
+  owner: team:hr
+  columns:
+    pais: { type: String }
+    n: { type: Integer }
+  changes: { mode: upsert, key: [pais] }
+  derivedFrom: [hr.iberia]

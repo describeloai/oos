@@ -130,6 +130,17 @@
             }
           }
         },
+        "derivedFrom": {
+          "description": "ESCRITO, opcional: LO QUE EL CODIGO LEYO PARA ESCRIBIRLO, como nombres cualificados de vistas o datasets. Lo escribe el sistema en el mismo acto que `columns` (de la procedencia de la escritura: los `inputs` del transform, o lo que la sesion leyo) y una persona puede corregirlo. Cada nombre resuelve (OOS2018); no se nombra a si mismo (OOS2019).\n\nPor aqui baja la clasificacion (spec 01-dataset §5): un escrito lleva, en CADA columna, el join de lo que llevan todos los campos de lo que leyo, porque el codigo no declara que columna salio de cual y quedarse corto no produce ningun sintoma (P4). Sin `derivedFrom`, el dataset dice no haber leido nada.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$",
+            "maxLength": 256
+          }
+        },
         "changes": {
           "description": "ESCRITO: QUE ESCRITURAS ADMITE. No es la cara D de la Table (que dice que llega de un origen que no controlamos): es la costura de la escritura desde codigo, que la Table del lago no tenia.\n\n`append`: solo altas; una escritura que funda por clave se niega. `upsert`: exige `key` (cada nombre una columna, OOS2018), y es por lo que se funde. Sin `witness`: es `snapshot`, siempre, porque es Iceberg. El mantenido no lo lleva: lo DERIVA de su raiz (mode y key los de la raiz, witness snapshot).",
           "type": "object",
@@ -184,7 +195,8 @@
           "not": {
             "anyOf": [
               { "required": ["columns"] },
-              { "required": ["changes"] }
+              { "required": ["changes"] },
+              { "required": ["derivedFrom"] }
             ]
           }
         },
