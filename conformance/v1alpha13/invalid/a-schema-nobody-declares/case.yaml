@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#3
+level: L0
+expects: OOS2037
+summary: >
+  Un schema existe porque un `kind: Schema` lo declara: `metadata.schema: francia` sin el es OOS2037.

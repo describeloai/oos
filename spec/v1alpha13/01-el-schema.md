@@ -61,7 +61,10 @@ spec: { owner: team:ventas-es, columns: { id: { type: Integer } }, changes: { mo
   nombran nada—; y uno en `default` vive **fuera** de toda carpeta de schema (`OOS2036`).
 
 El vocabulario compartido —`Lattice`, `Ruleset`, `Concept`, `Interface`, las políticas— **no**
-la admite (`OOS1005`): se nombra por su vocabulario ([`00-scope` §5](00-scope.md)).
+la admite (`OOS1005`): se nombra por su vocabulario ([`00-scope` §5](00-scope.md)). Tampoco
+`Resolution`, que es contenido del paquete pero no del catálogo —es de la entidad cuya
+identidad resuelve—: está en `default`, y nombra a la entidad en una, dos o tres partes como
+cualquier referencia.
 
 ## 4. El nombre
 

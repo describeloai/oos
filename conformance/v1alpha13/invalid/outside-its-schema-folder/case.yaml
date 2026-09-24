@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#3
+level: L0
+expects: OOS2036
+summary: >
+  Lo de un schema vive en su carpeta: un documento de `espana` en la raiz del paquete es OOS2036.

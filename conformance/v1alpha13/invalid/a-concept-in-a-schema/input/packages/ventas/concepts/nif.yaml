@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha13
+kind: Concept
+metadata: { name: nif, namespace: ventas, schema: espana }
+spec:
+  type: String

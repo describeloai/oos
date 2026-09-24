@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#4
+level: L0
+expects: OOS2035
+summary: >
+  Dos `pedidos` en el mismo schema siguen siendo el mismo documento declarado dos veces.

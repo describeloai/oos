@@ -1,0 +1,3 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: ordenar, version: 0.1.0 }

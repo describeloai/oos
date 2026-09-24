@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#2
+level: L0
+expects: OOS2036
+summary: >
+  Un `Schema` vive directamente en la carpeta que nombra: `espana` en `otra/` es OOS2036.

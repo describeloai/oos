@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha13
+kind: Dataset
+metadata: { name: pedidos, namespace: ventas, schema: espana }
+spec:
+  owner: team:ventas
+  columns:
+    id: { type: Integer }
+    pais: { type: String }
+  changes: { mode: append }

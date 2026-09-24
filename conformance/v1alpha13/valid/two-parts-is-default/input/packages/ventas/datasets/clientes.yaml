@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: clientes, namespace: ventas }
+spec:
+  owner: team:ventas
+  columns:
+    id: { type: Integer }
+    pais: { type: String }
+  changes: { mode: append }

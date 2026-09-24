@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha13
+kind: View
+metadata: { name: todos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { dataset: ventas.default.clientes }
+  fields: { id: id }

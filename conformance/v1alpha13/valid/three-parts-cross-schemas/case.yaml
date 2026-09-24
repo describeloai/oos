@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#5
+level: L0
+expects: accept
+summary: >
+  Tres partes nombran otro schema: desde `ventas.francia`, `ventas.espana.pedidos`.

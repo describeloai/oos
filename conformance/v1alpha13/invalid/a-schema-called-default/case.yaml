@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#2
+level: L0
+expects: OOS1004
+summary: >
+  `default` existe sin declararse: un `Schema` que se llame asi es OOS1004.

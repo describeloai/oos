@@ -1,0 +1,5 @@
+rule: spec/v1alpha13/01-el-schema.md#4
+level: L0
+expects: accept
+summary: >
+  Dos `pedidos` en dos schemas del mismo paquete: `ventas.espana.pedidos` y `ventas.francia.pedidos` son dos documentos (antes, OOS2035).

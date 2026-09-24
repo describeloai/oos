@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha13
+kind: View
+metadata: { name: rota, namespace: ventas, schema: francia }
+spec:
+  owner: team:ventas
+  from: { dataset: pedidos }
+  fields: { id: id }

@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha13
+kind: View
+metadata: { name: pedidos_es, namespace: ventas, schema: espana }
+spec:
+  owner: team:ventas
+  from: { dataset: pedidos }
+  fields: { id: id }
