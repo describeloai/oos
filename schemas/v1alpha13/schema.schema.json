@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha13/schema.schema.json",
+  "title": "Schema",
+  "description": "Un schema de un paquete: el segundo nivel del nombre de lo que el paquete tiene (`<paquete>.<schema>.<nombre>`). Ordena —es la carpeta donde vive su contenido— y nombra: `ventas.espana.pedidos` y `ventas.francia.pedidos` son dos documentos.\n\nEs un documento porque un schema existe antes que lo que contiene y tiene dueño: una carpeta vacía no existe en un árbol bajo control de versiones. Vive directamente en `<paquete>/<name>/`, y esa carpeta es el schema (OOS2036). `default` existe sin declararse; `information_schema` está reservado.\n\nNormativo: spec/v1alpha13/01-el-schema.md §2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha13"
+    },
+    "kind": {
+      "const": "Schema"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "description": "El nombre del schema, y el de su carpeta. Ni `default` (existe sin declararse) ni `information_schema` (reservado, como en SQL).",
+          "allOf": [
+            {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            },
+            {
+              "not": {
+                "enum": [
+                  "default",
+                  "information_schema"
+                ]
+              }
+            }
+          ]
+        },
+        "namespace": {
+          "description": "El paquete (OOS2030), como en todo contenido gobernado.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": {
+          "description": "Quien responde del schema: `team:` o `user:`, la misma forma que en Package, View y Dataset. Sin el, el dueño del paquete (OOS2009 si no lo es).",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        }
+      }
+    }
+  }
+}

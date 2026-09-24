@@ -103,6 +103,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2033` | un agregado sin agrupación no tiene linaje | v1alpha8 02 §5.8 |
 | `OOS2034` | `having` sobre algo que no es un agregado | v1alpha8 02 §5.8 |
 | `OOS2035` | dos documentos con la misma identidad (`kind` y nombre cualificado) | 90 §5.2 |
+| `OOS2036` | el documento no vive en la carpeta de su schema (o uno en `default` vive en la de uno declarado; o un `Schema` no está directamente en la carpeta que nombra) | v1alpha13 01 §3, §7 |
+| `OOS2037` | `metadata.schema` nombra un schema que el paquete no declara | v1alpha13 01 §3, §7 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
