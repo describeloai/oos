@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha14/function.schema.json",
+  "title": "Function",
+  "description": "Logica encapsulada como codigo que lee o edita los hechos de la copia, y el puente por el que un modelo soberano infiere sobre un conjunto de ellos. Lo que lee (`over`, `reads`: vistas) y lo que causa (`effects`) se leen en el documento: `lee(f) ⊆ reads(f)` y `causa(f) ⊆ effects(f)`. Tres caras —leer, editar, inferir— con un solo regimen: el sandbox es un conducto, los endosos deciden la integridad, y una funcion no aplica: propone.\n\nNormativo: spec/v1alpha10/01-function.md\n\nv1alpha13: admite `metadata.schema`, y su nombre cualificado es `<paquete>.<schema>.<nombre>` (spec/v1alpha13/01-el-schema.md). Lo demas, igual que en v1alpha10.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha14"
+    },
+    "kind": {
+      "const": "Function"
+    },
+    "metadata": {
+      "description": "Sin `labels`, y la ausencia es normativa: la integridad de una funcion SE COMPUTA de sus endosos (v1alpha2 §6).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "schema": {
+          "description": "El schema del paquete donde vive el documento (v1alpha13): el segundo nivel de su nombre, `<paquete>.<schema>.<nombre>`. Sin ella, `default`. Nombra un `Schema` declarado en el paquete (OOS2037) y el fichero vive en su carpeta (OOS2036). Normativo: spec/v1alpha13/01-el-schema.md §3",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime"
+      ],
+      "properties": {
+        "runtime": {
+          "enum": [
+            "wasm",
+            "model"
+          ],
+          "description": "wasm: un modulo sin red. model: un modelo del arbol (v1alpha9)."
+        },
+        "entrypoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "timeout": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^[0-9]+(Ki|Mi|Gi)$"
+            }
+          }
+        },
+        "over": {
+          "description": "La vista cuyas filas son la unidad de trabajo: la funcion se aplica una vez por fila, y `target` en las precondiciones es esa fila. Sin `over`, una vez sobre el conjunto entero de `reads`. Tiene que resolver a una View (OOS7014).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "reads": {
+          "description": "Las vistas que la funcion puede leer ademas de `over`. Lo que exponen entra en el sandbox con sus etiquetas: el sandbox es un conducto (04-flow, OOS4001/OOS4002) y lo leido arrastra integridad (OOS7001). Cada una tiene que resolver a una View (OOS7014).\n\nN4 · CONJUNTO.",
+          "type": "array",
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "input": {
+          "$ref": "#/$defs/parameters"
+        },
+        "output": {
+          "$ref": "#/$defs/parameters"
+        },
+        "preconditions": {
+          "description": "Del contrato, no del codigo: CEL total, terminante y sin efectos, evaluadas antes. Leen `target.<campo>` de `over`; un campo que `over` no expone es OOS7014.\n\nN4 · CONJUNTO.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "expr"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "expr": {
+                "$ref": "#/$defs/cel"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 512
+              }
+            }
+          }
+        },
+        "effects": {
+          "description": "OPCIONAL en v1alpha10: una funcion que lee y devuelve es legitima. Si esta, es la superficie de efecto de v1alpha2 entera: la funcion no escribe, el motor escribe en su nombre lo declarado; `writes` tiene que resolver (OOS2005); todos sobre la misma fuente (OOS7008); el destino declara integridad (OOS7005) y no es derivado (OOS7006); aterriza en la copia de la vista (OOS2025 si no la hay, OOS2024 sin `changes.key`).\n\nN4 · CONJUNTO.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "writes"
+            ],
+            "properties": {
+              "writes": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "endorsements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../v1alpha2/type/endorsement.schema.json#/$defs/endorsement"
+          }
+        },
+        "authorization": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        },
+        "idempotency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "window": {
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+            }
+          }
+        },
+        "model": {
+          "type": "string",
+          "pattern": "^modelo/[a-z0-9][a-z0-9.-]*$",
+          "description": "El nodo del arbol que invoca: modelo/<nombre>. Tiene que resolver a un kind: Model (OOS2005)."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Lo que se le dice al modelo. Solo con runtime: model."
+        }
+      },
+      "allOf": [
+        {
+          "description": "Una funcion toca algo: sin `over`, sin `reads` y sin `effects` es OOS1004.",
+          "anyOf": [
+            {
+              "required": [
+                "over"
+              ]
+            },
+            {
+              "required": [
+                "reads"
+              ]
+            },
+            {
+              "required": [
+                "effects"
+              ]
+            }
+          ]
+        },
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "model"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "model"
+            ],
+            "not": {
+              "required": [
+                "entrypoint"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "runtime": {
+                "const": "wasm"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "entrypoint"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "model"
+                  ]
+                },
+                {
+                  "required": [
+                    "prompt"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "cel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      },
+      "propertyNames": {
+        "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha14/view.schema.json",
+  "title": "View",
+  "description": "Una consulta SQL con nombre, gobernada (v1alpha14). Nace del lado del codigo -un CREATE VIEW, un .sql- y se promociona siendo SQL. Lo que se gobierna de ella -el contrato, lo que lee, el linaje, el canal lateral- se DERIVA de la consulta. La forma estructurada de v1alpha8-v1alpha13 (from, fields, where, groupBy, having) no es de esta version (OOS1005). Normativo: spec/v1alpha14/01-la-vista-es-sql.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha14"
+    },
+    "kind": {
+      "const": "View"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "schema": {
+          "description": "El schema del paquete donde vive el documento (v1alpha13): el segundo nivel de su nombre, `<paquete>.<schema>.<nombre>`. Sin ella, `default`. Nombra un `Schema` declarado en el paquete (OOS2037) y el fichero vive en su carpeta (OOS2036). Normativo: spec/v1alpha13/01-el-schema.md §3",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "labels": {
+          "description": "Ciclo de vida de ESTE DOCUMENTO, y nada más. La única clave admitida es `oos.maturity`.\n\nLa vista no lleva significado: si pudiera declarar `gdpr.sensitivity` habría dos sitios diciendo qué es una columna, y el día que discrepen ninguno diría cuál manda. Pero la madurez no dice nada de una columna: dice si esta pregunta está acordada. `discover` propone vistas y hasta aquí no podía marcarlas, así que una vista adivinada de un catálogo era indistinguible de una que alguien acordó preguntarse.\n\nEs el mismo corte que ya lleva `Concept`, y por el mismo motivo: lo acuñado por inferencia tiene que poder decir que todavía no es verdad.",
+          "type": "object",
+          "propertyNames": {
+            "const": "oos.maturity"
+          },
+          "additionalProperties": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "dialect",
+        "sql",
+        "columns"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde de esta vista. La tabla no tiene dueno de negocio —tiene dueno tecnico por su datasource— y la vista si, porque decide dos cosas que un puntero no decide: que se expone y con que frescura. La misma forma que en Package: `team:` o `user:`.",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "dialect": {
+          "description": "El dialecto en que `sql` esta escrito. En esta version, `duckdb`: el motor de la sesion de referencia. Servirla a otro motor es de una version posterior (§8).",
+          "enum": [
+            "duckdb"
+          ]
+        },
+        "sql": {
+          "description": "UNA consulta: un SELECT -con WITH, UNION, joins, expresiones, agregados, ventanas-, en el dialecto de `dialect`. Nada que escriba y una sola sentencia; lee por NOMBRE del arbol (una, dos o tres partes; OOS2018), nunca por funcion (read_parquet, una URL): OOS2038. Entra en la forma canonica tal cual, byte a byte.",
+          "type": "string",
+          "minLength": 1
+        },
+        "columns": {
+          "description": "EL CONTRATO: lo que la vista expone, columna a columna, con su tipo en el vocabulario de OOS. DERIVADO de `sql`: lo escribe quien declara la vista, resolviendo la consulta contra las columnas de sus fuentes, y sus nombres DEBEN ser exactamente los que la consulta proyecta (OOS2039). Es lo que una entidad con `backedBy` nombra (OOS2011), lo que un dataset que la copia recibe y lo que otra vista lee. Una persona puede anadir `description`; no cambiar un nombre ni un tipo sin cambiar la consulta. Normativo: spec/v1alpha14/01-la-vista-es-sql.md §4",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "description": "El tipo en el vocabulario de OOS, el que el motor da a la columna al resolver la consulta.",
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 4096
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "moved": {
+          "description": "Campos renombrados. Es el ALCANCE ESTRECHO de la disciplina de renombrado, y la casa la elige una sola regla: lo dice el que sobrevive —y aquí sobrevive la vista—.\n\nUn nombre anunciado no desaparece en silencio: desaparece con instrucciones, y `OOS5001` deja de tratarlo como una supresión.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "since"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "to": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "since": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "reserved": {
+          "description": "Nombres de campo retirados que NO pueden reutilizarse. Usar uno es OOS2006.\n\nEs el campo reservado de Protobuf un piso más abajo que en la entidad, y previene lo mismo: que una consulta antigua devuelva una cifra correcta para la pregunta equivocada.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "until": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-[a-z][a-z0-9]*-": {
+          "description": "Punto de extension."
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  }
+}

@@ -105,6 +105,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2035` | dos documentos con la misma identidad (`kind` y nombre cualificado) | 90 §5.2 |
 | `OOS2036` | el documento no vive en la carpeta de su schema (o uno en `default` vive en la de uno declarado; o un `Schema` no está directamente en la carpeta que nombra) | v1alpha13 01 §3, §7 |
 | `OOS2037` | `metadata.schema` nombra un schema que el paquete no declara | v1alpha13 01 §3, §7 |
+| `OOS2038` | la consulta de una vista no es **un** `SELECT` que lee por nombre: varias sentencias, una que escribe o crea, o una fuente leída por función (`read_parquet`, una URL) | v1alpha14 01 §2, §3 |
+| `OOS2039` | el contrato de una vista (`columns`) no es exactamente lo que su consulta proyecta | v1alpha14 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
@@ -134,6 +136,7 @@ credenciales, sin tocar un solo dato.
 | `OOS4011` | conducto sin autorización declarada — lo usa un binding, una función, una vista `materialized`, o **la travesía de una relación con `via`**, que lo instancia sin declararlo (04 §4.2) | 04 §4 |
 | `OOS4012` | propiedad que rebaja la etiqueta heredada de su entidad | 02 §4.1 |
 | `OOS4014` | `examples` no marcados como sintéticos en propiedad etiquetada por encima de `⊥` | 02 §4.2 |
+| `OOS4016` | predicado que ordena —rango, `BETWEEN`, patrón, función— sobre una columna cuya raíz lleva una etiqueta de confidencialidad por encima de `⊥` (el canal lateral, sobre el linaje de una vista SQL) | v1alpha14 01 §6 |
 
 ### Ejemplo de mensaje para `OOS4001`
 
