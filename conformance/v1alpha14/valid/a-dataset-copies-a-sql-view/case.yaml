@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#5
+level: L0
+expects: accept
+summary: >
+  Un dataset guarda las filas de una vista SQL por un conducto que admite lo que lleva: `dni` (high) sale directo, y el conducto admite high.

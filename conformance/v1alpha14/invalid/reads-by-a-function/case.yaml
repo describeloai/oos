@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#3
+level: L0
+expects: OOS2038
+summary: >
+  Se lee por nombre, nunca por función: `read_parquet` lee bytes que el árbol no nombra, sin linaje ni conducto.

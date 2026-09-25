@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: empleados, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT employee_id AS id, national_id AS dni, country AS pais
+    FROM hr.employees
+    WHERE deleted = false
+  columns:
+    id: { type: String }
+    dni: { type: String }
+    pais: { type: String }

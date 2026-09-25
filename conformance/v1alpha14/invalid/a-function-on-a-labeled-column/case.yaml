@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#6
+level: L0
+expects: OOS4016
+summary: >
+  Una función aplicada a la columna antes de compararla no es una igualdad sobre ella.

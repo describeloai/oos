@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#3
+level: L0
+expects: OOS2018
+summary: >
+  Lo que se lee DEBE resolver a una Table, una View o un Dataset del árbol.

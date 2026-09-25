@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: por_pais, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT pais, count(*) AS n FROM hr.empleados GROUP BY pais HAVING count(*) >= 8
+  columns:
+    pais: { type: String }
+    n: { type: Integer }

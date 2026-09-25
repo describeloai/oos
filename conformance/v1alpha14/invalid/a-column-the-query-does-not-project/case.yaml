@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#4
+level: L0
+expects: OOS2039
+summary: >
+  El contrato no se inventa: `nombre` no sale de la consulta.

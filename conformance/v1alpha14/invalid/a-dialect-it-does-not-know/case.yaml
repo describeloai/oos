@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#8
+level: L0
+expects: OOS1004
+summary: >
+  En esta versión hay un dialecto, `duckdb`; servir otro es de una versión posterior.

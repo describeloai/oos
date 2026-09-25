@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: vuelta, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT id FROM hr.ida
+  columns:
+    id: { type: String }

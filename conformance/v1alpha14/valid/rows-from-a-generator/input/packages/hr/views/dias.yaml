@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: dias, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT i AS dia FROM range(7) AS t(i)
+  columns:
+    dia: { type: Integer }

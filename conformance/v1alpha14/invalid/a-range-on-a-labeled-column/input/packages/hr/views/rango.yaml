@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: rango, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT id FROM hr.empleados WHERE dni > 'M'
+  columns:
+    id: { type: String }

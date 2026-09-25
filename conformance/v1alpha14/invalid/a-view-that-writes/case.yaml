@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#2
+level: L0
+expects: OOS2038
+summary: >
+  Una vista no es un camino de escritura: nada que escriba.

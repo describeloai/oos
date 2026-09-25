@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#4
+level: L0
+expects: OOS2018
+summary: >
+  Cada columna que la consulta nombra existe en su fuente: `salary` no está en `hr.employees`.

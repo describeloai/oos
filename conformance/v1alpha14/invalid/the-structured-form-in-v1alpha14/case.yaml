@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#2
+level: L0
+expects: OOS1005
+summary: >
+  En v1alpha14 una vista es sólo SQL: `from`, `fields` y `where` son claves desconocidas.

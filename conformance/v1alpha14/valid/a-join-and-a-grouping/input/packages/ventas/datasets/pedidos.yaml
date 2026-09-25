@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  columns:
+    id: { type: Integer }
+    cliente_id: { type: Integer }
+    total: { type: Decimal }
+  changes: { mode: append }

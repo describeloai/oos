@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: con_dni_copia, namespace: hr }
+spec:
+  owner: team:hr
+  from: { view: hr.con_dni }
+  freshness: 1h

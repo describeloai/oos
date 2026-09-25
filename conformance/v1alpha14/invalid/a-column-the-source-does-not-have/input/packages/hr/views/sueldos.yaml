@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: sueldos, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT employee_id AS id, salary FROM hr.employees
+  columns:
+    id: { type: String }
+    salary: { type: Decimal }

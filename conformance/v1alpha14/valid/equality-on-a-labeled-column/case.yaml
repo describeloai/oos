@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#6
+level: L0
+expects: accept
+summary: >
+  Sobre una columna etiquetada valen igualdad, pertenencia y ausencia: sólo revelan pertenencia a una clase, que es lo que la vista ya afirma.

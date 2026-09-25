@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: gasto_por_cliente, namespace: ventas }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: |
+    SELECT c.id, c.nombre, count(p.id) AS pedidos, sum(p.total) AS gastado
+    FROM ventas.clientes c
+    LEFT JOIN ventas.pedidos p ON p.cliente_id = c.id
+    GROUP BY c.id, c.nombre
+  columns:
+    id: { type: Integer }
+    nombre: { type: String }
+    pedidos: { type: Integer }
+    gastado: { type: Decimal }

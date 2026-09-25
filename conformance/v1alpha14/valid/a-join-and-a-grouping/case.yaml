@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#4
+level: L0
+expects: accept
+summary: >
+  Lo que la forma estructurada no dejaba escribir: un join, un agregado y una agrupación. El contrato nombra exactamente lo que la consulta proyecta.

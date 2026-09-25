@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#3
+level: L0
+expects: accept
+summary: >
+  Una función que genera filas sin leer nada se admite: no hay bytes que el árbol no nombre.

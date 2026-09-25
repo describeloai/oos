@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: fuera, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    SELECT id FROM read_parquet('s3://lago/empleados/*.parquet')
+  columns:
+    id: { type: String }

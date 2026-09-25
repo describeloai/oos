@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: escribe, namespace: hr }
+spec:
+  owner: team:hr
+  dialect: duckdb
+  sql: |
+    INSERT INTO hr.otros SELECT id FROM hr.empleados
+  columns:
+    id: { type: String }
