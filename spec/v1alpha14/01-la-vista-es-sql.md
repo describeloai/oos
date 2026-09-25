@@ -107,9 +107,18 @@ sale**:
   `upper(nombre)`), con todas las que lee.
 
 Y además, **INDIRECT**, como hacía el `where` desde v1alpha7: cada columna que la consulta
-**mira sin devolverla** —en un `WHERE`, en la condición de un `JOIN`, en un `GROUP BY`, un
-`HAVING`, un `QUALIFY`, la partición o el orden de una ventana, o una subconsulta que decide
-filas— deja una arista hacia **todas** las columnas de salida: qué filas salen depende de ella.
+**mira sin devolverla** —en un `WHERE`, en la condición de un `JOIN`, un `QUALIFY`, la
+partición o el orden de una ventana, o una subconsulta que decide filas— deja una arista hacia
+**todas** las columnas de salida: qué filas salen depende de ella.
+
+La agrupación, como desde v1alpha8 (§5.8 de `02-view`):
+
+- una clave de `GROUP BY` que la consulta **proyecta** deja su arista INDIRECT hacia las
+  columnas que **no** son claves —los agregados, cuyo valor depende de cómo se juntan las
+  filas—; hacia sí misma ya es directa;
+- una clave que **no** se proyecta decide filas que no se ven, y deja su arista hacia todas;
+- un `HAVING` mira lo que nombra **y las claves de grupo**, porque recorta por un agregado
+  que sale de ellas: arista hacia todas.
 
 La **regla de flujo** ([`v1alpha1/04-flow`](../v1alpha1/04-flow.md) §2) corre sobre estas
 aristas exactamente como corría sobre las de la forma: la etiqueta de una raíz sube por las
