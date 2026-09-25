@@ -58,6 +58,8 @@ spec:
 - `metadata.schema` es la de v1alpha13 §3: un schema declarado del paquete, o `default`
   (`OOS2037`), y el documento vive en su carpeta, a cualquier profundidad (`OOS2036`). La
   carpeta `modelos/` es la costumbre, como `views/`: ordena y no nombra.
+- `metadata.name` **no lleva puntos** (minúsculas, dígitos, `-` y `_`): el punto separa las
+  partes de la referencia (§3). v1alpha9 los admitía porque el nombre era una sola parte.
 - `spec` no cambia: todo lo de `01-model` (v1alpha9) §3 vale entero.
 - Su identidad es `Model:<paquete>.<schema>.<nombre>`. **Es único por schema**: dos `extractor`
   en `ventas.espana` son `OOS2035`; uno en `ventas.espana` y otro en `ventas.francia`, dos

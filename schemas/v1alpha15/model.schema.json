@@ -28,8 +28,8 @@
       "properties": {
         "name": {
           "type": "string",
-          "pattern": "^[a-z0-9][a-z0-9.-]*$",
-          "description": "Unico en su schema. Una Function del mismo schema lo nombra modelo/<name>."
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "description": "Unico en su schema. Sin puntos desde v1alpha15: el punto separa las partes de la referencia (modelo/<paquete>.<schema>.<nombre>)."
         },
         "namespace": {
           "description": "El paquete donde vive (OOS2030).",
