@@ -210,6 +210,7 @@ spec/v1alpha11/    borrador de alcance — publicar: el modelo entrenado como as
 spec/v1alpha12/    borrador de alcance — tener: el dataset, lo que se tiene, como un documento y no dos disfraces
 spec/v1alpha13/    borrador de alcance — ordenar: el schema, segundo nivel del nombre (`<paquete>.<schema>.<nombre>`)
 spec/v1alpha14/    borrador de alcance — escribir: la vista es SQL, y lo gobernado se deriva de la consulta
+spec/v1alpha15/    borrador de alcance — situar: el modelo vive en un paquete y un schema (`<paquete>.<schema>.<nombre>`)
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
@@ -221,6 +222,7 @@ schemas/v1alpha11/ trained-model
 schemas/v1alpha12/ dataset
 schemas/v1alpha13/ schema, y el contenido gobernado con `metadata.schema` (la view, por fin, como la dejó v1alpha12)
 schemas/v1alpha14/ view con cuerpo SQL (`sql`, `dialect`, el contrato `columns`); el resto, el de v1alpha13 en esta versión
+schemas/v1alpha15/ model con `namespace` y `schema`
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia

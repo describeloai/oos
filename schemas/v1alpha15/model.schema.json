@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha15/model.schema.json",
+  "title": "Model",
+  "description": "El modelo: un documento que nombra UN PERFIL CERTIFICADO y UN TIER, y que desde v1alpha15 VIVE EN UN PAQUETE Y UN SCHEMA, como lo que lee y lo que escribe: tiene namespace (el paquete) y schema (default si falta). Su identidad es Model:<paquete>.<schema>.<nombre>, unica por schema.\n\nNo lleva runtime, ni recursos, ni pesos: todo eso es del perfil. Que el perfil exista en la lista de certificacion NO lo comprueba la gramatica.\n\nNormativo: spec/v1alpha15/00-scope.md (y spec/v1alpha9/01-model.md para spec).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha15"
+    },
+    "kind": {
+      "const": "Model"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "description": "Unico en su schema. Sin puntos desde v1alpha15: el punto separa las partes de la referencia (modelo/<paquete>.<schema>.<nombre>)."
+        },
+        "namespace": {
+          "description": "El paquete donde vive (OOS2030).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "schema": {
+          "description": "Un schema declarado del paquete; sin ella, default (OOS2037), y el fichero vive en su carpeta (OOS2036). Normativo: spec/v1alpha13/01-el-schema.md §3",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "tier",
+        "task"
+      ],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*/[a-z0-9][a-z0-9.-]*$",
+          "description": "<maquina>/<modelo>: un perfil certificado, con sus numeros. Un perfil sin numero no existe."
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Los pesos que el perfil sirve. Lo que corre es esto, o no corre. Opcional hasta que el perfil publique el suyo."
+        },
+        "tier": {
+          "enum": [
+            "shared",
+            "dedicated"
+          ],
+          "description": "shared: un pod por modelo, se cobra por token. dedicated: una maquina para esta celda, precio fijo."
+        },
+        "task": {
+          "enum": [
+            "chat",
+            "embed",
+            "rerank"
+          ],
+          "description": "Lo que una funcion puede pedirle."
+        }
+      }
+    }
+  }
+}
