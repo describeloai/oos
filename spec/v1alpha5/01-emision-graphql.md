@@ -86,6 +86,7 @@ es **nombrarlo y mapear el vocabulario que existe de verdad**, que es el del mot
 | `Float` | `Float` | |
 | `Boolean` | `Boolean` | |
 | `Decimal` | `scalar Decimal` | `Float` perdería precisión, y una cifra contable no se redondea al emitirla |
+| `Decimal<p, s>` | `scalar Decimal` | el mismo escalar: el valor ya viaja como cadena exacta, y la precisión es del contrato de la copia (v1alpha1 02 §3.2), no de la forma del valor. Un escalar por combinación, como §3.1 hace con `Money`, no daría nada que el cliente pueda comprobar |
 | `Date` · `Time` · `DateTime` · `DateTimeTz` | `scalar Date` · `Time` · `DateTime` · `DateTimeTz` | uno por cada uno: colapsarlos perdería si lleva zona |
 | `Opaque` | `scalar Opaque` | |
 | `list<T>` | `[T!]` | un solo nivel, como en OOS |
