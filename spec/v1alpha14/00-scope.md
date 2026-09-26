@@ -108,6 +108,11 @@ Porque nunca estuvo en la forma: estaba en lo que la forma dejaba saber.
 
 ## 6. Compatibilidad y migración
 
+**Con una excepción, de seguridad**: la regla de flujo sobre el linaje alcanza también a las
+vistas de antes, y una copia que recorta por una columna etiquetada sin copiarla —el flujo
+implícito que v1alpha7 describía y nadie comprobaba al compilar— pasa a ser `OOS4001` u
+`OOS4002` (§7 de `01`). No cambia ningún resultado que no fuera una fuga.
+
 Ningún documento de v1alpha1 a v1alpha13 cambia de resultado: una vista v1alpha8–v1alpha13
 sigue teniendo su forma, y todo lo que la nombra —una entidad con `backedBy`, un dataset con
 `from: { view }`, otra vista— la sigue leyendo igual. La migración es **mecánica** y no pierde

@@ -168,6 +168,15 @@ Una vista v1alpha8–v1alpha13 **sigue siendo lo que era**: su forma compila con
 versión, y todo lo que la nombra la sigue leyendo igual. Un árbol puede tener vistas de las dos
 formas mientras migra.
 
+**Una excepción, y es de seguridad.** Desde esta versión la regla de flujo corre sobre el linaje
+por columna —con sus aristas INDIRECT (§5)— para **toda** vista, también las de antes: una
+implementación gobierna una sola clase de vista. Una copia de v1alpha7 a v1alpha13 que expone
+`id` y recorta por una columna etiquetada —`where: { nationalId: [...] }`— revela quién tiene ese
+valor, y hasta ahora la regla de flujo sólo miraba lo que se copia: compilaba. Ahora es `OOS4001`
+u `OOS4002`, como la misma vista escrita en SQL. Es el flujo implícito que v1alpha7 ya describía
+(«un predicado no filtra, LEE») y que ninguna versión anterior comprobaba al compilar; no
+cambia ningún resultado que no fuera una fuga.
+
 La migración es **mecánica**, porque la forma estructurada **es** una consulta:
 
 | antes (v1alpha13) | después (v1alpha14) |
