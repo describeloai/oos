@@ -1,4 +1,4 @@
-apiVersion: oos.dev/v1alpha8
+apiVersion: oos.dev/v1alpha14
 kind: View
 
 metadata:
@@ -12,18 +12,34 @@ metadata:
 spec:
   owner: team:supply-chain
 
-  from: { table: shipment_v2 }
+  # Migrada de v1alpha8 con `ore migrate v1alpha14`: la misma pregunta, escrita
+  # como la consulta que siempre fue.
+  dialect: duckdb
+  sql: |
+    SELECT
+      "SHP_UUID" AS "shipmentId",
+      "FK_SUPPLIER_ID" AS "supplierId",
+      "FK_SKU_CODE" AS "skuCode",
+      "QTY_UNITS" AS "quantity",
+      "DT_PROMISED_UTC" AS "promisedAt",
+      "CD_STATUS" AS "status",
+      "DT_DELIVERED_UTC" AS "deliveredAt",
+      "DT_ROW_VALID_FROM" AS "validFrom",
+      "DT_ROW_VALID_TO" AS "validTo"
+    FROM "supply"."shipment_v2"
 
-  fields:
-    shipmentId:  "SHP_UUID"
-    supplierId:  "FK_SUPPLIER_ID"
-    skuCode:     "FK_SKU_CODE"
-    quantity:    "QTY_UNITS"
-    promisedAt:  "DT_PROMISED_UTC"
-    status:      "CD_STATUS"
-    deliveredAt: "DT_DELIVERED_UTC"
-    validFrom:   "DT_ROW_VALID_FROM"
-    validTo:     "DT_ROW_VALID_TO"
+  # El contrato, derivado de la consulta; `String` porque `shipment_v2` no tipa
+  # sus columnas.
+  columns:
+    shipmentId: { type: String }
+    supplierId: { type: String }
+    skuCode: { type: String }
+    quantity: { type: String }
+    promisedAt: { type: String }
+    status: { type: String }
+    deliveredAt: { type: String }
+    validFrom: { type: String }
+    validTo: { type: String }
 
   # ---------------------------------------------------------------------
   # Dos cosas que el binding tenía y esto no. Están dichas porque una
@@ -41,12 +57,13 @@ spec:
   #     El binding traía
   #       delayDays:
   #         expression: "DATEDIFF(day, DT_PROMISED_UTC, COALESCE(...))"
-  #     y eso **no cabe aquí**: `fields` renombra, y nada más. No es una
-  #     limitación de v1alpha8 — v1alpha7 ya la causó al absorber el binding, y
-  #     no se notó porque nada se había migrado todavía. `00-scope` §5.3.
+  #     y en v1alpha8 eso no cabía: `fields` renombraba, y nada más
+  #     (`00-scope` §5.3). `supply.Shipment.delayDays` sigue siendo una
+  #     propiedad DERIVADA: conserva su `derivedFrom`, que es lo que propaga
+  #     las etiquetas.
   #
-  #     `supply.Shipment.delayDays` sigue existiendo como propiedad DERIVADA:
-  #     conserva su `derivedFrom`, que es lo que propaga las etiquetas, y pierde
-  #     que Snowflake la calcule. Quien la quiera calculada en el origen, hoy,
-  #     declara una vista del almacén y la registra como otra `Table`.
+  #     Desde v1alpha14 cabe: la vista es una consulta, y la cuenta sería una
+  #     columna más (`date_diff('day', ...) AS "delayDays"`). No se añade al
+  #     migrar, porque migrar es mecánico —expone lo mismo que antes—; añadirla
+  #     es un cambio de la pregunta, y lo decide su dueño.
   # ---------------------------------------------------------------------

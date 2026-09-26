@@ -122,6 +122,15 @@ Está aquí porque una migración que solo enumera lo que conserva promete que n
 nada. No es una pérdida de v1alpha8: v1alpha7 ya la causó al absorber el binding en la
 vista, y no se notó porque nada se había migrado todavía.
 
+### 5 · La migración a v1alpha14: la vista es SQL
+
+Las dos vistas (`hr.empleados`, `supply.envios`) son ya v1alpha14, migradas con
+`ore migrate v1alpha14`: cada una es **la consulta que siempre fue** —`from` es el `FROM`,
+`fields` el `SELECT`— con su contrato (`columns`) derivado de ella, y el árbol da los mismos
+diagnósticos que antes. Lo que la §4 dejó sin sitio ahora lo tiene: `delayDays` sería una
+columna más de la consulta de `supply.envios`. No se añade al migrar, porque migrar es
+mecánico y expone lo mismo; añadirla es cambiar la pregunta, y lo decide su dueño.
+
 ---
 
 ## Cómo se recorre
