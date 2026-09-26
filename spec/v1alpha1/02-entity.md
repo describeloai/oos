@@ -265,7 +265,10 @@ son un cambio de precisión, `OOS5010`.
 ### 3.5 · El decimal en las operaciones de una vista
 
 Una vista no declara tipos: los deriva de lo que lee. Sobre `Decimal<p, s>` la derivación es
-esta, y es **normativa** porque de ella depende el físico de la copia:
+esta, y es **normativa** porque de ella depende el físico de la copia. Rige donde la
+implementación tipa la vista; una **vista SQL** (v1alpha14 `01-la-vista-es-sql`) toma los tipos
+que describe su motor al resolver la consulta —con DuckDB, `avg` es `DOUBLE`—, y lo que de ahí
+sea un decimal con precisión se escribe `Decimal<p, s>`:
 
 | operación | tipo |
 |---|---|
