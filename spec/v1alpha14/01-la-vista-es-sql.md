@@ -167,7 +167,7 @@ La migración es **mecánica**, porque la forma estructurada **es** una consulta
 | `from: { table: pedidos_t }` · `from: { view: v }` · `from: { dataset: d }` | `FROM <el nombre de la fuente>` |
 | `fields: { importe: total, pais: pais }` | `SELECT total AS importe, pais` |
 | `fields: { n: "count()", s: "sum(total)" }` + `groupBy: [pais]` | `SELECT pais, count(*) AS n, sum(total) AS s … GROUP BY pais` |
-| `where: { pais: ES, estado: [pagado, enviado], baja: null }` | `WHERE pais = 'ES' AND estado IN ('pagado', 'enviado') AND baja IS NULL` |
+| `where: { pais: ES, estado: [pagado, enviado], baja: [] }` | `WHERE pais = 'ES' AND estado IN ('pagado', 'enviado') AND baja IS NULL` |
 | `having: { n: ">= 8" }` | `HAVING count(*) >= 8` |
 | los campos que expone | `columns`, con el tipo que la fuente da a cada uno |
 | `moved`, `reserved` | igual |

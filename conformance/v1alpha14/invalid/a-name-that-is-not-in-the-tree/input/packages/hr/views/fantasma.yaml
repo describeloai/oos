@@ -1,6 +1,6 @@
 apiVersion: oos.dev/v1alpha14
 kind: View
-metadata: { name: nadie, namespace: hr }
+metadata: { name: fantasma, namespace: hr }
 spec:
   owner: team:hr
   dialect: duckdb
