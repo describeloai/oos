@@ -274,8 +274,8 @@ esta, y es **normativa** porque de ella depende el físico de la copia:
 | `avg(Decimal<p, s>)` | `Decimal<38, max(s, 9)>` |
 | `min`, `max` | el tipo de lo que agregan |
 | el **supertipo** de `Decimal<p₁, s₁>` y `Decimal<p₂, s₂>` —una unión, las dos ramas de un `CASE`, los dos lados de una comparación o de un `join`— | `Decimal<e + s, s>` con `s = max(s₁, s₂)` y `e = max(p₁ − s₁, p₂ − s₂)` |
-| el supertipo con un `Integer` | el del decimal con `Decimal<19, 0>` |
 | el supertipo con un `Decimal` sin precisión | `Decimal`: la precisión deja de saberse |
+| con un `Integer` | **no hay supertipo**: un entero no se mezcla con un decimal sin decirlo, con precisión o sin ella. El literal se escribe decimal (`"100"`), y el `Integer` → `Decimal<p, s>` de §3.4 es la regla del *cambio* de un tipo, no de una comparación |
 
 Es la regla de BigQuery y la de DuckDB para `sum`; para `avg` es la de BigQuery, porque la de
 DuckDB (`DOUBLE`) cambia un número exacto por uno binario, que es el par que §3.4 prohíbe.
