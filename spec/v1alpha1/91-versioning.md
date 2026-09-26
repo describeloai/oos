@@ -131,14 +131,14 @@ Normativa. Una implementación conforme **DEBE** clasificar así.
 |---|---|
 | eliminar una propiedad **o un campo de vista** sin `moved` ni `reserved` | `OOS5001` |
 | estrechar un tipo (`string` → `enum`; retirar valores de un `enum`) | `OOS5002` |
-| **ensanchar** un tipo — `Integer` → `Decimal`, añadir valores a un `enum` | **ninguno** |
+| **ensanchar** un tipo — `Integer` → `Decimal`, `Decimal<10, 2>` → `Decimal<12, 2>`, añadir valores a un `enum` ([`02-entity`](02-entity.md) §3.4) | **ninguno** |
 | endurecer cardinalidad (`0..n` → `1..n`) | `OOS5003` |
 | cambiar `primaryKey` | `OOS5006` |
 | cambiar el `via` de una relación | `OOS5027` |
 | eliminar una entidad, una vista o una relación **sin anunciarlo en el manifiesto** | `OOS5007` |
 | rebajar `oos.maturity` de una entidad `STABLE` | `OOS5008` |
 | **elevar** la etiqueta de una propiedad | `OOS5009` |
-| cambiar la unidad o la precisión de un tipo paramétrico | `OOS5010` |
+| cambiar la unidad o la precisión de un tipo paramétrico — también `Decimal<p, s>` cuando no ensancha, y declarar o retirar su precisión (`Decimal` ↔ `Decimal<p, s>`) | `OOS5010` |
 | **rebajar** la autorización de un conducto | `OOS5026` |
 | **estrechar el recorte de una vista** — sirve menos filas | `OOS5028` |
 | **aflojar o retirar la `freshness`** de una vista | `OOS5030` |

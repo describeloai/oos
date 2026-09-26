@@ -199,6 +199,28 @@ Su serialización canónica es **cadena**, no número JSON
 > Una implementación **DEBERÍA** reconocer un paramétrico truncado —`Money<EUR` sin cerrar—
 > y señalar esta causa, que es la que el usuario no ve.
 
+#### `Decimal<p, s>` — un decimal con su precisión y su escala
+
+```yaml
+total:  { type: "Decimal<38, 9>" }     # un NUMERIC de BigQuery
+precio: { type: "Decimal<10, 2>" }     # un numeric(10,2) de PostgreSQL
+```
+
+`p` es la **precisión** —cuántas cifras en total— y `s` la **escala** —cuántas detrás de la
+coma—, con `1 ≤ p ≤ 38` y `0 ≤ s ≤ p`. Fuera de ese rango, o sin los dos números, es
+`OOS3002`. El techo de 38 no es una preferencia: es el de Iceberg y el de Parquet
+(`decimal128`), donde vive la copia de los datos.
+
+`Decimal` a secas sigue siendo un escalar válido y **no es lo mismo**: dice que la precisión
+**no se declaró**, y el físico lo elige la implementación. La diferencia se midió (ORE,
+2026-09-26): con la precisión sin declarar, ORE copiaba en `decimal(38, 18)`, que admite 20
+cifras enteras; un `NUMERIC` de BigQuery admite 29, y bastaba un valor así para que la columna
+entera dejara de ser un número.
+
+Un tipo del origen que no cabe en 38 cifras —el `BIGNUMERIC` de BigQuery, un `numeric` de
+PostgreSQL de más precisión— **no es un `Decimal<p, s>`**: su valor exacto viaja como
+`String`, y la cita del origen (`physicalType`) dice qué era.
+
 ### 3.3 · Listas y referencias
 
 `list<T>` de escalares, un solo nivel. `ref` a otra entidad (§6).
@@ -227,6 +249,41 @@ Lo normativo es lo que **no** está, porque son los pares que parecen serlo:
 
 Un `enum` ensancha cuando **gana** valores y estrecha cuando los pierde. Lo usa
 [`91-versioning`](91-versioning.md) §5.1 para no cobrar `OOS5002` por un ensanche.
+
+**Entre decimales con precisión**, `Decimal<p₁, s₁>` ensancha a `Decimal<p₂, s₂>` cuando no
+pierde ninguna cifra por ningún lado: `s₂ ≥ s₁` **y** `p₂ − s₂ ≥ p₁ − s₁`. `Decimal<10, 2>` →
+`Decimal<12, 2>` ensancha; `Decimal<12, 4>` → `Decimal<12, 2>` no (pierde dos decimales), y
+tampoco `Decimal<12, 2>` → `Decimal<12, 4>` (pierde dos cifras enteras).
+
+`Integer` → `Decimal<p, s>` ensancha solo si `p − s ≥ 19`: el entero de las copias es de 64
+bits, y su máximo tiene 19 cifras.
+
+Declarar o retirar la precisión **no es un ensanche en ninguna dirección**: `Decimal` →
+`Decimal<p, s>` fija un contrato que no había, y `Decimal<p, s>` → `Decimal` lo retira. Los dos
+son un cambio de precisión, `OOS5010`.
+
+### 3.5 · El decimal en las operaciones de una vista
+
+Una vista no declara tipos: los deriva de lo que lee. Sobre `Decimal<p, s>` la derivación es
+esta, y es **normativa** porque de ella depende el físico de la copia:
+
+| operación | tipo |
+|---|---|
+| `count(…)` | `Integer` |
+| `sum(Decimal<p, s>)` | `Decimal<38, s>` |
+| `avg(Decimal<p, s>)` | `Decimal<38, max(s, 9)>` |
+| `min`, `max` | el tipo de lo que agregan |
+| el **supertipo** de `Decimal<p₁, s₁>` y `Decimal<p₂, s₂>` —una unión, las dos ramas de un `CASE`, los dos lados de una comparación o de un `join`— | `Decimal<e + s, s>` con `s = max(s₁, s₂)` y `e = max(p₁ − s₁, p₂ − s₂)` |
+| el supertipo con un `Integer` | el del decimal con `Decimal<19, 0>` |
+| el supertipo con un `Decimal` sin precisión | `Decimal`: la precisión deja de saberse |
+
+Es la regla de BigQuery y la de DuckDB para `sum`; para `avg` es la de BigQuery, porque la de
+DuckDB (`DOUBLE`) cambia un número exacto por uno binario, que es el par que §3.4 prohíbe.
+
+Si el supertipo pasa de 38 cifras (`e + s > 38`) **la vista no tipa**: no hay decimal exacto
+donde quepan las dos ramas, y redondear una de ellas sería elegir en silencio qué cifras se
+pierden. Un literal comparado con una columna `Decimal<p, s>` se escribe como cadena
+(`OOS6003`) y compara como compara con `Decimal`.
 
 
 ## 4. Propiedades

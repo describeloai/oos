@@ -1,0 +1,6 @@
+rule: spec/v1alpha1/02-entity.md#3.2
+level: L0
+expects: accept
+summary: >
+  Un decimal con su precision y su escala, en los dos extremos del rango y en medio.
+  `Decimal` a secas sigue siendo valido: dice que la precision no se declaro.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: accept
+summary: >
+  `Decimal<10, 2>` a `Decimal<12, 2>`. Dos cifras enteras mas y la misma escala: todo valor de antes cabe. Es un ensanche (02-entity 3.4), no OOS5010.

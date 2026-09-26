@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/91-versioning.md#5.1
+level: L0
+expects: OOS5010
+summary: >
+  `Decimal` a `Decimal<38, 9>`. Declarar la precision fija un contrato que no habia. No es un ensanche en ninguna direccion.

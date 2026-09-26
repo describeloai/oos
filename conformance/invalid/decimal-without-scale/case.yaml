@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#3.2
+level: L0
+expects: OOS3002
+summary: >
+  `Decimal<10>`. Sin la escala no se sabe cuantas de las diez cifras van detras de la coma. Es la mitad del error, como `Money<EUR>`.

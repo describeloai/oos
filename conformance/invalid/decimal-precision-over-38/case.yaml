@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#3.2
+level: L0
+expects: OOS3002
+summary: >
+  `Decimal<40, 2>`. 38 es el techo de Iceberg y de Parquet (`decimal128`). Un origen mas ancho viaja como `String` con su cita.

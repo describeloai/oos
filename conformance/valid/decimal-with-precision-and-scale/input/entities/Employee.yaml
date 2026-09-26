@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Employee, namespace: hr }
+spec:
+  nature: entity
+  primaryKey: [employeeId]
+  properties:
+    employeeId: { type: String }
+    total:    { type: "Decimal<38, 9>" }
+    precio:   { type: "Decimal<10, 2>" }
+    digito:   { type: "Decimal<1, 0>" }
+    fraccion: { type: "Decimal<38, 38>" }
+    libre:    { type: Decimal }

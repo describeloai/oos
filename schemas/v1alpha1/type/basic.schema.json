@@ -106,6 +106,11 @@
         },
         {
           "type": "string",
+          "description": "Decimal con precisión y escala: Decimal<38, 9>, Decimal<10, 2> (02-entity §3.2). El patrón solo reconoce la forma: el rango (1 ≤ p ≤ 38, 0 ≤ s ≤ p) y los dos números los comprueba el compilador con OOS3002, igual que `Money<EUR>` sin precisión. Un patrón estricto convertiría ese error en «tipo desconocido» (OOS3001), que es la causa equivocada.",
+          "pattern": "^Decimal<[^>]*>$"
+        },
+        {
+          "type": "string",
           "description": "Lista de escalares: list<string>. Un solo nivel; no hay list<list<T>>.",
           "pattern": "^list<[a-zA-Z][a-zA-Z0-9_]*>$"
         },

@@ -1,0 +1,5 @@
+rule: spec/v1alpha1/02-entity.md#3.2
+level: L0
+expects: OOS3002
+summary: >
+  `Decimal<2, 4>`. Cuatro decimales en dos cifras no existen: la escala no puede pasar de la precision.

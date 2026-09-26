@@ -113,7 +113,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | Código | Condición | Doc |
 |---|---|---|
 | `OOS3001` | tipo fuera del conjunto del perfil | 02 §3 |
-| `OOS3002` | `Money` o `Quantity` sin unidad o sin precisión | 02 §3.2 |
+| `OOS3002` | `Money` o `Quantity` sin unidad o sin precisión; `Decimal<p, s>` sin los dos números o fuera de rango (`1 ≤ p ≤ 38`, `0 ≤ s ≤ p`) | 02 §3.2 |
 | `OOS3003` | `temporal` declarado sin `validTime` | 02 §7 |
 | `OOS3004` | incompatibilidad de unidades en una derivación | 02 §5 |
 | `OOS3005` | cardinalidad de relación incoherente con las claves declaradas | 02 §6 |
