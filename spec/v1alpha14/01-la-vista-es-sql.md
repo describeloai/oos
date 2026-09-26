@@ -62,6 +62,14 @@ escriben en una, dos o tres partes y se resuelven con la regla de siempre
 `Table`, una `View` o un `Dataset` (`OOS2018`), y la cadena no puede volver sobre sí misma
 (`OOS2019`). Un nombre del `WITH` de la propia consulta no es un nombre del árbol.
 
+**Un nombre, una cosa.** En SQL un nombre no dice su `kind`: `FROM ventas.clientes` no puede
+elegir entre una tabla y una vista que se llamen así. Por eso, desde esta versión, una `Table`,
+una `View` y un `Dataset` **comparten el espacio de nombres de su schema**, como en Unity
+Catalog: dos con el mismo nombre son la misma identidad, `OOS2035`, en cuanto uno de ellos es de
+v1alpha14. Hasta v1alpha13 podían convivir —`from.table` y `from.view` decían cuál— y siguen
+pudiendo; pero una consulta que nombra una pareja así no dice cuál lee, y es `OOS2018`. Una vista
+sobre la tabla del mismo nombre se llama como lo que pregunta.
+
 Se lee **por nombre, nunca por función**: una consulta que lee bytes que el árbol no nombra
 —`read_parquet('s3://…')`, `iceberg_scan(…)`, una URL— no tiene linaje ni conducto, y es
 `OOS2038`. Las funciones que generan filas sin leer nada (`range`, `generate_series`, `unnest`)
@@ -241,6 +249,7 @@ para quien la consume aunque las columnas sean las mismas: se dice en la versió
 Siguen valiendo, sobre la vista SQL: `OOS2009` (dueño), `OOS2011` y `OOS2022` (la entidad y su
 vista, contra `columns`), `OOS2018` (un nombre que no resuelve, una columna que la fuente no
 tiene), `OOS2019` (ciclo), `OOS2020` (una raíz que exige copia), `OOS2035`–`OOS2037` (nombre y
-schema), `OOS4001`, `OOS4002` y `OOS4011` (flujo y conducto) y `OOS7014` (lo que una función ve).
+schema; y desde esta versión, una tabla, una vista y un dataset con el mismo nombre en el mismo
+schema, §3), `OOS4001`, `OOS4002` y `OOS4011` (flujo y conducto) y `OOS7014` (lo que una función ve).
 Dejan de aplicarse a una vista v1alpha14, porque la forma que comprobaban ya no está: `OOS2032`,
 `OOS2033` y `OOS2034` —agrupar y agregar los comprueba el motor al resolver la consulta—.

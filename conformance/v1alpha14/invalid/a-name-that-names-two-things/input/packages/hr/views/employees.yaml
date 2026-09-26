@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha13
+kind: View
+metadata: { name: employees, namespace: hr }
+spec:
+  owner: team:hr
+  from: { table: hr.employees }
+  fields: { id: employee_id }

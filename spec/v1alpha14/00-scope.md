@@ -80,6 +80,8 @@ Porque nunca estuvo en la forma: estaba en lo que la forma dejaba saber.
 - `View.spec.sql` —una consulta `SELECT`, cualquiera—, `View.spec.dialect` y `View.spec.columns`,
   el contrato derivado. [`01-la-vista-es-sql` §2–§4](01-la-vista-es-sql.md).
 - Lo que lee la vista, derivado de la consulta, con la regla de nombres de siempre. §3.
+- **Un nombre, una cosa**: una tabla, una vista y un dataset comparten el espacio de nombres de su
+  schema, como en Unity Catalog, porque una consulta nombra por nombre (`OOS2035`). §3.
 - El linaje por columna y la regla de flujo sobre él. §5.
 - El canal lateral sobre el linaje, `OOS4016`. §6.
 - `OOS2038` (la consulta no es un `SELECT` que lee por nombre) y `OOS2039` (el contrato no es lo

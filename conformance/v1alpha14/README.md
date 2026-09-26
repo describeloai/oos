@@ -15,7 +15,7 @@ siendo lo que era—.
 
 ## Qué cubre
 
-Nueve casos que aceptan y quince que rechazan. Se escribieron desde la spec, antes que la
+Nueve casos que aceptan y diecisiete que rechazan. Se escribieron desde la spec, antes que la
 implementación: los `expects` se cotejan contra la de referencia (ORE, ADR 0040) según se
 implementa, y un caso que la implementación contradiga se discute, no se ajusta en silencio.
 
@@ -28,6 +28,7 @@ etiqueta `dni` con `gdpr.sensitivity: high`.
 | **la vista es su consulta** | `a-view-in-sql` · `a-view-over-a-sql-view` · `a-join-and-a-grouping` · `rows-from-a-generator` |
 | **el documento** | `the-structured-form-in-v1alpha14` (OOS1005) · `a-view-without-its-dialect` · `a-dialect-it-does-not-know` (OOS1004) |
 | **lo que lee** (§3) | `reads-by-a-function` · `two-statements` · `a-view-that-writes` (OOS2038) · `a-name-that-is-not-in-the-tree` (OOS2018) · `a-chain-that-comes-back` (OOS2019) |
+| **un nombre, una cosa** (§3) | `a-view-named-like-its-table` (OOS2035) · `a-name-that-names-two-things` (OOS2018) |
 | **el contrato** (§4) | `a-column-the-query-does-not-project` · `a-projection-the-contract-does-not-name` (OOS2039) · `a-column-the-source-does-not-have` (OOS2018) |
 | **el linaje** (§5) | `a-dataset-copies-a-sql-view` · `a-copy-that-leaks-through-a-filter` (OOS4002: la arista INDIRECT de un `WHERE`) |
 | **el canal lateral** (§6) | `equality-on-a-labeled-column` · `a-range-on-a-column-without-a-label` · `a-k-threshold-on-an-aggregate` · `a-range-on-a-labeled-column` · `a-pattern-on-a-labeled-column` · `a-function-on-a-labeled-column` (OOS4016) |

@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#3
+level: L0
+expects: OOS2035
+summary: >
+  Un nombre, una cosa: en v1alpha14 una tabla y una vista comparten el espacio de nombres de su schema, y `FROM hr.employees` no podría decir cuál lee.

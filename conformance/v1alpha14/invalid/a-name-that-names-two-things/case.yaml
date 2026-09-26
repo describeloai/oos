@@ -1,0 +1,5 @@
+rule: spec/v1alpha14/01-la-vista-es-sql.md#3
+level: L0
+expects: OOS2018
+summary: >
+  Hasta v1alpha13 una vista y una tabla podían llamarse igual, y siguen pudiendo; pero una consulta que nombra la pareja no dice cuál lee.
