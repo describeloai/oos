@@ -107,6 +107,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2037` | `metadata.schema` nombra un schema que el paquete no declara | v1alpha13 01 §3, §7 |
 | `OOS2038` | la consulta de una vista no es **un** `SELECT` que lee por nombre: varias sentencias, una que escribe o crea, o una fuente leída por función (`read_parquet`, una URL) | v1alpha14 01 §2, §3 |
 | `OOS2039` | el contrato de una vista (`columns`) no es exactamente lo que su consulta proyecta | v1alpha14 01 §4 |
+| `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
