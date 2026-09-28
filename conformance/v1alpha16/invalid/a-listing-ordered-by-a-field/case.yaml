@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/01-object-table.md#5
+level: L0
+expects: OOS1004
+summary: >
+  witness: field en un ObjectTable: un listado no tiene columna propia que ordene el avance.

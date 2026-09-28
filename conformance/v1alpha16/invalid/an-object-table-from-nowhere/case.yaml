@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/01-object-table.md#6
+level: L0
+expects: OOS2004
+summary: >
+  El datasource de un ObjectTable no está declarado en el manifiesto.

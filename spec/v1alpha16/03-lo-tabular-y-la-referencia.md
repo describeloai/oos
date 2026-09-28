@@ -57,6 +57,7 @@ En una `Table` con `format`, `changes.witness: listing` es legal por lo mismo qu
 | `format.type` fuera de `parquet`/`csv`/`jsonl` | `OOS1004` | un PDF no es filas: es un `ObjectTable` |
 | una partición que no está en `columns` | `OOS1004` | |
 | `header`/`delimiter`/`encoding` sin `type: csv` | `OOS1005` | |
+| `changes.witness: listing` en una `Table` sin `format` | `OOS1004` | una tabla de filas no tiene listado |
 
 ## 2. `Media<colección>`: el tipo de una referencia a un ítem
 

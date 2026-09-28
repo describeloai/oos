@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/01-object-table.md#7
+level: L0
+expects: accept
+summary: >
+  Una vista SQL de otra base lee el ObjectTable como lee una tabla: sus columnas fijas, por su
+  nombre de tres partes.

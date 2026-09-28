@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha16
+kind: View
+metadata: { name: listado, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT path FROM legal.archivo.contratos
+  columns:
+    path: { type: String }

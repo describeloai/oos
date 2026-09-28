@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha16/media-collection.schema.json",
+  "title": "MediaCollection",
+  "description": "LO QUE UN INQUILINO TIENE COMO COLECCION GOBERNADA DE FICHEROS DE UN SOLO TIPO DE MEDIO: cada item direccionable por su huella, con retencion y con historia.\n\nEs a los ficheros lo que el Dataset es a las tablas. Dos formas bajo un kind: MANTENIDA (`from`, la llena el sistema desde un ObjectTable; con `virtual: true` no copia y sirve desde el origen) y ESCRITA (sin `from`, la llena codigo). Virtual o no, fija en cada transaccion que items tenia: por eso es una coleccion y no un filtro.\n\nNo es un Dataset (no se lee con SQL), no es un ObjectTable (tiene dueno, historia y etiquetas propias) y no es un TrainedModel (items sueltos de un tipo, no los ficheros de un modelo).\n\nNormativo: spec/v1alpha16/02-media-collection.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha16"
+    },
+    "kind": {
+      "const": "MediaCollection"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "schema": {
+          "description": "El schema del paquete donde vive el documento (v1alpha13): el segundo nivel de su nombre, `<paquete>.<schema>.<nombre>`. Sin ella, `default`. Nombra un `Schema` declarado en el paquete (OOS2037) y el fichero vive en su carpeta (OOS2036). Normativo: spec/v1alpha13/01-el-schema.md §3",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "labels": {
+          "description": "Lo que la coleccion SUMA a lo que hereda de su origen: una foto de un DNI es `high` aunque el bucket no lo sea. Se eleva y no se rebaja: un nivel por debajo del heredado, en el mismo reticulo, es OOS4012. Que el nivel exista en su reticulo es OOS4003, del compilador.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          },
+          "additionalProperties": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "media",
+        "formats"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quien responde por el dataset. La misma forma que en View, Package y TrainedModel: `team:` o `user:` (OOS2009 si no lo es).",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "media": {
+          "description": "Uno, y el mismo que el de su ObjectTable (OOS2040). Sin `binary` ni `archive`: una coleccion sabe lo que guarda.",
+          "enum": [
+            "document",
+            "image",
+            "audio",
+            "video",
+            "spreadsheet",
+            "email"
+          ]
+        },
+        "formats": {
+          "description": "Los formatos que admite, en minuscula (`pdf`, `jpeg`). El PRIMERO es el primario. Un item de otro formato no entra.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9.+-]*$",
+            "maxLength": 64
+          }
+        },
+        "from": {
+          "description": "Mantenida: de que ObjectTable sale y que items toma. Sin `from`, escrita.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "objectTable"
+          ],
+          "properties": {
+            "objectTable": {
+              "description": "El ObjectTable del que sale, por su nombre (una, dos o tres partes, v1alpha13 §5). Tiene que resolver (OOS2018) y ser del mismo `media` (OOS2040).",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+            },
+            "match": {
+              "description": "Un patron glob sobre la clave RELATIVA al prefijo: `*` no cruza `/`, `**` si, `?` es un caracter. La clave se compara tal cual, con espacios y mayusculas.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          }
+        },
+        "virtual": {
+          "description": "`true`: no copia; sus items son los objetos del origen, servidos desde alli. Solo con `from`. Sin copia no cruza `materialization.payload`.",
+          "type": "boolean",
+          "default": false
+        },
+        "retention": {
+          "description": "Cuanto se guarda un item que ya no esta en la vista actual. Sin ella, no caduca. En una virtual vale lo que valga la retencion del origen.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+        }
+      },
+      "dependentRequired": {
+        "virtual": [
+          "from"
+        ]
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  }
+}

@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: expedientes, namespace: legal }
+spec:
+  owner: team:legal
+  from: { table: legal.expedientes_erp }
+  freshness: 1h

@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#2
+level: L0
+expects: OOS2018
+summary: >
+  Una vista SQL que nombra una colección en su FROM: una colección no se lee con SQL.

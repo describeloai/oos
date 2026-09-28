@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/01-object-table.md#3
+level: L0
+expects: accept
+summary: >
+  El conjunto de PDF de un prefijo, registrado una vez en un schema del paquete de su fuente, con
+  el listado como testigo y retract: puede decir qué desapareció.

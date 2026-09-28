@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#7
+level: L0
+expects: OOS2040
+summary: >
+  Una colección de documentos que sale de un ObjectTable de imágenes.

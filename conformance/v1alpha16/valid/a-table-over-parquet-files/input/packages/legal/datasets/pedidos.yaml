@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha16
+kind: Dataset
+metadata: { name: pedidos, namespace: legal }
+spec:
+  owner: team:legal
+  from: { table: s3_ventas.ventas.pedidos }
+  freshness: 1d

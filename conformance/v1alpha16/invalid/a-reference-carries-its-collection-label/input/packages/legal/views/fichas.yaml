@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha12
+kind: View
+metadata: { name: fichas, namespace: legal }
+spec:
+  owner: team:legal
+  from: { dataset: legal.expedientes }
+  fields:
+    id: id
+    documento: documento

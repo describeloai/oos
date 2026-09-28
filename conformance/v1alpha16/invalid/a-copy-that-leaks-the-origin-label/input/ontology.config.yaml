@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: guardar, version: 0.1.0 }
+datasources:
+  - name: s3_ventas
+    type: s3
+    connectionEnv: S3_VENTAS_URL
+    labels: { gdpr.sensitivity: high }
+  - { name: erp, type: postgres, connectionEnv: ERP_URL }

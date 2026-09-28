@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/01-object-table.md#4
+level: L0
+expects: OOS1004
+summary: >
+  media: pdf no es un tipo de medio sino un formato; el vocabulario es cerrado.

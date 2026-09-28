@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/01-object-table.md#6
+level: L0
+expects: OOS1004
+summary: >
+  Un ObjectTable sin media: no se sabe qué se puede hacer con sus objetos.

@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha16
+kind: Table
+metadata: { name: pedidos, namespace: s3_ventas, schema: ventas }
+spec:
+  datasource: s3_ventas
+  object: "Nueva carpeta/ventas/pedidos/"
+  format:
+    type: csv
+    header: false
+    delimiter: ";"
+    encoding: utf-8
+  columns:
+    id: { type: String }
+    total: { type: String }
+  reads: { fullScan: expensive, predicatePushdown: [eq] }
+  changes: { mode: append, witness: listing }

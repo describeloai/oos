@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/00-scope.md#6
+level: L0
+expects: OOS1003
+summary: >
+  kind ObjectTable en v1alpha15: es un documento de v1alpha16.

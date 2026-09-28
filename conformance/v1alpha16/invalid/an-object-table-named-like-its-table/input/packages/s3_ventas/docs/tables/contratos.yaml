@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha16
+kind: Table
+metadata: { name: contratos, namespace: s3_ventas, schema: docs }
+spec:
+  datasource: s3_ventas
+  object: "Nueva carpeta/contratos.csv"
+  format: { type: csv }
+  columns:
+    id: { type: String }
+  reads: { fullScan: cheap }
+  changes: { mode: append, witness: listing }

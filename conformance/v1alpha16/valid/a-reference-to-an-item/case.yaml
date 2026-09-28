@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#2
+level: L0
+expects: accept
+summary: >
+  Un Contrato apunta a su PDF con Media<colección>, sin copiar el fichero en la fila.

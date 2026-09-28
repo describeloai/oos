@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#7
+level: L0
+expects: OOS1004
+summary: >
+  media: archive en una colección: un contenedor no es un tipo que se pueda ver ni procesar.

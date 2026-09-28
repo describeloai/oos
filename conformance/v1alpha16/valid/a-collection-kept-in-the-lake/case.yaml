@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/02-media-collection.md#4
+level: L0
+expects: accept
+summary: >
+  Una colección mantenida de PDF copia al lago lo que el ObjectTable lista; eleva la clasificación
+  de su origen y el conducto de la copia la admite.

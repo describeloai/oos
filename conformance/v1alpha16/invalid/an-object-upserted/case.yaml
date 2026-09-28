@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/01-object-table.md#5
+level: L0
+expects: OOS1004
+summary: >
+  mode: upsert en un ObjectTable: un objeto no tiene más clave que su nombre, y cambiarlo es
+  retirar una huella y dar otra.

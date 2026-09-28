@@ -224,6 +224,7 @@ schemas/v1alpha12/ dataset
 schemas/v1alpha13/ schema, y el contenido gobernado con `metadata.schema` (la view, por fin, como la dejó v1alpha12)
 schemas/v1alpha14/ view con cuerpo SQL (`sql`, `dialect`, el contrato `columns`); el resto, el de v1alpha13 en esta versión
 schemas/v1alpha15/ model con `namespace` y `schema`
+schemas/v1alpha16/ object-table y media-collection; table con `format` (y el testigo `listing`); entity con `Media<…>`
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia

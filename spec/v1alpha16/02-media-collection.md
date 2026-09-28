@@ -20,9 +20,11 @@ hacer con lo que guarda.
 
 ## 2. Qué **no** es
 
-- **No es un `Dataset`.** Un dataset es tabular (v1alpha12); una colección, ficheros. Su índice
-  —un ítem por fila— se puede preguntar, pero eso es una vista sobre la colección, no la
-  colección.
+- **No es un `Dataset`.** Un dataset es tabular (v1alpha12); una colección, ficheros. **Una
+  consulta no la lee**: lo que una vista lee resuelve a una `Table`, una `View`, un `Dataset` o
+  un `ObjectTable`, y una colección nombrada en un `FROM` es `OOS2018`. Su índice —un ítem por
+  fila— es de la implementación, y la lee una función (`reads`), que escribe lo que saque en un
+  `Dataset`.
 - **No es un `ObjectTable`.** El `ObjectTable` dice qué hay en un origen ajeno; la colección es
   lo nuestro, con retención e historia, aunque sus bytes sigan en el origen (`virtual`, §3).
 - **No es un `TrainedModel`.** Aquél nombra los ficheros de un modelo por un digest de manifiesto
@@ -51,7 +53,7 @@ metadata:
   name: contratos
   namespace: legal
   schema: default
-  labels: { confidencialidad: interno }   # opcional (§6)
+  labels: { gdpr.sensitivity: high }       # opcional: suma a lo heredado (§6)
 spec:
   owner: team:legal
   media: document                          # uno, y el mismo que el de su origen
@@ -73,6 +75,18 @@ spec:
 | `virtual` | opcional | sólo con `from`. `true`: no copia |
 | `retention` | opcional | una duración (`30d`, `12h`): cuánto se guarda un ítem que ya no está en la vista actual. Sin ella, no caduca |
 
+**Dónde vive.** En un schema de una base —un paquete que no es el de la fuente—, con su nombre
+cualificado `<paquete>.<schema>.<nombre>`, y **comparte el espacio de nombres del schema** con la
+`Table`, la `View`, el `Dataset` y el `ObjectTable` (`OOS2035`), como ellos. La carpeta
+`collections/` es la costumbre.
+
+**`virtual` no es otro kind.** La colección virtual es la mantenida que no copia, y es una
+colección por lo mismo que la otra: su historia. Un `ObjectTable` dice qué hay **ahora**; una
+colección, virtual o no, fija en cada transacción **qué ítems tenía** —clave, huella y, si el
+origen versiona, la versión del objeto—, aunque los bytes sigan en el origen. Si fuese un filtro
+en vivo sobre el `ObjectTable`, sería una `View`, y sobraría el kind. Lo que una virtual no
+puede prometer es que los bytes sigan: su retención vale lo que valga la del origen (§8).
+
 ## 5. El ítem, y la historia
 
 Un ítem es **un fichero con una identidad**: su **huella** de contenido (la `checksum` del
@@ -92,8 +106,15 @@ bucket.
   la fuente, y la comprobación es la misma.
 - **Las etiquetas se heredan y se suman.** La colección hereda la clasificación de su origen (el
   `datasource`, por su `ObjectTable`) y puede **añadir** las suyas en `metadata.labels`: una foto
-  de un DNI es `pii` aunque el bucket no lo sea. **No puede quitar** lo heredado: rebajar una
-  clasificación es `OOS4002`, como en cualquier flujo.
+  de un DNI es `high` aunque el bucket no lo sea. **Puede elevar y no puede rebajar**: declarar
+  un nivel por debajo del heredado, en el mismo retículo, es `OOS4012`, como una propiedad que
+  rebaja la de su entidad (`v1alpha1/02-entity` §4.1). Una etiqueta que dice menos de lo que
+  lleva es la que acaba mintiendo.
+- **Copiar es un conducto.** Una mantenida que no es `virtual` copia bytes al lago: instancia
+  `materialization.payload`, como un dataset mantenido (v1alpha12 `01` §5). Sin autorizarlo es
+  `OOS4011`; si lo que la colección lleva excede su techo, `OOS4002`. Una `virtual` no copia y
+  **no lo cruza**: lo que sirve lo decide la comprobación al servir. Una escrita tampoco: lo que
+  escribe lo escribe código, con el conducto de quien escribe.
 - **Lo que deriva de ella la lleva.** Un `Dataset` escrito por una función que lee la colección
   (el texto de los contratos) hereda sus etiquetas por `derivedFrom`, como hoy desde una tabla.
 
@@ -112,7 +133,11 @@ una foto es un dato personal.
 | `retention` que no es una duración | `OOS1004` | |
 | `from.objectTable` que no resuelve a un `ObjectTable` | `OOS2018` | |
 | **`from.objectTable` de otro `media`** | **`OOS2040`** | una colección de documentos no sale de un conjunto de imágenes |
-| una etiqueta que rebaja lo heredado | `OOS4002` | el flujo de siempre |
+| una etiqueta que rebaja lo heredado | `OOS4012` | se eleva, no se rebaja |
+| mantenida, no `virtual`, sin `materialization.payload` autorizado | `OOS4011` | copiar es un conducto |
+| mantenida, no `virtual`, con etiquetas por encima del techo del conducto | `OOS4002` | |
+| un nombre que ya tiene otro documento del schema | `OOS2035` | un nombre, una cosa |
+| una consulta que la nombra en un `FROM` | `OOS2018` | una colección no se lee con SQL |
 | `owner` que no es `team:` ni `user:` | `OOS2009` | |
 | una clave que no es de aquí (`columns`, `fields`, `sql`) | `OOS1005` | una colección no es una tabla |
 | `kind: MediaCollection` en v1alpha15 o antes | `OOS1003` | es un documento de v1alpha16 |

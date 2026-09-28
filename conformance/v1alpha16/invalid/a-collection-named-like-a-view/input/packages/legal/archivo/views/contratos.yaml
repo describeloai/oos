@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha16
+kind: View
+metadata: { name: contratos, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT key FROM s3_ventas.docs.contratos
+  columns:
+    key: { type: String }

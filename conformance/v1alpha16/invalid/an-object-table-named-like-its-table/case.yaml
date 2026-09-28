@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/01-object-table.md#3
+level: L0
+expects: OOS2035
+summary: >
+  Un ObjectTable y una Table con el mismo nombre en el mismo schema: una consulta no sabría cuál
+  lee.

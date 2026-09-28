@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha16
+kind: MediaCollection
+metadata:
+  name: contratos
+  namespace: legal
+  schema: archivo
+  labels: { gdpr.sensitivity: low }
+spec:
+  owner: team:legal
+  media: document
+  formats: [pdf]
+  from: { objectTable: s3_ventas.docs.contratos }

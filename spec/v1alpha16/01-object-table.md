@@ -72,6 +72,13 @@ spec:
 | `reads` | opcional | la cara `I` de v1alpha8, sobre el listado: `fullScan` (`cheap`/`expensive`/`forbidden`) |
 | `changes` | **obligatoria** | la cara `D` sobre el listado: `mode` y `witness` (§5) |
 
+**Dónde vive.** En un schema del paquete de la fuente, una vez (ORE 0045), y su nombre
+cualificado es `<paquete>.<schema>.<nombre>` (v1alpha13). **Comparte el espacio de nombres del
+schema** con la `Table`, la `View`, el `Dataset` y la `MediaCollection`: una consulta nombra por
+nombre y no dice qué `kind` lee (v1alpha14 `01` §3), así que dos con el mismo nombre son
+`OOS2035`. La carpeta `objects/` es la costumbre; como toda carpeta bajo un schema, ordena y no
+nombra.
+
 ## 4. El tipo de medio, y la huella
 
 **`media` es un vocabulario cerrado**, y por lo mismo que `changes.mode`: lo que se puede hacer
@@ -132,6 +139,8 @@ colección mantenida la retira, la conserva o la marca); lo decide la iteración
 | `changes.mode: upsert` | `OOS1004` | un objeto no tiene más clave que su nombre |
 | `labels` en `metadata`, o una clave que no es de aquí (`columns`, `object`, `format`) | `OOS1005` | lo tabular es una `Table` |
 | el `datasource` no está declarado | `OOS2004` | como en `Table` |
+| un nombre que ya tiene otro documento del schema (`Table`, `View`, `Dataset`, `MediaCollection`) | `OOS2035` | un nombre, una cosa |
+| una consulta que nombra una columna que no es de las fijas (§1) ni una partición | `OOS2018` | sus columnas no se declaran: son éstas |
 | `kind: ObjectTable` en v1alpha15 o antes | `OOS1003` | es un documento de v1alpha16 |
 
 ## 7. Quién lo lee
@@ -139,7 +148,8 @@ colección mantenida la retira, la conserva o la marca); lo decide la iteración
 - una **`MediaCollection`** mantenida: `from: { objectTable: <ref> }`
   ([02](02-media-collection.md));
 - una **`View`** de una base foránea: `SELECT key, size, checksum FROM <fuente>.<schema>.<ot>`,
-  como lee una `Table`. Sus columnas son las fijas del §1;
+  como lee una `Table`: lo que una consulta lee (v1alpha14 `01` §3) resuelve ahora también a un
+  `ObjectTable`. Sus columnas son las fijas del §1 y las particiones, y ninguna más (`OOS2018`);
 - una **función** que procesa objetos (`reads`).
 
 Nadie lo lee por su bucket: se lee por el documento.

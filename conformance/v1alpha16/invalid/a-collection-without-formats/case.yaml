@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#7
+level: L0
+expects: OOS1004
+summary: >
+  Una colección sin formats: no sabe qué admite.

@@ -135,7 +135,7 @@ credenciales, sin tocar un solo dato.
 | `OOS4007` | `aggregate` sin `minGroupSize`, o por debajo del umbral del retículo | 04 §5 |
 | `OOS4008` | propiedad derivada que declara etiqueta en lugar de computarla | 02 §5 |
 | `OOS4011` | conducto sin autorización declarada — lo usa un binding, una función, una vista `materialized`, o **la travesía de una relación con `via`**, que lo instancia sin declararlo (04 §4.2) | 04 §4 |
-| `OOS4012` | propiedad que rebaja la etiqueta heredada de su entidad | 02 §4.1 |
+| `OOS4012` | propiedad que rebaja la etiqueta heredada de su entidad; desde v1alpha16, también una `MediaCollection` que rebaja la de su origen | 02 §4.1 · v1alpha16 02 §6 |
 | `OOS4014` | `examples` no marcados como sintéticos en propiedad etiquetada por encima de `⊥` | 02 §4.2 |
 | `OOS4016` | predicado que ordena —rango, `BETWEEN`, patrón, función— sobre una columna cuya raíz lleva una etiqueta de confidencialidad por encima de `⊥` (el canal lateral, sobre el linaje de una vista SQL) | v1alpha14 01 §6 |
 

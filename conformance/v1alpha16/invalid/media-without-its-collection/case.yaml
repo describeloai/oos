@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#2
+level: L0
+expects: OOS3001
+summary: >
+  Media a secas: la referencia no dice a qué colección apunta.

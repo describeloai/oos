@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/02-media-collection.md#6
+level: L0
+expects: OOS4011
+summary: >
+  Una colección mantenida que no es virtual copia bytes al lago, y nadie autorizó
+  materialization.payload.

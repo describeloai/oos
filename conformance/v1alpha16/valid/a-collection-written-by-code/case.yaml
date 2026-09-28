@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/02-media-collection.md#3
+level: L0
+expects: accept
+summary: >
+  Una colección escrita, sin from: la llena código, y lo que escribe lleva el conducto de quien
+  escribe.

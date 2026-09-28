@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#4
+level: L0
+expects: OOS2035
+summary: >
+  Una colección y una vista con el mismo nombre en el mismo schema.

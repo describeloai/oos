@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#1
+level: L0
+expects: accept
+summary: >
+  Un CSV con punto y coma y sin cabecera es una tabla con format csv y sus opciones.

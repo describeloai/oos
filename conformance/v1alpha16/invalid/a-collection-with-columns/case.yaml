@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#7
+level: L0
+expects: OOS1005
+summary: >
+  Una colección que declara columns: una colección no es una tabla.

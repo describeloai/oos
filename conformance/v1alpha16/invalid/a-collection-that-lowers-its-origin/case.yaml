@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#6
+level: L0
+expects: OOS4012
+summary: >
+  La fuente es high y la colección declara low: se eleva, no se rebaja.

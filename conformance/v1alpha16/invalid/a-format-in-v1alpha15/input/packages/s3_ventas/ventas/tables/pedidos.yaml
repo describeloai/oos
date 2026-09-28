@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha15
+kind: Table
+metadata: { name: pedidos, namespace: s3_ventas, schema: ventas }
+spec:
+  datasource: s3_ventas
+  object: "Nueva carpeta/ventas/pedidos/"
+  format:
+    type: parquet
+    match: "**/*.parquet"
+    partitions: [fecha]
+  columns:
+    id: { type: String, physicalType: string }
+    total: { type: "Decimal<12, 2>", physicalType: "decimal128(12, 2)" }
+    fecha: { type: String }
+  reads: { fullScan: expensive, predicatePushdown: [eq] }
+  changes: { mode: append, witness: none }

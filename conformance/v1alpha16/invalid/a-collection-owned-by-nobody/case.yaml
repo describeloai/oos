@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/02-media-collection.md#7
+level: L0
+expects: OOS2009
+summary: >
+  owner: legal no es un team: ni un user:.

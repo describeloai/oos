@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#1
+level: L0
+expects: OOS1005
+summary: >
+  delimiter en una tabla de Parquet: las opciones de csv sólo son de csv.

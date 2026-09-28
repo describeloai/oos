@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#2
+level: L0
+expects: OOS4002
+summary: >
+  La colección es high; la entidad la referencia, y su dataset se copia por un conducto de low.

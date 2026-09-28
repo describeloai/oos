@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha16/object-table.schema.json",
+  "title": "ObjectTable",
+  "description": "EL CONJUNTO DE OBJETOS DE UN ORIGEN —un prefijo, un patron y un tipo de medio—, REGISTRADO UNA VEZ, CUYAS FILAS SON LOS OBJETOS.\n\nEs a los ficheros lo que la Table es a las filas: lo que es de otro, apuntado. Vive en el paquete de la fuente (ORE 0045) y no copia nada: dice que hay. Sus columnas son FIJAS —key, size, contentType, checksum, modified, version— mas una por particion, y por eso no se declaran.\n\nNo es una Table (lo tabular es una Table con `format`), no es una coleccion (no tiene items, retencion ni historia) y no lleva `labels` (su clasificacion es la del datasource).\n\nNormativo: spec/v1alpha16/01-object-table.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha16"
+    },
+    "kind": {
+      "const": "ObjectTable"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "schema": {
+          "description": "El schema del paquete de la fuente donde vive el puntero (v1alpha13). Comparte el espacio de nombres del schema con Table, View, Dataset y MediaCollection (OOS2035).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "datasource",
+        "prefix",
+        "media",
+        "changes"
+      ],
+      "properties": {
+        "datasource": {
+          "description": "La fuente, declarada en el manifiesto raiz (OOS2004). De ella hereda el conjunto su clasificacion.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "prefix": {
+          "description": "El prefijo de claves en el origen, TAL CUAL (espacios, mayusculas). `\"\"` es el origen entero. Cadena opaca: sus reglas son del origen.",
+          "type": "string",
+          "maxLength": 1024
+        },
+        "match": {
+          "description": "Un patron glob sobre la clave RELATIVA al prefijo: `*` no cruza `/`, `**` si, `?` es un caracter. La clave se compara tal cual, con espacios y mayusculas.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "media": {
+          "description": "EL TIPO DE MEDIO de sus objetos. Vocabulario CERRADO por lo mismo que `changes.mode`: lo que se puede hacer con un objeto depende de que es. `archive` es un contenedor que no se abre al catalogar; `binary`, que todavia no se sabe.",
+          "enum": [
+            "document",
+            "image",
+            "audio",
+            "video",
+            "spreadsheet",
+            "email",
+            "archive",
+            "binary"
+          ]
+        },
+        "partitions": {
+          "description": "Nombres de las claves `k=v` del camino que se exponen como columnas `String` (particion Hive: `fecha=2026-09-01`).",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "reads": {
+          "description": "La cara `I` sobre el listado.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fullScan": {
+              "description": "`cheap` una tabla pequena · `expensive` el planificador lo evita salvo necesidad · `forbidden` una API con cuota que no admite recorrido completo.",
+              "enum": [
+                "cheap",
+                "expensive",
+                "forbidden"
+              ]
+            }
+          }
+        },
+        "changes": {
+          "description": "La cara `D` sobre el listado. `upsert` no: un objeto no tiene mas clave que su nombre, y cambiarlo es retirar su huella vieja y dar la nueva. `field` no: un listado no tiene columna propia que ordene el avance. `listing` es el testigo propio: el estado es el conjunto de pares (key, checksum), y lo que cambio es la diferencia de dos listados —altas, cambios y BAJAS—.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "witness"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "none",
+                "append",
+                "retract"
+              ]
+            },
+            "witness": {
+              "enum": [
+                "none",
+                "snapshot",
+                "log",
+                "listing"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extension. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  }
+}

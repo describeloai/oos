@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/02-media-collection.md#3
+level: L0
+expects: accept
+summary: >
+  Una colección virtual sirve desde el origen y no copia: no cruza el conducto de la copia, que
+  nadie autorizó, aunque su origen sea high.

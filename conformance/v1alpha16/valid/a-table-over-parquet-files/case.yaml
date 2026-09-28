@@ -1,0 +1,6 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#1
+level: L0
+expects: accept
+summary: >
+  Un prefijo de Parquet con partición Hive es una tabla con format, testigo listing, y una base la
+  copia como copia cualquier tabla.
