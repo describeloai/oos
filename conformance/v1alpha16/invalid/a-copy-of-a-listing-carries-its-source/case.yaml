@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/01-object-table.md#2
+level: L0
+expects: OOS4002
+summary: >
+  La fuente es high; una vista pregunta su listado y un dataset la copia por un conducto de low.

@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha16
+kind: Dataset
+metadata: { name: inventario_copia, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  from: { view: inventario }

@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha16
+kind: View
+metadata: { name: inventario, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT key, size, checksum FROM s3_ventas.docs.contratos
+  columns:
+    key: { type: String }
+    size: { type: Integer }
+    checksum: { type: String }

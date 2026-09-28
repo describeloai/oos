@@ -14,7 +14,7 @@ sostener es que no cambia un solo resultado de v1alpha1 a v1alpha15.
 
 ## Qué cubre
 
-Ocho casos que aceptan y treinta y cinco que rechazan. Se escribieron **desde la spec, antes que
+Ocho casos que aceptan y treinta y seis que rechazan. Se escribieron **desde la spec, antes que
 la implementación** (ORE 0046, E1): los `expects` salen del texto, y se cotejan contra la de
 referencia según se implementa (E2). Un caso que la implementación contradiga se discute, no se
 ajusta en silencio.
@@ -28,7 +28,7 @@ Todos parten del mismo mundo: la fuente `s3_ventas` (un bucket), cuyo paquete ti
 |---|---|
 | **el `ObjectTable`** (01) | `an-object-table` · `an-object-table-without-media` · `a-media-it-does-not-know` (OOS1004) · `a-listing-ordered-by-a-field` · `an-object-upserted` (OOS1004) · `an-object-table-with-labels` · `an-object-table-with-columns` (OOS1005) · `an-object-table-from-nowhere` (OOS2004) · `an-object-table-in-v1alpha15` (OOS1003) |
 | **un nombre, una cosa** | `an-object-table-named-like-its-table` · `a-collection-named-like-a-view` (OOS2035) |
-| **se lee como una tabla** (01 §7) | `a-query-over-an-object-table` · `a-column-objects-do-not-have` (OOS2018) |
+| **se lee como una tabla** (01 §7) | `a-query-over-an-object-table` · `a-column-objects-do-not-have` (OOS2018) · `a-copy-of-a-listing-carries-its-source` (OOS4002: la raíz es el listado, y lleva lo de su `datasource`) |
 | **las formas de la colección** (02 §3) | `a-collection-kept-in-the-lake` · `a-virtual-collection` · `a-collection-written-by-code` |
 | **la forma** (02 §7) | `a-collection-without-formats` · `a-collection-of-archives` · `the-same-format-twice` · `a-virtual-collection-with-no-origin` · `a-retention-that-is-not-a-duration` (OOS1004) · `a-collection-with-columns` (OOS1005) · `a-collection-owned-by-nobody` (OOS2009) · `a-collection-in-v1alpha15` (OOS1003) |
 | **de dónde sale** | `a-collection-from-nowhere` (OOS2018) · `a-source-that-keeps-its-objects-to-itself` (OOS2028) · **`documents-from-images` (OOS2040)** · `a-query-over-a-collection` (OOS2018) |
