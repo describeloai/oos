@@ -51,6 +51,31 @@ izquierda sale `Integer` de una muestra, y como entero pierde los ceros.
 En una `Table` con `format`, `changes.witness: listing` es legal por lo mismo que en un
 `ObjectTable`: lo que cambió son los ficheros.
 
+### 1.1 Lo que no encaja: `_rescued_data`
+
+Las columnas de un CSV o un JSONL **se deducen de una muestra y se congelan**, y una muestra
+puede mentir: el valor que no encaja llega después. Lo que se hace con él se **declara**, y hay
+dos respuestas:
+
+- **La tabla declara `_rescued_data: { type: String }`** (sólo con `type: csv` o `jsonl`). Un
+  valor que no analiza con el tipo de su columna llega **nulo** en ella, y su texto original, en
+  `_rescued_data`: un objeto JSON `{"<columna>": "<texto>", "_file": "<clave>"}`. Lo mismo una
+  clave de un JSONL, o una columna de un CSV con cabecera, que la tabla no declara. Una fila sin
+  nada rescatado lleva `_rescued_data` nulo. **Nada se pierde y la lectura no se para por un
+  valor**: es el *rescued data column* de Databricks, con el fichero dentro.
+- **No lo declara**: un valor que no analiza **para la lectura**, con la columna, el fichero y el
+  valor en el motivo. Nunca un nulo en silencio.
+
+Un Parquet no rescata: el tipo lo trae el fichero, y no se deduce. Lo que se rescata es lo que se
+deduce.
+
+### 1.2 Lo vacío
+
+CSV no tiene una forma de distinguir un nulo de una cadena vacía, y la regla es la de `COPY` de
+PostgreSQL, que es la que no pierde nada: **un campo vacío sin comillas es nulo; `""` entre
+comillas es la cadena vacía**. En JSONL, `null` y la clave ausente son nulo, y `""` es la cadena
+vacía.
+
 | | código | |
 |---|---|---|
 | `format` en una `Table` de v1alpha15 o antes | `OOS1005` | |
@@ -58,6 +83,8 @@ En una `Table` con `format`, `changes.witness: listing` es legal por lo mismo qu
 | una partición que no está en `columns` | `OOS1004` | |
 | `header`/`delimiter`/`encoding` sin `type: csv` | `OOS1005` | |
 | `changes.witness: listing` en una `Table` sin `format` | `OOS1004` | una tabla de filas no tiene listado |
+| `_rescued_data` en una `Table` con `format.type: parquet` | `OOS1004` | el tipo lo trae el fichero: no hay nada deducido que rescatar |
+| `_rescued_data` con un `type` que no es `String` | `OOS1004` | es un objeto JSON, en texto |
 
 ## 2. `Media<colección>`: el tipo de una referencia a un ítem
 

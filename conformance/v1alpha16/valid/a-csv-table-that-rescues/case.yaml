@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#1
+level: L0
+expects: accept
+summary: >
+  Un CSV que declara `_rescued_data`: lo que no encaje con su tipo llega nulo, y su texto, ahí.

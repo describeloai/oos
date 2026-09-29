@@ -14,7 +14,7 @@ sostener es que no cambia un solo resultado de v1alpha1 a v1alpha15.
 
 ## Qué cubre
 
-Ocho casos que aceptan y treinta y seis que rechazan. Se escribieron **desde la spec, antes que
+Nueve casos que aceptan y treinta y ocho que rechazan. Se escribieron **desde la spec, antes que
 la implementación** (ORE 0046, E1): los `expects` salen del texto, y se cotejan contra la de
 referencia según se implementa (E2). Un caso que la implementación contradiga se discute, no se
 ajusta en silencio.
@@ -33,7 +33,7 @@ Todos parten del mismo mundo: la fuente `s3_ventas` (un bucket), cuyo paquete ti
 | **la forma** (02 §7) | `a-collection-without-formats` · `a-collection-of-archives` · `the-same-format-twice` · `a-virtual-collection-with-no-origin` · `a-retention-that-is-not-a-duration` (OOS1004) · `a-collection-with-columns` (OOS1005) · `a-collection-owned-by-nobody` (OOS2009) · `a-collection-in-v1alpha15` (OOS1003) |
 | **de dónde sale** | `a-collection-from-nowhere` (OOS2018) · `a-source-that-keeps-its-objects-to-itself` (OOS2028) · **`documents-from-images` (OOS2040)** · `a-query-over-a-collection` (OOS2018) |
 | **el gobierno** (02 §6) | `a-collection-that-lowers-its-origin` (OOS4012) · `a-copy-without-a-conduit-for-files` (OOS4011) · `a-copy-that-leaks-the-origin-label` (OOS4002) |
-| **lo tabular** (03 §1) | `a-table-over-parquet-files` · `a-csv-table-with-its-options` · `a-format-in-v1alpha15` · `csv-options-on-parquet` (OOS1005) · `a-pdf-is-not-rows` · `a-partition-that-is-not-a-column` · `a-listing-without-files` (OOS1004) |
+| **lo tabular** (03 §1) | `a-table-over-parquet-files` · `a-csv-table-with-its-options` · `a-format-in-v1alpha15` · `csv-options-on-parquet` (OOS1005) · `a-pdf-is-not-rows` · `a-partition-that-is-not-a-column` · `a-listing-without-files` (OOS1004) · `a-csv-table-that-rescues` · `a-parquet-that-rescues` · `a-rescue-that-is-not-text` (OOS1004) |
 | **la referencia** (03 §2) | `a-reference-to-an-item` · `a-reference-in-v1alpha15` · `media-without-its-collection` (OOS3001) · `a-reference-to-a-dataset` (OOS2018) · `a-reference-carries-its-collection-label` (OOS4002) |
 
 Los que importan son dos parejas. **`a-virtual-collection` y

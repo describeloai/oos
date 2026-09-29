@@ -1,0 +1,5 @@
+rule: spec/v1alpha16/03-lo-tabular-y-la-referencia.md#1
+level: L0
+expects: OOS1004
+summary: >
+  `_rescued_data` en una tabla de Parquet: el tipo lo trae el fichero y no hay nada deducido que rescatar.
