@@ -212,6 +212,7 @@ spec/v1alpha13/    borrador de alcance — ordenar: el schema, segundo nivel del
 spec/v1alpha14/    borrador de alcance — escribir: la vista es SQL, y lo gobernado se deriva de la consulta
 spec/v1alpha15/    borrador de alcance — situar: el modelo vive en un paquete y un schema (`<paquete>.<schema>.<nombre>`)
 spec/v1alpha16/    borrador de alcance — guardar: los ficheros como objetos (`ObjectTable`), la colección tipada (`MediaCollection`), `Table.format` y `Media<…>`
+spec/v1alpha17/    borrador de alcance — anclar: `Struct<…>`, `Vector<n>` y `Anchor`; `Media<…>` vale la referencia entera; la tabla anclada (`anchoredTo`); la colección como listado en SQL (ORE 0049)
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
