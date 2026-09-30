@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha17
+kind: Table
+metadata: { name: bloques, namespace: legal, schema: archivo }
+spec:
+  datasource: s3_ventas
+  object: "bloques/"
+  anchoredTo: legal.archivo.contratos
+  format: { type: parquet }
+  columns:
+    texto: { type: String }
+  reads: { fullScan: cheap }
+  changes: { mode: none, witness: none }

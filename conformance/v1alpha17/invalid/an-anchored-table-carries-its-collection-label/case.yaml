@@ -1,0 +1,6 @@
+rule: spec/v1alpha17/03-la-tabla-anclada.md#5
+level: L0
+expects: OOS4002
+summary: >
+  La colección es high; lo que sale de sus ítems también, sin decirlo, y su copia por un
+  conducto de low no compila.

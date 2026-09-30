@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#1
+level: L0
+expects: accept
+summary: >
+  Un struct anida otro struct y un vector.

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha17
+kind: Entity
+metadata: { name: Contrato, namespace: legal }
+spec:
+  nature: entity
+  primaryKey: [id]
+  backedBy: registro
+  properties:
+    id: { type: String }
+    documento: { type: "Media<legal.archivo.contratos>" }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#2
+level: L0
+expects: accept
+summary: >
+  Un embedding con su dimensión en el tipo: Vector<768>.

@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: fichas, namespace: legal }
+spec:
+  owner: team:legal
+  columns:
+    id: { type: "String" }
+    ficha: { type: "Struct<nombre: String, crudo: Opaque>" }
+  changes: { mode: append }

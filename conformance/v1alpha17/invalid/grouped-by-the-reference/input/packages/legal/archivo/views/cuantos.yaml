@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha17
+kind: View
+metadata: { name: cuantos, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT _item, count(*) AS n FROM legal.archivo.contratos GROUP BY _item
+  columns:
+    _item: { type: "Media<legal.archivo.contratos>" }
+    n: { type: "Integer" }

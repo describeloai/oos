@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#4
+level: L0
+expects: OOS3001
+summary: >
+  Vector<n> es un tipo de v1alpha17.

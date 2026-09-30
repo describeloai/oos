@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha16
+kind: Dataset
+metadata: { name: facturas, namespace: legal }
+spec:
+  owner: team:legal
+  columns:
+    id: { type: "String" }
+    factura: { type: "Struct<numero: String>" }
+  changes: { mode: append }

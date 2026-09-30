@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/02-el-ancla.md#2
+level: L0
+expects: accept
+summary: >
+  Las regiones de una página como lista de anclas.

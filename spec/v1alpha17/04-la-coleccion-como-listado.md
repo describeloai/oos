@@ -35,7 +35,8 @@ tabla; las columnas sueltas son para filtrar.
 
 - **No lleva bytes.** Ninguna columna del listado es el contenido, ni una URL firmada.
 - **No se ordena ni se agrupa por `_item`**: una referencia no tiene orden (Snowflake prohíbe lo
-  mismo sobre `FILE`). Se ordena por `path`, `modified` o `size`.
+  mismo sobre `FILE`). Se ordena por `path`, `modified` o `size`, y se une por `_item.digest`,
+  `path` o `_anchor_id`.
 - **Es de una transacción**: una lectura ve la colección en una transacción entera, la actual o la
   que pida (como un *snapshot* de una tabla). Lo decide el motor; la gramática fija que no hay
   lecturas a medias.
@@ -52,5 +53,4 @@ Una `View` puede leer una colección como cualquier tabla. Su contrato declara `
 | una colección en un `FROM` en v1alpha16 | `OOS2018` | como siempre |
 | una colección en un `FROM` en v1alpha17 | — | es su listado |
 | `ORDER BY` o `GROUP BY` sobre `_item` | `OOS2041` | una referencia no tiene orden |
-| un `JOIN … ON` por `_item` entero | `OOS2041` | se une por `_item.digest`, `_item.path` o `_anchor_id` |
-| una columna del listado que no existe | `OOS2039` | como cualquier contrato de vista |
+| una columna que el listado no tiene (`content`) | `OOS2018` | como la que un `ObjectTable` no tiene |

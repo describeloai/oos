@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#3
+level: L0
+expects: accept
+summary: >
+  La columna que respalda una propiedad Media<c> es de tipo Media<c>: la referencia entera.

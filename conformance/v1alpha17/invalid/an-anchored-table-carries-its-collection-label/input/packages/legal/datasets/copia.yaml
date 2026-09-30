@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: copia, namespace: legal }
+spec:
+  owner: team:legal
+  from: { dataset: legal.bloques }
+  freshness: 1h

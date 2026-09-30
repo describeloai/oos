@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/02-el-ancla.md#5
+level: L0
+expects: OOS3007
+summary: >
+  Un ancla es una columna o un elemento de list<Anchor>, no un campo de un struct.

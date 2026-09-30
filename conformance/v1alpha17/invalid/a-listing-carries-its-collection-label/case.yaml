@@ -1,0 +1,6 @@
+rule: spec/v1alpha17/04-la-coleccion-como-listado.md#3
+level: L0
+expects: OOS4002
+summary: >
+  Una vista sobre el listado hereda las etiquetas de la colección: copiarla por un conducto de
+  low, con la colección high, no compila.

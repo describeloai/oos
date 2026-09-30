@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#4
+level: L0
+expects: OOS3001
+summary: >
+  Struct<…> es un tipo de v1alpha17: en un documento de v1alpha16 no existe.

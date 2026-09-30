@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/02-el-ancla.md#5
+level: L0
+expects: OOS3001
+summary: >
+  Anchor es un tipo de v1alpha17.

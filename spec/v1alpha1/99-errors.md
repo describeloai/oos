@@ -108,7 +108,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2038` | la consulta de una vista no es **un** `SELECT` que lee por nombre: varias sentencias, una que escribe o crea, o una fuente leída por función (`read_parquet`, una URL) | v1alpha14 01 §2, §3 |
 | `OOS2039` | el contrato de una vista (`columns`) no es exactamente lo que su consulta proyecta | v1alpha14 01 §4 |
 | `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
-| `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar, agrupar o unir por la referencia entera | v1alpha17 03 §6, 04 §4 · *borrador: su caso llega con la implementación* |
+| `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
@@ -120,7 +120,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS3004` | incompatibilidad de unidades en una derivación | 02 §5 |
 | `OOS3005` | cardinalidad de relación incoherente con las claves declaradas | 02 §6 |
 | `OOS3006` | el enlace no casa una clave declarada del destino: aridad, tipos o `toKey` | 02 §6 |
-| `OOS3007` | un tipo compuesto mal formado: `Struct` vacío o con un nombre repetido, `Vector<n>` fuera de `1 ≤ n ≤ 16000`, `Opaque`, `Media<…>` o `Anchor` como campo de un `Struct`, `list<list<…>>` | v1alpha17 01 §4, 02 §5 · *borrador: su caso llega con la implementación* |
+| `OOS3007` | un tipo compuesto mal formado: `Struct` vacío o con un nombre repetido, `Vector<n>` fuera de `1 ≤ n ≤ 16000`, `Opaque`, `Media<…>` o `Anchor` como campo de un `Struct`, `list<list<…>>` | v1alpha17 01 §4, 02 §5 |
 
 ## 6. `OOS4xxx` · Gobernanza y flujo
 

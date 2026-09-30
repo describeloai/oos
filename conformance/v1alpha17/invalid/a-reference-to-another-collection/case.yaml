@@ -1,0 +1,6 @@
+rule: spec/v1alpha17/03-la-tabla-anclada.md#6
+level: L0
+expects: OOS2041
+summary: >
+  Una tabla anclada a los contratos no lleva una columna Media de las fotos: es de una
+  colección.

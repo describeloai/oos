@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#2
+level: L0
+expects: accept
+summary: >
+  Una transcripción como lista de segmentos: list<Struct<…>>.

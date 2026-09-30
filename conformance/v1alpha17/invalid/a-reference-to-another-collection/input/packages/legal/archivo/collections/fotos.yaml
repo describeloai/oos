@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha16
+kind: MediaCollection
+metadata:
+  name: fotos
+  namespace: legal
+  schema: archivo
+spec:
+  owner: team:legal
+  media: image
+  formats: [jpg]
+  from: { objectTable: s3_ventas.docs.fotos }
+  virtual: true

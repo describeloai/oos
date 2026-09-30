@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#1
+level: L0
+expects: accept
+summary: >
+  Una columna con forma: el struct de una factura, con un decimal dentro.

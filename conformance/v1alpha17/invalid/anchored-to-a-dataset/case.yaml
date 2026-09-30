@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/03-la-tabla-anclada.md#6
+level: L0
+expects: OOS2018
+summary: >
+  Una tabla anclada lo está a una colección; registro es un dataset.

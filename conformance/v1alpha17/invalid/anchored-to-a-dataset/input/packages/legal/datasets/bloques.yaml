@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: bloques, namespace: legal }
+spec:
+  owner: team:legal
+  anchoredTo: legal.registro
+  columns:
+    texto: { type: "String" }

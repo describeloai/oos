@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/03-la-tabla-anclada.md#6
+level: L0
+expects: OOS1004
+summary: >
+  Una tabla anclada se funde por _anchor_id: no declara changes.

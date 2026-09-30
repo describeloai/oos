@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha17
+kind: View
+metadata: { name: pdfs, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT _item, path FROM legal.archivo.contratos
+  columns:
+    _item: { type: "Media<legal.archivo.contratos>" }
+    path: { type: "String" }

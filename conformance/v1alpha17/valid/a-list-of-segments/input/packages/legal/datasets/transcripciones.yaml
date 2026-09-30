@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: transcripciones, namespace: legal }
+spec:
+  owner: team:legal
+  columns:
+    id: { type: "String" }
+    segmentos: { type: "list<Struct<t_start: Float, t_end: Float, texto: String>>" }
+  changes: { mode: append }

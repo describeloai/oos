@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/04-la-coleccion-como-listado.md#1
+level: L0
+expects: accept
+summary: >
+  En v1alpha17 una colección en un FROM es su listado: la referencia y sus metadatos, sin bytes.

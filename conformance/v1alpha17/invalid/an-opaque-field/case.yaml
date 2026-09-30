@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/01-los-tipos.md#4
+level: L0
+expects: OOS3007
+summary: >
+  Opaque dentro de un struct: lo que no se modela no se anida en lo que sí.

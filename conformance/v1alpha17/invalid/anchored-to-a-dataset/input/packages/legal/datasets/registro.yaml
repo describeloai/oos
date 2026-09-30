@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: registro, namespace: legal }
+spec:
+  owner: team:legal
+  columns:
+    id: { type: "String" }
+  changes: { mode: append }

@@ -40,6 +40,8 @@ del ancla y `_derivation.fn`, en ese orden. Dos ejecuciones de la misma función
 contenido dan **los mismos ids**: una fila se reemplaza, no se duplica, y otra tabla puede
 apuntar a ella (como el `element_id` de Unstructured, que es un hash de lo mismo).
 
+Por eso una tabla anclada **no declara `changes`**: se funde por `_anchor_id`, siempre.
+
 ## 3. La derivación
 
 `_derivation.key` es `sha256(identidad del ítem, fn, fn_version, model_rev, params_hash)`. Es la
@@ -73,5 +75,7 @@ reintentar solo lo fallido y decir, de cada ítem, qué pasó con él.
 | `anchoredTo` en v1alpha16 o antes | `OOS1005` | una clave que no existía |
 | `anchoredTo` que no resuelve a una `MediaCollection` | `OOS2018` | |
 | una columna de `columns` que empieza por `_` | `OOS1004` | las de sistema son de la gramática |
+| `changes` en una tabla anclada | `OOS1004` | se funde por `_anchor_id` (§2) |
+| `anchoredTo` en un dataset con `from` | `OOS1004` | la escribe código que lee una colección, no un plan |
 | una columna `Media<x>` con `x` distinta de `anchoredTo` | `OOS2041` | una tabla anclada es de **una** colección; otra referencia se une por su id |
 | `anchoredTo` en un `kind` que no es `Dataset` | `OOS1005` | |

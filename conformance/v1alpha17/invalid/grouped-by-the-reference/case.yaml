@@ -1,0 +1,5 @@
+rule: spec/v1alpha17/04-la-coleccion-como-listado.md#4
+level: L0
+expects: OOS2041
+summary: >
+  Tampoco se agrupa por ella.
