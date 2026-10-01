@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#7
+level: L0
+expects: OOS5001
+summary: >
+  Quitar un parametro de input rompe a quien lo pasaba, aunque fuera opcional.

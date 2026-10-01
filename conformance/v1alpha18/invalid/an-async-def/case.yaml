@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#3
+level: L0
+expects: OOS2042
+summary: >
+  Un async def no es un def.

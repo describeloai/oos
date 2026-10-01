@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: contar, namespace: ventas }
+spec:
+  runtime: wasm
+  entrypoint: dist/contar.wasm
+  reads: [ventas.pedidos]
+  models: [modelo/extractor]
+  output:
+    pedidos: { type: Integer }

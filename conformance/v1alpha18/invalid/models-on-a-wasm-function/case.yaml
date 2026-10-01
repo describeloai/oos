@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#5
+level: L0
+expects: OOS1004
+summary: >
+  models es solo de runtime: python; un modulo wasm no tiene red con la que llamar a un modelo.

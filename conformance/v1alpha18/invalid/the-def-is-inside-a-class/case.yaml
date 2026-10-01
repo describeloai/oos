@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#3
+level: L0
+expects: OOS2042
+summary: >
+  El def nombrado no esta en el nivel superior del modulo: un metodo no es una funcion del modulo.

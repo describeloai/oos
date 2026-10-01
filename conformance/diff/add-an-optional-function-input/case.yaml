@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#7
+level: L0
+expects: accept
+summary: >
+  Un parametro opcional nuevo es superficie anadida: menor.

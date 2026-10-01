@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#5
+level: L0
+expects: OOS2005
+summary: >
+  models nombra un modelo que no esta.

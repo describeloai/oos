@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4
+level: L0
+expects: accept
+summary: >
+  Un def que recibe la fila y los parametros de input por su nombre, con lo opcional por defecto.

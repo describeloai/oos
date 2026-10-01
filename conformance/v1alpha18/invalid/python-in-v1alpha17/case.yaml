@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#8
+level: L0
+expects: OOS1004
+summary: >
+  runtime: python es de v1alpha18: en un documento de v1alpha17 no esta en el enum.

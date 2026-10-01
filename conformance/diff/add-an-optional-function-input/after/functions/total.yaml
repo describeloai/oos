@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: total, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: funciones/total.py:total
+  reads: [ventas.pedidos]
+  input:
+    desde: { type: Date, required: true }
+    moneda: { type: String }
+  output:
+    total: { type: Decimal }

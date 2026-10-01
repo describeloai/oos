@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.1
+level: L0
+expects: accept
+summary: >
+  Las anotaciones y los decoradores no son firma; un parametro solo-por-nombre vale como cualquier otro.

@@ -109,6 +109,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2039` | el contrato de una vista (`columns`) no es exactamente lo que su consulta proyecta | v1alpha14 01 §4 |
 | `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
 | `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
+| `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior | v1alpha18 01 §3 |
+| `OOS2043` | la cabecera del `def` no es la firma del documento: sobra o falta un parámetro de `input`, falta o sobra la fila, lo obligatorio tiene valor por defecto o lo opcional no, o hay `*args`/`**kwargs` | v1alpha18 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

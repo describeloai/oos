@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: riesgo, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: ../crm/funciones/riesgo.py:riesgo
+  over: ventas.clientes
+  reads: [ventas.pedidos]
+  input:
+    umbral: { type: Decimal, required: true }
+    moneda: { type: String }
+  output:
+    nivel: { type: String }

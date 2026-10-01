@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#5
+level: L0
+expects: OOS1004
+summary: >
+  model es el modelo que se ejecuta (runtime: model); una funcion de codigo usa modelos con models.
