@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.10
+level: L0
+expects: OOS2043
+summary: >
+  Una t-string es Python 3.14, y el runtime es 3.12.

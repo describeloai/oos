@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata:
+  name: adelantada
+  namespace: ventas
+  description: La docstring empieza tarde.
+spec:
+  runtime: python
+  entrypoint: funciones/despues.py:adelantada
+  input:
+    minimo: { type: Integer }
+  output:
+    valor: { type: Integer }
+  limits: { timeout: '30s' }

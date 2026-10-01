@@ -110,7 +110,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
 | `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
 | `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior | v1alpha18 01 §3 |
-| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs` | v1alpha18 01 §4 |
+| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción o un nombre que no es lo que parece, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs`; o un fichero que no es Python del runtime | v1alpha18 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

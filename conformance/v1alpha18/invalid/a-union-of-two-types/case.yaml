@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.6
+level: L0
+expects: OOS2043
+summary: >
+  int | str no es un tipo: un parámetro tiene uno, y None solo dice que puede faltar.

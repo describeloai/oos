@@ -110,10 +110,21 @@ v1alpha10; con `python`, el código fuente **es** el `entrypoint`.
 
 ### 4.1 · Qué es una función
 
-Un `def` del **nivel superior** de un fichero `.py` del paquete, con el decorador `function` del SDK
-`ore` en su lista de decoradores: `@function` o `@function(...)` cuando el fichero lo importa con
-`from ore import function`, o `@ore.function` / `@ore.function(...)`. Otro `function` —el de otra
-biblioteca— no lo es. Un fichero puede tener varias.
+Un `def` del **nivel superior** de un fichero `.py` del paquete con un decorador que **es**
+`ore.function` —`@nombre` o `@nombre(...)`—. Qué es un nombre se decide **leyendo el fichero como
+Python lo resolvería**, sin ejecutarlo (§4.9):
+
+- `from ore import function` liga `function` a `ore.function`; `from ore import function as f`
+  liga `f`. `import ore` liga `ore`, y `@ore.function` es él; `import ore as o`, `@o.function`.
+- Vale la ligadura vigente **donde está el `def`**, porque un decorador se evalúa al definir la
+  función. Lo que la tapa después —otra importación, un `def`, una clase, una asignación del mismo
+  nombre— vale para lo que viene detrás, no para lo de antes.
+- Cuentan las ligaduras del nivel superior, también las de dentro de un `if` o un `try` de ese
+  nivel (`if TYPE_CHECKING:`, `try: … except ImportError:`).
+
+Un `function` de otra biblioteca no lo es, aunque se llame igual. Un fichero puede tener varias.
+Un `def` decorado dentro de una clase o de otro `def` no es una función (una herramienta PUEDE
+avisar: así no se publica).
 
 ### 4.2 · Los argumentos del decorador
 
@@ -172,6 +183,17 @@ La anotación de retorno es **obligatoria** (`OOS2043` sin ella, o con `-> None`
 - **una `@dataclass` del nivel superior del mismo fichero** → `output` como mapa de sus campos,
   cada uno con su tipo de §4.6, `required: true` si no tiene valor por defecto ni es opcional.
 
+Una clase es una `@dataclass` si un decorador suyo es `dataclasses.dataclass`, con argumentos o sin
+ellos (los nombres, como en §4.1). Y sus campos son lo que `dataclasses` diría:
+
+- los nombres anotados de su cuerpo, en orden, salvo `ClassVar[…]`, `InitVar[…]` y el separador
+  `KW_ONLY`, que no son campos;
+- `campo: T = field(...)` tiene valor por defecto solo con `default=` o `default_factory=`; sin
+  ninguno de los dos es obligatorio;
+- puede heredar de otras `@dataclass` del nivel superior del fichero: sus campos van delante, y uno
+  que se redefine cambia en su sitio. Heredar de otra cosa (salvo `object`) o llevar argumentos de
+  clase (`metaclass=…`) es `OOS2043`: esos campos no se leen sin ejecutar.
+
 ### 4.6 · Los tipos
 
 | Python | OOS |
@@ -184,10 +206,26 @@ La anotación de retorno es **obligatoria** (`OOS2043` sin ella, o con `-> None`
 | `datetime`, `datetime.datetime` | `DateTime` |
 | `Decimal`, `decimal.Decimal` | `Decimal` |
 | `list[T]`, `List[T]` | `list<T>`, con `T` de esta tabla y sin listas dentro |
-| `Optional[T]`, `T \| None` | `T`, y el parámetro es opcional |
+| `Optional[T]`, `T \| None`, `Union[T, None]` | `T`, y el parámetro es opcional |
+| `Annotated[T, …]` | `T`: lo demás no es firma en esta versión |
 
 Cualquier otro —`dict`, `Any`, una clase que no es una `@dataclass` del fichero, un tipo de otra
 biblioteca— es `OOS2043`: lo que no tiene tipo en OOS no es firma.
+
+**Cómo se lee una anotación:**
+
+- **Por lo que el nombre es, no por cómo se escribe** (§4.1). `date` es `Date` si es
+  `datetime.date` —`from datetime import date`, o `import datetime` y `datetime.date`, con alias o
+  sin él—; `int`, `float`, `str`, `bool` y `list` son los del lenguaje salvo que el módulo los
+  tape. Un nombre sin ligar, o ligado a otra cosa —una clase del fichero que se llama `date`—, es
+  `OOS2043`.
+- `typing` y `typing_extensions` son lo mismo. Una unión de un tipo con `None` es ese tipo,
+  opcional; cualquier otra unión es `OOS2043`.
+- **Entre comillas** (`"Decimal"`, `list["Linea"]`), la anotación es la expresión de dentro.
+- **Cuándo**: como en el runtime (§4.10), una anotación se resuelve donde se evalúa —la de un
+  parámetro o de lo que devuelve, en el `def`; la de un campo, en su clase—, así que una clase
+  definida más abajo todavía no existe (`OOS2043`). Entre comillas, o con `from __future__ import
+  annotations`, se resuelve al final del módulo.
 
 ### 4.7 · `output` como un valor
 
@@ -209,12 +247,43 @@ Para cada fichero `.py` del paquete y cada documento `runtime: python`:
 | un documento cuyo `entrypoint` nombra un `def` sin `@function` | `OOS2013` |
 | un documento que no es el que su `@function` da (§4.3), campo a campo | `OOS2013` |
 | un `@function` que no se puede derivar (§4.2, §4.4–§4.6) | `OOS2043` |
+| un fichero con un `@function`, o que un `entrypoint` nombra, que no es Python del runtime: no se analiza, o usa sintaxis posterior a su versión (§4.10) | `OOS2043`, una vez por fichero |
 
 Dónde vive el documento en el paquete no forma parte de la regla: la herramienta lo pone en
 `functions/<def>.yaml` junto al código, y un validador lo encuentra por su `entrypoint`.
 
 **La precedencia**, para una misma función: `OOS2042` (no está) antes que `OOS2043` (no se deriva)
 antes que `OOS2013` (no es el que se deriva).
+
+**Un paquete que no puede tener documentos** —su nombre no puede ser `namespace`, `OOS2030`— no
+exige el de sus `@function`: no tienen dónde publicarse, y son código de la sesión (§9).
+
+### 4.9 · Leer, nunca ejecutar
+
+La derivación es **estática**: una implementación DEBE sacar la firma del texto del fichero y NO
+DEBE importarlo ni ejecutarlo. Importar es correr el código del cliente —con sus efectos y sus
+dependencias— dentro de quien compila, y daría una respuesta distinta en cada máquina; leer es una
+función del texto.
+
+Una implementación PUEDE negarse a leer lo que no es razonable leer —un fichero demasiado grande,
+un anidamiento demasiado hondo—, como el propio CPython (más de 200 paréntesis abiertos, más de 100
+niveles de sangría), y entonces es `OOS2043` en ese fichero.
+
+### 4.10 · La versión de Python
+
+El runtime `python` de esta versión es **Python 3.12**: su gramática, y cuándo evalúa las
+anotaciones (en el `def`, salvo con comillas o `from __future__ import annotations`). La sintaxis
+posterior —una t-string de 3.14, un parámetro de tipo con valor por defecto de 3.13— es Python
+válido que el runtime no ejecuta: `OOS2043`. Subir la versión es una versión de OOS.
+
+### 4.11 · La herramienta (no normativo)
+
+`ore functions generate` escribe el documento de cada `@function` en `functions/<def>.yaml` del
+repositorio del código (la carpeta con `pyproject.toml`) o del paquete, o donde ya esté el que
+nombra su `entrypoint`; con los mismos bytes para la misma firma, y una primera línea de
+procedencia, `# generado por ore desde <entrypoint>`, que le deja borrar el de un `@function` que
+ya no existe sin tocar nunca uno escrito a mano. `--check` dice si algún documento no es el que el
+código da, para el CI.
 
 ## 5. `models`
 
@@ -288,7 +357,7 @@ modelo más se decide cuando se mida.
 | `model` o `prompt` con `runtime: python` | `OOS1004` | de v1alpha9 |
 | sin `over`, `reads`, `effects` ni `models` —ni `input`, con `python`— | `OOS1004` | §5 |
 | el fichero o el `def` del `entrypoint` no están | `OOS2042` | §3 |
-| un `@function` que no se puede derivar | `OOS2043` | §4 |
+| un `@function` que no se puede derivar, o un fichero que no es Python del runtime | `OOS2043` | §4, §4.10 |
 | un `@function` sin documento, un documento sin `@function`, o uno que no es el que se deriva | `OOS2013` | §4.8 |
 | un modelo de `models` que no resuelve | `OOS2005` | §5 |
 | lo demás | lo de v1alpha10 §6 | |
@@ -301,5 +370,8 @@ modelo más se decide cuando se mida.
   vista previa del código que todavía no está en un commit tampoco es gramática: no hay documento
   que cotejar.
 - **Quién puede invocarla**: `authorization` (Cedar), como en v1alpha10.
+- **Los `@function` de un paquete que no puede ser `namespace`** (`OOS2030`, el de un proyecto):
+  hoy no se publican ni se exigen (§4.8). Si un proyecto puede publicar funciones —y con qué
+  nombre— está abierto.
 - **`node` y `jvm`**: entran por esta misma regla —una función exportada marcada, su firma como
   documento derivado— cuando haya quien los ejecute.

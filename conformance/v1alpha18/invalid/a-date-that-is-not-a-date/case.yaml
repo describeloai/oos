@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.6
+level: L0
+expects: OOS2043
+summary: >
+  Una clase del fichero que se llama date tapa a datetime.date: no es una fecha.

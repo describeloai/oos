@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.5
+level: L0
+expects: OOS2043
+summary: >
+  Una @dataclass que hereda de algo que no es una @dataclass del fichero: sus campos no se leen sin ejecutar.

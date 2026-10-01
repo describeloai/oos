@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: por_modulo, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: funciones/nombres.py:por_modulo
+  input:
+    dia: { type: Date, required: true }
+    'n': { type: Integer }
+  output: { type: String }

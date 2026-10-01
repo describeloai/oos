@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.1
+level: L0
+expects: OOS2013
+summary: >
+  Un decorador function que no es el de ore: el documento promueve un def sin @function.

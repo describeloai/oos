@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: resultado, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: funciones/resultado.py:resultado
+  input:
+    importe: { type: Decimal, required: true }
+  output:
+    id: { type: String, required: true }
+    total: { type: Decimal, required: true }
+    notas: { type: list<String> }
+    puntos: { type: Integer, required: true }
+    peso: { type: Float }

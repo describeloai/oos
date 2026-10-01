@@ -46,7 +46,8 @@ un consumidor—. Escrito a mano y distinto del código es `OOS2013`.
 - **`runtime: python`**, con `entrypoint: <ruta>.py:<def>` dentro del paquete (`01` §3).
 - **El documento se deriva del código** (`01` §4): `@function(over=…, reads=…, models=…,
   timeout=…)` sobre un `def` con anotaciones de tipo; la tabla de tipos de Python a OOS; la
-  coherencia en los dos sentidos.
+  coherencia en los dos sentidos. Se deriva **leyendo**, sin ejecutar, y resolviendo cada nombre
+  como Python 3.12 lo resolvería (`01` §4.9, §4.10).
 - **`output` como un valor**, `{type: T}`, junto al mapa de campos (`01` §4.7).
 - **`models`**: los modelos que el código puede llamar (`01` §5). `model` sigue siendo lo que es
   desde v1alpha9: *el modelo es lo que se ejecuta*.

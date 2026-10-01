@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata:
+  name: por_alias
+  namespace: ventas
+  description: 'Lo que se pida, por alias.'
+spec:
+  runtime: python
+  entrypoint: funciones/nombres.py:por_alias
+  input:
+    x: { type: Integer }
+    nombre: { type: String, required: true }
+  output: { type: list<Float> }
