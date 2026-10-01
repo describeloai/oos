@@ -6,8 +6,5 @@ spec:
   entrypoint: funciones/riesgo.py:riesgo
   over: ventas.clientes
   reads: [ventas.pedidos]
-  input:
-    umbral: { type: Decimal, required: true }
-    moneda: { type: String }
   output:
-    nivel: { type: String }
+    nivel: { type: String, required: true }

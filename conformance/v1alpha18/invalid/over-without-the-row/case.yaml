@@ -1,5 +1,5 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.4
 level: L0
 expects: OOS2043
 summary: >
-  Con over, el primer parametro es la fila; aqui no la hay.
+  Con over, el primer parametro es la fila; aqui no hay ninguno.

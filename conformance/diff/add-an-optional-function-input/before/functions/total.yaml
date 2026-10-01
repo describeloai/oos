@@ -7,5 +7,4 @@ spec:
   reads: [ventas.pedidos]
   input:
     desde: { type: Date, required: true }
-  output:
-    total: { type: Decimal }
+  output: { type: Decimal }

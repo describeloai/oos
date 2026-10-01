@@ -1,5 +1,5 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#5
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.2
 level: L0
 expects: accept
 summary: >
-  Sin over: el def se llama una vez; models declara el modelo que el codigo puede llamar, en una carpeta de repositorio.
+  Sin over, con reads, models y timeout en el decorador, en una carpeta de repositorio.

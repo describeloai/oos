@@ -83,7 +83,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila | 03 §3.5 |
 | `OOS2015` | un filtro exigido —por `requiredFilters` o por un ámbito de fila— nombra una propiedad que el binding no mapea | 05 §5.3 |
 | `OOS2012` | secreto de conexión presente en un documento | 03 §2.1 |
-| `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar u `ontology.lock` | 00 §5 |
+| `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar, `ontology.lock` o, desde v1alpha18, el `Function` de un `@function` | 00 §5 · v1alpha18 01 §4.8 |
 | `OOS2016` | la firma de un paquete importado no verifica, o falta la que el lock afirma | v1alpha6 02 §5 |
 | `OOS2017` | la prueba de transparencia de un paquete no verifica, o falta la que el lock afirma | v1alpha6 03 §5 |
 | `OOS2018` | una vista, `backedBy`, un campo o un filtro nombran una vista o un campo que no existe | v1alpha7 01 §4 |
@@ -110,7 +110,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
 | `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
 | `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior | v1alpha18 01 §3 |
-| `OOS2043` | la cabecera del `def` no es la firma del documento: sobra o falta un parámetro de `input`, falta o sobra la fila, lo obligatorio tiene valor por defecto o lo opcional no, o hay `*args`/`**kwargs` | v1alpha18 01 §4 |
+| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs` | v1alpha18 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

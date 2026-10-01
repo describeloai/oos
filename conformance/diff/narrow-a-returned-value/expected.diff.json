@@ -1,0 +1,6 @@
+{
+  "changes": [
+    { "code": "OOS5002", "axis": "CONSUMER", "subject": "ventas.total.output" }
+  ],
+  "requiredBump": "major"
+}

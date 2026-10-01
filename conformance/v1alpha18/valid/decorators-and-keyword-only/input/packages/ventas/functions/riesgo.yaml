@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: riesgo, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: funciones/riesgo.py:riesgo
+  over: ventas.clientes
+  input:
+    umbral: { type: Float, required: true }
+  output:
+    nivel: { type: String, required: true }

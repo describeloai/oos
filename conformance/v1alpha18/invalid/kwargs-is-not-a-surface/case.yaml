@@ -1,4 +1,4 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.4
 level: L0
 expects: OOS2043
 summary: >

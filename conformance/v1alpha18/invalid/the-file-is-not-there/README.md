@@ -4,4 +4,4 @@
 
 ---
 
-`funciones/riesgo.py` no existe: el documento promueve código que no hay.
+`funciones/riesgo.py` no existe: el documento nombra código que no hay.

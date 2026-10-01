@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.2
+level: L0
+expects: OOS2043
+summary: >
+  over como variable: los argumentos del decorador se leen sin ejecutar, y tienen que ser literales.

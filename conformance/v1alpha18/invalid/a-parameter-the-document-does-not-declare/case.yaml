@@ -1,5 +1,5 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.8
 level: L0
-expects: OOS2043
+expects: OOS2013
 summary: >
-  El def pide un parametro que input no declara: nadie podria pasarlo.
+  El def pide un parametro que el documento no tiene: el documento es de antes del codigo.

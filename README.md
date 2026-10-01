@@ -213,7 +213,7 @@ spec/v1alpha14/    borrador de alcance — escribir: la vista es SQL, y lo gober
 spec/v1alpha15/    borrador de alcance — situar: el modelo vive en un paquete y un schema (`<paquete>.<schema>.<nombre>`)
 spec/v1alpha16/    borrador de alcance — guardar: los ficheros como objetos (`ObjectTable`), la colección tipada (`MediaCollection`), `Table.format` y `Media<…>`
 spec/v1alpha17/    borrador de alcance — anclar: `Struct<…>`, `Vector<n>` y `Anchor`; `Media<…>` vale la referencia entera; la tabla anclada (`anchoredTo`); la colección como listado en SQL (ORE 0049)
-spec/v1alpha18/    borrador de alcance — promover: `runtime: python`, el `entrypoint` nombra un `def` y su cabecera es la firma; `models`, lo que el código usa (ORE 0050)
+spec/v1alpha18/    borrador de alcance — promover: `runtime: python`; un `def` marcado con `@function` y su `Function` DERIVADO del código (firma de las anotaciones, `over`/`reads`/`models` del decorador, `OOS2013` si no coincide); `output` como un valor (ORE 0050)
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset
@@ -227,7 +227,7 @@ schemas/v1alpha13/ schema, y el contenido gobernado con `metadata.schema` (la vi
 schemas/v1alpha14/ view con cuerpo SQL (`sql`, `dialect`, el contrato `columns`); el resto, el de v1alpha13 en esta versión
 schemas/v1alpha15/ model con `namespace` y `schema`
 schemas/v1alpha16/ object-table y media-collection; table con `format` (y el testigo `listing`); entity con `Media<…>`
-schemas/v1alpha18/ function con `runtime: python`, `entrypoint` `<ruta>.py:<def>` y `models`
+schemas/v1alpha18/ function con `runtime: python`, `entrypoint` `<ruta>.py:<def>`, `models` y `output` como un valor
 conformance/       suite de conformidad — NORMATIVA
 examples/          ontologías de referencia — validan con CERO diagnósticos
 packages/          vocabulario publicable — se consume, no se copia

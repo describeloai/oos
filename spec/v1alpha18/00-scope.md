@@ -6,12 +6,14 @@
 | | |
 |---|---|
 | `00-scope` | **este documento** — qué entra, qué no, y por qué el código de un repositorio se promueve a una función |
-| [`01-la-funcion-de-codigo`](01-la-funcion-de-codigo.md) | `runtime: python`: el `entrypoint` nombra un `def`, su cabecera es la firma, y `models` declara los modelos que el código usa |
+| [`01-la-funcion-de-codigo`](01-la-funcion-de-codigo.md) | `runtime: python`: un `def` marcado con `@function`, y su documento `Function` **derivado** del código —la firma de las anotaciones, `over`/`reads`/`models` de los argumentos del decorador— y cotejado con él |
 
-Esta versión **cambia un `kind`** —`Function`—: abre un runtime, `python`, y una clave, `models`.
-**Aclara** dos cosas que valían para todas las versiones y nadie había escrito: qué vale `required`
-cuando no se dice, y cómo se clasifica en `ore diff` el cambio de **un** parámetro. Añade dos
-códigos, `OOS2042` y `OOS2043`. Los demás `kind` no cambian.
+Esta versión **cambia un `kind`** —`Function`—: abre un runtime, `python`, una clave, `models`, y
+una forma de `output`, **un valor** (`{type: T}`). Y decide **de dónde sale** el documento de una
+función de código: **del código**, derivado y cotejado como un artefacto generado (`OOS2013`). **Aclara**
+dos cosas que valían para todas las versiones y nadie había escrito: qué vale `required` cuando no
+se dice, y cómo se clasifica en `ore diff` el cambio de **un** parámetro. Añade dos códigos,
+`OOS2042` y `OOS2043`, y amplía `OOS2013` a las funciones. Los demás `kind` no cambian.
 
 ---
 
@@ -21,7 +23,7 @@ códigos, `OOS2042` y `OOS2043`. Los demás `kind` no cambian.
 |---|---|---|
 | v1alpha9 | **razonar** | un modelo que se usa es un documento del árbol |
 | v1alpha10 | **actuar** | una función es lógica encapsulada sobre la copia: lee lo que declara, devuelve su `output`, propone sus `effects` |
-| **v1alpha18** | **promover** | **el código de un repositorio pasa a ser una función cuando un documento lo nombra: el documento es el contrato, y el código lo cumple o no compila** |
+| **v1alpha18** | **promover** | **el código de un repositorio pasa a ser una función cuando se marca: se escribe el `def`, y el documento que se gobierna se deriva de él** |
 
 v1alpha10 dejó la función con una sola forma de traer código, `runtime: wasm`, porque su sandbox no
 tenía red: lo que una función puede leer es la unión de lo que declara, y fuera no hay canal. Era
@@ -34,10 +36,18 @@ la hace cumplir en tiempo de ejecución: con `wasm`, la falta de sockets; con `p
 cerrada más lo declarado. Al compilar, las dos son lo mismo: `over`, `reads`, `effects` y ahora
 `models`.
 
+Y lo que tampoco cambia es **quién escribe qué**. Nadie escribe una función en YAML: se escribe
+código. El documento lo produce la herramienta a partir de él, como el esquema Cedar a partir de las
+políticas, y se compromete para que lo lea quien no tiene el código a mano —el catálogo, `ore diff`,
+un consumidor—. Escrito a mano y distinto del código es `OOS2013`.
+
 ## 2. Qué entra
 
 - **`runtime: python`**, con `entrypoint: <ruta>.py:<def>` dentro del paquete (`01` §3).
-- **La cabecera del `def` es la firma**, y se coteja con `input` sin ejecutar nada (`01` §4).
+- **El documento se deriva del código** (`01` §4): `@function(over=…, reads=…, models=…,
+  timeout=…)` sobre un `def` con anotaciones de tipo; la tabla de tipos de Python a OOS; la
+  coherencia en los dos sentidos.
+- **`output` como un valor**, `{type: T}`, junto al mapa de campos (`01` §4.7).
 - **`models`**: los modelos que el código puede llamar (`01` §5). `model` sigue siendo lo que es
   desde v1alpha9: *el modelo es lo que se ejecuta*.
 - **`limits.timeout`** es el plazo de una invocación (`01` §6). Estaba en la gramática sin decir
@@ -63,4 +73,5 @@ cerrada más lo declarado. Al compilar, las dos son lo mismo: `over`, `reads`, `
 | código | qué | dónde |
 |---|---|---|
 | `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior | `01` §3 |
-| `OOS2043` | la cabecera del `def` no es la firma del documento: sobra o falta un parámetro, la fila falta o sobra, lo obligatorio tiene valor por defecto o lo opcional no, o la superficie no es cerrada (`*args`, `**kwargs`) | `01` §4 |
+| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal o no existe, un parámetro sin anotar, un tipo sin traducción a OOS, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs` | `01` §4 |
+| `OOS2013` (ampliado) | un `@function` sin su documento, un documento sin su `@function`, o uno que no es el que el código da | `01` §4.8 |

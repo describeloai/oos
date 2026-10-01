@@ -4,4 +4,4 @@
 
 ---
 
-`../crm/funciones/riesgo.py` existe, pero es de otro paquete. La ruta es relativa a la carpeta del paquete y no sale de ella.
+`../crm/funciones/riesgo.py` es de otro paquete. La ruta es relativa a la carpeta del paquete y no sale de ella.

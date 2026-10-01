@@ -1,5 +1,5 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.8
 level: L0
-expects: OOS2043
+expects: OOS2013
 summary: >
-  umbral es obligatorio en el documento y el def le da un valor por defecto.
+  El codigo da un valor por defecto a umbral y el documento lo tiene por obligatorio.

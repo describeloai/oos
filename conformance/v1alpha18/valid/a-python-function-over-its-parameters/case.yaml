@@ -1,5 +1,5 @@
-rule: spec/v1alpha18/01-la-funcion-de-codigo.md#5
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.7
 level: L0
 expects: accept
 summary: >
-  Una funcion de codigo que solo trabaja sobre sus parametros: input es superficie, y toca algo.
+  Sin datos ni modelos: solo parametros, y devuelve un valor (output como un tipo).

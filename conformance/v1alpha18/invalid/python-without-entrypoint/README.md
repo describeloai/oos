@@ -4,4 +4,4 @@
 
 ---
 
-Con `python`, el `entrypoint` es obligatorio: es lo que el documento promueve.
+Con `python`, el `entrypoint` es obligatorio: es lo que el documento nombra.

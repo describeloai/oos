@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://oos.dev/schemas/v1alpha18/function.schema.json",
   "title": "Function",
-  "description": "Logica encapsulada como codigo que lee o edita los hechos de la copia, y el puente por el que un modelo soberano infiere sobre un conjunto de ellos. Lo que lee (`over`, `reads`: vistas) y lo que causa (`effects`) se leen en el documento: `lee(f) ⊆ reads(f)` y `causa(f) ⊆ effects(f)`. Tres caras —leer, editar, inferir— con un solo regimen: el sandbox es un conducto, los endosos deciden la integridad, y una funcion no aplica: propone.\n\nNormativo: spec/v1alpha10/01-function.md\n\nv1alpha13: admite `metadata.schema`, y su nombre cualificado es `<paquete>.<schema>.<nombre>` (spec/v1alpha13/01-el-schema.md). Lo demas, igual que en v1alpha10.\n\nv1alpha18: `runtime: python` —el `entrypoint` nombra un `def` del paquete (`<ruta>.py:<def>`) y su cabecera es la firma (OOS2042, OOS2043)— y `models`, los modelos que el codigo puede llamar. Normativo: spec/v1alpha18/01-la-funcion-de-codigo.md",
+  "description": "Logica encapsulada como codigo que lee o edita los hechos de la copia, y el puente por el que un modelo soberano infiere sobre un conjunto de ellos. Lo que lee (`over`, `reads`: vistas) y lo que causa (`effects`) se leen en el documento: `lee(f) ⊆ reads(f)` y `causa(f) ⊆ effects(f)`. Tres caras —leer, editar, inferir— con un solo regimen: el sandbox es un conducto, los endosos deciden la integridad, y una funcion no aplica: propone.\n\nNormativo: spec/v1alpha10/01-function.md\n\nv1alpha13: admite `metadata.schema`, y su nombre cualificado es `<paquete>.<schema>.<nombre>` (spec/v1alpha13/01-el-schema.md). Lo demas, igual que en v1alpha10.\n\nv1alpha18: `runtime: python` —el `entrypoint` nombra un `def` del paquete (`<ruta>.py:<def>`) y su cabecera es la firma (OOS2042, OOS2043)— y `models`, los modelos que el codigo puede llamar. Normativo: spec/v1alpha18/01-la-funcion-de-codigo.md v1alpha18 tambien: el documento de una funcion python se DERIVA del codigo (`@function`) y se coteja con el (OOS2013, §4).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -94,7 +94,15 @@
           "$ref": "#/$defs/parameters"
         },
         "output": {
-          "$ref": "#/$defs/parameters"
+          "description": "Lo que devuelve: el mapa de campos de v1alpha2, o desde v1alpha18 UN VALOR, `{type: T}`, cuando la funcion devuelve algo sin nombre. Un mapa cuyos valores no son objetos no es un mapa (spec/v1alpha18/01-la-funcion-de-codigo.md §4.7).",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/parameters"
+            },
+            {
+              "$ref": "#/$defs/valor"
+            }
+          ]
         },
         "preconditions": {
           "description": "Del contrato, no del codigo: CEL total, terminante y sin efectos, evaluadas antes. Leen `target.<campo>` de `over`; un campo que `over` no expone es OOS7014.\n\nN4 · CONJUNTO.",
@@ -351,6 +359,22 @@
       },
       "propertyNames": {
         "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+      }
+    },
+    "valor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/scalarType"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 512
+        }
       }
     }
   }

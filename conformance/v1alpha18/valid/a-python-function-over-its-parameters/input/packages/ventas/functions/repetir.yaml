@@ -7,5 +7,4 @@ spec:
   input:
     texto: { type: String, required: true }
     veces: { type: Integer }
-  output:
-    resultado: { type: String }
+  output: { type: String }

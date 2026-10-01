@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: fibonacci, namespace: ventas, description: Los n primeros de Fibonacci. }
+spec:
+  runtime: python
+  entrypoint: funciones/series.py:fibonacci
+  input:
+    n: { type: Integer, required: true }
+    desde: { type: Date }
+  output: { type: list<Integer> }

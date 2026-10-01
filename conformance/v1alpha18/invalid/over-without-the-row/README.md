@@ -1,7 +1,7 @@
 # v1alpha18 / invalid / over-without-the-row
 
-**Regla:** [`01-la-funcion-de-codigo.md` §4](../../../../spec/v1alpha18/01-la-funcion-de-codigo.md#4) · **Espera:** `OOS2043` · **Nivel:** L0
+**Regla:** [`01-la-funcion-de-codigo.md` §4.4](../../../../spec/v1alpha18/01-la-funcion-de-codigo.md#4.4) · **Espera:** `OOS2043` · **Nivel:** L0
 
 ---
 
-Sin la fila, `umbral` ocuparía su sitio y la llamada se descuadra.
+Sin la fila no hay dónde poner cada fila de `ventas.clientes`.

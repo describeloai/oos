@@ -1,0 +1,5 @@
+rule: spec/v1alpha18/01-la-funcion-de-codigo.md#4.8
+level: L0
+expects: OOS2013
+summary: >
+  Un @function sin documento: el catalogo no la veria.

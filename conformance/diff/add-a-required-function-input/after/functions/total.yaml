@@ -8,5 +8,4 @@ spec:
   input:
     desde: { type: Date, required: true }
     moneda: { type: String, required: true }
-  output:
-    total: { type: Decimal }
+  output: { type: Decimal }

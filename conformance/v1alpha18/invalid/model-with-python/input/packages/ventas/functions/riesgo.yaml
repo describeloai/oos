@@ -10,5 +10,5 @@ spec:
     umbral: { type: Decimal, required: true }
     moneda: { type: String }
   output:
-    nivel: { type: String }
+    nivel: { type: String, required: true }
   model: modelo/extractor

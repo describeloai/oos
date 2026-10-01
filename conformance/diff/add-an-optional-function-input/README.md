@@ -4,4 +4,4 @@
 
 ---
 
-Se añade `moneda` sin `required` —opcional, §4.3—. Las llamadas de antes siguen valiendo: compatible, y el salto es menor.
+Se añade `moneda` con valor por defecto —opcional—. Las llamadas de antes siguen valiendo: compatible, y el salto es menor.

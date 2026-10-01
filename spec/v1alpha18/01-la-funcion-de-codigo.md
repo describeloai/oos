@@ -9,49 +9,83 @@ lo de v1alpha10 (con `metadata.schema` desde v1alpha13).
 
 ## 1. Naturaleza
 
-> **Una función de código es un `def` de un repositorio que un documento promueve: el documento
-> es el contrato y el `def` lo cumple.**
+> **Una función de código es un `def` de un repositorio marcado con `@function`. Quien programa
+> escribe el `def`; el documento `Function` se deriva de él, y es lo que se gobierna.**
 
-El código vive en el paquete, junto a lo demás, y **por sí solo no es una función**: un fichero
-`.py` de un repositorio se ejecuta, lee y escribe por sus frutos, pero no tiene superficie que un
-consumidor pueda nombrar. Pasa a tenerla cuando un `Function` lo nombra en su `entrypoint`. Esa
-promoción es **explícita**: un documento escrito, revisado y versionado con el paquete. Una
-herramienta puede escribirlo a partir del código, una vez; el documento no se regenera solo, porque
-lo que otros consumen no puede cambiar porque alguien editó un fichero.
+Nadie escribe una función en YAML. Se escribe código —un `def` con sus tipos— y se marca: ese
+`@function` es el acto explícito de promoverlo a algo que un consumidor puede nombrar. El documento
+`Function` que lo acompaña en el árbol **no se escribe a mano**: lo produce la herramienta, en el
+mismo commit que el código, con la regla de §4, y es lo que aporta el resto —el nombre en el
+catálogo, la versión del paquete, la superficie de lectura, la autorización, el linaje—.
 
-Y el compilador comprueba que el código **cumple** el documento: que el `def` existe y que su
-cabecera es la firma. Lo comprueba **leyendo**, sin ejecutar nada: la cabecera de un `def` es
-sintaxis, no comportamiento.
+Es la figura del esquema Cedar (v1alpha1 `00` §5): un artefacto **generado** que se compromete, para
+que todo lo que lee el árbol —el catálogo, `ore diff`, un consumidor, un validador sin el código
+a mano— lo encuentre sin derivarlo, y que el compilador **coteja** con su fuente: un documento que no
+es el que el código da es `OOS2013`.
+
+Y se coteja **leyendo**, sin ejecutar nada: los decoradores, la cabecera del `def` y sus
+anotaciones son sintaxis, no comportamiento.
 
 ## 2. Anatomía
+
+Lo que se escribe:
+
+```python
+# packages/ventas/riesgo/funciones/riesgo.py
+from dataclasses import dataclass
+from ore import function
+
+
+@dataclass
+class Riesgo:
+    nivel: str
+    total: float
+
+
+@function(over="ventas.clientes", reads=["ventas.pedidos"], models=["extractor"], timeout="60s")
+def riesgo(cliente, umbral: float, moneda: str = "EUR") -> Riesgo:
+    """El riesgo de un cliente por lo que ha comprado."""
+    ...
+
+
+@function
+def sumar(a: int, b: int) -> str:
+    return f"{a} + {b} = {a + b}"
+```
+
+Y lo que se deriva, uno por `@function`:
 
 ```yaml
 apiVersion: oos.dev/v1alpha18
 kind: Function
-metadata: { name: riesgo, namespace: ventas }
+metadata:
+  name: riesgo
+  namespace: ventas
+  description: El riesgo de un cliente por lo que ha comprado.
 spec:
   runtime: python
-  entrypoint: funciones/riesgo.py:riesgo   # <ruta>.py:<def>, dentro del paquete
-
-  over: ventas.clientes                    # una fila por llamada: el primer parámetro
-  reads: [ventas.pedidos]                  # lo demás que el código puede leer
-  models: [modelo/extractor]               # los modelos que el código puede llamar
-
+  entrypoint: riesgo/funciones/riesgo.py:riesgo
+  over: ventas.clientes
+  reads: [ventas.pedidos]
+  models: [modelo/extractor]
   input:
-    umbral: { type: Decimal, required: true }
-    moneda: { type: String }               # sin `required`: opcional
+    umbral: { type: Float, required: true }
+    moneda: { type: String }
   output:
-    nivel: { type: String }
-    total: { type: Decimal }
-
-  limits: { timeout: 60s, memory: 2Gi }
-```
-
-```python
-# packages/ventas/funciones/riesgo.py
-def riesgo(cliente, umbral, moneda="EUR"):
-    ...
-    return {"nivel": "alto", "total": 1234.5}
+    nivel: { type: String, required: true }
+    total: { type: Float, required: true }
+  limits: { timeout: 60s }
+---
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: sumar, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: riesgo/funciones/riesgo.py:sumar
+  input:
+    a: { type: Integer, required: true }
+    b: { type: Integer, required: true }
+  output: { type: String }
 ```
 
 ## 3. `runtime: python` y su `entrypoint`
@@ -69,44 +103,118 @@ La forma mal escrita es `OOS1004` (no valida contra el esquema). Bien escrita, y
 | el fichero no existe en el paquete | `OOS2042` |
 | el fichero no define `def <def>(…)` **en su nivel superior** (no dentro de una clase ni de otro `def`) | `OOS2042` |
 
-Un `async def` no es un `def` y es `OOS2042`. Que el fichero lleve más código —imports, otras
-funciones, constantes— no importa: el `entrypoint` nombra **una** función del módulo.
+Un `async def` no es un `def` y es `OOS2042`. `source` sigue siendo opcional e informativo, como en
+v1alpha10; con `python`, el código fuente **es** el `entrypoint`.
 
-`source` sigue siendo opcional e informativo, como en v1alpha10; con `python`, el código fuente
-**es** el `entrypoint`.
+## 4. El documento se deriva del código
 
-## 4. La firma: la cabecera del `def`
+### 4.1 · Qué es una función
 
-### 4.1 · Qué se lee
+Un `def` del **nivel superior** de un fichero `.py` del paquete, con el decorador `function` del SDK
+`ore` en su lista de decoradores: `@function` o `@function(...)` cuando el fichero lo importa con
+`from ore import function`, o `@ore.function` / `@ore.function(...)`. Otro `function` —el de otra
+biblioteca— no lo es. Un fichero puede tener varias.
 
-Solo la lista de parámetros del `def`: sus **nombres**, si tienen **valor por defecto**, y si hay
-`*args` o `**kwargs`. Las anotaciones de tipo, los decoradores y el cuerpo **no** forman parte de la
-firma: los tipos son los del documento, que es el contrato. Una implementación puede avisar cuando
-una anotación contradice el tipo del documento; no es un error de compilación.
+### 4.2 · Los argumentos del decorador
 
-### 4.2 · Las reglas
+Solo por nombre, y solo **literales** —una cadena, o una lista de cadenas—, porque se leen sin
+ejecutar:
 
-| regla | si no |
+| argumento | en el documento |
 |---|---|
-| **con `over`**, el primer parámetro es **la fila**: posicional y sin valor por defecto; su nombre es libre | `OOS2043` |
-| **sin `over`**, no hay fila: el `def` se llama una vez, sobre el conjunto entero de `reads` | — |
-| los demás parámetros son **exactamente** las claves de `input`: ni uno más, ni uno menos; el orden no importa | `OOS2043` |
-| un parámetro de `input` obligatorio **no** tiene valor por defecto en el `def`; uno opcional **sí** | `OOS2043` |
-| ni `*args` ni `**kwargs`: la superficie es cerrada | `OOS2043` |
+| `over="<vista>"` | `spec.over` |
+| `reads=["<vista>", …]` | `spec.reads` |
+| `models=["<referencia>", …]` | `spec.models`, cada una como `modelo/<referencia>` (sin repetir el prefijo si ya lo trae) |
+| `timeout="<duración>"` | `spec.limits.timeout` |
 
-El parámetro solo-por-nombre (`*, moneda="EUR"`) vale como cualquier otro.
+Un argumento que no es uno de estos, o que no es literal (una variable, una concatenación, una
+llamada), es `OOS2043`.
 
-### 4.3 · `required` ausente es `false`
+### 4.3 · El documento
 
-Vale para `input` y `output` de **todas** las versiones, y nadie lo había escrito: un parámetro sin
-`required` es opcional. En `output`, `required: true` dice que el valor no puede faltar en lo que
-la función devuelve.
+| campo | de dónde |
+|---|---|
+| `apiVersion` | `oos.dev/v1alpha18` |
+| `metadata.name` | el nombre del `def` |
+| `metadata.namespace` | el nombre del paquete |
+| `metadata.description` | la primera línea no vacía de la *docstring* del `def`, si tiene; si no, no está |
+| `spec.runtime` | `python` |
+| `spec.entrypoint` | `<ruta del fichero desde la carpeta del paquete>:<def>` |
+| `spec.over`, `reads`, `models`, `limits.timeout` | §4.2; los que no se dicen, no están |
+| `spec.input` | un parámetro por cada uno del `def` —salvo la fila, §4.4—, en su orden: `{type: T, required: true}` si no tiene valor por defecto ni es opcional; `{type: T}` si lo tiene o lo es. Sin parámetros, no está |
+| `spec.output` | del tipo de retorno, §4.5 |
 
-### 4.4 · Lo que devuelve
+**`required` ausente es `false`.** Vale para `input` y `output` de **todas** las versiones, y nadie
+lo había escrito: un parámetro sin `required` es opcional; en `output`, `required: true` dice que el
+valor no puede faltar en lo que la función devuelve. Por eso la derivación escribe `required: true`
+solo en lo obligatorio, y nada en lo demás.
 
-Con `output` declarado, el `def` devuelve **un objeto con las claves de `output`**. Es una regla
-del runtime, no de la compilación: una devolución que no la cumple es un error de **esa
-invocación**, con su motivo, y no tumba a quien la llamó.
+Lo que el documento lleva de más —`authorization`, `endorsements`, `effects`, `preconditions`,
+`idempotency`— no sale del código en esta versión: una función con cualquiera de ellos no se deriva
+y se escribe como en v1alpha10. Un `@function` y un documento que lo nombra con alguno de ellos es
+`OOS2013`.
+
+### 4.4 · Los parámetros
+
+- **Con `over`**, el primer parámetro es **la fila**: posicional, sin valor por defecto y sin
+  anotación obligatoria; su nombre es libre y no entra en `input`. Sin él, `OOS2043`.
+- **Todos los demás llevan anotación de tipo** (§4.6). Uno sin ella es `OOS2043`: la firma de una
+  función es explícita, porque es lo que un consumidor ve.
+- **Opcional** es tener valor por defecto, o anotarse `Optional[T]` / `T | None`.
+- Ni `*args` ni `**kwargs`: la superficie es cerrada (`OOS2043`). El parámetro solo-por-nombre
+  (`*, moneda: str = "EUR"`) vale como cualquier otro.
+
+### 4.5 · Lo que devuelve
+
+La anotación de retorno es **obligatoria** (`OOS2043` sin ella, o con `-> None`):
+
+- **un tipo de §4.6** → `output: { type: T }`, **un valor** (§4.7);
+- **una `@dataclass` del nivel superior del mismo fichero** → `output` como mapa de sus campos,
+  cada uno con su tipo de §4.6, `required: true` si no tiene valor por defecto ni es opcional.
+
+### 4.6 · Los tipos
+
+| Python | OOS |
+|---|---|
+| `int` | `Integer` |
+| `float` | `Float` |
+| `str` | `String` |
+| `bool` | `Boolean` |
+| `date`, `datetime.date` | `Date` |
+| `datetime`, `datetime.datetime` | `DateTime` |
+| `Decimal`, `decimal.Decimal` | `Decimal` |
+| `list[T]`, `List[T]` | `list<T>`, con `T` de esta tabla y sin listas dentro |
+| `Optional[T]`, `T \| None` | `T`, y el parámetro es opcional |
+
+Cualquier otro —`dict`, `Any`, una clase que no es una `@dataclass` del fichero, un tipo de otra
+biblioteca— es `OOS2043`: lo que no tiene tipo en OOS no es firma.
+
+### 4.7 · `output` como un valor
+
+Desde esta versión `output` admite dos formas, para **todas** las funciones: el **mapa de campos** de
+v1alpha2 (`nombre → {type, required, description}`) o **un tipo**, `{type: T}`, cuando la función
+devuelve un valor sin nombre —un texto, un número, una lista—. Un mapa cuyos valores no son objetos
+no es un mapa: `{type: String}` es un tipo.
+
+En `ore diff`, cambiar el tipo de un `output` de un valor se clasifica como el de un campo (§7), con
+sujeto `<función>.output`.
+
+### 4.8 · La coherencia
+
+Para cada fichero `.py` del paquete y cada documento `runtime: python`:
+
+| | código |
+|---|---|
+| un `@function` sin ningún documento cuyo `entrypoint` lo nombre | `OOS2013` |
+| un documento cuyo `entrypoint` nombra un `def` sin `@function` | `OOS2013` |
+| un documento que no es el que su `@function` da (§4.3), campo a campo | `OOS2013` |
+| un `@function` que no se puede derivar (§4.2, §4.4–§4.6) | `OOS2043` |
+
+Dónde vive el documento en el paquete no forma parte de la regla: la herramienta lo pone en
+`functions/<def>.yaml` junto al código, y un validador lo encuentra por su `entrypoint`.
+
+**La precedencia**, para una misma función: `OOS2042` (no está) antes que `OOS2043` (no se deriva)
+antes que `OOS2013` (no es el que se deriva).
 
 ## 5. `models`
 
@@ -142,7 +250,10 @@ La gramática la fija; el runtime la hace cumplir. Un ejecutor conforme de `runt
 - **DEBE** llamar al `def` con la fila (si hay `over`) y con los parámetros de `input` **por su
   nombre**, ya validados contra sus tipos;
 - **DEBE** cortar la invocación al pasar `limits.timeout` y darla por fallida con ese motivo. Sin
-  `limits.timeout`, el plazo es del ejecutor y lo dice.
+  `limits.timeout`, el plazo es del ejecutor y lo dice;
+- **DEBE** devolver lo que el `def` devuelve contra `output`: un objeto con sus campos, o un valor
+  de su tipo. Lo que no lo cumple es un error de **esa invocación** —de esa fila, con `over`—, con su
+  motivo, y no tumba a quien la llamó.
 
 Esto es **L2**: la suite no lo certifica (no hay datos ni red en un caso). Lo que se certifica es
 lo de §3–§5.
@@ -151,14 +262,14 @@ lo de §3–§5.
 
 Una aclaración de [`v1alpha1/91-versioning`](../v1alpha1/91-versioning.md) §5 que vale para
 **todas** las versiones: `input` y `output` son superficie del consumidor **parámetro a parámetro**,
-como las propiedades de una entidad. El sujeto del cambio es `<función>.input.<parámetro>` o
-`<función>.output.<campo>`.
+como las propiedades de una entidad. El sujeto del cambio es `<función>.input.<parámetro>`,
+`<función>.output.<campo>` o, con `output` de un valor, `<función>.output`.
 
 | cambio | código | eje |
 |---|---|---|
 | quitar un parámetro de `input` o un campo de `output` | `OOS5001` | `CONSUMER` |
 | añadir un parámetro de `input` **obligatorio**, o hacer obligatorio uno opcional | `OOS5003` | `CONSUMER` |
-| estrechar el tipo de un parámetro | `OOS5002` | `CONSUMER` |
+| estrechar el tipo de un parámetro o de lo que devuelve | `OOS5002` | `CONSUMER` |
 | cambiar la unidad o la precisión de su tipo paramétrico | `OOS5010` | `CONSUMER` |
 | añadir un parámetro opcional, o un campo de `output` | compatible · menor | — |
 | cambiar `entrypoint`, `runtime` o el código | compatible · parche | — |
@@ -177,7 +288,8 @@ modelo más se decide cuando se mida.
 | `model` o `prompt` con `runtime: python` | `OOS1004` | de v1alpha9 |
 | sin `over`, `reads`, `effects` ni `models` —ni `input`, con `python`— | `OOS1004` | §5 |
 | el fichero o el `def` del `entrypoint` no están | `OOS2042` | §3 |
-| la cabecera del `def` no es la firma | `OOS2043` | §4 |
+| un `@function` que no se puede derivar | `OOS2043` | §4 |
+| un `@function` sin documento, un documento sin `@function`, o uno que no es el que se deriva | `OOS2013` | §4.8 |
 | un modelo de `models` que no resuelve | `OOS2005` | §5 |
 | lo demás | lo de v1alpha10 §6 | |
 
@@ -185,7 +297,9 @@ modelo más se decide cuando se mida.
 
 - **Cómo llegan las filas y los modelos al código**: un SDK, un cliente, un contexto. Es del
   runtime.
-- **Dónde corre y con qué latencia**: bajo demanda o residente es despliegue, no gramática.
+- **Dónde corre y con qué latencia**: bajo demanda o residente es despliegue, no gramática. Una
+  vista previa del código que todavía no está en un commit tampoco es gramática: no hay documento
+  que cotejar.
 - **Quién puede invocarla**: `authorization` (Cedar), como en v1alpha10.
-- **`node` y `jvm`**: entran por esta misma regla —un `entrypoint` que nombra una función
-  exportada, su cabecera como firma— cuando haya quien los ejecute.
+- **`node` y `jvm`**: entran por esta misma regla —una función exportada marcada, su firma como
+  documento derivado— cuando haya quien los ejecute.
