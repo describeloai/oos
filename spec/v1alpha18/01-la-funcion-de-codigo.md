@@ -249,8 +249,9 @@ Para cada fichero `.py` del paquete y cada documento `runtime: python`:
 | un `@function` que no se puede derivar (§4.2, §4.4–§4.6) | `OOS2043` |
 | un fichero con un `@function`, o que un `entrypoint` nombra, que no es Python del runtime: no se analiza, o usa sintaxis posterior a su versión (§4.10) | `OOS2043`, una vez por fichero |
 
-Dónde vive el documento en el paquete no forma parte de la regla: la herramienta lo pone en
-`functions/<def>.yaml` junto al código, y un validador lo encuentra por su `entrypoint`.
+Dónde vive el documento en el paquete no forma parte de la regla: un validador lo encuentra por su
+`entrypoint`. La herramienta lo pone en `functions/<def>.yaml` del paquete, fuera del código: una
+función publicada es un nombre del paquete, `<paquete>.<def>`, y no del sitio donde se escribe.
 
 **La precedencia**, para una misma función: `OOS2042` (no está) antes que `OOS2043` (no se deriva)
 antes que `OOS2013` (no es el que se deriva).
@@ -282,8 +283,7 @@ válido que el runtime no ejecuta: `OOS2043`. Subir la versión es una versión 
 ### 4.11 · La herramienta (no normativo)
 
 `ore functions generate` escribe el documento de cada `@function` en `functions/<def>.yaml` del
-repositorio del código (la carpeta con `pyproject.toml`) o del paquete, o donde ya esté el que
-nombra su `entrypoint`; con los mismos bytes para la misma firma, y una primera línea de
+paquete, y mueve allí el que nombre su `entrypoint` desde otro sitio; con los mismos bytes para la misma firma, y una primera línea de
 procedencia, `# generado por ore desde <entrypoint>`, que le deja borrar el de un `@function` que
 ya no existe sin tocar nunca uno escrito a mano. `--check` dice si algún documento no es el que el
 código da, para el CI.
