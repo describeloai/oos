@@ -123,6 +123,11 @@ resolver a un `Model` (`OOS2005`).
 - `model` y `prompt` siguen siendo **solo** de `runtime: model` (`OOS1004`, de v1alpha9).
 - La regla de v1alpha10 «una función toca algo» admite `models`: sin `over`, `reads`, `effects` ni
   `models`, `OOS1004`.
+- Y con `runtime: python` admite también **`input`**: una función de código puede trabajar solo
+  sobre sus parámetros —`formatear(texto)`, `riesgo(importe, pais)`— sin leer la copia ni llamar a
+  un modelo. La regla de v1alpha10 existía para que un documento que no declara superficie no se
+  hiciera pasar por función; los parámetros **son** superficie, tipada y en el documento. Un `wasm`
+  o un `model` siguen necesitando lo de antes.
 
 **Por qué una clave y no `model`:** `model` dice qué se ejecuta; `models` dice qué se usa. Son dos
 relaciones distintas con el mismo nodo, y una función de código puede usar varios.
@@ -170,7 +175,7 @@ modelo más se decide cuando se mida.
 | `runtime: python` en una versión anterior | `OOS1004` | el enum de v1alpha10 |
 | `models` con otro runtime, o en una versión anterior | `OOS1004` · `OOS1005` | §5 |
 | `model` o `prompt` con `runtime: python` | `OOS1004` | de v1alpha9 |
-| sin `over`, `reads`, `effects` ni `models` | `OOS1004` | §5 |
+| sin `over`, `reads`, `effects` ni `models` —ni `input`, con `python`— | `OOS1004` | §5 |
 | el fichero o el `def` del `entrypoint` no están | `OOS2042` | §3 |
 | la cabecera del `def` no es la firma | `OOS2043` | §4 |
 | un modelo de `models` que no resuelve | `OOS2005` | §5 |

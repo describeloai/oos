@@ -190,7 +190,7 @@
       },
       "allOf": [
         {
-          "description": "Una funcion toca algo: sin `over`, sin `reads`, sin `effects` y sin `models` es OOS1004.",
+          "description": "Una funcion toca algo: sin `over`, sin `reads`, sin `effects` y sin `models` es OOS1004. Con runtime: python, `input` tambien cuenta: los parametros son superficie (v1alpha18 01 §5).",
           "anyOf": [
             {
               "required": [
@@ -211,6 +211,16 @@
               "required": [
                 "models"
               ]
+            },
+            {
+              "required": [
+                "input"
+              ],
+              "properties": {
+                "runtime": {
+                  "const": "python"
+                }
+              }
             }
           ]
         },

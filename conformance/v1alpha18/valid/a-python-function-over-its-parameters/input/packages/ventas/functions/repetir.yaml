@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: repetir, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: funciones/repetir.py:repetir
+  input:
+    texto: { type: String, required: true }
+    veces: { type: Integer }
+  output:
+    resultado: { type: String }
