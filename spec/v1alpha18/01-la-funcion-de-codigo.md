@@ -256,7 +256,10 @@ Dónde vive el documento en el paquete no forma parte de la regla: la herramient
 antes que `OOS2013` (no es el que se deriva).
 
 **Un paquete que no puede tener documentos** —su nombre no puede ser `namespace`, `OOS2030`— no
-exige el de sus `@function`: no tienen dónde publicarse, y son código de la sesión (§9).
+exige el de sus `@function`: no tienen dónde publicarse, y son código de la sesión. No es el sitio
+de un proyecto: el paquete que nace con un proyecto se llama con un identificador
+(`test_project`), y publica lo que hagan sus repositorios. Es un vocabulario importado
+(`oos.dev`), cuyo nombre es la coordenada con la que se importa.
 
 ### 4.9 · Leer, nunca ejecutar
 
@@ -370,8 +373,5 @@ modelo más se decide cuando se mida.
   vista previa del código que todavía no está en un commit tampoco es gramática: no hay documento
   que cotejar.
 - **Quién puede invocarla**: `authorization` (Cedar), como en v1alpha10.
-- **Los `@function` de un paquete que no puede ser `namespace`** (`OOS2030`, el de un proyecto):
-  hoy no se publican ni se exigen (§4.8). Si un proyecto puede publicar funciones —y con qué
-  nombre— está abierto.
 - **`node` y `jvm`**: entran por esta misma regla —una función exportada marcada, su firma como
   documento derivado— cuando haya quien los ejecute.
