@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#2
+level: L0
+expects: accept
+summary: >
+  Una colección escrita dice lo que el código leyó para escribirla: los contratos.

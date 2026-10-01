@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#5
+level: L0
+expects: OOS2018
+summary: >
+  Un nombre de derivedFrom que no es una vista, un dataset ni una colección.

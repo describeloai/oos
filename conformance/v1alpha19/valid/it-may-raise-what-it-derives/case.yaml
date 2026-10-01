@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#3
+level: L0
+expects: accept
+summary: >
+  Sus etiquetas se suman a lo derivado: puede declararse high, como lo que leyó.

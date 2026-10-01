@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#5
+level: L0
+expects: OOS2019
+summary: >
+  La colección no deriva de sí misma.

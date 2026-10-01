@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: textos, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  derivedFrom: [legal.archivo.contratos]
+  columns:
+    path: { type: String }
+    texto: { type: String }
+  changes: { mode: append }

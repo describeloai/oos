@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#5
+level: L0
+expects: OOS1004
+summary: >
+  Una mantenida no lleva derivedFrom: su linaje es from.

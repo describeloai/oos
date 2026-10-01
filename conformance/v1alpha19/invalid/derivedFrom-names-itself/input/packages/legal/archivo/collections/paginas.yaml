@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha19
+kind: MediaCollection
+metadata:
+  name: paginas
+  namespace: legal
+  schema: archivo
+spec:
+  owner: team:legal
+  media: image
+  formats: [png]
+  derivedFrom: [legal.archivo.paginas]

@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha17
+kind: Dataset
+metadata: { name: copia, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  from: { view: legal.archivo.pngs }
+  freshness: 1h

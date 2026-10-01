@@ -1,0 +1,5 @@
+rule: spec/v1alpha19/01-la-coleccion-escrita-deriva.md#4
+level: L0
+expects: accept
+summary: >
+  El derivedFrom de un dataset escrito puede nombrar una colección.

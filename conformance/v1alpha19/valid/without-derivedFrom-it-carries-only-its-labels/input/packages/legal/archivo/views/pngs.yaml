@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha17
+kind: View
+metadata: { name: pngs, namespace: legal, schema: archivo }
+spec:
+  owner: team:legal
+  dialect: duckdb
+  sql: |
+    SELECT _item, path FROM legal.archivo.paginas
+  columns:
+    _item: { type: "Media<legal.archivo.paginas>" }
+    path: { type: "String" }
