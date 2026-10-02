@@ -1,0 +1,5 @@
+rule: spec/v1alpha21/01-el-dueno.md#2
+level: L0
+expects: OOS2009
+summary: >
+  `owner: Ana García` en una entidad: un dueño es `team:<handle>` o `user:<handle>`, no un nombre.

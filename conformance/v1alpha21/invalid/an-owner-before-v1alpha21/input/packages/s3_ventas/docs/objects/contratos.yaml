@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha16
+kind: ObjectTable
+metadata: { name: contratos, namespace: s3_ventas, schema: docs }
+spec:
+  owner: user:bea
+  datasource: s3_ventas
+  prefix: "Nueva carpeta/contratos/"
+  match: "*.pdf"
+  media: document
+  reads: { fullScan: cheap }
+  changes: { mode: retract, witness: listing }

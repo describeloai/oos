@@ -1,0 +1,17 @@
+# generado por ore desde riesgo/funciones/riesgo.py:riesgo · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha20
+kind: Function
+metadata:
+  name: riesgo
+  namespace: ventas
+  description: Las líneas de un pedido que pesan.
+spec:
+  runtime: python
+  entrypoint: riesgo/funciones/riesgo.py:riesgo
+  input:
+    pedido: { type: 'Struct<id: Integer, lineas: list<Struct<producto: String, precio: Money<EUR, 2>, notas: String>>, entrega: Time>', required: true }
+    corte: { type: DateTimeTz, required: true }
+    firma: { type: Opaque, required: true }
+    tasa: { type: 'Decimal<5, 4>', required: true }
+    peso: { type: 'Quantity<kg, 3>' }
+  output: { type: 'list<Struct<producto: String, precio: Money<EUR, 2>, notas: String>>' }

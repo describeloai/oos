@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha15
+kind: Model
+metadata: { name: extractor, namespace: ventas }
+spec:
+  profile: g1/llama-3.1-8b
+  tier: shared
+  task: chat
