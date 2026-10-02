@@ -1,0 +1,13 @@
+# generado por ore desde riesgo/funciones/riesgo.py:riesgo · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata:
+  name: riesgo
+  namespace: ventas
+  description: El riesgo de un importe.
+spec:
+  runtime: python
+  entrypoint: riesgo/funciones/riesgo.py:riesgo
+  input:
+    importe: { type: 'Money<EUR, 2>', required: true }
+  output: { type: String }

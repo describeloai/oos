@@ -1,0 +1,13 @@
+# generado por ore desde contratos/funciones/resumir.py:resumir · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha20
+kind: Function
+metadata:
+  name: resumir
+  namespace: legal
+  description: El resumen de un contrato.
+spec:
+  runtime: python
+  entrypoint: contratos/funciones/resumir.py:resumir
+  input:
+    contrato: { type: Media<legal.archivo.contratos>, required: true }
+  output: { type: String }

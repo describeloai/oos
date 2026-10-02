@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: s3_ventas, version: 1.0.0, status: active, domain: storage }
+spec: { owner: team:data, exports: [s3_ventas.docs.contratos] }

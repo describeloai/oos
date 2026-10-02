@@ -1,0 +1,5 @@
+rule: spec/v1alpha20/01-la-firma-habla-oos.md#6
+level: L0
+expects: OOS2013
+summary: >
+  La firma usa `Money`, que se deriva desde v1alpha20, y el documento declara v1alpha18.
