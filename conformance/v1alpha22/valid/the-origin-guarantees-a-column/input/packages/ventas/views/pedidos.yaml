@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha14
+kind: View
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: |
+    SELECT "id", "cliente", "nota", "alta"
+    FROM "ventas"."default"."pedidos_t"
+  columns:
+    id: { type: Integer }
+    cliente: { type: String }
+    nota: { type: String }
+    alta: { type: Date }

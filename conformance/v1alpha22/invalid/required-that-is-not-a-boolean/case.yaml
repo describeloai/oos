@@ -1,0 +1,5 @@
+rule: spec/v1alpha22/01-nunca-nula.md#2
+level: L0
+expects: OOS1004
+summary: >
+  `required: siempre` en una columna: la clave es un booleano.

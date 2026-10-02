@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha16
+kind: Table
+metadata: { name: pedidos_t, namespace: ventas }
+spec:
+  datasource: erp
+  object: "public.pedidos"
+  columns:
+    id: { type: Integer, physicalType: bigint, required: true }
+    cliente: { type: String, physicalType: text, required: true }
+    nota: { type: String, physicalType: text, required: false }
+    alta: { type: Date, physicalType: date }
+  reads: {}
+  changes: { mode: none, witness: none, key: [id] }
