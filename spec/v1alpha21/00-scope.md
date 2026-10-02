@@ -25,8 +25,8 @@ Cuatro de los activos que una persona crea no tenían dónde decir de quién son
 que corre y escribe; una tabla de objetos apunta a un bucket; un modelo es una suscripción con
 coste; una entidad es lo que la ontología afirma. Que respondiera de ellos «su paquete» era heredar
 del contenedor, y el contenedor no lo creó: una función que Ana escribe en el proyecto de Bea es
-de Ana. La plataforma que implementa OOS (ORE 0049, «el dueño», 2026-10-02) decidió que **lo que se
-crea es de quien lo crea**, y la gramática tenía que poder escribirlo.
+de Ana. La plataforma que implementa OOS (ORE 0027, «el dueño es quien lo crea», 2026-10-02)
+decidió que **lo que se crea es de quien lo crea**, y la gramática tenía que poder escribirlo.
 
 ## 2. Qué entra
 

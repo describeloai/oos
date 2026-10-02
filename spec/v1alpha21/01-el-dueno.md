@@ -39,9 +39,13 @@ retirarlo. Es lo mismo que significa en `Package`, `Schema`, `View`, `Dataset`, 
 - **NO DEBE** conceder ni negar acceso. Quién puede leer, escribir o invocar algo lo decide el
   gobierno del flujo y el plano de control; un `owner` que diera permisos sería una segunda
   superficie de autorización escrita en un fichero que cualquiera con commit puede editar.
-- **No se hereda.** Un `owner` ausente no es «el del paquete» en ningún análisis de esta
-  especificación: es que el documento no lo dice. Una herramienta PUEDE mostrar el del paquete como
-  referencia, pero no escribirlo como si fuera el del activo.
+- **No se hereda.** En estos cuatro `kind`, un `owner` ausente no es «el del paquete» en ningún
+  análisis de esta especificación: es que el documento no lo dice. Una herramienta PUEDE mostrar el
+  del paquete como referencia, pero no escribirlo como si fuera el del activo.
+- **Y el `Schema` no cambia.** Un `Schema` sin `owner` sigue respondiendo por su paquete (v1alpha13
+  `01` §2): un schema es una parte de la base —un contenedor—, no un activo que alguien crea aparte
+  de ella. Lo que no se hereda es el dueño de un **activo**; el de un contenedor vacío de dueño es el
+  del contenedor que lo encierra.
 - Una herramienta que crea el documento en nombre de alguien DEBERÍA escribir el `owner` de **quien
   lo crea**, y al reescribirlo DEBERÍA conservar el que tenía: editar no es transferir.
 
