@@ -2,4 +2,4 @@ rule: spec/v1alpha20/01-la-firma-habla-oos.md#4
 level: L0
 expects: OOS2043
 summary: >
-  Una `@dataclass` que se contiene a sí misma no tiene un tipo finito.
+  Una `@dataclass` que se contiene a sí misma no tiene un tipo finito: no es un `Struct`.

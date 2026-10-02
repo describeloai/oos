@@ -2,4 +2,4 @@ rule: spec/v1alpha20/01-la-firma-habla-oos.md#5
 level: L0
 expects: OOS2018
 summary: >
-  `Media["legal.
+  `Media["legal.archivo.facturas"]` nombra una colección que el árbol no tiene.

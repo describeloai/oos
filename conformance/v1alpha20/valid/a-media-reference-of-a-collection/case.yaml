@@ -2,4 +2,4 @@ rule: spec/v1alpha20/01-la-firma-habla-oos.md#5
 level: L0
 expects: accept
 summary: >
-  `Media["legal.
+  `Media["legal.archivo.contratos"]` es `Media<legal.archivo.contratos>`: la colección está en el árbol.
