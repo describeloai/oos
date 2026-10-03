@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha22
+kind: Table
+metadata: { name: clientes_t, namespace: ventas }
+spec:
+  datasource: erp
+  object: "public.clientes"
+  columns:
+    id: { type: String, physicalType: text, required: true }
+    email: { type: String, physicalType: text, required: true }
+    nota: { type: String, physicalType: text, required: false }
+    apodo: { type: String, physicalType: text }
+  reads: {}
+  changes: { mode: none, witness: none, key: [id] }

@@ -1,0 +1,8 @@
+rule: spec/v1alpha22/01-nunca-nula.md#7
+level: L0
+expects: structure
+format: graphql
+summary: >
+  El `!` de un campo de GraphQL sale de la columna que lo respalda: `email` lo garantiza el origen y
+  es `String!`; `nota` no, y es `String`; `apodo` es `required` en la entidad y su columna no lo
+  garantiza, y sigue siendo `String`.

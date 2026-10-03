@@ -1,0 +1,27 @@
+{
+  "description": "Propiedades del SDL emitido, como en v1alpha5/emit: cadenas que DEBEN estar, y cadenas que NO DEBEN.",
+  "mustContain": [
+    {
+      "contains": ["id: ID!"],
+      "reason": "pertenece a `primaryKey`, como en v1alpha5"
+    },
+    {
+      "contains": ["email: String!"],
+      "reason": "la columna `email` de lo que respalda la entidad nunca es nula: el origen lo garantiza (§3) y la vista la lee tal cual (§4)"
+    },
+    {
+      "contains": ["nota: String", "apodo: String"],
+      "reason": "las dos columnas pueden ser nulas"
+    }
+  ],
+  "mustNotContain": [
+    {
+      "contains": ["nota: String!"],
+      "reason": "`required: false` en el origen: nulable"
+    },
+    {
+      "contains": ["apodo: String!"],
+      "reason": "`required` en la propiedad dice lo que el concepto exige, no lo que el dato garantiza (§7): el `!` mentiría"
+    }
+  ]
+}

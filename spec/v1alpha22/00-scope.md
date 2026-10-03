@@ -38,6 +38,8 @@ La pidió la plataforma que implementa OOS (ORE 0051, «ORE Null Contract», 202
 - **Vistas y datasets no lo declaran**: se deriva (`01` §4).
 - **Una regla de evolución**: aflojar sigue al origen; endurecer lo materializado exige verificar
   (`01` §5).
+- **Lo que se expone sale del árbol**: un campo de GraphQL es `T!` sólo si su columna nunca es nula,
+  y el `required` de una propiedad no lo pone (`01` §7); de esa discrepancia se avisa (`01` §8).
 
 ## 3. Qué no entra
 

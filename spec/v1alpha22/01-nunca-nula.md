@@ -82,3 +82,27 @@ decir nada, porque los motores se apoyan en ello.
 
 Un documento `Table` con `required` en alguna columna declara **v1alpha22**. Uno sin él PUEDE seguir
 declarando la versión que tenía: la más baja que lo describe.
+
+## 7. Lo que se expone
+
+Una implementación que expone las filas a un cliente con un esquema —el SDL de GraphQL de una
+entidad (v1alpha5 `01`), el esquema de Arrow de una vista o un dataset— dice en él qué campos nunca
+son nulos. **Lo saca del árbol**: de lo que garantiza el origen (§3) o de lo que se deriva (§4), y
+de nada más.
+
+- **Un campo de GraphQL** que no es clave PUEDE emitirse no nulo (`T!`) cuando la columna del mismo
+  nombre de lo que respalda la entidad (`backedBy`) nunca es nula, y NO DEBE emitirse no nulo por
+  ninguna otra razón. Un campo de lista no nulo es `[T!]!`.
+- **`Entity.properties.<p>.required` no pone el `!`.** Dice lo que el concepto exige, no lo que el
+  dato garantiza: un cliente que se fía del `!` recibiría el nulo que la física no impide, y el
+  error saldría lejos de su causa.
+- **Lo materializado no es la fuente de la marca.** Un formato puede llevarla (`required` en
+  Iceberg) y un motor puede ignorarla al leer; quien expone las filas la toma del árbol, que es lo
+  que se compiló, y no del motor que las leyó.
+
+## 8. El aviso
+
+Una propiedad `required: true` de una entidad cuya columna, en lo que la respalda, no es nunca nula
+es un documento **válido**: la semántica pide lo que la física no garantiza, y quien lo comprueba
+es una aserción de un `Ruleset`. Una implementación DEBERÍA avisar de ello sin tratarlo como error
+—no hay código—, nombrando la propiedad y la columna.

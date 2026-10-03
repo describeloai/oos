@@ -1,0 +1,12 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Cliente, namespace: ventas, labels: { oos.maturity: STABLE } }
+spec:
+  nature: entity
+  primaryKey: [id]
+  backedBy: clientes
+  properties:
+    id: { type: String }
+    email: { type: String }
+    nota: { type: String }
+    apodo: { type: String, required: true }
