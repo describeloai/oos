@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#5.1
+level: L0
+expects: OOS2043
+summary: >
+  ...partes: un parametro sin nombre propio no es superficie.

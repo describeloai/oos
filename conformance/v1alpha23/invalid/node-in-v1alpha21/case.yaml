@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#11
+level: L0
+expects: OOS1004
+summary: >
+  runtime: node en un documento de v1alpha21: el enum de esa version no lo tiene.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#5.2
+level: L0
+expects: OOS2043
+summary: >
+  async que devuelve Promise<void>: una funcion que no devuelve nada no tiene output.

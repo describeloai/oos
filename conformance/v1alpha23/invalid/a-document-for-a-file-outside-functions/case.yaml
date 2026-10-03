@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#9
+level: L0
+expects: OOS2013
+summary: >
+  El entrypoint nombra un .ts con export default fuera de functions/: no es una funcion.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#4
+level: L0
+expects: OOS2043
+summary: >
+  config.sources no es una clave de esta version.

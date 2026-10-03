@@ -1,0 +1,22 @@
+# generado por ore desde pedidos/functions/lineas.ts · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha23
+kind: Function
+metadata:
+  name: lineas
+  namespace: ventas
+  description: Las líneas de un pedido que pesan.
+spec:
+  runtime: node
+  entrypoint: pedidos/functions/lineas.ts
+  input:
+    pedido: { type: 'Struct<id: Integer, lineas: list<Struct<producto: String, precio: Money<EUR, 2>, notas: String>>, entrega: Time>', required: true }
+    corte: { type: DateTimeTz, required: true }
+    firma: { type: Opaque, required: true }
+    tasa: { type: 'Decimal<5, 4>', required: true }
+    dia: { type: Date, required: true }
+    visto: { type: DateTime }
+    intentos: { type: Integer, required: true }
+    ratio: { type: Float, required: true }
+    activo: { type: Boolean, required: true }
+    peso: { type: 'Quantity<kg, 3>' }
+  output: { type: 'list<Struct<producto: String, precio: Money<EUR, 2>, notas: String>>' }

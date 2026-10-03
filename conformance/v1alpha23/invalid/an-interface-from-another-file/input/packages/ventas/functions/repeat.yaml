@@ -1,0 +1,14 @@
+# generado por ore desde textos/functions/repeat.ts · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha23
+kind: Function
+metadata:
+  name: repeat
+  namespace: ventas
+spec:
+  runtime: node
+  entrypoint: textos/functions/repeat.ts
+  input:
+    text: { type: String, required: true }
+    times: { type: Integer }
+  output:
+    texto: { type: String, required: true }

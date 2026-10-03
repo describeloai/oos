@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#3
+level: L0
+expects: accept
+summary: >
+  Un modulo de functions/ sin export default, un .test.ts, un .d.ts y un .ts fuera de functions/ no piden documento.

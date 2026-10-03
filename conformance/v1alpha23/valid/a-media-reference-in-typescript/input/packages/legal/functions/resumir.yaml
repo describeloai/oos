@@ -1,0 +1,13 @@
+# generado por ore desde contratos/functions/resumir.ts · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha23
+kind: Function
+metadata:
+  name: resumir
+  namespace: legal
+  description: El resumen de un contrato.
+spec:
+  runtime: node
+  entrypoint: contratos/functions/resumir.ts
+  input:
+    contrato: { type: Media<legal.archivo.contratos>, required: true }
+  output: { type: String }

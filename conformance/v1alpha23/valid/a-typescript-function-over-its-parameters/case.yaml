@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#5
+level: L0
+expects: accept
+summary: >
+  La exportacion por defecto de un .ts de functions/: solo parametros, y devuelve un valor.

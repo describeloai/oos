@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#3
+level: L0
+expects: OOS2035
+summary: >
+  Una funcion de Python y una de TypeScript que se llaman repeat en el mismo paquete.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#3
+level: L0
+expects: OOS2043
+summary: >
+  Una flecha exportada por defecto en functions/: la exportacion promueve, y no es una declaracion de funcion.

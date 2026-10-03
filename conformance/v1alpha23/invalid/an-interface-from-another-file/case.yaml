@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#6.4
+level: L0
+expects: OOS2043
+summary: >
+  La vuelta es un interface importado de ./tipos.ts: la derivacion es de un fichero.

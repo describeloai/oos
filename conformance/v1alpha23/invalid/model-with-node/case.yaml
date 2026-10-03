@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#11
+level: L0
+expects: OOS1004
+summary: >
+  model con runtime: node: model dice que se ejecuta un modelo, y aqui se ejecuta codigo.

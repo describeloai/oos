@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#3
+level: L0
+expects: OOS2043
+summary: >
+  repeat.ts exporta por defecto repetir: el nombre de la funcion es el del fichero.

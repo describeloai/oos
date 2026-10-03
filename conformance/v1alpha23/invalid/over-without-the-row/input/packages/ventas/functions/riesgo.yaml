@@ -1,0 +1,11 @@
+# generado por ore desde riesgo/functions/riesgo.ts · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha23
+kind: Function
+metadata:
+  name: riesgo
+  namespace: ventas
+spec:
+  runtime: node
+  entrypoint: riesgo/functions/riesgo.ts
+  over: ventas.clientes
+  output: { type: String }

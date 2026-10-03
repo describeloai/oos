@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#8
+level: L0
+expects: OOS2043
+summary: >
+  Un enum no se borra, se compila: el runtime borra tipos y no lo ejecuta.

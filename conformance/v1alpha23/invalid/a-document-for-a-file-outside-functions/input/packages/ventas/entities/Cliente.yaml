@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha1
+kind: Entity
+metadata: { name: Cliente, namespace: ventas }
+spec:
+  nature: entity
+  primaryKey: [clienteId]
+  backedBy: ventas.clientes
+  properties:
+    clienteId: { type: String }
+    actividad: { type: String }
+    segmento:
+      type: String
+      labels: { acme.assurance: untrusted }

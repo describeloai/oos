@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#6.3
+level: L0
+expects: OOS2043
+summary: >
+  El fichero declara su propio Money: un nombre se lee por lo que es, no por como se escribe.

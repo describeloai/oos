@@ -1,0 +1,21 @@
+# generado por ore desde riesgo/functions/riesgo.ts · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha23
+kind: Function
+metadata:
+  name: riesgo
+  namespace: ventas
+  description: El riesgo de un cliente por lo que ha comprado.
+spec:
+  runtime: node
+  entrypoint: riesgo/functions/riesgo.ts
+  over: ventas.clientes
+  reads: [ventas.pedidos]
+  models: [modelo/extractor]
+  input:
+    umbral: { type: 'Decimal<12, 2>', required: true }
+    moneda: { type: String }
+  output:
+    nivel: { type: String, required: true }
+    total: { type: Float, required: true }
+    motivo: { type: String }
+  limits: { timeout: 60s }

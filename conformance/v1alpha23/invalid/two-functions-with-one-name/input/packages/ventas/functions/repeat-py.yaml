@@ -1,0 +1,13 @@
+# generado por ore desde funciones/repeat.py:repeat · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata:
+  name: repeat
+  namespace: ventas
+spec:
+  runtime: python
+  entrypoint: funciones/repeat.py:repeat
+  input:
+    text: { type: String, required: true }
+    times: { type: Integer }
+  output: { type: String }

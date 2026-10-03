@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#9
+level: L0
+expects: OOS2013
+summary: >
+  El documento dice que text es opcional; el codigo, que no.

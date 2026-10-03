@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#6.1
+level: L0
+expects: OOS2043
+summary: >
+  modo: "corto" | "largo": OOS no tiene un enumerado en la firma.

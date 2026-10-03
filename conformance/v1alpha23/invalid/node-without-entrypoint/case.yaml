@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#2
+level: L0
+expects: OOS1004
+summary: >
+  runtime: node sin entrypoint: no hay codigo que promover.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha23/01-la-funcion-de-typescript.md#6.1
+level: L0
+expects: OOS2043
+summary: >
+  Un Record no tiene tipo en OOS: no es firma.
