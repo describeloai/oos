@@ -111,6 +111,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
 | `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior (Python) o no tiene `export default function` (TypeScript, v1alpha23) | v1alpha18 01 §3 · v1alpha23 01 §2 |
 | `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción o un nombre que no es lo que parece, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs`; o un fichero que no es Python del runtime. Desde v1alpha23, lo mismo para una función de TypeScript: una exportación por defecto que no es una función con el nombre del fichero, un `config` que no es literal, un tipo sin traducción, o un fichero que no es TypeScript borrable del runtime | v1alpha18 01 §4 · v1alpha23 01 §3–§8 |
+| `OOS2044` | lectura en vivo de una `Table` con `fullScan: forbidden` sin un predicado empujado que la acote | v1alpha24 01 §4 |
+| `OOS2045` | lectura en vivo de una `Table` sin un predicado `eq`/`in` empujado sobre cada columna de `requiredFilters` | v1alpha24 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
@@ -138,7 +140,7 @@ credenciales, sin tocar un solo dato.
 | `OOS4006` | desclasificador fuera del conjunto cerrado | 04 §5 |
 | `OOS4007` | `aggregate` sin `minGroupSize`, o por debajo del umbral del retículo | 04 §5 |
 | `OOS4008` | propiedad derivada que declara etiqueta en lugar de computarla | 02 §5 |
-| `OOS4011` | conducto sin autorización declarada — lo usa un binding, una función, una vista `materialized`, o **la travesía de una relación con `via`**, que lo instancia sin declararlo (04 §4.2) | 04 §4 |
+| `OOS4011` | conducto sin autorización declarada — lo usa un binding, una función, una vista `materialized`, o **la travesía de una relación con `via`**, que lo instancia sin declararlo (04 §4.2) — y desde v1alpha24, **`federation.read`**: la lectura en vivo de un origen, y una vista de esa versión sobre una `Table` (v1alpha24 01 §2, §5) | 04 §4 · v1alpha24 01 |
 | `OOS4012` | propiedad que rebaja la etiqueta heredada de su entidad; desde v1alpha16, también una `MediaCollection` que rebaja la de su origen | 02 §4.1 · v1alpha16 02 §6 |
 | `OOS4014` | `examples` no marcados como sintéticos en propiedad etiquetada por encima de `⊥` | 02 §4.2 |
 | `OOS4016` | predicado que ordena —rango, `BETWEEN`, patrón, función— sobre una columna cuya raíz lleva una etiqueta de confidencialidad por encima de `⊥` (el canal lateral, sobre el linaje de una vista SQL) | v1alpha14 01 §6 |

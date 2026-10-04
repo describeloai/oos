@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#4
+level: L0
+expects: OOS2045
+query: query.sql
+summary: >
+  `requiredFilters: [hired]` con un rango: `range` no está en `predicatePushdown`, así que no llega al origen.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#5
+level: L0
+expects: OOS4011
+summary: >
+  Una vista de v1alpha24 sobre una `Table` sin `federation.read` en el árbol: `⊥`, no compila.

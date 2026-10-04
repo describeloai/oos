@@ -68,6 +68,7 @@ conformance/
 ├── digest/     <caso>/  a/ + b/           → mismo | distinto digest
 ├── emit/       <caso>/  input/ + expected.*
 ├── pack/       <caso>/  input/ + expected.structure.json
+├── plan/       <caso>/  input/ + query.sql        → acepta | rechaza con este código
 │
 ├── v1alpha2/   ── un árbol por borrador, con las mismas familias dentro
 ├── v1alpha3/
@@ -85,6 +86,7 @@ conformance/
 | `digest/` | **relaciones** entre digests: mismo, o distinto (§4.1) | **2** |
 | `emit/` | ida y vuelta sin pérdida | 1 |
 | `pack/` | el **paquete publicable**: qué lleva el `.oob` y qué no | 1 |
+| `plan/` | **planificar una lectura en vivo** de un origen: se lee o no, y con qué código (v1alpha24) | **2** |
 
 `pack/` es aparte de `emit/` y la mecánica es la misma —producir un artefacto y afirmar su
 forma—, así que la separación es por lo que producen: `emit/` habla **formatos ajenos** y un
@@ -241,7 +243,15 @@ Para cada caso en digest/:         expects: same | different | stable
 
 Para cada caso en emit/:           expects: roundtrip | structure | emit-fails
     emit(input, formato) DEBE ser equivalente al esperado según las reglas de ese formato
+
+Para cada caso en plan/:           expects: accept | OOSxxxx
+    planear(input, query) DEBE aceptar la lectura en vivo de lo que la consulta lee, o
+                         rechazarla con ESE código ANTES de conectar a ningún origen
 ```
+
+`plan/` (v1alpha24) es L0 aunque hable de leer un origen: **planificar no lee nada**. Decide, con
+el árbol y la consulta, qué se empuja a cada `Table` y si el coste que la tabla declara lo
+permite (`v1alpha24/01` §3, §4). Leer de verdad es L2 y queda fuera, como siempre.
 
 Este contrato exigía hasta ahora un `expected.canonical.json` y un `expected.digest` por
 caso. **No existen, y no es un olvido**: §4.1 explica por qué esa forma se descartó —afirmar

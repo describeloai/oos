@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#4
+level: L0
+expects: accept
+query: query.sql
+summary: >
+  `fullScan: expensive` no exige filtro ni límite: se lee con presupuesto, y eso es de la implementación.

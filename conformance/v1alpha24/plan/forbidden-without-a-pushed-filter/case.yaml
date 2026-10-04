@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#4
+level: L0
+expects: OOS2044
+query: query.sql
+summary: >
+  `fullScan: forbidden` y ningún predicado acota la lectura.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#5
+level: L0
+expects: accept
+summary: >
+  Una vista de v1alpha24 sobre una `Table` compila con `federation.read` autorizado.

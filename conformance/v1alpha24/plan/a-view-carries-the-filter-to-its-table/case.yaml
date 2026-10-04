@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#4
+level: L0
+expects: accept
+query: query.sql
+summary: >
+  Leer una vista virtual: el predicado de quien la lee llega a la tabla de su raíz y cumple `requiredFilters`.

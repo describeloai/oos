@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#2
+level: L0
+expects: OOS4011
+query: query.sql
+summary: >
+  Leer en vivo una `Table` sin `federation.read` en el árbol: `⊥`, no se lee.

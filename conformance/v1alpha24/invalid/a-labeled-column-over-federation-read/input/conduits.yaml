@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: ConduitPolicy
+metadata: { name: hr }
+spec:
+  owner: team:security
+  conduits:
+    federation.read:
+      gdpr.sensitivity: low

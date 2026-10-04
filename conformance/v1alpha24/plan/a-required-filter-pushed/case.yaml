@@ -1,0 +1,6 @@
+rule: spec/v1alpha24/01-leer-el-origen.md#4
+level: L0
+expects: accept
+query: query.sql
+summary: >
+  `requiredFilters: [hired]` con un `eq` empujado.
