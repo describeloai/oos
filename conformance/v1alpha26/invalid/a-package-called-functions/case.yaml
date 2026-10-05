@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#3
+level: L0
+expects: OOS2048
+summary: >
+  Un paquete llamado functions haria de functions.x a la vez una funcion y un dato.

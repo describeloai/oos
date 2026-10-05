@@ -1,0 +1,15 @@
+# generado por ore desde packages/ventas/facturacion/funciones/total.py:total · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha26
+kind: Function
+metadata:
+  name: total
+  version: 0.1.0
+  namespace: ventas
+spec:
+  owner: user:ana
+  runtime: python
+  entrypoint: packages/ventas/facturacion/funciones/total.py:total
+  codeDigest: sha256:1da9a9f975c78490b08d96d0d5c7a300be84f7464a525c44dce7f31968d12b26
+  input:
+    desde: { type: Date, required: true }
+  output: { type: Decimal }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#5
+level: L0
+expects: accept
+summary: >
+  Otro cuerpo con la misma firma: otra huella, y un parche.

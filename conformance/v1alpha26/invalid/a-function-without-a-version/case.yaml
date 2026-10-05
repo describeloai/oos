@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#5
+level: L0
+expects: OOS1004
+summary: >
+  metadata.version es obligatoria: la escribe quien deriva el documento.

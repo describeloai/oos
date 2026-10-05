@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#7
+level: L0
+expects: accept
+summary: >
+  Una funcion propia y una del paquete con el mismo nombre son dos cosas: functions.total y ventas.total.

@@ -1,0 +1,17 @@
+{
+  "changes": [
+    {
+      "code": "OOS5003",
+      "axis": "CONSUMER",
+      "subject": "functions.total.input.moneda"
+    },
+    {
+      "code": "OOS5021",
+      "axis": "PACKAGE",
+      "subject": "functions.total",
+      "declared": "0.1.1",
+      "required": "1.0.0"
+    }
+  ],
+  "requiredBump": "major"
+}

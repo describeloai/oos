@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#2
+level: L0
+expects: OOS1004
+summary: >
+  Una funcion de v1alpha26 no es de ningun paquete: namespace no se escribe.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#6
+level: L0
+expects: OOS2013
+summary: >
+  El cuerpo cambio y la huella no: el documento ya no dice que codigo corre.

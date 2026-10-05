@@ -115,6 +115,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2045` | lectura en vivo de una `Table` sin un predicado `eq`/`in` empujado sobre cada columna de `requiredFilters` | v1alpha24 01 §4 |
 | `OOS2046` | la salida de un `Transform` resuelve a algo que el código no escribe: una `Table`, una `View`, un `Dataset` mantenido o una `MediaCollection` con `from` | v1alpha25 01 §6 |
 | `OOS2047` | dos `Transform` con la misma salida: una salida tiene un solo productor | v1alpha25 01 §6 |
+| `OOS2048` | un `Package` llamado `functions`: es el espacio de las funciones propias, y `functions.x` sería a la vez una función y un dato | v1alpha26 01 §3 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

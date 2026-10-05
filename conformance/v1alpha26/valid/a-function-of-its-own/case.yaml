@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#2
+level: L0
+expects: accept
+summary: >
+  functions/total.yaml en la raiz: sin namespace, con su version y la huella de lo que corre.

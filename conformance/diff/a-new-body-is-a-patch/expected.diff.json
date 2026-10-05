@@ -1,0 +1,10 @@
+{
+  "changes": [],
+  "verdicts": {
+    "CONSUMER": "compatible",
+    "POLICY": "compatible",
+    "INDEX": "compatible",
+    "PACKAGE": "compatible"
+  },
+  "requiredBump": "patch"
+}

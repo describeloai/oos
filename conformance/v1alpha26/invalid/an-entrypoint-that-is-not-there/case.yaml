@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#4
+level: L0
+expects: OOS2042
+summary: >
+  El entrypoint se lee desde la raiz del espacio de trabajo, y ese fichero no esta.

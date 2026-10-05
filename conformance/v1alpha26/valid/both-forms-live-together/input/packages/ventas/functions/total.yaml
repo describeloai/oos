@@ -1,0 +1,10 @@
+# generado por ore desde viejas/funciones/total.py:total · se edita el def, no este fichero
+apiVersion: oos.dev/v1alpha18
+kind: Function
+metadata: { name: total, namespace: ventas }
+spec:
+  runtime: python
+  entrypoint: viejas/funciones/total.py:total
+  input:
+    desde: { type: Date, required: true }
+  output: { type: Decimal }

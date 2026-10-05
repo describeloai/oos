@@ -1,0 +1,5 @@
+rule: spec/v1alpha26/01-la-funcion-propia.md#5
+level: L0
+expects: OOS5021
+summary: >
+  Un parametro obligatorio nuevo exige mayor, y la funcion lo publica como parche.
