@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha25/transform.schema.json",
+  "title": "Transform",
+  "description": "El productor declarado de un dataset escrito: codigo, en un commit, que lee unas entradas y escribe una salida. Se DERIVA del codigo —un `@transform` de Python o una sentencia SQL que escribe— y se coteja con el (OOS2042, OOS2043, OOS2013). Su identidad es su salida: una salida, un productor (OOS2047). La salida es un Dataset o una MediaCollection escritos (OOS2046), o un nombre todavia sin escribir. No lleva el modo de escritura (es del Dataset), ni cuando se construye.\n\nNormativo: spec/v1alpha25/01-transform.md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "oos.dev/v1alpha25" },
+    "kind": { "const": "Transform" },
+    "metadata": {
+      "description": "Sin `schema` ni `labels`: un transform vive con su codigo, y la etiqueta baja por el desde sus entradas (01 §7).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": {
+          "description": "La salida con `__` por separador (01 §5.3): `<base>__<nombre>` o `<base>__<schema>__<nombre>`.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+        },
+        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string", "maxLength": 4096 }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "entrypoint", "inputs", "output"],
+      "properties": {
+        "owner": {
+          "description": "Quien responde (v1alpha21 `01`): `team:` o `user:` (OOS2009 si no lo es).",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "runtime": { "enum": ["python", "sql"] },
+        "entrypoint": {
+          "description": "`python`: `<ruta>.py:<def>`; `sql`: `<ruta>.sql:<n>`, la sentencia n-esima desde 1. La ruta, desde la carpeta del paquete.",
+          "type": "string"
+        },
+        "inputs": {
+          "description": "Lo que el codigo lee: Table, View, Dataset o MediaCollection (OOS2018). Puede ser vacia.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName" }
+        },
+        "output": {
+          "description": "Lo que el codigo escribe: un Dataset o una MediaCollection escritos, o un nombre por nacer (01 §6).",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "runtime": { "const": "python" } } },
+          "then": { "properties": { "entrypoint": { "pattern": "^(?!/)(?!(.*/)?\\.\\.(/|:))[^:]+\\.py:[A-Za-z_][A-Za-z0-9_]*$" } } }
+        },
+        {
+          "if": { "properties": { "runtime": { "const": "sql" } } },
+          "then": { "properties": { "entrypoint": { "pattern": "^(?!/)(?!(.*/)?\\.\\.(/|:))[^:]+\\.sql:[1-9][0-9]*$" } } }
+        }
+      ]
+    }
+  }
+}

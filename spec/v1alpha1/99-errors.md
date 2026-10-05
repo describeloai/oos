@@ -83,11 +83,11 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2014` | dos bindings del mismo objeto pueden reclamar la misma fila | 03 §3.5 |
 | `OOS2015` | un filtro exigido —por `requiredFilters` o por un ámbito de fila— nombra una propiedad que el binding no mapea | 05 §5.3 |
 | `OOS2012` | secreto de conexión presente en un documento | 03 §2.1 |
-| `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar, `ontology.lock` o, desde v1alpha18, el `Function` de un `@function` (y desde v1alpha23, el de una función de TypeScript) | 00 §5 · v1alpha18 01 §4.8 · v1alpha23 01 §9 |
+| `OOS2013` | artefacto generado desincronizado con su fuente — esquema Cedar, `ontology.lock` o, desde v1alpha18, el `Function` de un `@function` (y desde v1alpha23, el de una función de TypeScript); desde v1alpha25, el `Transform` de un `@transform` o de una sentencia SQL que escribe | 00 §5 · v1alpha18 01 §4.8 · v1alpha23 01 §9 · v1alpha25 01 §5.4 |
 | `OOS2016` | la firma de un paquete importado no verifica, o falta la que el lock afirma | v1alpha6 02 §5 |
 | `OOS2017` | la prueba de transparencia de un paquete no verifica, o falta la que el lock afirma | v1alpha6 03 §5 |
-| `OOS2018` | una vista, `backedBy`, un campo o un filtro nombran una vista o un campo que no existe | v1alpha7 01 §4 |
-| `OOS2019` | la cadena de vistas vuelve sobre sí misma | v1alpha7 01 §4 |
+| `OOS2018` | una vista, `backedBy`, un campo o un filtro nombran una vista o un campo que no existe; desde v1alpha25, una entrada de un `Transform` que no resuelve | v1alpha7 01 §4 · v1alpha25 01 §6 |
+| `OOS2019` | la cadena de vistas vuelve sobre sí misma; desde v1alpha25, también por los transforms (la salida entre sus entradas, o un ciclo) | v1alpha7 01 §4 · v1alpha25 01 §6 |
 | `OOS2020` | una vista cuya raíz de lectura no se deja leer —`reads: none`— no lleva `materialized` | v1alpha8 02 §5.1 |
 | `OOS2021` | una vista materializada cuya raíz solo anexa —`changes.mode: append`— respalda una entidad `nature: entity` | v1alpha8 02 §5.2 |
 | `OOS2022` | una propiedad de una entidad no es campo de su vista, y no declara `derivedFrom` | v1alpha8 02 §5.3 |
@@ -109,10 +109,12 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2039` | el contrato de una vista (`columns`) no es exactamente lo que su consulta proyecta | v1alpha14 01 §4 |
 | `OOS2040` | una `MediaCollection` sale de un `ObjectTable` de otro tipo de medio (`media`) | v1alpha16 02 §7 |
 | `OOS2041` | una referencia a medio usada fuera de su sitio: en una tabla anclada, una columna `Media<x>` de otra colección; en una consulta, ordenar o agrupar por la referencia (`_item`) | v1alpha17 03 §6, 04 §4 |
-| `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior (Python) o no tiene `export default function` (TypeScript, v1alpha23) | v1alpha18 01 §3 · v1alpha23 01 §2 |
-| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción o un nombre que no es lo que parece, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs`; o un fichero que no es Python del runtime. Desde v1alpha23, lo mismo para una función de TypeScript: una exportación por defecto que no es una función con el nombre del fichero, un `config` que no es literal, un tipo sin traducción, o un fichero que no es TypeScript borrable del runtime | v1alpha18 01 §4 · v1alpha23 01 §3–§8 |
+| `OOS2042` | el `entrypoint` de una función de código no está: el fichero no existe en el paquete, o no define el `def` en su nivel superior (Python) o no tiene `export default function` (TypeScript, v1alpha23); desde v1alpha25, el de un `Transform`: el fichero, el `def` o la sentencia `n` | v1alpha18 01 §3 · v1alpha23 01 §2 · v1alpha25 01 §5.4 |
+| `OOS2043` | un `@function` que no se puede derivar: un argumento del decorador que no es literal, un parámetro sin anotar, un tipo sin traducción o un nombre que no es lo que parece, sin anotación de retorno, sin la fila con `over`, o con `*args`/`**kwargs`; o un fichero que no es Python del runtime. Desde v1alpha23, lo mismo para una función de TypeScript: una exportación por defecto que no es una función con el nombre del fichero, un `config` que no es literal, un tipo sin traducción, o un fichero que no es TypeScript borrable del runtime. Desde v1alpha25, un `@transform` con un argumento que no es literal, constante del módulo ni `ore.collection(…)`, o un `.sql` que no se analiza | v1alpha18 01 §4 · v1alpha23 01 §3–§8 · v1alpha25 01 §5 |
 | `OOS2044` | lectura en vivo de una `Table` con `fullScan: forbidden` sin un predicado empujado que la acote | v1alpha24 01 §4 |
 | `OOS2045` | lectura en vivo de una `Table` sin un predicado `eq`/`in` empujado sobre cada columna de `requiredFilters` | v1alpha24 01 §4 |
+| `OOS2046` | la salida de un `Transform` resuelve a algo que el código no escribe: una `Table`, una `View`, un `Dataset` mantenido o una `MediaCollection` con `from` | v1alpha25 01 §6 |
+| `OOS2047` | dos `Transform` con la misma salida: una salida tiene un solo productor | v1alpha25 01 §6 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
