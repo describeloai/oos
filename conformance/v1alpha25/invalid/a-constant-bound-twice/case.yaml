@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: OOS2043
+summary: >
+  una constante ligada dos veces no se lee sin ejecutar.

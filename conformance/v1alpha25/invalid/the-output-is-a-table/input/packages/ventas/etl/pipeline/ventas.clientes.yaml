@@ -1,0 +1,11 @@
+# derivado por ore desde etl/transforms/pisar.py:pisar · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha25
+kind: Transform
+metadata:
+  name: ventas__clientes
+  namespace: ventas
+spec:
+  runtime: python
+  entrypoint: etl/transforms/pisar.py:pisar
+  inputs: [ventas.pedidos]
+  output: ventas.clientes

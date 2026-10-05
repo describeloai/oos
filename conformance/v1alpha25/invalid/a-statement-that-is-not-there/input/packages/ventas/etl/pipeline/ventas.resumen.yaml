@@ -1,0 +1,11 @@
+# derivado por ore desde etl/transforms/resumen.sql:3 · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha25
+kind: Transform
+metadata:
+  name: ventas__resumen
+  namespace: ventas
+spec:
+  runtime: sql
+  entrypoint: etl/transforms/resumen.sql:3
+  inputs: [ventas.pedidos]
+  output: ventas.resumen

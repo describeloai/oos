@@ -1,0 +1,11 @@
+# derivado por ore desde etl/transforms/cadena.py:limpios · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha25
+kind: Transform
+metadata:
+  name: ventas__limpios
+  namespace: ventas
+spec:
+  runtime: python
+  entrypoint: etl/transforms/cadena.py:limpios
+  inputs: [ventas.pedidos]
+  output: ventas.limpios

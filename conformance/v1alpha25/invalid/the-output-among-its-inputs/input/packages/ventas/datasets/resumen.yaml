@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata: { name: resumen, namespace: ventas }
+spec:
+  owner: team:ventas
+  columns:
+    pais: { type: String }
+    total: { type: Decimal }
+  changes: { mode: append }

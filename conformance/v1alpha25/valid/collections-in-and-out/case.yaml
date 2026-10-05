@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: accept
+summary: >
+  ore.collection(...) nombra la coleccion, con literal o con constante.

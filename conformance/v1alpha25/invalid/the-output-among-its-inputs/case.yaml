@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#6
+level: L0
+expects: OOS2019
+summary: >
+  la salida no es una entrada de si misma.

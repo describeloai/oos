@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#6
+level: L0
+expects: accept
+summary: >
+  la salida ya existe y es un Dataset escrito.

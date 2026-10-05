@@ -1,0 +1,11 @@
+# derivado por ore desde etl/transforms/ciclo.py:a · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha25
+kind: Transform
+metadata:
+  name: ventas__a
+  namespace: ventas
+spec:
+  runtime: python
+  entrypoint: etl/transforms/ciclo.py:a
+  inputs: [ventas.b]
+  output: ventas.a

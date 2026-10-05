@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#8
+level: L0
+expects: OOS1003
+summary: >
+  kind Transform no existe antes de v1alpha25.
