@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#2
+level: L0
+expects: accept
+summary: >
+  `include` nombra `ventas.facturas`, que la fuente no tiene: no es un error —el origen cambia sin pedir permiso—; la base expone lo demás.

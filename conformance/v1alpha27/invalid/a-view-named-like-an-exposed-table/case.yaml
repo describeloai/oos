@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#5
+level: L0
+expects: OOS2050
+summary: >
+  Una vista de la base se llama `ventas_vivo.ventas.clientes`, el nombre que ya expone la `Table` de la fuente.

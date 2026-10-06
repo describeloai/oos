@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha27
+kind: Package
+metadata: { name: ventas_vivo, version: 0.1.0, status: active, domain: ventas }
+spec:
+  owner: team:ventas
+  foreign:
+    datasource: erp
+    include: [ventas.clientes]

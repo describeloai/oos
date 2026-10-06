@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha13
+kind: Dataset
+metadata: { name: clientes, namespace: ventas_vivo, schema: copias }
+spec:
+  owner: team:ventas
+  from: { table: erp_catalogo.ventas.clientes }

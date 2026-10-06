@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: pedidos, namespace: ventas_vivo, schema: informes }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: |
+    SELECT id, cliente FROM ventas_vivo.ventas.pedidos
+  columns:
+    id: { type: String }
+    cliente: { type: String }

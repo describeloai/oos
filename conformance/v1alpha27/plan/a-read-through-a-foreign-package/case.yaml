@@ -1,0 +1,6 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#3
+level: L0
+expects: accept
+query: query.sql
+summary: >
+  Leer `ventas_vivo.ventas.clientes` es leer la `Table` de la fuente en vivo: con `federation` y `federation.read`, se lee.

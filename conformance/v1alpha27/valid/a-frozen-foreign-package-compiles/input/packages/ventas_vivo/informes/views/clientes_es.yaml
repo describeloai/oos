@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: clientes_es, namespace: ventas_vivo, schema: informes }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: |
+    SELECT id, email FROM ventas_vivo.ventas.clientes WHERE pais = 'ES'
+  columns:
+    id: { type: String }
+    email: { type: String }

@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha22
+kind: Table
+metadata: { name: clientes, namespace: ventas_vivo, schema: propias }
+spec:
+  datasource: erp
+  object: "ventas.clientes"
+  columns:
+    id: { physicalType: "varchar(16)", type: String }
+    email: { physicalType: "text", type: String }
+    pais: { physicalType: "char(2)", type: String }
+  reads:
+    predicatePushdown: [eq, in]
+    fullScan: cheap
+  changes: { mode: retract, witness: log }

@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha27/package.schema.json",
+  "title": "Package",
+  "description": "Manifiesto de un paquete ontológico: quién responde de él, en qué estado está, con qué garantías y de qué depende.\n\nNo es un formato nuevo: es un PERFIL del Open Data Contract Standard v3.1. Casi todo lo que hay aquí es vocabulario de ODCS, absorbido tal cual. La única extensión es `dependencies`.\n\nPrincipio de producto: el perfil debe ser invisible. Quien escribe este documento no necesita saber que ODCS existe.\n\nNormativo: spec/v1alpha1/01-package.md · spec/v1alpha27/01-la-base-foranea.md (spec.foreign)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "oos.dev/v1alpha27"
+    },
+    "kind": {
+      "const": "Package"
+    },
+    "metadata": {
+      "description": "Los Fundamentals de ODCS, reorganizados bajo `metadata` para que todos los documentos OOS tengan la misma forma.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "status",
+        "domain"
+      ],
+      "properties": {
+        "name": {
+          "description": "Nombre del paquete. ODCS lo hace opcional; OOS lo EXIGE: un paquete sin nombre no puede ser referenciado por otro, y las dependencias son el mecanismo central de este sistema.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/packageName"
+        },
+        "version": {
+          "description": "Versión semántica del paquete. Es un COMPROMISO con quien lo consume, no una identidad — para eso están el commit y el digest.\n\n`ore diff` la verifica: si los cambios detectados no corresponden a la versión declarada, falla (OOS5021). La versión deja de ser una afirmación y pasa a ser una comprobación.",
+          "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+        },
+        "status": {
+          "description": "Estado del contrato, con el vocabulario EXACTO de ODCS.\n\nSe adopta su enum en lugar de inventar uno propio para que la emisión no pierda nada. El nivel del retículo `oos.maturity` se DERIVA de este valor —proposed y draft → DRAFT, active → STABLE, deprecated y retired → DEPRECATED— y sirve de valor por defecto para las entidades del paquete que no declaren el suyo. Una entidad puede declarar cualquier nivel, por encima o por debajo: un paquete estable admite perfectamente una entidad nueva en borrador.",
+          "enum": [
+            "proposed",
+            "draft",
+            "active",
+            "deprecated",
+            "retired"
+          ]
+        },
+        "domain": {
+          "description": "Dominio de negocio al que pertenece. ODCS lo hace opcional; OOS lo EXIGE porque es la unidad de propiedad y de radio de impacto.",
+          "type": "string",
+          "maxLength": 128
+        },
+        "id": {
+          "description": "Identificador estable de ODCS.\n\nNO se escribe a mano. Si se omite, se DERIVA de forma determinista del nombre cualificado (UUIDv5), de modo que emitir a ODCS produzca siempre el mismo identificador sin que la compilación deje de ser pura.\n\nSolo aparece explícito al importar un contrato ODCS existente, donde se conserva literalmente para no romper a sus consumidores.\n\nDivergencia consciente: ODCS usa este id para que renombrar no rompa referencias. OOS resuelve lo mismo con `moved` y `reserved`, que además dicen en qué se convirtió cada nombre y por qué. Es un enfoque distinto, con sus contrapartidas, no una mejora estricta.",
+          "type": "string",
+          "maxLength": 128
+        },
+        "tenant": {
+          "description": "Absorbido de ODCS sin interpretar.",
+          "type": "string",
+          "maxLength": 128
+        },
+        "tags": {
+          "description": "Etiquetas libres de ODCS para categorización. NO son etiquetas de retículo: no ordenan, no propagan y no gobiernan nada. Las que sí lo hacen viven en `labels` y pertenecen a un Lattice.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "description": {
+          "description": "Se absorbe la forma ESTRUCTURADA de ODCS en lugar de una cadena simple. `limitations` y `usage` son especialmente valiosos en un artefacto de gobernanza: dicen dónde NO se debe usar esto, que es información que ningún esquema puede inferir.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "purpose": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "limitations": {
+              "type": "string",
+              "maxLength": 2048
+            },
+            "usage": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner"
+      ],
+      "properties": {
+        "owner": {
+          "description": "Quién responde de este paquete. Exactamente uno.\n\nEs un HANDLE —`team:plataforma-personas` o `user:dausten`— y no un nombre libre, porque es lo que se alinea con CODEOWNERS, que es quien realmente hace cumplir la revisión.\n\nEn emisión se traduce a ODCS: un `team:` se convierte en `team.name`; un `user:` en un miembro con `role: Owner`.",
+          "type": "string",
+          "pattern": "^(team|user):[a-z][a-z0-9-]*$",
+          "maxLength": 128
+        },
+        "team": {
+          "description": "Sección Team de ODCS, absorbida literalmente.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 1024
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "role": {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1024
+                  },
+                  "dateIn": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "dateOut": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "replacedByUsername": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                }
+              }
+            }
+          }
+        },
+        "roles": {
+          "description": "Sección Roles de ODCS, absorbida literalmente. Describe quién puede SOLICITAR acceso y quién lo aprueba.\n\nNo confundir con las políticas: esto es metadato de proceso —a quién dirigirse—, no una decisión evaluable. La decisión de acceso se toma en Cedar y la aplica el motor en cada consulta.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "role"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "role": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "access": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "firstLevelApprovers": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "secondLevelApprovers": {
+                "type": "string",
+                "maxLength": 512
+              }
+            }
+          }
+        },
+        "support": {
+          "description": "Sección Support de ODCS, absorbida literalmente.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "channel"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "channel": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "url": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "tool": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "scope": {
+                "type": "string",
+                "maxLength": 64
+              }
+            }
+          }
+        },
+        "sla": {
+          "description": "Acuerdo de nivel de servicio.\n\nODCS lo modela como `slaProperties`, un array genérico de property/value/unit. Aquí se TIPA únicamente lo que el compilador hace cumplir, y todo lo demás se transporta sin interpretar.\n\nPrincipio: se tipa lo que se comprueba; el resto es transporte. Un array genérico de pares clave-valor es imposible de validar y desagradable de escribir, pero perfectamente válido para llevar información que nadie va a evaluar.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "breakingChangePolicy": {
+              "description": "El único campo del SLA que es NORMATIVO. `ore diff` falla si un cambio rompedor llega sin haberse anunciado con esta antelación mediante `moved`, `reserved` o `DEPRECATED` con fecha (OOS5022).",
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "noticePeriod"
+              ],
+              "properties": {
+                "noticePeriod": {
+                  "$ref": "../v1alpha1/type/basic.schema.json#/$defs/duration"
+                }
+              }
+            },
+            "properties": {
+              "description": "slaProperties de ODCS transportadas sin interpretar: disponibilidad, latencia, frecuencia de actualización. OOS no las evalúa.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "property",
+                  "value"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  "property": {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  "value": {},
+                  "unit": {
+                    "type": "string",
+                    "maxLength": 64
+                  },
+                  "element": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "driver": {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  "schedule": {
+                    "type": "string",
+                    "maxLength": 128
+                  }
+                }
+              }
+            }
+          }
+        },
+        "authoritativeDefinitions": {
+          "description": "Enlaces a fuentes autoritativas —glosario de negocio, norma, documentación— absorbidos de ODCS.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "type"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "url": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "type": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 1024
+              }
+            }
+          }
+        },
+        "dependencies": {
+          "description": "LA ÚNICA EXTENSIÓN DE ESTE PERFIL (P7).\n\nNi ODCS ni Apache Ossie tienen mecanismo de dependencia entre artefactos: un contrato ODCS no referencia a otro contrato ODCS. Sin este campo son imposibles el retículo importable, el perfil de conector, la ontología sectorial y el registry.\n\nY lo que hace no es reutilizar: es TRANSFERIR AUTORIDAD. Declarar `gdpr@^2.1` es afirmar que la definición de dato personal no es tuya, y acogerte a un enunciado concreto y auditable de esa autoridad.\n\nCriterio: si la respuesta a «¿quién decide si esto es correcto?» no es «nosotros», es una dependencia.\n\nSe emite a ODCS bajo `customProperties` como `x-oos-dependencies`. La resolución se fija en ontology.lock.",
+          "type": "array",
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/packageRef"
+          }
+        },
+        "moved": {
+          "description": "Documentos renombrados. Es el ALCANCE ANCHO de la disciplina de renombrado, y vive aquí por la misma regla que la pone en la entidad y en la vista, leída al revés: **lo dice el que sobrevive, y si no sobrevive nadie lo dice el paquete**.\n\nUn `moved` de documento sí tendría superviviente —el que se queda con el nombre nuevo, que es la forma de los `aliases` de Avro— pero `reserved` NO: un nombre retirado para siempre no deja documento donde vivir. Y los dos son un mecanismo, así que partirlos en dos casas sería peor que cualquiera de las dos.\n\nSin esto, renombrar un documento se lee como OOS5007 —desapareció— y lo que aparece con el nombre nuevo no se reporta: nadie relaciona los dos hechos.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "since"
+            ],
+            "properties": {
+              "from": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "to": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "since": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "reserved": {
+          "description": "Nombres de documento retirados que NO pueden reutilizarse. Usar uno es OOS2006.\n\nEs el único sitio posible para el alcance ancho: un nombre retirado para siempre no tiene documento donde declararse.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1024
+              },
+              "until": {
+                "$ref": "../v1alpha1/type/basic.schema.json#/$defs/semver"
+              }
+            }
+          }
+        },
+        "exports": {
+          "description": "Lo que este paquete deja usar a OTRO. Es VISIBILIDAD, no membresía.\n\nDe qué se compone el paquete ya lo dice el directorio, y redeclararlo sería declarar lo derivable (P2). Lo que no está escrito en ninguna parte del árbol es «esto lo expongo a propósito»: desde dentro del paquete, una vista publicada y una muerta se ven igual.\n\nCada nombre DEBE resolver a un documento de ESTE paquete —OOS2027—; lo de una dependencia lo exporta ella. Y una referencia de otro paquete a algo que no está aquí es OOS2028, que NO es OOS2018: existe, y no es público.\n\nAUSENTE SIGNIFICA NADA, no todo. Es P4, la misma regla con la que un conducto no listado no autoriza y `reads` ausente es una negativa. Java exporta nada sin `exports`, Rust es privado por defecto y dbt es `protected`.\n\nSin versión, a diferencia de `dependencies`: se nombra lo propio, y lo propio no cruza el límite del artefacto.",
+          "type": "array",
+          "items": {
+            "$ref": "../v1alpha1/type/basic.schema.json#/$defs/qualifiedName"
+          }
+        },
+        "foreign": {
+          "description": "La base foránea (v1alpha27 01): este paquete EXPONE, con su nombre, las Table y los ObjectTable de una fuente que se lee en vivo. No los copia ni los redeclara: <paquete>.<schema>.<objeto> ES el documento de la fuente.\n\nCon esta clave el paquete sólo contiene Schema y vistas sin `materialized` (OOS2049). Sin ella, el paquete es lo que siempre fue.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "datasource",
+            "include"
+          ],
+          "properties": {
+            "datasource": {
+              "description": "La fuente, por su nombre en `datasources` del OntologyConfig (OOS2004 si no está). Si no tiene `federation: true`, la base compila y está congelada (OOS2051 al leer).",
+              "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier"
+            },
+            "include": {
+              "description": "Qué parte de la fuente se expone. Cada entrada es un schema (`ventas`: un espejo, expone lo que haya en él) o un objeto (`ventas.clientes`). Una entrada que no nombra nada no es un error: el origen cambia sin pedir permiso.",
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)?$",
+                "maxLength": 257
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "^x-[a-z][a-z0-9]*-": {
+      "description": "Punto de extensión. Cualquier otra clave desconocida es un error (OOS1005)."
+    }
+  },
+  "$comment": "FUERA DEL PERFIL, transportado sin interpretar en la ida y vuelta: `price` (el precio de un producto de datos no es asunto de un artefacto de gobernanza), `dataProduct` y `slaDefaultElement` (obsoletos en ODCS v3.1), y `customProperties` no reconocidas. `contractCreatedTs` merece mención aparte: OOS NUNCA lo escribe, porque el invariante III prohíbe el reloj en la compilación; si viene en un contrato importado se conserva literalmente. EXCLUIDAS por pertenecer a otro documento: `schema` va a Entity, `servers` va a Binding, `quality` queda aplazada a Rule."
+}

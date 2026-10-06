@@ -1,0 +1,6 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#6
+level: L0
+expects: OOS2051
+query: query.sql
+summary: >
+  La fuente no tiene `federation: true`: la base está congelada y la lectura se niega antes de conectar.

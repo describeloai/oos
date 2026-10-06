@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: erp_catalogo, version: 1.0.0, status: active, domain: erp }
+spec: { owner: team:data, exports: [erp_catalogo.ventas.clientes, erp_catalogo.ventas.pedidos] }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#4
+level: L0
+expects: OOS2049
+summary: >
+  Una base foránea con un `Dataset`: copiar es de otra base. Una foránea sólo contiene `Schema` y vistas sin copia.

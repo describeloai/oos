@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#3
+level: L0
+expects: OOS2018
+summary: >
+  La base expone sólo `ventas.clientes`; una vista suya lee `ventas_vivo.ventas.pedidos`, que no expone: es un nombre que no existe.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#2
+level: L0
+expects: OOS2004
+summary: >
+  `foreign.datasource` nombra `crm`, que no está en `datasources`.

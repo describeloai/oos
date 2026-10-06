@@ -1,0 +1,5 @@
+rule: spec/v1alpha27/01-la-base-foranea.md#2
+level: L0
+expects: accept
+summary: >
+  Una base foránea que expone un objeto suelto (`ventas.clientes`) y no contiene ningún documento más que su `Package`.

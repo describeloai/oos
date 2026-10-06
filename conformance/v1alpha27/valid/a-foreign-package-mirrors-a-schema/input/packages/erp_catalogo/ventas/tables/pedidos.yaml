@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha22
+kind: Table
+metadata: { name: pedidos, namespace: erp_catalogo, schema: ventas }
+spec:
+  datasource: erp
+  object: "ventas.pedidos"
+  columns:
+    id: { physicalType: "varchar(16)", type: String }
+    cliente: { physicalType: "varchar(16)", type: String }
+    importe: { physicalType: "text", type: String }
+  reads:
+    predicatePushdown: [eq, in]
+    fullScan: cheap
+  changes: { mode: retract, witness: log }

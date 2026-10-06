@@ -116,6 +116,9 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2046` | la salida de un `Transform` resuelve a algo que el código no escribe: una `Table`, una `View`, un `Dataset` mantenido o una `MediaCollection` con `from` | v1alpha25 01 §6 |
 | `OOS2047` | dos `Transform` con la misma salida: una salida tiene un solo productor | v1alpha25 01 §6 |
 | `OOS2048` | un `Package` llamado `functions`: es el espacio de las funciones propias, y `functions.x` sería a la vez una función y un dato | v1alpha26 01 §3 |
+| `OOS2049` | una base foránea (`spec.foreign`) contiene algo que no es un `Schema` o una vista sin `materialized`: una `Table`, un `Dataset`, una colección, una entidad, una copia | v1alpha27 01 §4 |
+| `OOS2050` | un nombre expuesto por una base foránea no es único: dos objetos de la fuente con el mismo, o uno y una vista de la base | v1alpha27 01 §5 |
+| `OOS2051` | lectura en vivo de un objeto de una fuente sin `federation: true` (con un `OntologyConfig` de v1alpha27 o posterior): una base foránea congelada | v1alpha27 01 §6 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

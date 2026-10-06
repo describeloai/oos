@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: clientes, namespace: ventas_vivo, schema: ventas }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: |
+    SELECT id, email FROM erp_catalogo.ventas.clientes
+  columns:
+    id: { type: String }
+    email: { type: String }
