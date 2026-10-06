@@ -1,6 +1,6 @@
 # v1alpha26 / invalid / a-function-with-a-namespace
 
-**Regla:** [`01-la-funcion-propia.md` §2](../../../../spec/v1alpha26/01-la-funcion-propia.md#2) · **Espera:** `OOS1004` · **Nivel:** L0
+**Regla:** [`01-la-funcion-propia.md` §2](../../../../spec/v1alpha26/01-la-funcion-propia.md#2) · **Espera:** `OOS1005` · **Nivel:** L0
 
 ---
 

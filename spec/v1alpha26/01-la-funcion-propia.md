@@ -39,7 +39,7 @@ spec:
 - El documento está en `functions/<nombre>.yaml`, en la **raíz del espacio de trabajo**, fuera de
   todo paquete. El fichero se llama como `metadata.name`. En otro sitio —dentro de un paquete— es
   `OOS2036`: la identidad no sale de la ruta, pero la ruta tiene que estar de acuerdo.
-- `metadata` **no lleva** `namespace` ni `schema`: llevarlos es `OOS1004`.
+- `metadata` **no lleva** `namespace` ni `schema`: en esta versión no existen, y llevarlos es `OOS1005`.
 - `spec.owner` es **obligatorio** (v1alpha21 `01`): fuera de un paquete no hay de quién heredarlo.
 
 ## 3. El nombre
@@ -83,9 +83,10 @@ La huella de **lo que corre**: `sha256:` y el hash, en hexadecimal, de, en este 
 1. los bytes del fichero del `entrypoint`;
 2. los del manifiesto de entorno más cercano subiendo desde ese fichero —`pyproject.toml` con
    `runtime: python`, `package.json` con `runtime: node`—, si lo hay;
-3. los de su fichero de bloqueo al lado (`uv.lock`, `poetry.lock`, `package-lock.json`), si lo hay;
+3. los de su fichero de bloqueo al lado, el primero que haya —`pylock.toml`, `uv.lock` o `poetry.lock` con `python`; `package-lock.json` con `node`—;
 
-cada uno precedido por su ruta desde la raíz y un `\n`. Es **derivada**: la que no es la del código
+cada uno precedido por su ruta desde la raíz y un `\n`, con los finales de línea en `\n` (un
+checkout de Windows no es otro código). Es **derivada**: la que no es la del código
 es `OOS2013`, como la firma. Un cambio del cuerpo, de una dependencia o de su resolución es otra
 huella y, por §5, un parche.
 
@@ -107,7 +108,8 @@ resultado.
 
 | código | cuándo |
 |---|---|
-| `OOS1004` | una `Function` de v1alpha26 con `metadata.namespace` o `metadata.schema`, o sin `metadata.version`, `spec.owner` o `spec.codeDigest` |
+| `OOS1004` | una `Function` de v1alpha26 sin `metadata.version`, `spec.owner` o `spec.codeDigest`, o con alguno mal formado |
+| `OOS1005` | una `Function` de v1alpha26 con `metadata.namespace` o `metadata.schema` |
 | `OOS2013` | `codeDigest` no es la huella del código |
 | `OOS2035` | dos `Function` de v1alpha26 con el mismo `metadata.name`, sin distinguir mayúsculas |
 | `OOS2036` | una `Function` de v1alpha26 fuera de `functions/` de la raíz |
