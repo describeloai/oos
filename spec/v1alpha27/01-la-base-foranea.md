@@ -82,6 +82,9 @@ Una base foránea no tiene datos propios. **Normativo:**
 - Sus documentos son `Schema` y `View` **sin `materialized`**. Cualquier otro —`Table`,
   `ObjectTable`, `Dataset`, `MediaCollection`, `Entity`, `Binding`— o una vista con
   `materialized` es `OOS2049`.
+- Tampoco es la salida de un `Transform` (v1alpha25): un build escribe datos, y los escribe en una
+  base estándar. Un `Transform` cuyo `output` nombra una base foránea es `OOS2049`, y se dice al
+  validar, sin construir. Sí puede leerla: sus `inputs` nombran lo que ella expone.
 - Un schema expuesto existe sin documento: lo crea la exposición. Para escribir una vista en él, la
   base declara su `Schema`, como siempre (`OOS2037`).
 - Una vista de una base foránea puede leer lo que exponga ella, lo que expongan otras y lo que
