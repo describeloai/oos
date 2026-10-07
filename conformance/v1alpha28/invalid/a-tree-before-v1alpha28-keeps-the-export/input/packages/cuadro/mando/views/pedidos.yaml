@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: pedidos, namespace: cuadro, schema: mando }
+spec:
+  owner: team:cuadro
+  dialect: duckdb
+  sql: |
+    SELECT id FROM informes.espana.pedidos
+  columns:
+    id: { type: String }

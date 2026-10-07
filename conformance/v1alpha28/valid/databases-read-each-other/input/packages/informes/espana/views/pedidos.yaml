@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: pedidos, namespace: informes, schema: espana }
+spec:
+  owner: team:informes
+  dialect: duckdb
+  sql: |
+    SELECT id, cliente FROM erp_catalogo.ventas.pedidos
+  columns:
+    id: { type: String }
+    cliente: { type: String }

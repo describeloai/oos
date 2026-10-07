@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: clientes_con_pedido, namespace: cuadro, schema: mando }
+spec:
+  owner: team:cuadro
+  dialect: duckdb
+  sql: |
+    SELECT c.id FROM informes.espana.clientes c JOIN informes.espana.pedidos p ON p.cliente = c.id
+  columns:
+    id: { type: String }

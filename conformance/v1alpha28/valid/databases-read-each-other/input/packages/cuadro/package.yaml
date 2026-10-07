@@ -1,0 +1,4 @@
+apiVersion: oos.dev/v1alpha1
+kind: Package
+metadata: { name: cuadro, version: 0.1.0, status: active, domain: cuadro }
+spec: { owner: team:cuadro }

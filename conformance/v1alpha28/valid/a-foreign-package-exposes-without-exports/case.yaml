@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#3
+level: L0
+expects: accept
+summary: >
+  En un árbol v1alpha28, una base foránea expone el schema `ventas` de `erp` entero aunque el paquete de la fuente no exporte nada: lo que expone lo dice su `include`, y quién lo lee, el acceso.

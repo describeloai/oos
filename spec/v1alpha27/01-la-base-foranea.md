@@ -57,6 +57,8 @@ Lo que una base foránea `B` con `foreign.datasource: D` **expone** es cada docu
 3. `include` nombra `s`, o nombra `s.n`;
 4. el paquete de `T` lo **exporta**. Si `include` nombra `s.n` y no se exporta, es `OOS2028`; un
    schema en espejo expone sólo lo exportado.
+   *(Desde v1alpha28 —[`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md) §4—, en un árbol
+   v1alpha28 esta regla no se aplica: se expone lo que `include` alcanza.)*
 
 Su **nombre expuesto** es `B.s.n`.
 

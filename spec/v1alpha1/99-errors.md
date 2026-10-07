@@ -95,7 +95,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2024` | la raíz de una vista por la que la ontología escribe no declara `changes.key` | v1alpha8 02 §5.5 |
 | `OOS2025` | una vista por la que la ontología escribe no declara `materialized` | v1alpha8 02 §5.5 |
 | `OOS2027` | `exports` nombra algo que el paquete no contiene | v1alpha8 01 §3.2 |
-| `OOS2028` | una referencia cruza a un paquete que no la exporta | v1alpha8 01 §3.2 |
+| `OOS2028` | una referencia cruza a un paquete que no la exporta (desde v1alpha28, sólo hacia otro artefacto) | v1alpha8 01 §3.2, v1alpha28 01 §3 |
 | `OOS2029` | una tabla que no empuja la proyección no sostiene una copia | v1alpha8 01 §4.1 |
 | `OOS2030` | el `namespace` no es el del paquete que contiene al documento | v1alpha1 01 §3.5 |
 | `OOS2031` | se depende de un paquete retirado | v1alpha1 01 §3.6 |

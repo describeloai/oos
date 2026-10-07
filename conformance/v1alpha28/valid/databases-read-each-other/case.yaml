@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#2
+level: L0
+expects: accept
+summary: >
+  Tres bases de un mismo árbol v1alpha28 se leen por nombre sin un `exports`: una standard lee una vista de la foránea y una `Table` de la fuente, y otra standard lee la primera.
