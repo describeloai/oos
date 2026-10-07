@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#4
+level: L0
+expects: accept
+summary: >
+  `include` nombra `ventas.pedidos`, que su paquete no exporta. Hasta v1alpha27 era `OOS2028`; desde v1alpha28 la base foránea expone lo que su `include` alcanza.

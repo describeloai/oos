@@ -57,8 +57,8 @@ Lo que una base foránea `B` con `foreign.datasource: D` **expone** es cada docu
 3. `include` nombra `s`, o nombra `s.n`;
 4. el paquete de `T` lo **exporta**. Si `include` nombra `s.n` y no se exporta, es `OOS2028`; un
    schema en espejo expone sólo lo exportado.
-   *(Desde v1alpha28 —[`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md) §4—, en un árbol
-   v1alpha28 esta regla no se aplica: se expone lo que `include` alcanza.)*
+   *(Desde v1alpha28 —[`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md) §4 y §6—, esta
+   regla no se aplica en ningún árbol: se expone lo que `include` alcanza.)*
 
 Su **nombre expuesto** es `B.s.n`.
 
@@ -73,7 +73,8 @@ Su **nombre expuesto** es `B.s.n`.
 - Leer `B.s.n` **ES** leer `T` en vivo, con todo lo de [`v1alpha24/01`](../v1alpha24/01-leer-el-origen.md):
   el conducto `federation.read` (`OOS4011`), lo que se empuja, `fullScan` y `requiredFilters`
   (`OOS2044`, `OOS2045`).
-- Un documento de otro paquete que nombra `B.s.n` necesita que `B` lo exporte (`OOS2028`):
+- Un documento de otro paquete que nombra `B.s.n` necesita que `B` lo exporte (`OOS2028`; desde
+  v1alpha28 no dentro de un árbol, [`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md) §6):
   `exports` de una base foránea puede nombrar lo que expone sin que sea `OOS2027`.
 - Una `Table` sin `metadata.schema` no se expone nunca.
 

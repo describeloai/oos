@@ -5,7 +5,7 @@
 
 ---
 
-**El trío con [`invalid/a-reference-across-packages-needs-an-export`](../../invalid/a-reference-across-packages-needs-an-export/)
+**El trío con [`valid/a-reference-across-packages-without-an-export`](../a-reference-across-packages-without-an-export/) (hasta v1alpha27, `OOS2028`; ver v1alpha28 `01-la-visibilidad`)
 y [`invalid/exports-names-what-the-package-does-not-have`](../../invalid/exports-names-what-the-package-does-not-have/),
 y los tres son el mismo árbol.** Aquí la lista está y nombra lo correcto; allí falta; allí sobra un
 nombre.

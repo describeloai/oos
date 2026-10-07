@@ -1,5 +1,0 @@
-rule: spec/v1alpha28/01-la-visibilidad.md#4
-level: L0
-expects: OOS2028
-summary: >
-  El mismo cruce en un árbol cuyo `OntologyConfig` es v1alpha27: la regla de antes sigue, y una base que lee otra que no exporta no compila.

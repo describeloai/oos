@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#2
+level: L0
+expects: accept
+summary: >
+  La colección sale del ObjectTable de otro paquete, que no lo exporta. Hasta v1alpha27 era `OOS2028`; desde v1alpha28 un árbol es un catálogo y compila.

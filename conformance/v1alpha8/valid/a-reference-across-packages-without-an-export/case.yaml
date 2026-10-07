@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#2
+level: L0
+expects: accept
+summary: >
+  El mismo árbol que `a-package-exports-what-others-may-use`, sin la lista. Hasta v1alpha27 era `OOS2028`; desde v1alpha28 un árbol es un catálogo y la referencia que cruza compila.

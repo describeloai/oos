@@ -1,0 +1,5 @@
+rule: spec/v1alpha28/01-la-visibilidad.md#2
+level: L0
+expects: accept
+summary: >
+  El mismo cruce en un árbol cuyo `OntologyConfig` es v1alpha27: compila igual. La regla sólo quita errores, así que vale para todo árbol, sin puerta de versión.

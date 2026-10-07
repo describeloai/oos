@@ -18,9 +18,9 @@ catálogo con muchas bases, la segunda es la de cada día, y la primera la de pu
 
 **Normativo:**
 
-- En un árbol cuyo `OntologyConfig` declara **v1alpha28 o posterior**, una referencia de un
-  miembro a otro **compila** aunque el otro no la exporte. `OOS2028` **no se aplica** entre
-  miembros del árbol.
+- En **todo** árbol —sea cual sea la versión de su `OntologyConfig` y la de sus documentos
+  (§6)—, una referencia de un miembro a otro **compila** aunque el otro no la exporte. `OOS2028`
+  **no se aplica** entre miembros del árbol.
 - Vale para todas las clases de base y en las dos direcciones: una **standard** que lee otra, una
   standard que lee una **foránea** o la base del **catálogo de una fuente**, y una foránea que lee
   una standard (una vista mixta).
@@ -49,14 +49,12 @@ catálogo con muchas bases, la segunda es la de cada día, y la primera la de pu
 v1alpha27 (`01` §3, regla 4) exponía sólo lo que el paquete de la fuente exportaba, y nombrar en
 `include` algo no exportado era `OOS2028`.
 
-**Normativo**, en un árbol v1alpha28:
+**Normativo**, en todo árbol (§6):
 
 - Una base foránea expone **lo que su `include` alcanza** de su fuente: las `Table` y los
   `ObjectTable` de su `datasource` con `metadata.schema` declarado, exporte o no su paquete.
 - Lo demás de v1alpha27 sigue: la fuente con `federation: true` para leer (`OOS2051`), sin
   documentos propios salvo `Schema` y vistas sin copia (`OOS2049`), nombres únicos (`OOS2050`).
-
-En un árbol anterior, la regla 4 de v1alpha27 sigue como estaba — `a-tree-before-v1alpha28-keeps-the-export`.
 
 ## 5. Los casos
 
@@ -64,4 +62,24 @@ En un árbol anterior, la regla 4 de v1alpha27 sigue como estaba — `a-tree-bef
 |---|---|---|
 | `valid/databases-read-each-other` | acepta | standard → foránea, standard → fuente y standard → standard, sin un `exports` |
 | `valid/a-foreign-package-exposes-without-exports` | acepta | la foránea expone el schema entero de una fuente que no exporta nada |
-| `invalid/a-tree-before-v1alpha28-keeps-the-export` | `OOS2028` | el mismo cruce con el `OntologyConfig` en v1alpha27: la regla de antes |
+| `valid/a-tree-before-v1alpha28-reads-too` | acepta | el mismo cruce con el `OntologyConfig` en v1alpha27: también compila (§6) |
+
+Y tres casos de versiones anteriores que esperaban `OOS2028` dentro de un árbol pasan a `valid/` en
+su propia versión: `v1alpha8/a-reference-across-packages-without-an-export` (antes
+`…-needs-an-export`), `v1alpha16/a-source-that-keeps-its-objects-to-itself` y
+`v1alpha27/an-unexported-table-named-in-include`.
+
+## 6. Sin puerta de versión
+
+**Normativo:** esta versión vale para **todo** árbol, no sólo para los que declaran v1alpha28.
+
+Una regla que **añade** errores necesita una puerta —el árbol elige cuándo cumplirla, como la
+base congelada de v1alpha27 (`OOS2051`)—, porque sin ella un árbol que compilaba dejaría de
+hacerlo sin haber cambiado. Esta **sólo quita** errores: lo que compilaba sigue compilando, y lo que
+era `OOS2028` dentro de un árbol deja de serlo. Pedirle a cada árbol que suba su `OntologyConfig`
+para recibirla sería un trabajo sin nada que proteger, y en una rama, que no se actualiza sola, uno
+que se olvida.
+
+Por eso es una corrección de v1alpha8 más que una regla nueva: la frontera entre bases nunca
+protegió lo que parecía (`00-scope` §4). Una implementación de una versión anterior que aún aplique
+`OOS2028` dentro del árbol rechazará árboles que esta acepta; no al revés.

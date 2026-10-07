@@ -178,10 +178,9 @@ Por eso el nombre es el de Java —`module-info` · `exports`— y el de Node �
   anterior se escribió cuando un paquete no tenía superficie pública, y aplicárselo cambiaría lo
   que significa algo ya escrito. Es el mismo razonamiento —y la misma puerta— que `OOS2022`.
 
-> **Desde v1alpha28** ([`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md)): en un árbol
-> cuyo `OntologyConfig` es v1alpha28 o posterior, `OOS2028` no se aplica entre miembros del mismo
-> árbol —sus bases se leen por su nombre, y quién lee qué es del acceso—; `exports` queda como la
-> frontera del artefacto, hacia quien importa el paquete en `dependencies`.
+> **Desde v1alpha28** ([`01-la-visibilidad`](../v1alpha28/01-la-visibilidad.md)): en **todo**
+> árbol, sea cual sea su versión, `OOS2028` no se aplica entre miembros del mismo árbol: sus bases
+> se leen por su nombre, y `exports` queda como la frontera del artefacto (`dependencies`).
 
 #### Y dónde vive, que no es una preferencia
 

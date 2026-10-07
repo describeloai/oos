@@ -1,5 +1,0 @@
-rule: spec/v1alpha16/02-media-collection.md#4
-level: L0
-expects: OOS2028
-summary: >
-  La colección sale del ObjectTable de otro paquete, que no lo exporta.

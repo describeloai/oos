@@ -1,7 +1,8 @@
 # OOS v1alpha28 — alcance
 
-**Estado:** borrador de alcance. Gobierna los árboles cuyo `OntologyConfig` declara esta
-`apiVersion`, y es **alpha**: sin garantías de compatibilidad.
+**Estado:** borrador de alcance. Su regla vale para **todo** árbol, declare la `apiVersion` que
+declare (sólo quita errores: [`01`](01-la-visibilidad.md) §6), y es **alpha**: sin garantías de
+compatibilidad.
 
 | | |
 |---|---|
@@ -47,7 +48,7 @@ igual: las bases de una cuenta se leen por su nombre con privilegios, y salir de
 
 ## 2. Lo que entra
 
-1. **Dentro de un árbol v1alpha28, una referencia entre bases compila** —standard, foránea o la
+1. **Dentro de un árbol, una referencia entre bases compila** —standard, foránea o la
    base del catálogo de una fuente; en cualquier dirección—. `OOS2028` no se aplica entre miembros
    del árbol ([`01`](01-la-visibilidad.md) §2).
 2. **`exports` sigue siendo la superficie pública del paquete hacia fuera del árbol**: lo que un
@@ -56,8 +57,8 @@ igual: las bases de una cuenta se leen por su nombre con privilegios, y salir de
 3. **La base foránea expone lo que su `include` alcanza**, aunque el paquete de la fuente no lo
    exporte ([`01`](01-la-visibilidad.md) §4). Lo demás de v1alpha27 no cambia: la fuente con
    `federation: true` (`OOS2051`), sin datos propios (`OOS2049`), nombres únicos (`OOS2050`).
-4. **La puerta es el `OntologyConfig`**: el árbol entero cambia de reglas a la vez, como en
-   v1alpha27 la base congelada (`OOS2051`). Un árbol de antes compila igual que antes.
+4. **Sin puerta de versión** ([`01`](01-la-visibilidad.md) §6): la regla sólo quita errores, así
+   que vale para todo árbol, también los de un `OntologyConfig` anterior. Ninguno deja de compilar.
 
 ## 3. Lo que no entra
 
