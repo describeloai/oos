@@ -135,11 +135,18 @@ Un `.sql` del paquete da un transform por cada sentencia que **escribe datos**:
 | `create or replace dataset <d> as select …` | `<d>` |
 | `insert into <d> select …` | `<d>` |
 | `insert or replace into <d> select …` | `<d>` |
+| `create or replace media collection <c> media … formats (…) as select …` | `<c>` |
 
 `spec.inputs` es lo que lee la consulta, en el orden en que aparece por primera vez. No son
 transforms la `select` que no escribe, `create view` ni `create materialized view` (producen una
 `View`, v1alpha14), ni lo que crea algo vacío (`create database`, `create schema`,
-`create dataset (…)`, `create media collection`).
+`create dataset (…)`, `create media collection` sin `as`).
+
+La última fila (añadida el 2026-10-08, ORE 0049 B10) es **ficheros que dan ficheros**: la consulta
+da una fila por fichero de `<c>`, que es una `MediaCollection` escrita (v1alpha19) —por nacer, o
+existente y sin `from`—. Cómo se calcula (ítem a ítem, con su registro) es de la plataforma; aquí
+sólo cuenta que la sentencia escribe `<c>` y lee lo que lee. Sólo añade un transform donde antes
+el `.sql` no se analizaba (`OOS2043`), así que ningún árbol que compilaba deja de hacerlo.
 
 Un fichero que no se puede analizar es `OOS2043`, una vez por fichero.
 

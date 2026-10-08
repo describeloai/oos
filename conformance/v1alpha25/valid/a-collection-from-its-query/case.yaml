@@ -1,0 +1,6 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: accept
+summary: >
+  create or replace media collection ... as select es un transform: su salida, la coleccion;
+  sus entradas, lo que lee la consulta.

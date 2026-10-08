@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha16
+kind: MediaCollection
+metadata: { name: contratos, namespace: ventas }
+spec:
+  owner: team:ventas
+  media: document
+  formats: [pdf]
