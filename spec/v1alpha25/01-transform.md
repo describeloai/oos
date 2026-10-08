@@ -13,8 +13,8 @@ fuente, el documento se deriva leyendo y se coteja— a un `kind` nuevo, y nombr
 > unas entradas y escribe una salida. Lo que lee y lo que escribe se leen en su documento sin
 > ejecutarlo.**
 
-Quien programa escribe el código —un `def` marcado con `@transform`, o una sentencia SQL que
-escribe—; el documento `Transform` **se deriva** de él, en el mismo commit, y lo coteja el
+Quien programa escribe el código —un `def` marcado con `@transform`, una sentencia SQL que
+escribe, o un método de Java marcado con `@Transform`—; el documento `Transform` **se deriva** de él, en el mismo commit, y lo coteja el
 compilador (`OOS2013`). Es un artefacto generado, como el `Function` de un `@function`.
 
 **Su identidad es su salida.** Una salida tiene un solo productor (§6), así que el nombre de lo
@@ -68,6 +68,25 @@ FROM ventas.pedidos p JOIN ventas.clientes c USING (cliente_id)
 GROUP BY c.pais
 ```
 
+o en Java:
+
+```java
+// packages/ventas/etl/transforms/Resumen.java
+import static ore.Ore.*;
+
+import ore.Transform;
+
+public class Resumen {
+    static final String PEDIDOS = "ventas.pedidos";
+
+    /** El total por país. */
+    @Transform(inputs = {PEDIDOS, "ventas.clientes"}, output = "ventas.resumen")
+    public static Object resumen() throws Exception {
+        return write("ventas.resumen", over(PEDIDOS));
+    }
+}
+```
+
 Y lo que se deriva:
 
 ```yaml
@@ -92,8 +111,8 @@ spec:
 | `metadata.name` | **obligatoria** | la salida con `__` por separador: `<base>__<nombre>` en `default`, `<base>__<schema>__<nombre>` en otro (§5.3). No es un nombre que nadie elija |
 | `metadata.namespace` | **obligatoria** | el paquete donde está el código |
 | `metadata.description` | opcional | §5.3 |
-| `spec.runtime` | **obligatoria** | `python` o `sql` |
-| `spec.entrypoint` | **obligatoria** | `python`: `<ruta>.py:<def>`; `sql`: `<ruta>.sql:<n>`, la sentencia `n`-ésima del fichero, desde 1. La ruta, desde la carpeta del paquete |
+| `spec.runtime` | **obligatoria** | `python`, `sql` o `java` |
+| `spec.entrypoint` | **obligatoria** | `python`: `<ruta>.py:<def>`; `sql`: `<ruta>.sql:<n>`, la sentencia `n`-ésima del fichero, desde 1; `java`: `<ruta>.java:<método>`, un método de la clase del fichero (§5.5). La ruta, desde la carpeta del paquete |
 | `spec.inputs` | **obligatoria** | lista, puede ser vacía, sin repetidos: lo que el código lee. Cada nombre, una `Table`, una `View`, un `Dataset` o una `MediaCollection` (`OOS2018`) |
 | `spec.output` | **obligatoria** | lo que el código escribe: un `Dataset` escrito o una `MediaCollection` escrita, o un nombre que todavía no resuelve (§6) |
 | `spec.owner` | opcional | quien responde (v1alpha21 `01`); el documento que nace lleva el de quien lo guarda |
@@ -157,17 +176,17 @@ Un fichero que no se puede analizar es `OOS2043`, una vez por fichero.
 | `apiVersion` | `oos.dev/v1alpha25` |
 | `metadata.name` | `spec.output` con cada `.` cambiado por `__` |
 | `metadata.namespace` | el paquete |
-| `metadata.description` | Python: la primera línea no vacía de la *docstring*; SQL: no está |
-| `spec.runtime`, `entrypoint`, `inputs`, `output` | §4, §5.1, §5.2 |
+| `metadata.description` | Python: la primera línea no vacía de la *docstring*; Java: la primera línea no vacía de su Javadoc que no es una etiqueta (§5.5); SQL: no está |
+| `spec.runtime`, `entrypoint`, `inputs`, `output` | §4, §5.1, §5.2, §5.5 |
 
 ### 5.4 · La coherencia
 
-Para cada `.py` y `.sql` del paquete y cada documento `Transform`:
+Para cada `.py`, `.sql` y `.java` del paquete y cada documento `Transform`:
 
 | | código |
 |---|---|
-| el `entrypoint` no está: el fichero no existe, no define ese `def` en su nivel superior, o no tiene esa sentencia | `OOS2042` |
-| un transform que no se puede derivar (§5.1, §5.2) | `OOS2043` |
+| el `entrypoint` no está: el fichero no existe, no define ese `def` en su nivel superior, no tiene esa sentencia, o su clase no tiene ese método | `OOS2042` |
+| un transform que no se puede derivar (§5.1, §5.2, §5.5) | `OOS2043` |
 | un transform del código sin documento que lo nombre; un documento cuyo `entrypoint` no es un transform; un documento que no es el que el código da (§5.3), campo a campo | `OOS2013` |
 
 La precedencia, para un mismo transform: `OOS2042` antes que `OOS2043` antes que `OOS2013`. Un
@@ -175,6 +194,44 @@ La precedencia, para un mismo transform: `OOS2042` antes que `OOS2043` antes que
 
 Dónde vive el documento en el paquete no forma parte de la regla: un validador lo encuentra por su
 `entrypoint`. Leer, nunca ejecutar: v1alpha18 §4.9, tal cual.
+
+### 5.5 · En Java: `@Transform`
+
+(Añadido el 2026-10-08, ORE 0055 T1·7.) Un método de la **clase del fichero** —la de nivel superior
+que lleva el nombre del `.java`, como Java exige a una clase pública— con una anotación que **es**
+`ore.Transform`. Lo es `@ore.Transform`, y `@Transform` cuando el fichero importa `ore.Transform` o
+`ore.*` y no importa ni declara otra `Transform`. El método es `public static` y no tiene
+parámetros; lo que devuelve no cuenta. Sus argumentos, por nombre:
+
+| argumento | en el documento |
+|---|---|
+| `inputs = {…}` | `spec.inputs`, en su orden. Un solo valor sin llaves (`inputs = "ventas.pedidos"`) también, como Java lo admite; `{}` es la lista vacía |
+| `output = …` | `spec.output` |
+
+Cada valor se lee sin compilar, y vale si es:
+
+- una **cadena literal** (`"…"`, con los escapes de Java; un *text block* no);
+- un **campo `static final String` de la misma clase**, declarado en su cuerpo —no en un método ni
+  en otra clase— e inicializado con una cadena literal, nombrado por su nombre (`PEDIDOS`) o por el
+  de la clase (`Resumen.PEDIDOS`).
+
+Cualquier otra cosa es `OOS2043`, también lo que Java sí pliega en una constante —una concatenación
+(`"ventas." + "pedidos"`), un campo de otra clase, uno sin `final`—, porque la regla es la misma en
+todos los lenguajes: el valor se ve escrito, no se calcula. También es `OOS2043` un argumento que no
+es uno de estos dos o que falta, y la anotación sobre un método que no es `public static`, que tiene
+parámetros, que está en otra clase (una anidada, otra de nivel superior), o cuyo nombre se repite
+en la clase. La clase misma la da la plataforma: `ore.Transform`, con `String[] inputs()` y
+`String output()`.
+
+Lo que está en un comentario o en una cadena no es una anotación. **`metadata.description`** es la
+primera línea no vacía del Javadoc (`/** … */`) que precede al método o a su anotación, sin el `*`
+del margen y sin las etiquetas (`@param`, `@return`…).
+
+Llamar a `transform(…)` desde el código —la forma de antes, la que se ejecuta— no es un transform:
+no se lee, y el árbol no lo conoce.
+
+Ningún árbol que compilaba deja de hacerlo: `ore.Transform` no existía, y un documento con
+`runtime: java` era `OOS1004`.
 
 ## 6. Lo que resuelve
 
@@ -204,7 +261,7 @@ conducto es el de siempre, y el transform es una arista más por la que baja la 
 
 | | código |
 |---|---|
-| falta `metadata.name`, `namespace`, `runtime`, `entrypoint`, `inputs` u `output`; `runtime` fuera de `python`/`sql`; `entrypoint` sin la forma de su runtime; `inputs` con repetidos | `OOS1004` |
+| falta `metadata.name`, `namespace`, `runtime`, `entrypoint`, `inputs` u `output`; `runtime` fuera de `python`/`sql`/`java`; `entrypoint` sin la forma de su runtime; `inputs` con repetidos | `OOS1004` |
 | una clave que no es de aquí (`changes`, `schedule`, `labels`, `metadata.schema`…) | `OOS1005` |
 | `kind: Transform` en v1alpha24 o antes | `OOS1003` |
 | una entrada que no resuelve | `OOS2018` |
@@ -230,5 +287,5 @@ procedencia `Transform@commit`, es de la implementación; también cuándo, en q
 no lea ni escriba otra cosa lo hace cumplir quien lo ejecuta, como la superficie de una función
 (v1alpha18 §6).
 
-**Otros lenguajes.** `jvm` y `node` entran por esta misma regla cuando su declaración se pueda leer
-sin ejecutar.
+**Otros lenguajes.** Java entró por esta misma regla (§5.5) cuando su declaración pasó a ser una
+anotación; `node` entrará igual cuando la suya se pueda leer sin ejecutar.

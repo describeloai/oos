@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: accept
+summary: >
+  un @Transform de Java con una constante static final y un literal; la salida por nacer.

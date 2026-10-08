@@ -6,7 +6,7 @@
 | | |
 |---|---|
 | `00-scope` | **este documento** — qué entra, qué no, y por qué |
-| [`01-transform`](01-transform.md) | el `kind` `Transform`: el productor de un dataset escrito, **derivado** del código —un `@transform` de Python o una sentencia SQL que escribe— y cotejado con él |
+| [`01-transform`](01-transform.md) | el `kind` `Transform`: el productor de un dataset escrito, **derivado** del código —un `@transform` de Python, una sentencia SQL que escribe o un `@Transform` de Java— y cotejado con él |
 
 Esta versión **añade un `kind`** —`Transform`— y **dos códigos**: `OOS2046` (la salida no es algo
 que el código escriba) y `OOS2047` (dos productores para una salida). Amplía `OOS2013`, `OOS2042` y
@@ -40,15 +40,16 @@ Tres decisiones dan forma a la versión:
 ## 2. Qué entra
 
 - El `kind` `Transform` (`01` §1–§4).
-- La derivación desde Python (`@transform`, argumentos literales o constantes del módulo) y desde SQL
-  (las tres sentencias que escriben) (`01` §5).
+- La derivación desde Python (`@transform`, argumentos literales o constantes del módulo), desde SQL
+  (las sentencias que escriben) y desde Java (`@Transform`, literales o constantes `static final` de
+  la clase; añadida el 2026-10-08) (`01` §5).
 - La resolución: entradas, salida escrita o por nacer, un productor, sin ciclos (`01` §6).
 - La etiqueta que baja por el transform antes de ejecutar (`01` §7).
 
 ## 3. Qué no entra
 
-- **Java y TypeScript.** Su declaración de hoy es una llamada dentro de código que se ejecuta; entran
-  cuando se pueda leer sin ejecutar.
+- **TypeScript.** Su declaración de hoy es una llamada dentro de código que se ejecuta; entra cuando
+  se pueda leer sin ejecutar. Java entró así: su `@Transform` es una anotación (`01` §5.5).
 - **Varias salidas.** Un transform, una salida; si llegan, como `outputs`.
 - **Cuándo construir** —una programación, un disparador—: es un objeto aparte que nombra transforms.
 - **Builds, incremental, expectativas de datos**: son de la implementación o de otra versión (las

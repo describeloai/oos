@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: OOS2013
+summary: >
+  una anotacion que se llama Transform y no es la de ORE no hace un transform.

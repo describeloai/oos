@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: OOS2043
+summary: >
+  una concatenacion no se deriva, aunque Java la pliegue en una constante.

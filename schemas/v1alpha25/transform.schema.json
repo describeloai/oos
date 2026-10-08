@@ -34,9 +34,9 @@
           "pattern": "^(team|user):[a-z][a-z0-9-]*$",
           "maxLength": 128
         },
-        "runtime": { "enum": ["python", "sql"] },
+        "runtime": { "enum": ["python", "sql", "java"] },
         "entrypoint": {
-          "description": "`python`: `<ruta>.py:<def>`; `sql`: `<ruta>.sql:<n>`, la sentencia n-esima desde 1. La ruta, desde la carpeta del paquete.",
+          "description": "`python`: `<ruta>.py:<def>`; `sql`: `<ruta>.sql:<n>`, la sentencia n-esima desde 1; `java`: `<ruta>.java:<metodo>`, un metodo de la clase del fichero (01 §5.5). La ruta, desde la carpeta del paquete.",
           "type": "string"
         },
         "inputs": {
@@ -58,6 +58,10 @@
         {
           "if": { "properties": { "runtime": { "const": "sql" } } },
           "then": { "properties": { "entrypoint": { "pattern": "^(?!/)(?!(.*/)?\\.\\.(/|:))[^:]+\\.sql:[1-9][0-9]*$" } } }
+        },
+        {
+          "if": { "properties": { "runtime": { "const": "java" } } },
+          "then": { "properties": { "entrypoint": { "pattern": "^(?!/)(?!(.*/)?\\.\\.(/|:))[^:]+\\.java:[A-Za-z_$][A-Za-z0-9_$]*$" } } }
         }
       ]
     }

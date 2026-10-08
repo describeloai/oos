@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: OOS2043
+summary: >
+  un campo static sin final puede cambiar: no es una constante.

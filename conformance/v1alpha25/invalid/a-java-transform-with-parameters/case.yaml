@@ -1,0 +1,5 @@
+rule: spec/v1alpha25/01-transform.md#5
+level: L0
+expects: OOS2043
+summary: >
+  el build llama al metodo sin nada: uno con parametros no se puede construir.
