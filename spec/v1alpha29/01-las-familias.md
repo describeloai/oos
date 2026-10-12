@@ -18,7 +18,7 @@ depende de qué es, y quien lo lea tiene que poder razonar sobre ello. Son quinc
 | `spreadsheet` | una hoja con celdas, no filas declaradas | xlsx, xlsm, xlsb, xls, ods, numbers | OOXML/ODF por la extensión; OLE2 |
 | `email` | un mensaje con adjuntos | eml, msg, mbox | `From `, `Received:`; OLE2 |
 | `structured` | datos con forma: un documento por fichero | json, xml, yaml, yml, toml | `<?xml`; un `{` o `[` que analiza |
-| `text` | texto que no se pagina | log, sha256, sha1, md5, ini, conf, cfg, y código: py, js, ts, java, scala, kt, rs, go, c, h, cpp, cs, rb, php, sh, ps1, sql, r, ipynb | UTF-8 sin bytes de control en la muestra |
+| `text` | texto que no se pagina | log, sha256, sha1, md5, ini, conf, cfg, y código: py, js, java, scala, kt, rs, go, c, h, cpp, cs, rb, php, sh, ps1, sql, r, ipynb | UTF-8 sin bytes de control en la muestra |
 | `geospatial` | geometría y mapas | geojson, kml, kmz, gpx, gml, gpkg, shp, shx, dbf, prj, cpg, las, laz | `<kml`, `<gpx`, SQLite (gpkg), shp `0000270A`, `LASF` |
 | `model3d` | piezas y escenas 3D, CAD | stl, obj, ply, glb, gltf, fbx, 3ds, dwg, dxf, step, stp, iges, igs, usdz | `glTF`, `solid`, `ply`, `AC10` (dwg), `ISO-10303-21` |
 | `medical` | imagen y señal clínica | dcm, dicom, nii, hl7, edf | `DICM` en el byte 128, `n+1` en el 344 (NIfTI), `MSH|` (HL7) |
@@ -33,12 +33,18 @@ Y una más que sólo existe en una colección: **`multimodal`** (§3).
 
 - **El tipo es el de los bytes** (v1alpha16 `01` §4.1): la extensión propone y los bytes deciden.
   La tabla es la de la extensión; una implementación **DEBERÍA** confirmar con la firma.
+- **Un contenedor genérico en los bytes no desmiente a la extensión.** Un zip (DOCX, XLSX, KMZ,
+  USDZ), un XML (KML, GPX, GML, SVG), un OLE2 (DOC, XLS, MSG) o un SQLite (GeoPackage) son eso por
+  dentro: la extensión dice cuál. Los bytes desmienten cuando dicen algo **específico** —un `.csv`
+  que empieza por `%PDF` es un PDF—.
 - **Una extensión es de una sola familia.** Las fronteras:
   - `dcm` es `medical`, no `image`: un DICOM lleva paciente, estudio y serie, no sólo píxeles.
   - `txt` y `md` son `document`; `text` es lo que no se pagina —registros, código, sumas de control—.
   - `json` es `structured`: un documento por fichero. `jsonl`, `csv` y `parquet` son **filas**: una
     `Table` con `format` (v1alpha16 `03`), no un medio.
   - Un GeoTIFF es `image`: distinguirlo exige leer las etiquetas TIFF, y una imagen lo es.
+  - `.ts` propone `video` (MPEG-TS, que empieza por el byte de sincronía `0x47`); un `.ts` que no
+    empieza así y es texto es TypeScript: `text`. Los bytes deciden, como siempre.
   - `obj` y `stl` son `model3d`; las nubes de puntos LiDAR (`las`, `laz`), `geospatial`.
 - Un `ObjectTable` es de **una** familia, o `binary`. `multimodal` en un `ObjectTable` es
   `OOS1004`: un objeto es de una cosa; un conjunto puede mezclarlas.
