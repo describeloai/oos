@@ -142,6 +142,9 @@ una foto es un dato personal.
 | una clave que no es de aquí (`columns`, `fields`, `sql`) | `OOS1005` | una colección no es una tabla |
 | `kind: MediaCollection` en v1alpha15 o antes | `OOS1003` | es un documento de v1alpha16 |
 
+> *(Desde v1alpha29 —[`01-las-familias`](../v1alpha29/01-las-familias.md)—, en un documento de
+> v1alpha29 `archive` es una colección legal y existe `multimodal`; `binary` sigue sin serlo.)*
+
 ## 8. Lo que la gramática no decide
 
 - **Qué pasa con un ítem que desaparece del origen** en una colección mantenida: se retira, se

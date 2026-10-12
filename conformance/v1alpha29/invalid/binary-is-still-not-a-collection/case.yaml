@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: OOS1004
+summary: >
+  `media: binary` en una colección: lo que no se sabe qué es se guarda como `multimodal`, que es decirlo (§4).

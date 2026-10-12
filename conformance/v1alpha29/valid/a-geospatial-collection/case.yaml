@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: accept
+summary: >
+  Un `ObjectTable` de GeoJSON es `geospatial`, y su colección también (§1).

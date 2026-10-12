@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha29
+kind: MediaCollection
+metadata: { name: guardado, namespace: lago, schema: archivo }
+spec:
+  owner: team:data
+  media: multimodal
+  from: { objectTable: mnist.datos.objetos }

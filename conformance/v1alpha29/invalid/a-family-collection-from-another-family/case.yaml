@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: OOS2040
+summary: >
+  Una colección `image` de un `ObjectTable` `geospatial`: sólo `multimodal` sale de cualquier familia (§3).

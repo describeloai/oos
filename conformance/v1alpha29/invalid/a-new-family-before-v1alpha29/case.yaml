@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: OOS1004
+summary: >
+  `geospatial` en un `ObjectTable` de v1alpha16: el vocabulario nuevo es del documento que declara v1alpha29 (00-scope §4).

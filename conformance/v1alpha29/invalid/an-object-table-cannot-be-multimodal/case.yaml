@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: OOS1004
+summary: >
+  `multimodal` es de un conjunto, no de un objeto: un `ObjectTable` es de una familia o `binary` (§1).

@@ -1,0 +1,5 @@
+rule: spec/v1alpha29/01-las-familias.md
+level: L0
+expects: accept
+summary: >
+  Un manifiesto y sus sumas de control son `binary` para el catálogo; una colección `multimodal`, sin `formats`, los guarda: lo que no tiene familia se guarda diciéndolo (§3, §4).

@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha29
+kind: ObjectTable
+metadata: { name: objetos, namespace: mnist, schema: datos }
+spec:
+  datasource: mnist
+  prefix: ""
+  match: "*"
+  media: multimodal
+  reads: { fullScan: cheap }
+  changes: { mode: retract, witness: listing }
