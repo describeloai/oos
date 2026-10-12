@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha24
+kind: View
+metadata: { name: largos, namespace: lago_vivo, schema: informes }
+spec:
+  owner: team:data
+  dialect: duckdb
+  sql: |
+    SELECT id, distancia FROM lago_vivo.default.viajes WHERE distancia > 10
+  columns:
+    id: { type: Integer }
+    distancia: { type: Float }

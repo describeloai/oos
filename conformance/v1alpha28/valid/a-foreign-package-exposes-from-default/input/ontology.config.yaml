@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha28
+kind: OntologyConfig
+metadata: { name: vivo, version: 0.1.0 }
+datasources:
+  - { name: lago, type: s3, connectionEnv: LAGO_URL, federation: true }

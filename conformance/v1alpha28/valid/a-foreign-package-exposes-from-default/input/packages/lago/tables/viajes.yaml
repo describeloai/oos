@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha16
+kind: Table
+metadata: { name: viajes, namespace: lago }
+spec:
+  datasource: lago
+  object: "part-00066.snappy.parquet"
+  format:
+    type: parquet
+  columns:
+    id: { type: Integer, physicalType: int32 }
+    distancia: { type: Float, physicalType: double }
+  reads:
+    predicatePushdown: []
+    fullScan: cheap
+  changes: { mode: retract, witness: listing }

@@ -55,7 +55,8 @@ igual: las bases de una cuenta se leen por su nombre con privilegios, y salir de
    paquete publicado deja usar a quien lo declara en `dependencies` ([`01`](01-la-visibilidad.md)
    §3). Su gramática no cambia.
 3. **La base foránea expone lo que su `include` alcanza**, aunque el paquete de la fuente no lo
-   exporte ([`01`](01-la-visibilidad.md) §4). Lo demás de v1alpha27 no cambia: la fuente con
+   exporte, **y también lo que está en `default`** —lo que no declara schema—
+   ([`01`](01-la-visibilidad.md) §4). Lo demás de v1alpha27 no cambia: la fuente con
    `federation: true` (`OOS2051`), sin datos propios (`OOS2049`), nombres únicos (`OOS2050`).
 4. **Sin puerta de versión** ([`01`](01-la-visibilidad.md) §6): la regla sólo quita errores, así
    que vale para todo árbol, también los de un `OntologyConfig` anterior. Ninguno deja de compilar.

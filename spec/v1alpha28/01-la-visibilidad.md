@@ -52,7 +52,14 @@ v1alpha27 (`01` §3, regla 4) exponía sólo lo que el paquete de la fuente expo
 **Normativo**, en todo árbol (§6):
 
 - Una base foránea expone **lo que su `include` alcanza** de su fuente: las `Table` y los
-  `ObjectTable` de su `datasource` con `metadata.schema` declarado, exporte o no su paquete.
+  `ObjectTable` de su `datasource`, exporte o no su paquete.
+- **El schema de lo expuesto es el suyo, y el de un documento que no lo declara es `default`**
+  ([`v1alpha13/01`](../v1alpha13/01-el-schema.md) §2: *«Si falta, es `default`»*). v1alpha27
+  (`01` §3, regla 2) exponía sólo lo que declaraba `metadata.schema`, y una fuente cuyo catálogo
+  deja algo en `default` —los ficheros sueltos en el prefijo de un bucket, una tabla sin
+  esquema— no podía exponerlo de ninguna manera: su base foránea quedaba vacía. Ahora
+  `include: [default]` es el espejo de `default` y `default.<n>` nombra un objeto suyo, como en
+  cualquier otro schema; su nombre expuesto es `B.default.n` (`B.n` en forma corta).
 - Lo demás de v1alpha27 sigue: la fuente con `federation: true` para leer (`OOS2051`), sin
   documentos propios salvo `Schema` y vistas sin copia (`OOS2049`), nombres únicos (`OOS2050`).
 
@@ -63,6 +70,7 @@ v1alpha27 (`01` §3, regla 4) exponía sólo lo que el paquete de la fuente expo
 | `valid/databases-read-each-other` | acepta | standard → foránea, standard → fuente y standard → standard, sin un `exports` |
 | `valid/a-foreign-package-exposes-without-exports` | acepta | la foránea expone el schema entero de una fuente que no exporta nada |
 | `valid/a-tree-before-v1alpha28-reads-too` | acepta | el mismo cruce con el `OntologyConfig` en v1alpha27: también compila (§6) |
+| `valid/a-foreign-package-exposes-from-default` | acepta | la foránea expone una tabla de la fuente que no declara schema (está en `default`), y una vista la lee por `B.default.n` |
 
 Y tres casos de versiones anteriores que esperaban `OOS2028` dentro de un árbol pasan a `valid/` en
 su propia versión: `v1alpha8/a-reference-across-packages-without-an-export` (antes
@@ -72,6 +80,9 @@ su propia versión: `v1alpha8/a-reference-across-packages-without-an-export` (an
 ## 6. Sin puerta de versión
 
 **Normativo:** esta versión vale para **todo** árbol, no sólo para los que declaran v1alpha28.
+
+Lo de `default` (§4) también sólo quita errores: una vista que nombraba `B.default.n` era
+`OOS2018` y ahora resuelve; nada que compilaba deja de hacerlo.
 
 Una regla que **añade** errores necesita una puerta —el árbol elige cuándo cumplirla, como la
 base congelada de v1alpha27 (`OOS2051`)—, porque sin ella un árbol que compilaba dejaría de

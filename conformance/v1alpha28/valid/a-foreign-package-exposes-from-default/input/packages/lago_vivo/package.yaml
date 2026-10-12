@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha27
+kind: Package
+metadata: { name: lago_vivo, version: 0.1.0, status: active, domain: lago }
+spec:
+  owner: team:data
+  foreign:
+    datasource: lago
+    include: [default.viajes]
