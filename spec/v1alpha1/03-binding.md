@@ -228,6 +228,10 @@ al consumidor. **NO DEBE** servir datos obsoletos como si fueran frescos.
 degradado es la diferencia entre abstenerse y alucinar. Un motor que sirve datos viejos en
 silencio convierte una garantía en una trampa.
 
+> **v1alpha30** ([`01-la-salud`](../v1alpha30/01-la-salud.md)) dice con qué se mide y qué se le
+> da a quien lee: el estado degradado es `degraded`, uno de cuatro estados, y viaja con cada
+> lectura en el bloque de salud.
+
 ### 3.3 · `capabilities` — qué sabe hacer el origen
 
 ```yaml

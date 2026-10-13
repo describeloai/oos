@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha30/health.schema.json",
+  "title": "Health",
+  "description": "EL BLOQUE DE SALUD DE UN ACTIVO: de cuando es lo que se sirve, en que estado esta y por que. Acompana a cada lectura (una consulta, una funcion, la vista previa, lo que recibe un agente) y es lo que da quien pregunta por un activo.\n\nNo es un documento del arbol: es lo que dice quien sirve los datos. El estado no se guarda; se calcula con lo medido, lo prometido y la hora.\n\nNormativo: spec/v1alpha30/01-la-salud.md (§1 las horas, §2 los estados, §5 las capas, §6 este bloque y sus motivos).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["state", "dataAsOf", "reasons", "layers"],
+  "properties": {
+    "state": {
+      "description": "El peor de sus motivos (§2.1): degraded > warning > unknown > healthy. Healthy no lleva motivos; los demas llevan al menos uno.",
+      "enum": ["healthy", "warning", "degraded", "unknown"]
+    },
+    "dataAsOf": {
+      "description": "Los datos: cuando se leyo el origen para la version que se sirve, tomado antes de leer (§1). En vivo, el momento de la lectura. Null solo si nunca hubo version (motivo never-refreshed). Nunca la hora de publicar.",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "checkedAt": {
+      "description": "La ultima vez que una medida vio que el origen no habia cambiado desde dataAsOf (§1). Null si no hay con que medirlo, o si la capa 1 esta apagada y el refresco no lo midio.",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "sourceChangedAt": {
+      "description": "Cuando se supo que el origen cambio despues de dataAsOf (§1). Null si no se sabe, o si no cambio.",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "freshness": {
+      "description": "La promesa de frescura y las dos magnitudes (§1). El retraso se calcula siempre; la edad, solo con una comprobacion, y nunca supera al retraso.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lagSeconds"],
+      "properties": {
+        "promise": {
+          "description": "freshness del activo (v1alpha12), como duracion ISO 8601. Ausente si no se promete.",
+          "type": "string"
+        },
+        "lagSeconds": { "type": ["integer", "null"], "minimum": 0 },
+        "ageSeconds": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "servingLastGood": {
+      "description": "Verdadero si lo que se sirve es la ultima version buena porque el ultimo intento fallo o se retuvo (§4).",
+      "type": "boolean"
+    },
+    "lastRefresh": {
+      "description": "El ultimo intento de refresco, haya publicado o no (§4).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "outcome"],
+      "properties": {
+        "at": { "type": "string", "format": "date-time" },
+        "outcome": {
+          "description": "published: se publico una version nueva. unchanged: una medida respaldo que el origen no cambio y no hizo falta copiar. failed: fallo. held: se retuvo por una guarda o una promesa.",
+          "enum": ["published", "unchanged", "failed", "held"]
+        }
+      }
+    },
+    "reasons": {
+      "description": "Por que el estado no es healthy (§6). Vacio si y solo si state es healthy.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/reason" }
+    },
+    "layers": {
+      "description": "Que capas estan encendidas para este activo (§5). La 0 no aparece: no se puede apagar.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["monitoring", "profiling"],
+      "properties": {
+        "monitoring": { "type": "boolean" },
+        "profiling": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "since"],
+      "properties": {
+        "code": {
+          "description": "Vocabulario cerrado (§6), o propio con el prefijo x-.",
+          "anyOf": [
+            {
+              "enum": [
+                "freshness-exceeded",
+                "refresh-failed",
+                "refresh-held",
+                "source-schema-changed",
+                "source-unreachable",
+                "upstream-degraded",
+                "behind-source",
+                "guard-warning",
+                "unverified",
+                "never-refreshed"
+              ]
+            },
+            { "type": "string", "pattern": "^x-[a-z0-9-]+$" }
+          ]
+        },
+        "since": { "type": "string", "format": "date-time" },
+        "message": {
+          "description": "Para una persona: que pasa, en una frase.",
+          "type": "string"
+        },
+        "asset": {
+          "description": "upstream-degraded: la entrada degradada, por su nombre cualificado.",
+          "type": "string"
+        },
+        "guard": {
+          "description": "guard-warning y refresh-held: la guarda (zero-rows, column-lost, row-drop, null-surge) o la promesa.",
+          "type": "string"
+        },
+        "columns": {
+          "description": "source-schema-changed: lo que cambio en el origen frente a lo declarado.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "added": { "type": "array", "items": { "type": "string" } },
+            "removed": { "type": "array", "items": { "type": "string" } },
+            "retyped": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

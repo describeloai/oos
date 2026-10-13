@@ -203,4 +203,6 @@ gramática no dice es que una escritura **se niegue** por no cuadrar: eso es un 
 otra decisión (`00-scope` §5).
 
 **Cuándo se cumple el plan.** `freshness` dice cuánto retraso se tolera; quién refresca, con
-qué testigo y en qué orden, es del mantenedor.
+qué testigo y en qué orden, es del mantenedor. Con qué horas se juzga —la de los datos, no la de
+publicar— y qué se le dice a quien lee, lo dice v1alpha30
+([`01-la-salud`](../v1alpha30/01-la-salud.md) §1–§3).
