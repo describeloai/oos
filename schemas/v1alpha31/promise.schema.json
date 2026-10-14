@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha31/promise.schema.json",
+  "title": "Promise",
+  "description": "Lo que el dueño de un activo promete de él, comprobado en cada refresco. Es la aserción `library` del Ruleset de v1alpha3 (perfil de ODCS v3.1) con la columna, los argumentos y la biblioteca de objetos. `spec.promises` de un `Dataset` es `tabularPromises`; el de una `MediaCollection`, `objectPromises`. Que el `id` sea único en su activo (OOS2053) y que `column` sea una columna del activo (OOS2052) son relaciones del documento: las comprueba el compilador.\n\nNormativo: spec/v1alpha31/01-las-promesas.md",
+  "$defs": {
+    "tabularPromises": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/notEmptied" },
+          { "$ref": "#/$defs/tabularPromise" }
+        ]
+      }
+    },
+    "objectPromises": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/notEmptied" },
+          { "$ref": "#/$defs/objectPromise" }
+        ]
+      }
+    },
+    "notEmptied": {
+      "description": "La promesa de serie (01 §5), ablandada o descrita: solo su severidad y su descripción.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "const": "notEmptied" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "description": { "$ref": "#/$defs/description" }
+      }
+    },
+    "tabularPromise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "metric"],
+      "properties": {
+        "id": { "$ref": "#/$defs/promiseId" },
+        "metric": {
+          "enum": ["rowCount", "rowCountChange", "nullValues", "missingValues", "invalidValues", "duplicateValues"]
+        },
+        "column": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "arguments": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "missingValues": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": ["string", "number"] }
+            },
+            "validValues": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": ["string", "number", "boolean"] }
+            },
+            "between": { "$ref": "#/$defs/range" }
+          }
+        },
+        "unit": { "enum": ["rows", "percent"] },
+        "mustBe": { "$ref": "#/$defs/threshold" },
+        "mustNotBe": { "$ref": "#/$defs/threshold" },
+        "mustBeGreaterThan": { "$ref": "#/$defs/threshold" },
+        "mustBeGreaterOrEqualTo": { "$ref": "#/$defs/threshold" },
+        "mustBeLessThan": { "$ref": "#/$defs/threshold" },
+        "mustBeLessOrEqualTo": { "$ref": "#/$defs/threshold" },
+        "mustBeBetween": { "$ref": "#/$defs/range" },
+        "mustNotBeBetween": { "$ref": "#/$defs/range" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "description": { "$ref": "#/$defs/description" }
+      },
+      "allOf": [
+        { "$ref": "#/$defs/oneComparator" },
+        {
+          "if": { "properties": { "metric": { "enum": ["rowCount", "rowCountChange"] } } },
+          "then": { "not": { "anyOf": [{ "required": ["column"] }, { "required": ["arguments"] }] } },
+          "else": { "required": ["column"] }
+        },
+        {
+          "if": { "properties": { "metric": { "const": "rowCountChange" } } },
+          "then": { "properties": { "unit": { "const": "percent" } } }
+        },
+        {
+          "if": { "properties": { "metric": { "const": "missingValues" } } },
+          "then": { "properties": { "arguments": { "not": { "anyOf": [{ "required": ["validValues"] }, { "required": ["between"] }] } } } }
+        },
+        {
+          "if": { "properties": { "metric": { "const": "invalidValues" } } },
+          "then": {
+            "required": ["arguments"],
+            "properties": {
+              "arguments": {
+                "oneOf": [
+                  { "required": ["validValues"], "not": { "anyOf": [{ "required": ["between"] }, { "required": ["missingValues"] }] } },
+                  { "required": ["between"], "not": { "anyOf": [{ "required": ["validValues"] }, { "required": ["missingValues"] }] } }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "metric": { "enum": ["nullValues", "duplicateValues"] } } },
+          "then": { "not": { "required": ["arguments"] } }
+        }
+      ]
+    },
+    "objectPromise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "metric"],
+      "properties": {
+        "id": { "$ref": "#/$defs/promiseId" },
+        "metric": {
+          "enum": ["itemCount", "itemCountChange", "emptyItems", "invalidFormats", "invalidSizes", "duplicateItems", "lostItems"]
+        },
+        "arguments": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "formats": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.+-]*$", "maxLength": 64 }
+            },
+            "families": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["document", "image", "audio", "video", "spreadsheet", "email", "structured", "text", "geospatial", "model3d", "medical", "scientific", "design", "archive", "binary"]
+              }
+            },
+            "between": { "$ref": "#/$defs/range" }
+          }
+        },
+        "unit": { "enum": ["items", "percent"] },
+        "mustBe": { "$ref": "#/$defs/threshold" },
+        "mustNotBe": { "$ref": "#/$defs/threshold" },
+        "mustBeGreaterThan": { "$ref": "#/$defs/threshold" },
+        "mustBeGreaterOrEqualTo": { "$ref": "#/$defs/threshold" },
+        "mustBeLessThan": { "$ref": "#/$defs/threshold" },
+        "mustBeLessOrEqualTo": { "$ref": "#/$defs/threshold" },
+        "mustBeBetween": { "$ref": "#/$defs/range" },
+        "mustNotBeBetween": { "$ref": "#/$defs/range" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "description": { "$ref": "#/$defs/description" }
+      },
+      "allOf": [
+        { "$ref": "#/$defs/oneComparator" },
+        {
+          "if": { "properties": { "metric": { "const": "itemCountChange" } } },
+          "then": { "properties": { "unit": { "const": "percent" } } }
+        },
+        {
+          "if": { "properties": { "metric": { "const": "invalidFormats" } } },
+          "then": {
+            "required": ["arguments"],
+            "properties": {
+              "arguments": {
+                "oneOf": [
+                  { "required": ["formats"], "not": { "anyOf": [{ "required": ["families"] }, { "required": ["between"] }] } },
+                  { "required": ["families"], "not": { "anyOf": [{ "required": ["formats"] }, { "required": ["between"] }] } }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "metric": { "const": "invalidSizes" } } },
+          "then": {
+            "required": ["arguments"],
+            "properties": { "arguments": { "required": ["between"], "not": { "anyOf": [{ "required": ["formats"] }, { "required": ["families"] }] } } }
+          }
+        },
+        {
+          "if": { "properties": { "metric": { "enum": ["itemCount", "itemCountChange", "emptyItems", "duplicateItems", "lostItems"] } } },
+          "then": { "not": { "required": ["arguments"] } }
+        }
+      ]
+    },
+    "promiseId": {
+      "description": "Único en su activo (OOS2053). `notEmptied` es el de la promesa de serie, y solo admite su forma (01 §5).",
+      "allOf": [
+        { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        { "not": { "const": "notEmptied" } }
+      ]
+    },
+    "oneComparator": {
+      "description": "Exactamente un comparador, con los nombres y el sentido de ODCS.",
+      "oneOf": [
+        { "required": ["mustBe"] },
+        { "required": ["mustNotBe"] },
+        { "required": ["mustBeGreaterThan"] },
+        { "required": ["mustBeGreaterOrEqualTo"] },
+        { "required": ["mustBeLessThan"] },
+        { "required": ["mustBeLessOrEqualTo"] },
+        { "required": ["mustBeBetween"] },
+        { "required": ["mustNotBeBetween"] }
+      ]
+    },
+    "range": {
+      "description": "`[mínimo, máximo]`, cerrado. Que el mínimo no pase del máximo lo comprueba el compilador (OOS1004).",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/threshold" }
+    },
+    "threshold": {
+      "description": "Un entero, o un decimal escrito como cadena: un decimal sin comillas es OOS6003, como en todo documento (90 §4.1).",
+      "oneOf": [
+        { "type": "integer" },
+        { "type": "string", "pattern": "^-?[0-9]+([.][0-9]+)?$" }
+      ]
+    },
+    "severity": {
+      "description": "`error` es Blocking: si falla, el refresco no se publica. `warning` es Warning: se publica y se anota (01 §6).",
+      "enum": ["error", "warning"],
+      "default": "error"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4096
+    }
+  }
+}

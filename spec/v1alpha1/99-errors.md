@@ -119,6 +119,8 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2049` | una base foránea (`spec.foreign`) contiene algo que no es un `Schema` o una vista sin `materialized`: una `Table`, un `Dataset`, una colección, una entidad, una copia | v1alpha27 01 §4 |
 | `OOS2050` | un nombre expuesto por una base foránea no es único: dos objetos de la fuente con el mismo, o uno y una vista de la base | v1alpha27 01 §5 |
 | `OOS2051` | lectura en vivo de un objeto de una fuente sin `federation: true` (con un `OntologyConfig` de v1alpha27 o posterior): una base foránea congelada | v1alpha27 01 §6 |
+| `OOS2052` | una promesa nombra una `column` que su activo no declara (ni en `fields` ni en `columns`) | v1alpha31 01 §3 |
+| `OOS2053` | dos promesas con el mismo `id` en un activo | v1alpha31 01 §2 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

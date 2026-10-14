@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha29
+kind: ObjectTable
+metadata: { name: objetos, namespace: fotos, schema: datos }
+spec:
+  datasource: fotos
+  prefix: ""
+  match: "*"
+  media: image
+  reads: { fullScan: cheap }
+  changes: { mode: retract, witness: listing }

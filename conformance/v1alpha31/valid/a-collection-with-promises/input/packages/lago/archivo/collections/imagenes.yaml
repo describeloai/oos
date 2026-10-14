@@ -1,0 +1,42 @@
+apiVersion: oos.dev/v1alpha31
+kind: MediaCollection
+metadata: { name: imagenes, namespace: lago, schema: archivo }
+spec:
+  owner: team:data
+  media: image
+  formats: [jpeg, png]
+  from: { objectTable: fotos.datos.objetos }
+  promises:
+    - id: hay_imagenes
+      metric: itemCount
+      mustBeGreaterThan: 0
+    - id: sin_borrado_masivo
+      metric: itemCountChange
+      unit: percent
+      mustBeGreaterThan: -20
+    - id: sin_vacios
+      metric: emptyItems
+      mustBe: 0
+    - id: solo_imagenes
+      metric: invalidFormats
+      arguments: { families: [image] }
+      mustBe: 0
+      severity: warning
+    - id: formatos_admitidos
+      metric: invalidFormats
+      arguments: { formats: [jpeg, png] }
+      unit: percent
+      mustBeLessOrEqualTo: 1
+      severity: warning
+    - id: tamano_razonable
+      metric: invalidSizes
+      arguments: { between: [1, 52428800] }
+      mustBe: 0
+      severity: warning
+    - id: sin_repetidas
+      metric: duplicateItems
+      mustBe: 0
+      severity: warning
+    - id: nada_perdido
+      metric: lostItems
+      mustBe: 0

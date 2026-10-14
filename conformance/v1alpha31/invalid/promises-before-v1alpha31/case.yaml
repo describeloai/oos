@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: OOS1005
+summary: >
+  `promises` en un `Dataset` de v1alpha30: la clave es del documento que declara v1alpha31 (§1).

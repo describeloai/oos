@@ -1,0 +1,19 @@
+apiVersion: oos.dev/v1alpha31
+kind: Dataset
+metadata: { name: resumen, namespace: ventas }
+# Un dataset escrito por código: sus columnas las dice `columns`.
+spec:
+  owner: team:ventas
+  columns:
+    cliente: { type: String }
+    pedidos: { type: Integer }
+  changes: { mode: upsert, key: [cliente] }
+  promises:
+    - id: un_cliente_una_fila
+      column: cliente
+      metric: duplicateValues
+      mustBe: 0
+    - id: alguno
+      metric: rowCount
+      mustBeGreaterThan: 0
+      severity: warning

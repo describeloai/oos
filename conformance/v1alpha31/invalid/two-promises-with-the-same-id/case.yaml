@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: OOS2053
+summary: >
+  Dos promesas `volumen` en el mismo activo: una retención no sabría cuál nombra (§2).

@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: accept
+summary: >
+  Un dataset escrito por código promete sobre las columnas de su `columns` (§3).

@@ -1,0 +1,48 @@
+apiVersion: oos.dev/v1alpha31
+kind: Dataset
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: ventas.orders }
+  fields:
+    id: id
+    cliente: customer
+    total: total
+    estado: status
+  freshness: 1h
+  promises:
+    - id: volumen
+      metric: rowCount
+      mustBeGreaterOrEqualTo: 900
+    - id: sin_caidas
+      metric: rowCountChange
+      unit: percent
+      mustBeGreaterThan: -50
+    - id: cliente_presente
+      column: cliente
+      metric: nullValues
+      unit: percent
+      mustBeLessOrEqualTo: 1
+      severity: warning
+    - id: cliente_informado
+      column: cliente
+      metric: missingValues
+      arguments: { missingValues: ["", "N/A"] }
+      mustBe: 0
+      severity: warning
+    - id: id_unico
+      column: id
+      metric: duplicateValues
+      mustBe: 0
+    - id: estado_valido
+      column: estado
+      metric: invalidValues
+      arguments: { validValues: [pendiente, pagado, enviado, anulado] }
+      mustBe: 0
+      severity: warning
+    - id: total_en_rango
+      column: total
+      metric: invalidValues
+      arguments: { between: [0, 10000] }
+      unit: percent
+      mustBeLessThan: "0.5"

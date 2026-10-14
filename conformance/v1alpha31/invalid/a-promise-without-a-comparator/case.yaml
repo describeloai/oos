@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: OOS1004
+summary: >
+  Una promesa sin comparador no promete nada (§2).

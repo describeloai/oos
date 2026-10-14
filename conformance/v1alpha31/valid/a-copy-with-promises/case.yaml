@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: accept
+summary: >
+  Una copia de una tabla promete volumen, cambio, nulos, ausentes, duplicados y valores válidos (§1–§3): todo con las columnas de su `fields`.

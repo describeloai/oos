@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: accept
+summary: >
+  `notEmptied` declarada solo para ablandarla a `warning`, con su descripción (§5).

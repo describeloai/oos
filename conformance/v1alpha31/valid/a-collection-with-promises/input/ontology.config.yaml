@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: promesas, version: 0.1.0 }
+datasources:
+  - name: fotos
+    type: s3
+    connectionEnv: FOTOS_URL
+    labels: { gdpr.sensitivity: low }

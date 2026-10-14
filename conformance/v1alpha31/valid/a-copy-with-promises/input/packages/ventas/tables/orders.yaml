@@ -1,0 +1,15 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: orders, namespace: ventas }
+spec:
+  datasource: erp
+  object: "public.orders"
+  columns:
+    id:       { physicalType: bigint, type: Integer }
+    customer: { physicalType: text, type: String }
+    total:    { physicalType: "numeric(12,2)", type: "Decimal<12, 2>" }
+    status:   { physicalType: text, type: String }
+  reads:
+    predicatePushdown: [eq, in]
+    fullScan: cheap
+  changes: { mode: retract, witness: log }

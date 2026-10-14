@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha30
+kind: Dataset
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: ventas.orders }
+  fields:
+    id: id
+    cliente: customer
+    total: total
+    estado: status
+  freshness: 1h
+  promises:
+    - id: volumen
+      metric: rowCount
+      mustBeGreaterOrEqualTo: 900

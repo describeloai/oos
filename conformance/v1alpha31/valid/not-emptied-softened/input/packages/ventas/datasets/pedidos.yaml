@@ -1,0 +1,16 @@
+apiVersion: oos.dev/v1alpha31
+kind: Dataset
+metadata: { name: pedidos, namespace: ventas }
+spec:
+  owner: team:ventas
+  from: { table: ventas.orders }
+  fields:
+    id: id
+    cliente: customer
+    total: total
+    estado: status
+  freshness: 1h
+  promises:
+    - id: notEmptied
+      severity: warning
+      description: el origen se vacía cada noche antes de recargarse

@@ -1,0 +1,14 @@
+apiVersion: oos.dev/v1alpha31
+kind: View
+metadata: { name: caros, namespace: ventas }
+spec:
+  owner: team:ventas
+  dialect: duckdb
+  sql: select id, total from ventas.orders where total > 1000
+  columns:
+    id: { type: Integer }
+    total: { type: "Decimal<12, 2>" }
+  promises:
+    - id: alguno
+      metric: rowCount
+      mustBeGreaterThan: 0

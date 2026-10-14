@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: OOS1005
+summary: >
+  Una `View` no se refresca: no tiene dónde comprobar una promesa, y la clave no existe en ella (§1).

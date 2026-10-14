@@ -1,0 +1,5 @@
+rule: spec/v1alpha31/01-las-promesas.md
+level: L0
+expects: accept
+summary: >
+  Una colección mantenida promete con la biblioteca de objetos: cuántos ítems, cuánto cambian, vacíos, formatos, tamaños, repetidos y perdidos (§3).
