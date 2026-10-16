@@ -1,5 +1,0 @@
-rule: spec/v1alpha32/01-la-geometria.md#5
-level: L0
-expects: OOS3001
-summary: >
-  `Geography<…>` es un tipo de v1alpha32, también dentro de una lista.

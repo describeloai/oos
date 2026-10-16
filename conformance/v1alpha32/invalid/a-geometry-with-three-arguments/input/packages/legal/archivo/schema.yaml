@@ -1,3 +1,0 @@
-apiVersion: oos.dev/v1alpha13
-kind: Schema
-metadata: { name: archivo, namespace: legal }

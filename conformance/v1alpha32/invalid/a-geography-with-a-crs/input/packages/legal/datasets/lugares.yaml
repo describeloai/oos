@@ -1,9 +1,0 @@
-apiVersion: oos.dev/v1alpha32
-kind: Dataset
-metadata: { name: lugares, namespace: legal }
-spec:
-  owner: team:legal
-  columns:
-    id: { type: "String" }
-    ruta: { type: "Geography<Point, EPSG:4326>" }
-  changes: { mode: append }

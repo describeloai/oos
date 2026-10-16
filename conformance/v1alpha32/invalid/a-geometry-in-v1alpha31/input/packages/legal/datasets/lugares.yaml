@@ -1,9 +1,0 @@
-apiVersion: oos.dev/v1alpha31
-kind: Dataset
-metadata: { name: lugares, namespace: legal }
-spec:
-  owner: team:legal
-  columns:
-    id: { type: "String" }
-    ubicacion: { type: "Geometry<Point>" }
-  changes: { mode: append }
