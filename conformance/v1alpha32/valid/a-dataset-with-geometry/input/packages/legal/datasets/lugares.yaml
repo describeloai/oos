@@ -1,0 +1,17 @@
+apiVersion: oos.dev/v1alpha32
+kind: Dataset
+metadata: { name: lugares, namespace: legal }
+spec:
+  owner: team:legal
+  columns:
+    id: { type: "String" }
+    ubicacion: { type: "Geometry<Point>" }
+    parcela: { type: "Geometry<Polygon, EPSG:25830>" }
+    trazado: { type: "Geometry<Any, EPSG:3857>" }
+    zona: { type: "Geometry" }
+    altura: { type: "Geometry<Point Z, EPSG:4979>" }
+    ruta: { type: "Geography<LineString>" }
+    mundo: { type: "Geography" }
+    posiciones: { type: "list<Geometry<Point>>" }
+    visita: { type: "Struct<lugar: Geometry<Point>, cuando: DateTime>" }
+  changes: { mode: append }

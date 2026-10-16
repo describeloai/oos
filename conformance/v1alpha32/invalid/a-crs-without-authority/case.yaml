@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#5
+level: L0
+expects: OOS3008
+summary: >
+  Un CRS se escribe `AUTORIDAD:CÓDIGO`: `25830` a secas no dice de quién es el código (§1).

@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#5
+level: L0
+expects: OOS3008
+summary: >
+  Una geometría lleva como mucho subtipo y CRS (§5).

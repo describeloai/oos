@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha16
+kind: ObjectTable
+metadata: { name: fotos, namespace: s3_ventas, schema: docs }
+spec:
+  datasource: s3_ventas
+  prefix: "fotos/"
+  match: "*.jpg"
+  media: image
+  reads: { fullScan: cheap }
+  changes: { mode: retract, witness: listing }

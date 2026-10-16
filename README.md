@@ -214,6 +214,7 @@ spec/v1alpha15/    borrador de alcance — situar: el modelo vive en un paquete 
 spec/v1alpha16/    borrador de alcance — guardar: los ficheros como objetos (`ObjectTable`), la colección tipada (`MediaCollection`), `Table.format` y `Media<…>`
 spec/v1alpha17/    borrador de alcance — anclar: `Struct<…>`, `Vector<n>` y `Anchor`; `Media<…>` vale la referencia entera; la tabla anclada (`anchoredTo`); la colección como listado en SQL (ORE 0049)
 spec/v1alpha18/    borrador de alcance — promover: `runtime: python`; un `def` marcado con `@function` y su `Function` DERIVADO del código (firma de las anotaciones, `over`/`reads`/`models` del decorador, `OOS2013` si no coincide), leído sin ejecutar y con los nombres resueltos como Python 3.12; `output` como un valor (ORE 0050)
+spec/v1alpha32/    borrador de alcance — situar en el espacio: `Geometry<subtipo, crs>` y `Geography<subtipo>`, WKB en orden x/y, el tipo lógico de Parquet y la clave GeoParquet a la vez, Iceberg v3 o binario con el tipo en el contrato (ORE 0066/0067)
 schemas/v1alpha1/  JSON Schema publicado — generado
 schemas/v1alpha3/  ruleset y lattice
 schemas/v1alpha4/  property, interface, entity y ruleset

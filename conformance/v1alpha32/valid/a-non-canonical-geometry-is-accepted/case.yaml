@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#5
+level: L0
+expects: accept
+summary: >
+  Una escritura no canónica (`Geometry<Any, OGC:CRS84>`, espacios de más) se acepta y se canoniza (§5).
