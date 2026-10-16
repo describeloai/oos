@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#2
+level: L0
+expects: OOS3008
+summary: >
+  `Geography` está siempre en `OGC:CRS84` y no lleva CRS (§2).

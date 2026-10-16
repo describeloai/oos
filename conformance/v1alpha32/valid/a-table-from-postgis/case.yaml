@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#4
+level: L0
+expects: accept
+summary: >
+  Una `Table` de PostGIS declara sus columnas geo con su CRS de origen y cita el tipo físico (§1, §2, §4).

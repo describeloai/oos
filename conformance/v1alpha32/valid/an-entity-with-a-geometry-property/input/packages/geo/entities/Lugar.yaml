@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha32
+kind: Entity
+metadata: { name: Lugar, namespace: geo }
+spec:
+  nature: entity
+  primaryKey: [lugarId]
+  properties:
+    lugarId: { type: String }
+    ubicacion: { type: "Geometry<Point>" }

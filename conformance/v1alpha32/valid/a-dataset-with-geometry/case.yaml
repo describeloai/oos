@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#6
+level: L0
+expects: accept
+summary: >
+  Un `Dataset` con un punto en CRS84, una geografía, un punto con altura, una trayectoria (`list<Geometry<Point>>`) y una geometría dentro de un `Struct` (§1, §2, §6).

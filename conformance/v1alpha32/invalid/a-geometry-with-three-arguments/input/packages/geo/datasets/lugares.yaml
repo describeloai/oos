@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha32
+kind: Dataset
+metadata: { name: lugares, namespace: geo }
+spec:
+  owner: team:geo
+  columns:
+    id: { type: "String" }
+    zona: { type: "Geometry<Point, EPSG:4326, planar>" }
+  changes: { mode: append }

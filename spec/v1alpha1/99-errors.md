@@ -133,6 +133,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS3005` | cardinalidad de relación incoherente con las claves declaradas | 02 §6 |
 | `OOS3006` | el enlace no casa una clave declarada del destino: aridad, tipos o `toKey` | 02 §6 |
 | `OOS3007` | un tipo compuesto mal formado: `Struct` vacío o con un nombre repetido, `Vector<n>` fuera de `1 ≤ n ≤ 16000`, `Opaque`, `Media<…>` o `Anchor` como campo de un `Struct`, `list<list<…>>` | v1alpha17 01 §4, 02 §5 |
+| `OOS3008` | un tipo geo mal formado: subtipo, dimensión o CRS que no existen, argumentos vacíos o de más, un CRS en `Geography`, o una columna geo como clave | v1alpha32 01 §6 |
 
 ## 6. `OOS4xxx` · Gobernanza y flujo
 

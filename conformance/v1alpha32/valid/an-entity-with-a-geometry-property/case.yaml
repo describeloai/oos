@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#6
+level: L0
+expects: accept
+summary: >
+  Una propiedad de entidad puede ser una geometría (§6).

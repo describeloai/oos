@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#6
+level: L0
+expects: OOS3001
+summary: >
+  `Geography<Point>` en una `Table` de v1alpha8: el tipo no existía (§6).

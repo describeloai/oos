@@ -1,0 +1,13 @@
+apiVersion: oos.dev/v1alpha32
+kind: Dataset
+metadata: { name: lugares, namespace: geo }
+spec:
+  owner: team:geo
+  columns:
+    id: { type: "String" }
+    punto: { type: "Geometry<Point>" }
+    zona: { type: "Geography" }
+    cota: { type: "Geometry<Point Z, EPSG:4258>" }
+    trayectoria: { type: "list<Geometry<Point>>" }
+    parada: { type: "Struct<nombre: String, lugar: Geometry<Point>>" }
+  changes: { mode: append }

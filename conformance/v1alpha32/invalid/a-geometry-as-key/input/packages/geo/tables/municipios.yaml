@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha32
+kind: Table
+metadata: { name: municipios, namespace: geo }
+spec:
+  datasource: ide
+  object: "public.municipios"
+  columns:
+    id: { physicalType: text, type: String }
+    geom: { physicalType: "geometry(MultiPolygon,25830)", type: "Geometry<MultiPolygon, EPSG:25830>" }
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: retract, witness: log, key: [geom] }

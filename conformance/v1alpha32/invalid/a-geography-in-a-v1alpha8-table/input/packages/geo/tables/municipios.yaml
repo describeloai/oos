@@ -1,0 +1,11 @@
+apiVersion: oos.dev/v1alpha8
+kind: Table
+metadata: { name: municipios, namespace: geo }
+spec:
+  datasource: ide
+  object: "public.municipios"
+  columns:
+    id: { physicalType: text, type: String }
+    centro: { physicalType: "geography(Point,4326)", type: "Geography<Point>" }
+  reads: { predicatePushdown: [eq], fullScan: cheap }
+  changes: { mode: retract, witness: log }

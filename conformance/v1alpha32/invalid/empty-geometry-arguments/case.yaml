@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#1
+level: L0
+expects: OOS3008
+summary: >
+  `Geometry<>` no dice nada: sin argumentos se escribe `Geometry` (§1).

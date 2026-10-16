@@ -1,0 +1,5 @@
+rule: spec/v1alpha32/01-la-geometria.md#6
+level: L0
+expects: OOS3008
+summary: >
+  Una columna geo no es clave: dos geometrías iguales pueden tener WKB distinto (§6).
