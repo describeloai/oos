@@ -121,6 +121,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2051` | lectura en vivo de un objeto de una fuente sin `federation: true` (con un `OntologyConfig` de v1alpha27 o posterior): una base foránea congelada | v1alpha27 01 §6 |
 | `OOS2052` | una promesa nombra una `column` que su activo no declara (ni en `fields` ni en `columns`) | v1alpha31 01 §3 |
 | `OOS2053` | dos promesas con el mismo `id` en un activo | v1alpha31 01 §2 |
+| `OOS2054` | un enriquecimiento nombra una columna que su dataset no tiene, una `geometry` que no es geo (o que falta y no es única), o un `as` que repite una columna del objetivo | v1alpha33 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 
@@ -134,6 +135,7 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS3006` | el enlace no casa una clave declarada del destino: aridad, tipos o `toKey` | 02 §6 |
 | `OOS3007` | un tipo compuesto mal formado: `Struct` vacío o con un nombre repetido, `Vector<n>` fuera de `1 ≤ n ≤ 16000`, `Opaque`, `Media<…>` o `Anchor` como campo de un `Struct`, `list<list<…>>` | v1alpha17 01 §4, 02 §5 |
 | `OOS3008` | un tipo geo mal formado: subtipo, dimensión o CRS que no existen, argumentos vacíos o de más, un CRS en `Geography`, o una columna geo como clave | v1alpha32 01 §6 |
+| `OOS3009` | un enriquecimiento con dos CRS, que mide en metros sobre un CRS geográfico, o con un método que no casa con la columna o la geometría | v1alpha33 01 §4 |
 
 ## 6. `OOS4xxx` · Gobernanza y flujo
 

@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#4
+level: L0
+expects: accept
+summary: >
+  dentro de, sin metros: vale en EPSG:4326, y la geometría única no hace falta nombrarla.

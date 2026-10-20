@@ -1,0 +1,8 @@
+output: ventas.clientes_con_municipio
+target: { dataset: ventas.clientes }
+layers:
+  - dataset: ventas.municipios
+    relation: within
+    take:
+      - { as: municipio, column: nombre }
+      - { as: poblacion_municipio, column: poblacion, method: max }

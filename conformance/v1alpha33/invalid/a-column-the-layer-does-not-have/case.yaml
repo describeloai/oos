@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#4
+level: L0
+expects: OOS2054
+summary: >
+  take nombra una columna que la capa no tiene.

@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#2
+level: L0
+expects: OOS2043
+summary: >
+  un take sin as: el documento no se deriva.

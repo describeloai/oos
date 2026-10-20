@@ -1,0 +1,12 @@
+# derivado por ore desde etl/clientes.enrich.yaml:1 · se edita el código, no este fichero
+apiVersion: oos.dev/v1alpha33
+kind: Transform
+metadata:
+  name: ventas__clientes_enriquecidos
+  namespace: ventas
+  description: Cada cliente, con su municipio y lo que tiene alrededor.
+spec:
+  runtime: enrich
+  entrypoint: etl/clientes.enrich.yaml:1
+  inputs: [ventas.clientes, ventas.municipios, ventas.competidores]
+  output: ventas.clientes_enriquecidos

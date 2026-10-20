@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#6
+level: L0
+expects: OOS2013
+summary: >
+  un documento del .enrich.yaml sin su Transform.

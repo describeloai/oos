@@ -1,0 +1,8 @@
+output: ventas.clientes_ventas
+target: { dataset: ventas.clientes }
+layers:
+  - dataset: ventas.competidores
+    relation: intersects
+    around: 500
+    take:
+      - { as: ventas_500m, column: ventas, method: extensive }

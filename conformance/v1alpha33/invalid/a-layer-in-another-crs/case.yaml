@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#4
+level: L0
+expects: OOS3009
+summary: >
+  una capa en otro CRS que el objetivo.

@@ -1,0 +1,19 @@
+description: Cada cliente, con su municipio y lo que tiene alrededor.
+output: ventas.clientes_enriquecidos
+target: { dataset: ventas.clientes, geometry: ubicacion }
+layers:
+  - dataset: ventas.municipios
+    relation: within
+    take:
+      - { column: nombre }
+  - dataset: ventas.competidores
+    relation: intersects
+    around: 500
+    take:
+      - { as: competidores_500m, count: true }
+      - { as: ventas_500m, column: ventas, method: sum }
+  - dataset: ventas.competidores
+    relation: { nearest: 1, maxDistance: 5000 }
+    take:
+      - { as: competidor_cercano, column: nombre }
+      - { as: dist_competidor, distance: true }

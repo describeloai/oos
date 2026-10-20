@@ -1,0 +1,5 @@
+rule: spec/v1alpha33/01-enrich.md#7
+level: L0
+expects: OOS1004
+summary: >
+  runtime enrich en un documento de v1alpha32.
