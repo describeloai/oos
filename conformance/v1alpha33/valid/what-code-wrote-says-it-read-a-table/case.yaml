@@ -1,0 +1,6 @@
+rule: spec/v1alpha33/03-lo-escrito-lee-una-tabla.md#2
+level: L0
+expects: accept
+summary: >
+  Una sesión leyó la tabla `hr.employees` (su fuente lleva high) y escribió `resumen`, que lo dice en
+  `derivedFrom`; la copia sale por un conducto que admite high. Compila.

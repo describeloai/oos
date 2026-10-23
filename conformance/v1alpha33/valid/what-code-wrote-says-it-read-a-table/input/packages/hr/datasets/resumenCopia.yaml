@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha12
+kind: Dataset
+metadata:
+  name: resumenCopia
+  namespace: hr
+  description: "la copia del resumen para otro paquete"
+spec:
+  owner: team:hr
+  from: { dataset: hr.resumen }

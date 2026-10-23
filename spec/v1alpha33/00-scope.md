@@ -8,6 +8,7 @@ documento** que declara v1alpha33.
 | `00-scope` | **este documento** — qué entra, qué no, y por qué |
 | [`01-enrich`](01-enrich.md) | **el enriquecimiento**: `runtime: enrich` del `Transform` y su fuente, `.enrich.yaml` |
 | [`02-la-entrada-nueva`](02-la-entrada-nueva.md) | **un motivo de salud**: `input-refreshed`, construido con una versión vieja de lo que lee |
+| [`03-lo-escrito-lee-una-tabla`](03-lo-escrito-lee-una-tabla.md) | **`derivedFrom` nombra una `Table`**: lo escrito desde una sesión dice que leyó una tabla, y hereda lo que lleva |
 
 Esta versión **añade un runtime** al `Transform`, `enrich`, **un fichero de código**, `.enrich.yaml`,
 **dos códigos**, `OOS2054` y `OOS3009`, y **un motivo de salud**, `input-refreshed`.
@@ -43,6 +44,8 @@ cuánta población vive alrededor). Investigado el 2026-10-20 (ORE 0068 C4):
 5. **Las reglas** (§6), con `OOS2054` y `OOS3009`.
 6. **La entrada nueva** ([`02`](02-la-entrada-nueva.md)): lo construido sabe que una entrada ya tiene algo más
    nuevo (`input-refreshed`), para todo transform.
+7. **Lo escrito lee una tabla** ([`03`](03-lo-escrito-lee-una-tabla.md)): `derivedFrom` admite una `Table`,
+   sin puerta de versión.
 
 ## 3. Lo que no entra (todavía)
 
