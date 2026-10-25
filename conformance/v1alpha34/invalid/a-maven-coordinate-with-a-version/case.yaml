@@ -1,5 +1,0 @@
-rule: spec/v1alpha34/01-artifact.md#3
-level: L0
-expects: OOS1004
-summary: >
-  `com.banco:x:1.0.0` lleva versión: la coordenada nombra el paquete con todas sus versiones.

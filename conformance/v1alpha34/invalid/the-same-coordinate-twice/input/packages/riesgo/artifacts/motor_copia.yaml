@@ -1,7 +1,0 @@
-apiVersion: oos.dev/v1alpha34
-kind: Artifact
-metadata: { name: motor_copia, namespace: riesgo }
-spec:
-  owner: team:riesgo
-  format: maven
-  coordinate: com.banco:motor-riesgo

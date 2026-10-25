@@ -122,7 +122,6 @@ OOS2010: hr.AuditLog declara nature 'entity' y no tiene primaryKey.
 | `OOS2052` | una promesa nombra una `column` que su activo no declara (ni en `fields` ni en `columns`) | v1alpha31 01 §3 |
 | `OOS2053` | dos promesas con el mismo `id` en un activo | v1alpha31 01 §2 |
 | `OOS2054` | un enriquecimiento nombra una columna que su dataset no tiene, una `geometry` que no es geo (o que falta y no es única), o un `as` que repite una columna del objetivo | v1alpha33 01 §4 |
-| `OOS2055` | dos `Artifact` con el mismo `format` y la misma `coordinate` (normalizada en `pypi`) | v1alpha34 01 §4 |
 
 ## 5. `OOS3xxx` · Sistema de tipos
 

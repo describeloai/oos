@@ -1,0 +1,5 @@
+rule: spec/v1alpha34/01-artifact-registry.md#3
+level: L0
+expects: OOS2003
+summary: >
+  `maven` dos veces en `formats`: un conjunto no repite.

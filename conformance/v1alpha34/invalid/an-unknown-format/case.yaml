@@ -1,5 +1,5 @@
-rule: spec/v1alpha34/01-artifact.md#3
+rule: spec/v1alpha34/01-artifact-registry.md#3
 level: L0
 expects: OOS1004
 summary: >
-  `format: npm` no está en el vocabulario de v1alpha34.
+  `npm` no está en el vocabulario de v1alpha34.

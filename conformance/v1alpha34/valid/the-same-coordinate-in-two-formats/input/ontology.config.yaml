@@ -1,5 +1,0 @@
-apiVersion: oos.dev/v1alpha1
-kind: OntologyConfig
-metadata: { name: traer, version: 0.1.0 }
-datasources:
-  - { name: lago, type: iceberg, connectionEnv: LAGO_URL }

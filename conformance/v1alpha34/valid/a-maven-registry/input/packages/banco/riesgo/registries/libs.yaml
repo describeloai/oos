@@ -1,0 +1,6 @@
+apiVersion: oos.dev/v1alpha34
+kind: ArtifactRegistry
+metadata: { name: libs, namespace: banco, schema: riesgo }
+spec:
+  owner: team:riesgo
+  formats: [maven]

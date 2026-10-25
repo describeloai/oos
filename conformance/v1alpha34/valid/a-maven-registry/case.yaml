@@ -1,0 +1,5 @@
+rule: spec/v1alpha34/01-artifact-registry.md#2
+level: L0
+expects: accept
+summary: >
+  Un registro `banco.riesgo.libs` para jars de Maven, en el schema `riesgo`. Compila.

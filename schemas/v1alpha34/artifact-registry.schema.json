@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oos.dev/schemas/v1alpha34/artifact-registry.schema.json",
+  "title": "ArtifactRegistry",
+  "description": "El registro de artefactos: donde una organizacion guarda los paquetes de software (Maven, PyPI) que su codigo importa. El documento DECLARA los formatos que admite; las librerias, sus versiones y sus ficheros son dato de la plataforma.\n\nNormativo: spec/v1alpha34/01-artifact-registry.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "oos.dev/v1alpha34" },
+    "kind": { "const": "ArtifactRegistry" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "namespace"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" },
+        "namespace": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "schema": { "$ref": "../v1alpha1/type/basic.schema.json#/$defs/identifier" },
+        "description": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formats"],
+      "properties": {
+        "owner": { "type": "string" },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["maven", "pypi"] }
+        }
+      }
+    }
+  }
+}

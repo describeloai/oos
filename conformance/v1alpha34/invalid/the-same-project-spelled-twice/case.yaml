@@ -1,5 +1,0 @@
-rule: spec/v1alpha34/01-artifact.md#4
-level: L0
-expects: OOS2055
-summary: >
-  `Banco_Riesgo` y `banco-riesgo` son el mismo proyecto de PyPI (PEP 503).
