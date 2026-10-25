@@ -1,0 +1,8 @@
+apiVersion: oos.dev/v1alpha34
+kind: Artifact
+metadata: { name: x, namespace: banco }
+spec:
+  owner: team:riesgo
+  format: maven
+  coordinate: com.banco:x
+  versions: [1.0.0]

@@ -1,0 +1,5 @@
+rule: spec/v1alpha34/01-artifact.md#3
+level: L0
+expects: OOS1004
+summary: >
+  `banco-` no es un nombre de proyecto de PEP 508.

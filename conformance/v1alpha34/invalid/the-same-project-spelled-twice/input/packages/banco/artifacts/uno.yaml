@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha34
+kind: Artifact
+metadata: { name: uno, namespace: banco }
+spec:
+  owner: team:riesgo
+  format: pypi
+  coordinate: Banco_Riesgo

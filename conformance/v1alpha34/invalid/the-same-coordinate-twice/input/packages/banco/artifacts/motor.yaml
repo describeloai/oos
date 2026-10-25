@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha34
+kind: Artifact
+metadata: { name: motor, namespace: banco }
+spec:
+  owner: team:riesgo
+  format: maven
+  coordinate: com.banco:motor-riesgo

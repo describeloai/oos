@@ -1,0 +1,7 @@
+apiVersion: oos.dev/v1alpha34
+kind: Artifact
+metadata: { name: riesgo_java, namespace: banco }
+spec:
+  owner: team:riesgo
+  format: maven
+  coordinate: banco:riesgo

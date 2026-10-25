@@ -1,0 +1,5 @@
+rule: spec/v1alpha34/01-artifact.md#3
+level: L0
+expects: accept
+summary: >
+  Un jar de la organización, `com.banco:motor-riesgo`, en el schema `riesgo` de `banco`. Compila.
