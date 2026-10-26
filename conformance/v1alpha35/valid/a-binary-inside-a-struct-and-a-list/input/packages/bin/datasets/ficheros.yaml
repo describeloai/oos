@@ -1,0 +1,10 @@
+apiVersion: oos.dev/v1alpha35
+kind: Dataset
+metadata: { name: ficheros, namespace: bin }
+spec:
+  owner: team:data
+  columns:
+    id: { type: "String" }
+    adjunto: { type: "Struct<nombre: String, contenido: Binary>" }
+    huellas: { type: "list<Binary>" }
+  changes: { mode: append }

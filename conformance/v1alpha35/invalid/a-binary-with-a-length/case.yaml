@@ -1,0 +1,5 @@
+rule: spec/v1alpha35/01-el-binario.md#5
+level: L0
+expects: OOS3010
+summary: >
+  `Binary<16>`: en esta versión `Binary` no lleva argumentos (§5).

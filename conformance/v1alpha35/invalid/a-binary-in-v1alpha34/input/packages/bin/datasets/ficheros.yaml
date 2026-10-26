@@ -1,0 +1,9 @@
+apiVersion: oos.dev/v1alpha34
+kind: Dataset
+metadata: { name: ficheros, namespace: bin }
+spec:
+  owner: team:data
+  columns:
+    id: { type: "String" }
+    firma: { type: "Binary" }
+  changes: { mode: append }

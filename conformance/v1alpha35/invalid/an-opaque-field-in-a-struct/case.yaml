@@ -1,0 +1,5 @@
+rule: spec/v1alpha35/01-el-binario.md#5
+level: L0
+expects: OOS3007
+summary: >
+  Un campo `Opaque` en un `Struct` sigue siendo `OOS3007`: la salida es `Binary` (§5).

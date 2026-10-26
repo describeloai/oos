@@ -1,0 +1,5 @@
+rule: spec/v1alpha35/01-el-binario.md#1
+level: L0
+expects: accept
+summary: >
+  Un `Dataset` con tres columnas `Binary` (§1, §2).

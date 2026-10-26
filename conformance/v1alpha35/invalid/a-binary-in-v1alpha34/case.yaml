@@ -1,0 +1,5 @@
+rule: spec/v1alpha35/01-el-binario.md#5
+level: L0
+expects: OOS3001
+summary: >
+  `Binary` en un `Dataset` de v1alpha34: el tipo no existía (§5).

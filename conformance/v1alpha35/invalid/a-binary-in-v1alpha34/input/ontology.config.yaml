@@ -1,0 +1,5 @@
+apiVersion: oos.dev/v1alpha1
+kind: OntologyConfig
+metadata: { name: binario, version: 0.1.0 }
+datasources:
+  - { name: ide, type: postgres, connectionEnv: IDE_URL }

@@ -1,0 +1,5 @@
+rule: spec/v1alpha35/01-el-binario.md#5
+level: L0
+expects: accept
+summary: >
+  Un `Binary` como campo de un `Struct` y como elemento de una `list` (§5).
