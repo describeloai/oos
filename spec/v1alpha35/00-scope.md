@@ -38,6 +38,7 @@ Medido el 2026-10-26 al mapear Oracle a OOS (ORE 0075) y contrastado con los dem
 3. **Cómo viaja en texto**: base64 (RFC 4648, alfabeto estándar, con relleno) (§3).
 4. **La correspondencia** con Arrow, Parquet, Iceberg y DuckDB (§4).
 5. **Dónde vale, y cómo se relaciona con `Opaque`** (§5), con el código `OOS3010`.
+6. **La firma de una función**: `bytes` y `Uint8Array` derivan `Binary`, con la regla de la versión del documento (§6).
 
 ## 3. Lo que no entra (todavía)
 

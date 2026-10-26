@@ -79,3 +79,29 @@ Y con los orígenes: `RAW`, `LONG RAW` y `BLOB` (Oracle), `bytea`, `blob` (Cassa
 | una escritura no canónica (`binary`, `Binary ` con espacios) | — | se acepta si el nombre casa y se canoniza; el digest del paquete usa la canónica |
 
 `OOS3010` es **un `Binary` mal formado**; `OOS3001` sigue siendo un tipo que no existe.
+
+## 6. La firma de una función
+
+Una función de Python o de TypeScript **deriva** su documento de la firma del código
+([v1alpha20 `01`](../v1alpha20/01-la-firma-habla-oos.md) §2, [v1alpha23 `01`](../v1alpha23/01-la-funcion-de-typescript.md) §6).
+Desde v1alpha35 los bytes del lenguaje son `Binary`:
+
+| Lenguaje | Tipo del código | OOS |
+|---|---|---|
+| Python | `bytes` | `Binary` |
+| TypeScript | `Uint8Array` | `Binary` |
+
+**Qué regla deriva.** La del documento que se compara: un documento que declara v1alpha34 o antes **sigue
+siendo el que su código da** con `bytes` → `Opaque` (la tabla de entonces); uno que declara v1alpha35 o
+después da `Binary`. Quien genera el documento de una función con bytes **declara v1alpha35**; un documento
+anterior se pone al día regenerándolo, y eso **no** es un estrechamiento (§5: `Opaque` → `Binary` afina).
+
+**Los valores al invocar.** El JSON es una cadena en base64 (§3), y el arnés la entrega como `bytes` en
+Python y como `Uint8Array` en TypeScript. Un valor que no es base64 estricto se rechaza al invocar, antes de
+llamar al código. **De vuelta**, unos bytes que la firma declara `Binary` salen en base64, no en
+hexadecimal: el hexadecimal es de la geometría (v1alpha32 `01` §5), que también es `bytes` en el código y se
+distingue por su tipo, no por su valor.
+
+**Dónde vale.** Como parámetro, como valor de vuelta, como campo de una `@dataclass` (→ `Struct<…>`) y como
+elemento de una lista (`list<Binary>`). Una función con un `Binary` en su firma pide un documento de
+v1alpha35 o posterior (`OOS3001` si declara una anterior).
