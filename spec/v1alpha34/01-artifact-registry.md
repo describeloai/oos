@@ -23,7 +23,7 @@ metadata:
   description: …                       # opcional
 spec:
   owner: team:riesgo                   # opcional, como en v1alpha21
-  formats: [maven, pypi]               # lo que admite
+  formats: [maven, pypi]               # opcional: sin ella, todos
 ```
 
 - `metadata` admite `name`, `namespace`, `schema` y `description`. **Sin `labels`**: un registro no
@@ -34,12 +34,14 @@ spec:
 
 ## 3. Los formatos
 
-`formats` es **obligatoria**: una lista **no vacía** de formatos de un vocabulario cerrado, `maven`
-y `pypi`. Ausente, vacía, o con una palabra fuera del vocabulario, es `OOS1004`. Un formato repetido
-es `OOS2003` (un conjunto no repite).
+`formats` es **opcional**. **Sin ella, el registro admite todos los formatos** que la plataforma
+sirve: un registro guarda a la vez librerías de Maven y de Python, y el formato de cada una lo dice
+cómo se publica, no el documento. Un formato que la plataforma añada después cabe sin tocarlo.
 
-Un registro sólo recibe librerías de los formatos que declara: publicar un jar en un registro que
-sólo dice `pypi` lo rechaza la plataforma.
+Con ella, **restringe**: una lista **no vacía** de un vocabulario cerrado, `maven` y `pypi`, y el
+registro sólo recibe librerías de esos formatos (publicar un jar en uno que sólo dice `pypi` lo
+rechaza la plataforma). Vacía, o con una palabra fuera del vocabulario, es `OOS1004`. Un formato
+repetido es `OOS2003` (un conjunto no repite).
 
 ## 4. Lo que no es del documento
 
@@ -48,8 +50,8 @@ sólo dice `pypi` lo rechaza la plataforma.
   **inmutable**: no se reescribe ni se borra; una versión se retira.
 - **A qué registro pertenece una coordenada.** La reclama el primero que la publica, y otro registro
   de la misma plataforma no puede publicarla. Lo decide quien recibe lo publicado.
-- **Quitar un formato** a un registro que ya tiene librerías de ese formato: lo rechaza la
-  plataforma, que es quien sabe si las hay.
+- **Restringir los formatos** de un registro que ya tiene librerías de un formato que deja fuera:
+  lo rechaza la plataforma, que es quien sabe si las hay.
 - **Quién puede publicar o leer**: del control de acceso de la plataforma, sobre el registro.
 
 ## 5. Las reglas
@@ -57,7 +59,7 @@ sólo dice `pypi` lo rechaza la plataforma.
 | código | la regla | sección |
 |---|---|---|
 | `OOS1003` | un `ArtifactRegistry` que declara una versión anterior a v1alpha34 | §1 |
-| `OOS1004` | `formats` ausente, vacía o con un formato fuera del vocabulario | §3 |
+| `OOS1004` | `formats` vacía o con un formato fuera del vocabulario | §3 |
 | `OOS1005` | una clave de `metadata` o `spec` que no está en §2 | §2 |
 | `OOS2003` | un formato repetido en `formats` | §3 |
 | `OOS2030` · `OOS2036` · `OOS2037` | su paquete y su schema, como todo contenido gobernado | §1 |

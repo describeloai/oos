@@ -1,5 +1,0 @@
-rule: spec/v1alpha34/01-artifact-registry.md#3
-level: L0
-expects: OOS1004
-summary: >
-  un registro sin `formats` no dice qué admite.
