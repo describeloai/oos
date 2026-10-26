@@ -32,7 +32,7 @@ Medido el 2026-10-26 al mapear Oracle a OOS (ORE 0075) y contrastado con los dem
 
 ## 2. Lo que entra
 
-1. **`Binary`**: un escalar sin argumentos; una secuencia de bytes de cualquier longitud, incluida la vacía
+1. **`Binary`**: un tipo sin argumentos (no se añade a los diez escalares de v1alpha1 §3.1: lo añade la versión); una secuencia de bytes de cualquier longitud, incluida la vacía
    ([`01`](01-el-binario.md) §1).
 2. **Nulo y vacío son cosas distintas**; se compara **por igualdad** y por el orden de los bytes (§2).
 3. **Cómo viaja en texto**: base64 (RFC 4648, alfabeto estándar, con relleno) (§3).

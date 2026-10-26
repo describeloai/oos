@@ -19,7 +19,9 @@ columns:
     type: "Binary"                 # una imagen pequeña, que cabe en la fila
 ```
 
-- Un escalar **sin argumentos**: una secuencia de bytes de cualquier longitud, **incluida la vacía**.
+- Un tipo **sin argumentos**: una secuencia de bytes de cualquier longitud, **incluida la vacía**. Como `Anchor`
+  (v1alpha17), es un nombre que añade esta versión: **no entra en los diez escalares** de
+  [v1alpha1 `02-entity` §3.1](../v1alpha1/02-entity.md), que quedan como estaban.
 - **El nulo y el vacío son distintos.** Una columna `Binary` con `NULL` no tiene valor; con una secuencia
   de cero bytes lo tiene, y es vacío.
 - **`physicalType`** guarda el tipo del origen (`RAW(16)`, `bytea`, `BYTES`, `blob`), como en los demás tipos.
